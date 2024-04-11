@@ -25,12 +25,15 @@
             <p class="code-quarry">LOREM IPSUM</p>
             <p class="description">balbalbalbalblabla</p>
         </div>
-        <input type="text" name="fullname" id="registerName">
-        <input type="text" name="username" id="registerUsername">
-        <input type="text" name="email" id="registerEmail">
-        <input type="password" name="password" id="registerPassword">
-        <input type="password" name="passwordConfirmation" id="registerPasswordConfirmation">
-        <button id="registerSubmit">Register</button>
+        <form id="registerForm" action="/register" method="post">
+            <input type="text" name="fullname" id="registerName">
+            <input type="text" name="username" id="registerUsername">
+            <input type="email" name="email" id="registerEmail">
+            <input type="password" name="password" id="registerPassword">
+            <input type="password" name="passwordConfirmation" id="registerPasswordConfirmation">
+            <div id="contentAlert"></div>
+            <button type="submit" id="registerSubmit">Register</button>
+        </form>        
         <p>Already have an account ?</p>
         <button id="loginRedirect">Login</button>
     </div>

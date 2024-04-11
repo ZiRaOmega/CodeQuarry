@@ -59,6 +59,22 @@ body{
     background-color: white;
 }
 
+#registerForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#contentAlert{
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: red;
+}
+
 /* ---------------------------- Login block ---------------------------- */
 
 #loginBlock{
