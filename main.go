@@ -1,25 +1,24 @@
 package main
 
 import (
+	"CQ/app"
 	"fmt"
 	"net/http"
 )
 
 func main() {
-	// Initialize the database
-	db := initDB("users.db")
+	db := app.InitDB("users.db")
 	defer db.Close()
 
-	// Setup database tables
-	setupDB(db)
+	app.SetupDB(db)
 
-	// Set the HTTP handlers for serving files and handling requests
-	http.HandleFunc("/", loginhandler)
-	http.HandleFunc("/styles.css", cssHandler)
-	http.HandleFunc("/animation.js", animationsHandler)
-	http.HandleFunc("/register", registerHandler(db))
+	http.HandleFunc("/", app.LoginhandlerPage)
+	http.HandleFunc("/styles.css", app.CssHandler)
+	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
+	http.HandleFunc("/scripts/errors.js", app.ErrorsHandler)
+	http.HandleFunc("/register", app.RegisterHandler(db))
+	http.HandleFunc("/login", app.LoginHandler(db))
 
-	// Start the server
 	fmt.Println("Server is running on http://localhost:8080/")
 	http.ListenAndServe(":8080", nil)
 }

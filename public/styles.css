@@ -1,0 +1,95 @@
+body{
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: #000513;
+}
+
+/* ---------------------------- Main block ---------------------------- */
+
+#mainBlock{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: white;
+}
+
+.CQ-logo{
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background-color: grey;
+    margin-bottom: 20px;
+}
+
+.Title{
+   display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.code-quarry{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.description{
+    font-size: 15px;
+    margin-bottom: 20px;
+}
+
+/* ---------------------------- register block ---------------------------- */
+
+
+#registerBlock{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: white;
+}
+
+#registerForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#contentAlert{
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: red;
+}
+
+/* ---------------------------- Login block ---------------------------- */
+
+#loginBlock{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: white;
+}
+
+#loginForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}

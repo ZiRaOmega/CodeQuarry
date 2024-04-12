@@ -1,0 +1,27 @@
+package app
+
+import (
+	"net/http"
+)
+
+// handle CSS files
+func CssHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/styles.css")
+}
+
+func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
+	//serve the animation js file
+	http.ServeFile(w, r, "scripts/animation.js")
+}
+
+func ErrorsHandler(w http.ResponseWriter, r *http.Request) {
+	//serve the animation js file
+	http.ServeFile(w, r, "scripts/errors.js")
+}
+
+// handle the main page
+func LoginhandlerPage(w http.ResponseWriter, r *http.Request) {
+	// Serve the login.html file as the default page
+	http.ServeFile(w, r, "public/login.html")
+}
