@@ -1,13 +1,13 @@
-registerName = document.getElementById("registerName");
-registerUsername = document.getElementById("registerUsername");
-registerEmail = document.getElementById("registerEmail");
-registerPassword = document.getElementById("registerPassword");
-registerPasswordConfirmation = document.getElementById(
+let registerName = document.getElementById("registerName");
+let registerUsername = document.getElementById("registerUsername");
+let registerEmail = document.getElementById("registerEmail");
+let registerPassword = document.getElementById("registerPassword");
+let registerPasswordConfirmation = document.getElementById(
   "registerPasswordConfirmation"
 );
-registerForm = document.getElementById("registerForm");
-registerSubmit = document.getElementById("registerSubmit");
-contentAlert = document.getElementById("contentAlert");
+let registerForm = document.getElementById("registerForm");
+let registerSubmit = document.getElementById("registerSubmit");
+let contentAlert = document.getElementById("contentAlert");
 
 registerSubmit.addEventListener("click", function (event) {
   const fields = [
@@ -64,31 +64,89 @@ registerSubmit.addEventListener("click", function (event) {
       },
       body: new URLSearchParams(new FormData(registerForm)),
     })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        throw new Error("Registration failed");
-      })
+      .then((response) => response.json())
       .then((data) => {
-        let registerBlock = document.getElementById("registerBlock");
-        registerBlock.style.display = "none";
-        Swal.fire({
-          title: "Thank You!",
-          text: "You have successfully registered.",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then((result) => {
-          if (result.value) {
-            window.location.reload(); // Reload the page
-          }
-        });
+        if (data.status === "success") {
+          let registerBlock = document.getElementById("registerBlock");
+          registerBlock.style.display = "none";
+          Swal.fire({
+            title: "Thank You!",
+            text: data.message,
+            icon: "success",
+            confirmButtonText: "OK",
+          }).then((result) => {
+            if (result.value) {
+              window.location.href = "login.html"; // Redirect to login page or another page
+            }
+          });
+        } else {
+          throw new Error(data.message || "Registration failed");
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
-        contentAlert.innerHTML = "An error occurred during registration.";
+        contentAlert.innerHTML = error.message;
       });
   } else {
     contentAlert.innerHTML = errorMessage;
   }
+});
+
+let login = document.getElementById("login");
+let usernameOrEmailLogin = document.getElementById("usernameOrEmailLogin");
+let passwordLogin = document.getElementById("loginPassword");
+let contentAlertLogin = document.getElementById("contentAlertLogin");
+
+$(document).ready(function () {
+  $("#loginForm").submit(function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    var formData = {
+      usernameOrEmailLogin: $("#usernameOrEmailLogin").val(),
+      passwordLogin: $("#loginPassword").val(),
+    };
+
+    $.ajax({
+      type: "POST",
+      url: "/login",
+      data: $.param(formData), // Correctly encode the data as URL-encoded string
+      contentType: "application/x-www-form-urlencoded", // Ensure the content type is set correctly
+      success: function (response) {
+        if (response.status === "success") {
+          window.location.href = "codeQuarry.html"; // Redirect to the forum page
+        } else {
+          let loginBlock = document.getElementById("loginBlock");
+          loginBlock.style.display = "none";
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: response.message || "Invalid login credentials!",
+            confirmButtonText: "OK",
+          }).then((result) => {
+            if (result.value) {
+              setTimeout(() => {
+                loginBlock.style.display = "flex";
+              }, 500);
+            }
+          });
+        }
+      },
+      error: function () {
+        let loginBlock = document.getElementById("loginBlock");
+        loginBlock.style.display = "none";
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Invalid login credentials!",
+        }).then((result) => {
+          if (result.value) {
+            setTimeout(() => {
+              loginBlock.style.display = "flex";
+            }, 300);
+            loginBlock.style.animation = "fadeIn 0.3s ease-in-out";
+          }
+        });
+      },
+    });
+  });
 });
