@@ -17,7 +17,7 @@ func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 
 func ErrorsHandler(w http.ResponseWriter, r *http.Request) {
 	//serve the animation js file
-	http.ServeFile(w, r, "scripts/errors.js")
+	http.ServeFile(w, r, "scripts/errors_obfuscate.js")
 }
 
 // handle the main page
