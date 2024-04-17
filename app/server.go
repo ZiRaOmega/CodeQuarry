@@ -25,3 +25,8 @@ func LoginhandlerPage(w http.ResponseWriter, r *http.Request) {
 	// Serve the login.html file as the default page
 	http.ServeFile(w, r, "public/login.html")
 }
+
+func HandleCodeQuarry(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/codeQuarry.html")
+}

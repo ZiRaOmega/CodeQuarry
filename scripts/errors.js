@@ -113,7 +113,7 @@ $(document).ready(function () {
       contentType: "application/x-www-form-urlencoded", // Ensure the content type is set correctly
       success: function (response) {
         if (response.status === "success") {
-          window.location.href = "codeQuarry.html"; // Redirect to the forum page
+          window.location.href = "/codeQuarry"; // Redirect to the forum page
         } else {
           let loginBlock = document.getElementById("loginBlock");
           loginBlock.style.display = "none";

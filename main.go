@@ -10,7 +10,7 @@ import (
 
 func obfuscateJavaScript(inputPath, outputPath string) {
 	// Ensure the path to the Python executable and the script is correct
-	cmd := exec.Command("python3", "obfuscator/obfuscate.py", inputPath, outputPath)
+	cmd := exec.Command("npx", "javascript-obfuscator", inputPath, "-o", outputPath)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("Obfuscation failed: %s", err)
@@ -30,7 +30,7 @@ func main() {
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
 	http.HandleFunc("/scripts/errors_obfuscate.js", app.ErrorsHandler)
-
+	http.HandleFunc("/codeQuarry", app.HandleCodeQuarry)
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
 
