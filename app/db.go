@@ -23,7 +23,7 @@ func InitDB(filepath string) *sql.DB {
 }
 
 func SetupDB(db *sql.DB) {
-	// Example SQL statement to create a table
+	// Create a User table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS users (
 		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
 		"fullname" TEXT,
