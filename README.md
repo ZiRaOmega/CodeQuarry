@@ -30,4 +30,8 @@ Pourquoi ? : Le certificat est utilisé pour prouver l'identité du serveur web 
 
 Importance : Un certificat SSL/TLS valide est nécessaire pour établir une connexion sécurisée et chiffrée. Ce certificat contient des informations sur le serveur (comme son nom de domaine) et est signé numériquement avec la clé privée. Bien qu'un certificat auto-signé ne soit pas aussi fiable qu'un certificat signé par une autorité de certification reconnue, il est tout de même utile pour tester et développer des applications.
 
+- Vu que nous utilisons désormais `HTTPS`, et donc le port 443, il faut lancer le serveur en tant que super utilisateur. Les ports inférieurs à 1024 sont réservés aux processus exécutés par le super utilisateur.
 
+```bash
+sudo go run .
+```
