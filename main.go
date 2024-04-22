@@ -34,6 +34,9 @@ func main() {
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
 
-	fmt.Println("Server is running on http://localhost:8080/")
-	http.ListenAndServe(":8080", nil)
+	fmt.Println("Server is running on https://localhost:443/")
+	err := http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
+	if err != nil {
+		log.Fatal("[DEBUG] ListenAndServe: ", err)
+	}
 }
