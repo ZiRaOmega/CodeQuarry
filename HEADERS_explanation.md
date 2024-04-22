@@ -18,7 +18,7 @@ L'en-tête "X-XSS-Protection" empêche les pages de se charger lorsqu'elles dét
 
 `w.Header().Add("X-Frame-Options", "DENY")`
  
-L'en-tête "X-Frame-Options" indique au navigateur s'il est autorisé à rendre une page dans une balise <embed>,<frame >, <iframe> ou <object>. Cela permet d'éviter le "click-jacking", c'est-à-dire que le contenu n'est pas intégré dans d'autres sites. Ici, nous avons choisi la valeur "DENY", ce qui empêche le contenu d'être intégré dans d'autres pages.
+L'en-tête "X-Frame-Options" indique au navigateur s'il est autorisé à rendre une page dans une balise "embed,frame, iframe ou object". Cela permet d'éviter le "click-jacking", c'est-à-dire que le contenu n'est pas intégré dans d'autres sites. Ici, nous avons choisi la valeur "DENY", ce qui empêche le contenu d'être intégré dans d'autres pages.
 
 `w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")`
 
