@@ -27,7 +27,8 @@ func main() {
 	outputPath := "scripts/errors_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
 
-	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all pages
+	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
+	//http.HandleFunc("/", app.AddSecurityHeaders(app.LoginhandlerPage))
 	http.HandleFunc("/", app.AddSecurityHeaders(app.LoginhandlerPage))
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
@@ -39,6 +40,7 @@ func main() {
 	fmt.Println("Server is running on https://localhost:443/")
 	err := http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
+		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
 	}
 }
