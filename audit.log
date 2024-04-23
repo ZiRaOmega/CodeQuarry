@@ -14,3 +14,9 @@ ERROR: 2024/04/23 12:18:15 Error starting the server
 DEBUG: 2024/04/23 12:27:45 Login successful:  at /login
 ERROR: 2024/04/23 12:29:10 Error inserting the data into the database
 ERROR: 2024/04/23 12:30:11 Error inserting the data into the database
+ERROR: 2024/04/23 16:33:53 Error starting the server
+ERROR: 2024/04/23 16:43:07 Error fetching user from databaseerfvfqdcs at /login
+ERROR: 2024/04/23 16:49:24 Error fetching user from database  at /login
+ERROR: 2024/04/23 17:05:39 Error fetching user from databaservefcx at /login
+ERROR: 2024/04/23 17:06:14 Error fetching user from databasebthtgvf at /login
+ERROR: 2024/04/23 17:14:18 Error fetching user from databasegfbrfvcd at /login

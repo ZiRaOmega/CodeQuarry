@@ -7,7 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div id="mainBlock">
@@ -29,16 +29,48 @@
         <p class="description">Let's register !</p>
       </div>
       <form id="registerForm" action="/register" method="post">
-        <input type="text" name="lastname" id="registerLastName" placeholder="Lastname"/>
-        <input type="text" name="firstname" id="registerFirstName" placeholder="Firstname"/>
-        <input type="text" name="username" id="registerUsername" placeholder="Username"/>
-        <input type="email" name="email" id="registerEmail" placeholder="E-mail"/>
-        <input type="password" name="password" id="registerPassword" placeholder="Password"/>
+        <input
+          type="text"
+          name="lastname"
+          id="registerLastName"
+          placeholder="Lastname"
+          required="required"
+        />
+        <input
+          type="text"
+          name="firstname"
+          id="registerFirstName"
+          placeholder="Firstname"
+          required="required"
+        />
+        <input
+          type="text"
+          name="username"
+          id="registerUsername"
+          placeholder="Username"
+          required="required"
+        />
+        <input
+          type="email"
+          name="email"
+          id="registerEmail"
+          placeholder="E-mail"
+          required="required"
+        />
+        <input
+          type="password"
+          name="password"
+          id="registerPassword"
+          placeholder="Password"
+          required="required"
+        />
 
         <input
           type="password"
           name="passwordConfirmation"
-          id="registerPasswordConfirmation" placeholder="Confirm Password"
+          id="registerPasswordConfirmation"
+          placeholder="Confirm Password"
+          required="required"
         />
         <div id="contentAlert"></div>
         <button type="submit" id="registerSubmit">Register</button>
@@ -57,9 +89,17 @@
         <input
           type="text"
           name="usernameOrEmailLogin"
-          id="usernameOrEmailLogin" placeholder="Username or Email"
+          id="usernameOrEmailLogin"
+          placeholder="Username or Email"
+          required="required"
         />
-        <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password"/>
+        <input
+          type="password"
+          name="passwordLogin"
+          id="loginPassword"
+          placeholder="Password"
+          required="required"
+        />
         <div id="contentAlertLogin"></div>
         <button type="submit" id="login">Login</button>
       </form>
@@ -67,7 +107,7 @@
       <p>You don't have an account ?</p>
       <button id="registerRedirect">Register</button>
     </div>
-  
+
     <script src="../scripts/animation.js"></script>
     <script src="../scripts/errors_obfuscate.js"></script>
   </body>

@@ -1,8 +1,9 @@
-module CQ
+module codequarry
 
-go 1.19
+go 1.22
 
 require (
-	github.com/mattn/go-sqlite3 v1.14.22 // indirect
-	golang.org/x/crypto v0.22.0 // indirect
+	github.com/joho/godotenv v1.5.1
+	github.com/lib/pq v1.10.9
+	golang.org/x/crypto v0.22.0
 )

@@ -19,7 +19,8 @@ const (
 func AddSecurityHeaders(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Add("Strict-Transport-Security", "max-age=63072000; includeSubdomains")
-		w.Header().Add("Content-Security-Policy", "default-src 'self'")
+		// TODO : Verify if 'unsafe-inline' is allowed only for "https://cdn.jsdelivr.net"
+		w.Header().Add("Content-Security-Policy", "default-src 'self'; script-src 'self' https://ajax.googleapis.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;")
 		w.Header().Add("X-XSS-Protection", "1; mode=block")
 		w.Header().Add("X-Frame-Options", "DENY")
 		w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
