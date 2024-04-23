@@ -28,7 +28,7 @@ func main() {
 	obfuscateJavaScript(inputPath, outputPath)
 
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
-	//http.HandleFunc("/", app.AddSecurityHeaders(app.LoginhandlerPage))
+
 	http.HandleFunc("/", app.AddSecurityHeaders(app.LoginhandlerPage))
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
