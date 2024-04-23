@@ -68,7 +68,7 @@ func createTableUsers(db *sql.DB) {
 
 func createTableSubject(db *sql.DB) {
 	// Create a Subject table
-	tableCreationQuery := `CREATE TABLE Subject(
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Subject(
 		id_subject SERIAL NOT NULL,
 		title VARCHAR(50) NOT NULL,
 		description VARCHAR(500) NOT NULL,
@@ -86,7 +86,7 @@ func createTableSubject(db *sql.DB) {
 
 func createTableTag(db *sql.DB) {
 	// Create a Tag table
-	tableCreationQuery := `CREATE TABLE Tag(
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Tag(
 		id_tag SERIAL NOT NULL,
 		title VARCHAR(50) NOT NULL,
 		description VARCHAR(500) NOT NULL,
@@ -104,7 +104,7 @@ func createTableTag(db *sql.DB) {
 
 func createTableQuestion(db *sql.DB) {
 	// Create a Question table
-	tableCreationQuery := `CREATE TABLE Question(
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Question(
 		id_question SERIAL NOT NULL,
 		title VARCHAR(50) NOT NULL,
 		content VARCHAR(500) NOT NULL,
@@ -116,7 +116,7 @@ func createTableQuestion(db *sql.DB) {
 		id_subject INT NOT NULL,
 		PRIMARY KEY(id_question),
 		UNIQUE(title),
-		FOREIGN KEY(id_student) REFERENCES Student(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_subject) REFERENCES Subject(id_subject)
 	 );`
 
@@ -128,19 +128,19 @@ func createTableQuestion(db *sql.DB) {
 
 func createTableResponse(db *sql.DB) {
 	// Create a Response table
-	tableCreationQuery := `CREATE TABLE Response(
-		id_response SERIAL NOT FULL,
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Response(
+		id_response SERIAL NOT NULL,
 		content VARCHAR(500) NOT NULL,
 		upvotes INT,
 		downvotes INT,
-		best_answer LOGICAL NOT NULL,
+		best_answer BOOLEAN NOT NULL,
 		creation_date DATE NOT NULL,
 		update_date DATE NOT NULL,
 		id_question INT NOT NULL,
 		id_student INT NOT NULL,
 		PRIMARY KEY(id_response),
 		FOREIGN KEY(id_question) REFERENCES Question(id_question),
-		FOREIGN KEY(id_student) REFERENCES Student(id_student)
+		FOREIGN KEY(id_student) REFERENCES users(id_student)
 	 );
 	 `
 
@@ -152,7 +152,7 @@ func createTableResponse(db *sql.DB) {
 
 func createTableTagged(db *sql.DB) {
 	// Create a Tagged table
-	tableCreationQuery := `CREATE TABLE Tagged(
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Tagged(
 		id_question INT,
 		id_tag INT,
 		PRIMARY KEY(id_question, id_tag),
@@ -169,7 +169,7 @@ func createTableTagged(db *sql.DB) {
 
 func createTablePrecise(db *sql.DB) {
 	// Create a Precise table
-	tableCreationQuery := `CREATE TABLE Precise(
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Precise(
 		id_subject INT,
 		id_tag INT,
 		PRIMARY KEY(id_subject, id_tag),
@@ -186,13 +186,13 @@ func createTablePrecise(db *sql.DB) {
 
 func createTableVote_response(db *sql.DB) {
 	// Create a	Vote_response table
-	tableCreationQuery := `CREATE TABLE Vote_response(
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Vote_response(
 		id_student INT,
 		id_response INT,
-		upvote_r LOGICAL NOT NULL,
-		downvote_r LOGICAL NOT NULL,
+		upvote_r BOOLEAN NOT NULL,
+		downvote_r BOOLEAN NOT NULL,
 		PRIMARY KEY(id_student, id_response),
-		FOREIGN KEY(id_student) REFERENCES Student(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_response) REFERENCES Response(id_response)
 	 );
 	`
@@ -205,13 +205,13 @@ func createTableVote_response(db *sql.DB) {
 
 func createTableVote_question(db *sql.DB) {
 	// Create a	Vote_question table
-	tableCreationQuery := `CREATE TABLE Vote_question(
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Vote_question(
 		id_student INT,
 		id_question INT,
-		upvote_q LOGICAL NOT NULL,
-		downvote_q LOGICAL NOT NULL,
+		upvote_q BOOLEAN NOT NULL,
+		downvote_q BOOLEAN NOT NULL,
 		PRIMARY KEY(id_student, id_question),
-		FOREIGN KEY(id_student) REFERENCES Student(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_question) REFERENCES Question(id_question)
 	 );
 	`
