@@ -1,11 +1,15 @@
 package main
 
 import (
-	"CQ/app"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"os/exec"
+
+	"codequarry/app"
+
+	"github.com/joho/godotenv"
 )
 
 func obfuscateJavaScript(inputPath, outputPath string) {
@@ -18,8 +22,23 @@ func obfuscateJavaScript(inputPath, outputPath string) {
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading .env file")
+		// You may choose to handle the error differently based on your requirements
+		return
+	}
 
-	db := app.InitDB("users.db")
+	// Update the DSN for PostgreSQL
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbType := os.Getenv("DB_TYPE")
+	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
+
+	db := app.InitDB(dsn)
 	defer db.Close()
 
 	app.SetupDB(db)
@@ -38,7 +57,7 @@ func main() {
 	http.HandleFunc("/login", app.LoginHandler(db))
 
 	fmt.Println("Server is running on https://localhost:443/")
-	err := http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
+	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
