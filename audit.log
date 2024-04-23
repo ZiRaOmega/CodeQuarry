@@ -1,1 +1,16 @@
 ERROR: 2024/04/23 11:00:49 Error starting the server
+DEBUG: 2024/04/23 11:33:49 Login successful:  at /login
+DEBUG: 2024/04/23 11:34:01 Login successful:  at /login
+ERROR: 2024/04/23 11:34:05 Error inserting the data into the database
+ERROR: 2024/04/23 11:35:44 Error inserting the data into the database
+DEBUG: 2024/04/23 11:35:57 Login successful:  at /login
+DEBUG: 2024/04/23 11:36:10 Login successful:  at /login
+ERROR: 2024/04/23 11:52:23 Error starting the server
+ERROR: 2024/04/23 12:00:51 Error starting the server
+ERROR: 2024/04/23 12:01:09 Error starting the server
+ERROR: 2024/04/23 12:01:17 Error starting the server
+ERROR: 2024/04/23 12:02:28 Error starting the server
+ERROR: 2024/04/23 12:18:15 Error starting the server
+DEBUG: 2024/04/23 12:27:45 Login successful:  at /login
+ERROR: 2024/04/23 12:29:10 Error inserting the data into the database
+ERROR: 2024/04/23 12:30:11 Error inserting the data into the database

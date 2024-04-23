@@ -24,8 +24,7 @@ func AddSecurityHeaders(next http.HandlerFunc) http.HandlerFunc {
 		w.Header().Add("X-Frame-Options", "DENY")
 		w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")
 		w.Header().Add("X-Content-Type-Options", "nosniff")
-		//w.Header().Add("Content-Type", "text/plain")
-
+		w.Header().Add("Content-Type", "text/html; charset=utf-8")
 		next.ServeHTTP(w, r)
 	}
 }

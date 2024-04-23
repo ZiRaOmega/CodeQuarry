@@ -13,8 +13,8 @@
     <div id="mainBlock">
       <div class="CQ-logo"></div>
       <div class="Title">
-        <p class="code-quarry">LOREM IPSUM</p>
-        <p class="description">balbalbalbalblabla</p>
+        <p class="code-quarry">Welcome to Code Quarry</p>
+        <p class="description">Dig it, Find it</p>
       </div>
       <div id="login-register-buttons">
         <button id="login-button">Login</button>
@@ -25,18 +25,20 @@
     <div id="registerBlock">
       <div class="CQ-logo"></div>
       <div class="Title">
-        <p class="code-quarry">LOREM IPSUM</p>
-        <p class="description">balbalbalbalblabla</p>
+        <p class="code-quarry">Welcome to Code Quarry</p>
+        <p class="description">Let's register !</p>
       </div>
       <form id="registerForm" action="/register" method="post">
-        <input type="text" name="fullname" id="registerName" />
-        <input type="text" name="username" id="registerUsername" />
-        <input type="email" name="email" id="registerEmail" />
-        <input type="password" name="password" id="registerPassword" />
+        <input type="text" name="lastname" id="registerLastName" placeholder="Lastname"/>
+        <input type="text" name="firstname" id="registerFirstName" placeholder="Firstname"/>
+        <input type="text" name="username" id="registerUsername" placeholder="Username"/>
+        <input type="email" name="email" id="registerEmail" placeholder="E-mail"/>
+        <input type="password" name="password" id="registerPassword" placeholder="Password"/>
+
         <input
           type="password"
           name="passwordConfirmation"
-          id="registerPasswordConfirmation"
+          id="registerPasswordConfirmation" placeholder="Confirm Password"
         />
         <div id="contentAlert"></div>
         <button type="submit" id="registerSubmit">Register</button>
@@ -48,16 +50,16 @@
     <div id="loginBlock">
       <div class="CQ-logo"></div>
       <div class="Title">
-        <p class="code-quarry">LOREM IPSUM</p>
-        <p class="description">balbalbalbalblabla</p>
+        <p class="code-quarry">Welcome to Code Quarry</p>
+        <p class="description">Let's dig again !</p>
       </div>
       <form id="loginForm" action="/login" method="post">
         <input
           type="text"
           name="usernameOrEmailLogin"
-          id="usernameOrEmailLogin"
+          id="usernameOrEmailLogin" placeholder="Username or Email"
         />
-        <input type="password" name="passwordLogin" id="loginPassword" />
+        <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password"/>
         <div id="contentAlertLogin"></div>
         <button type="submit" id="login">Login</button>
       </form>
