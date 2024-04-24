@@ -32,7 +32,6 @@ func SetupDB(db *sql.DB) {
 	createTablePrecise(db)
 	createTableVote_response(db)
 	createTableVote_question(db)
-
 }
 
 func createTableUsers(db *sql.DB) {
@@ -41,9 +40,9 @@ func createTableUsers(db *sql.DB) {
 		id_student SERIAL NOT NULL,
 		lastname VARCHAR(50) NOT NULL,
 		firstname VARCHAR(50) NOT NULL,
-		nickname VARCHAR(50) NOT NULL,
+		username VARCHAR(50) NOT NULL,
 		email VARCHAR(50) NOT NULL,
-		password VARCHAR(50) NOT NULL,
+		password VARCHAR(250) NOT NULL,
 		avatar VARCHAR(50),
 		birth_date DATE,
 		bio VARCHAR(100),
@@ -56,7 +55,7 @@ func createTableUsers(db *sql.DB) {
 		update_date DATE,
 		deleting_date DATE,
 		PRIMARY KEY(id_student),
-		UNIQUE(nickname),
+		UNIQUE(username),
 		UNIQUE(email)
 	);`
 
@@ -94,7 +93,7 @@ func createTableTag(db *sql.DB) {
 		update_date DATE NOT NULL,
 		PRIMARY KEY(id_tag),
 		UNIQUE(title)
-	 );`
+	);`
 
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
@@ -118,7 +117,7 @@ func createTableQuestion(db *sql.DB) {
 		UNIQUE(title),
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_subject) REFERENCES Subject(id_subject)
-	 );`
+	);`
 
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
@@ -141,8 +140,8 @@ func createTableResponse(db *sql.DB) {
 		PRIMARY KEY(id_response),
 		FOREIGN KEY(id_question) REFERENCES Question(id_question),
 		FOREIGN KEY(id_student) REFERENCES users(id_student)
-	 );
-	 `
+	);
+	`
 
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
@@ -158,7 +157,7 @@ func createTableTagged(db *sql.DB) {
 		PRIMARY KEY(id_question, id_tag),
 		FOREIGN KEY(id_question) REFERENCES Question(id_question),
 		FOREIGN KEY(id_tag) REFERENCES Tag(id_tag)
-	 );
+	);
 	`
 
 	// Execute the table creation query
@@ -175,7 +174,7 @@ func createTablePrecise(db *sql.DB) {
 		PRIMARY KEY(id_subject, id_tag),
 		FOREIGN KEY(id_subject) REFERENCES Subject(id_subject),
 		FOREIGN KEY(id_tag) REFERENCES Tag(id_tag)
-	 );
+	);
 	`
 
 	// Execute the table creation query
@@ -194,7 +193,7 @@ func createTableVote_response(db *sql.DB) {
 		PRIMARY KEY(id_student, id_response),
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_response) REFERENCES Response(id_response)
-	 );
+	);
 	`
 
 	// Execute the table creation query
@@ -213,7 +212,7 @@ func createTableVote_question(db *sql.DB) {
 		PRIMARY KEY(id_student, id_question),
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_question) REFERENCES Question(id_question)
-	 );
+	);
 	`
 
 	// Execute the table creation query
