@@ -38,7 +38,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error hashing password", http.StatusInternalServerError)
 			return
 		}
-		
+
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
 		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password) VALUES($1, $2, $3, $4, $5)")
 		if err != nil {

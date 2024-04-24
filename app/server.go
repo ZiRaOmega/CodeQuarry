@@ -35,3 +35,8 @@ func HandleCodeQuarry(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/codeQuarry.html")
 }
+
+func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "scripts/websocket.js")
+}

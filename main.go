@@ -52,10 +52,12 @@ func main() {
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
 	http.HandleFunc("/scripts/errors_obfuscate.js", app.ErrorsHandler)
+	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 	http.HandleFunc("/codeQuarry", app.HandleCodeQuarry)
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
 	http.HandleFunc("/logo", app.LogoHandler)
+	http.HandleFunc("/ws", app.WebsocketHandler(db))
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
