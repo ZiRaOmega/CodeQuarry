@@ -24,6 +24,7 @@ func InitDB(dsn string) *sql.DB {
 
 func SetupDB(db *sql.DB) {
 	createTableUsers(db)
+	createTableSession(db)
 	createTableSubject(db)
 	createTableTag(db)
 	createTableQuestion(db)
@@ -214,6 +215,22 @@ func createTableVote_question(db *sql.DB) {
 		PRIMARY KEY(id_student, id_question),
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_question) REFERENCES Question(id_question)
+	);
+	`
+
+	// Execute the table creation query
+	if _, err := db.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+}
+func createTableSession(db *sql.DB) {
+	// Create a	Vote_question table
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Sessions(
+		id SERIAL NOT NULL,
+		uuid VARCHAR(50) NOT NULL,
+		user_id INT NOT NULL,
+		expire_at DATE NOT NULL,
+		created_at TIMESTAMP NOT NULL
 	);
 	`
 
