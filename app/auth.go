@@ -35,6 +35,18 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
+		if ContainsSQLi(lastname) || ContainsSQLi(firstname) || ContainsSQLi(username) || ContainsSQLi(email) || ContainsSQLi(password) {
+			Log(ErrorLevel, "SQL injection detected")
+			//http.Error(w, "SQL injection detected", http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "SQL injection detected"})
+			return
+		} else if ContainsXSS(lastname) || ContainsXSS(firstname) || ContainsXSS(username) || ContainsXSS(email) || ContainsXSS(password) {
+			Log(ErrorLevel, "XSS detected")
+			//http.Error(w, "XSS detected", http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
+			return
+		}
+
 		// !!! TODO : smth better than bcrypt?
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
@@ -91,6 +103,17 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		username := r.FormValue("usernameOrEmailLogin")
 		password := r.FormValue("passwordLogin")
 
+		if ContainsSQLi(username) || ContainsSQLi(password) {
+			Log(ErrorLevel, "SQL injection detected")
+			//http.Error(w, "SQL injection detected", http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "SQL injection detected"})
+			return
+		} else if ContainsXSS(username) || ContainsXSS(password) {
+			Log(ErrorLevel, "XSS detected")
+			//http.Error(w, "XSS detected", http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
+			return
+		}
 		// Fetch user from database
 		var storedPassword string
 		err := db.QueryRow("SELECT password FROM users WHERE username = $1 OR email = $2", username, username).Scan(&storedPassword)
@@ -141,10 +164,15 @@ func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error {
 	user_uuid := UUID.NewV4().String()
 	createdAt := time.Now()
 	expireAt := createdAt.Add(Cookie_Expiration)
-	_, err = db.Exec("INSERT INTO Sessions(user_id,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)", user_id, user_uuid, createdAt, expireAt)
+	stmt, err := db.Prepare("INSERT INTO Sessions(id_student,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)")
 	if err != nil {
-		Log(ErrorLevel, "Error creating session "+err.Error())
+		return err
 	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(user_id, user_uuid, createdAt, expireAt); err != nil {
+		return err
+	}
+
 	cookie := http.Cookie{
 		Name:     "session",
 		Value:    user_uuid,
@@ -156,8 +184,16 @@ func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error {
 }
 func getUserID(username string, db *sql.DB) (int, error) {
 	var id int
-	err := db.QueryRow("SELECT id_student FROM users WHERE username = $1", username).Scan(&id)
+	stmt, err := db.Prepare("SELECT id_student FROM users WHERE username = $1 OR email = $2")
 	if err != nil {
+		return -1, err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(username, username).Scan(&id)
+	switch {
+	case err == sql.ErrNoRows:
+		return 0, err
+	case err != nil:
 		return 0, err
 	}
 	return id, nil
