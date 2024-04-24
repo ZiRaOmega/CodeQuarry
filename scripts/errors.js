@@ -1,4 +1,5 @@
-let registerName = document.getElementById("registerName");
+let registerLastName = document.getElementById("registerLastName");
+let registerFirstName = document.getElementById("registerFirstName");
 let registerUsername = document.getElementById("registerUsername");
 let registerEmail = document.getElementById("registerEmail");
 let registerPassword = document.getElementById("registerPassword");
@@ -14,7 +15,8 @@ $(document).ready(function () {
   $("#registerForm").submit(function (event) {
     event.preventDefault();
     const fields = [
-      { value: registerName.value, name: "Name" },
+      { value: registerLastName.value, name: "LastName" },
+      { value: registerFirstName.value, name: "FirstName" },
       { value: registerUsername.value, name: "Username" },
       { value: registerEmail.value, name: "Email" },
       { value: registerPassword.value, name: "Password" },

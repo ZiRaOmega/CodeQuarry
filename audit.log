@@ -21,3 +21,8 @@ ERROR: 2024/04/23 17:05:39 Error fetching user from databaservefcx at /login
 ERROR: 2024/04/23 17:06:14 Error fetching user from databasebthtgvf at /login
 ERROR: 2024/04/23 17:14:18 Error fetching user from databasegfbrfvcd at /login
 ERROR: 2024/04/23 18:22:32 Error starting the server
+ERROR: 2024/04/24 15:35:48 No user found with the provided credentials at /login
+ERROR: 2024/04/24 15:36:16 Error starting the server
+ERROR: 2024/04/24 15:36:51 No user found with the provided credentialsiku,jnhgf at /login
+DEBUG: 2024/04/24 15:38:10 Registration successful: Svalbard at /register
+DEBUG: 2024/04/24 15:38:30 Login successful: svalbardmalfant@gmail.com at /login

@@ -31,6 +31,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		email := r.FormValue("email")
 		password := r.FormValue("password")
 
+		// !!! TODO : smth better than bcrypt?
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			Log(ErrorLevel, "Error hashing password")
