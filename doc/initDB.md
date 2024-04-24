@@ -99,7 +99,7 @@ go run .
 
 - 2.Choisissez PostgreSQL comme type de base de données.  
 
-![choosePOSTGRESQL](/images/Capture%20d’écran%20du%202024-04-23%2017-27-09.png)
+![choosePOSTGRESQL](/imagesDb/Capture%20d’écran%20du%202024-04-23%2017-27-09.png)
 
 - 3.Remplissez les détails de la connexion :
 
@@ -110,7 +110,7 @@ go run .
 >Username : codequarry  
 >Password : CQ1234  
 
-![FILL](/images/Capture%20d’écran%20du%202024-04-23%2017-26-57.png)
+![FILL](/imagesDb/Capture%20d’écran%20du%202024-04-23%2017-26-57.png)
 
 - Cliquez sur Test Connection pour vérifier que tout est configuré correctement.  
 
