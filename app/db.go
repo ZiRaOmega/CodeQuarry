@@ -8,7 +8,7 @@ import (
 )
 
 func InitDB(dsn string) *sql.DB {
-	// Open the SQLite database
+	// Open the database
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
 		log.Fatal(err)
@@ -33,6 +33,8 @@ func SetupDB(db *sql.DB) {
 	createTableVote_response(db)
 	createTableVote_question(db)
 }
+
+/* --------- Create Funcs ----------- */
 
 func createTableUsers(db *sql.DB) {
 	// Create a User table

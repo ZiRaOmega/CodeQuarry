@@ -42,13 +42,21 @@ $(document).ready(function () {
       errorMessage += "Passwords do not match.<br>";
     }
 
-    // Check for password length and numeric requirements
-    if (
-      registerPassword.value !== "" &&
-      !/^(?=.*\d)[a-zA-Z0-9]{8,}$/.test(registerPassword.value)
-    ) {
-      errorMessage +=
-        "Password must be at least 8 characters long and contain at least one number.<br>";
+    // Check for password length, numeric, and special character requirements
+    if (registerPassword.value !== "") {
+      var regex =
+        /^(?=.*[0-9])(?=.*[^a-zA-Z0-9])[a-zA-Z0-9!@#$%^&*()_+=\-`~\[\]{};':"\\|,.<>\/?]{8,}$/;
+      /* 
+        ^ asserts position at the start of a line
+        (?=.*[0-9]) asserts that the string contains at least one number
+        (?=.*[^a-zA-Z0-9]) asserts that the string contains at least one special character
+        [a-zA-Z0-9!@#$%^&*()_+=\-`~\[\]{};':"\\|,.<>\/?]{8,} matches any character in the set, including special characters, at least 8 times
+        $ asserts position at the end of a line
+      */
+      if (!regex.test(registerPassword.value)) {
+        errorMessage +=
+          "Password must be at least 8 characters long, contain at least one number, and contain at least one special character.<br>";
+      }
     }
 
     // Check if the email is not empty and valid
