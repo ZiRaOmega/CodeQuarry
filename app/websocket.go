@@ -4,6 +4,7 @@ package app
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -11,6 +12,11 @@ import (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+}
+
+type WSMessage struct {
+	Type    string      `json:"type"`
+	Content interface{} `json:"content"`
 }
 
 // WebsocketHandler is a handler function that upgrades the HTTP connection to a WebSocket connection
@@ -39,21 +45,56 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 		}
 		defer conn.Close()
 		for {
-
+			wsmessage := WSMessage{}
 			// Read the message from the client
-			_, msg, err := conn.ReadMessage()
+			err := conn.ReadJSON(&wsmessage)
 			if err != nil {
 				Log(ErrorLevel, "Error reading the message from the client")
-				http.Error(w, "Error reading the message from the client", http.StatusInternalServerError)
 				return
 			}
+			switch wsmessage.Type {
+			case "session":
+				if wsmessage.Content == nil {
+					conn.WriteJSON(WSMessage{Type: "session", Content: "empty"})
+					break
+				}
+				session_id := wsmessage.Content.(string)
+				// Check if the session ID is valid
+				if !isValidSession(session_id, db) {
+					conn.WriteJSON(WSMessage{Type: "session", Content: "expired"})
 
-			// Send the message back to the client
-			if err := conn.WriteMessage(websocket.TextMessage, msg); err != nil {
-				Log(ErrorLevel, "Error sending the message back to the client")
-				http.Error(w, "Error sending the message back to the client", http.StatusInternalServerError)
-				return
+				} else {
+					conn.WriteJSON(WSMessage{Type: "session", Content: "valid"})
+				}
 			}
 		}
 	}
+}
+
+func isValidSession(session_id string, db *sql.DB) bool {
+	var expireAt time.Time
+	err := db.QueryRow("SELECT expire_at FROM Sessions WHERE uuid = $1", session_id).Scan(&expireAt)
+	if err != nil {
+		Log(ErrorLevel, "Error fetching session from database")
+		return false
+	}
+	if time.Now().After(expireAt) {
+		Log(ErrorLevel, "Session expired")
+		DeleteSession(session_id, db)
+		return false
+	} else {
+		return true
+	}
+}
+
+func DeleteSession(session_id string, db *sql.DB) error {
+	stmt, err := db.Prepare("DELETE FROM Sessions WHERE uuid = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(session_id); err != nil {
+		return err
+	}
+	return nil
 }

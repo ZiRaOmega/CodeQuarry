@@ -1,90 +1,72 @@
-## Function `CreateSession` Documentation
+**Language > Specialist**: Go > Web Session Management Expert
+**Includes**: `database/sql`, `net/http`, `time`, `github.com/satori/go.uuid`
+**Requirements**: Detailed documentation for two Go functions responsible for session management, including inserting sessions into a database and creating a session with associated cookie handling.
+## Plan
+1. Document the `insertSessionToDB` function, detailing its purpose, parameters, operations, and error handling.
+2. Document the `CreateSession` function, explaining its comprehensive role in session creation, from user ID retrieval to setting session cookies.
 
-The `CreateSession` function is designed to authenticate a user by their username, create a new session record in the database, and set an HTTP cookie with the session identifier. This function is a key component in managing user sessions securely and efficiently in a web application.
+---
 
-### Function Signature
+## Package `session` Documentation
 
+This documentation covers two crucial functions in the session management package, which facilitate the creation and storage of user sessions in a web application environment.
+
+### 1. `insertSessionToDB`
+
+**Function Signature**:
+```go
+func insertSessionToDB(db *sql.DB, user_id int, user_uuid string, createdAt time.Time, expireAt time.Time) error
+```
+
+**Purpose**:
+Inserts a new session record into the database. This function is typically used to persist session details after generating a new session for a user.
+
+**Parameters**:
+- `db *sql.DB`: The database connection used to execute SQL commands.
+- `user_id int`: The identifier of the user for whom the session is created.
+- `user_uuid string`: The UUID of the new session, serving as a unique identifier.
+- `createdAt time.Time`: The timestamp marking the creation of the session.
+- `expireAt time.Time`: The timestamp indicating when the session will expire.
+
+**Operations**:
+1. **Prepare SQL Statement**: Prepares an SQL statement for inserting session data into the `Sessions` table.
+2. **Execute SQL Statement**: Executes the prepared statement with the provided parameters.
+3. **Error Handling**: Returns any errors encountered during the SQL operation, ensuring that calling functions can respond appropriately.
+
+**Return Value**:
+- `error`: Returns an error object if there is a failure in inserting the session data into the database.
+
+### 2. `CreateSession`
+
+**Function Signature**:
 ```go
 func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error
 ```
 
-#### Parameters
+**Purpose**:
+Creates a new session for a user, retrieves the user ID, generates a session UUID, inserts session details into the database, and sets a session cookie on the client's browser.
 
+**Parameters**:
 - `username string`: The username of the user for whom the session is being created.
-- `db *sql.DB`: A pointer to the database connection pool used for SQL operations.
-- `w http.ResponseWriter`: The HTTP response writer used to send back the session cookie to the client's browser.
+- `db *sql.DB`: The database connection for querying and inserting data.
+- `w http.ResponseWriter`: The HTTP response writer used to set cookies on the client side.
 
-#### Return Value
+**Operations**:
+1. **Retrieve User ID**: Calls `getUserIDFromDB` to fetch the user ID based on the username.
+2. **Generate Session UUID**: Generates a new UUID v4 for the session.
+3. **Calculate Timestamps**: Determines the current time and expiration time for the session.
+4. **Insert Session into Database**: Utilizes `insertSessionToDB` to store session details.
+5. **Set HTTP Cookie**: Configures and sets an HTTP cookie with the session UUID, which includes HttpOnly flag to enhance security.
 
-- `error`: Returns an error object that will be non-nil if an error occurs during the session creation process.
+**Error Handling**:
+- Checks and returns errors at each critical step, ensuring that the process halts if a problem occurs (e.g., user ID retrieval fails, database insertion errors).
 
-### Detailed Breakdown
-
-```go
-user_id, err := getUserID(username, db)
-```
-
-- **Retrieve User ID**: Fetches the user ID associated with the given username from the database. This ID is necessary to link the session to the correct user account.
-
-```go
-if err != nil {
-    return err
-}
-```
-
-- **Error Handling**: Immediately returns the error if fetching the user ID fails, stopping further execution of the function.
-
-```go
-user_uuid := UUID.NewV4().String()
-createdAt := time.Now()
-expireAt := createdAt.Add(Cookie_Expiration)
-```
-
-- **Session Identifier**: Generates a new UUID v4, which is used as a unique identifier for the session.
-- **Session Timing**:
-  - `createdAt`: Records the current time as the session's start time.
-  - `expireAt`: Calculates the expiration time of the session based on a predefined duration (`Cookie_Expiration`).
-
-```go
-_, err = db.Exec("INSERT INTO Sessions(user_id,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)", user_id, user_uuid, createdAt, expireAt)
-```
-
-- **Database Insertion**: Inserts the new session into the `Sessions` table with the user ID, UUID, creation time, and expiration time.
-- **SQL Injection Prevention**: Uses parameterized SQL queries to safeguard against SQL injection.
-
-```go
-if err != nil {
-    Log(ErrorLevel, "Error creating session "+err.Error())
-}
-```
-
-- **Log Error**: If there's an error during the database operation, logs the error with an "ErrorLevel" indicating the severity.
-
-```go
-cookie := http.Cookie{
-    Name:     "session",
-    Value:    user_uuid,
-    Expires:  expireAt,
-    HttpOnly: true,
-}
-http.SetCookie(w, &cookie)
-```
-
-- **Cookie Configuration**:
-  - `Name`: The name of the cookie, set to "session".
-  - `Value`: The UUID of the newly created session.
-  - `Expires`: The expiration time of the cookie, aligning with the session's expiration.
-  - `HttpOnly`: Set to true to prevent access to the cookie via client-side scripts, enhancing security against XSS attacks.
-- **Set Cookie**: Attaches the configured cookie to the HTTP response, effectively sending it to the client's browser.
-
-```go
-return err
-```
-
-- **Return Error**: Returns any error that occurred during session creation, allowing the calling function to handle it appropriately.
+**Return Value**:
+- `error`: Returns an error object if any step in the session creation process encounters issues.
 
 ### Best Practices
 
-- **Secure Cookie Handling**: Setting `HttpOnly` to true is crucial for preventing access to the cookie value via client-side JavaScript, which is a common vector for XSS attacks.
-- **Error Logging and Handling**: Robust error handling and logging are implemented to facilitate troubleshooting and ensure that errors do not go unnoticed.
-- **Parameterized SQL Queries**: Using parameterized queries is a best practice to prevent SQL injection, a prevalent security vulnerability in web applications.
+- **Security Measures**: Use HttpOnly cookies to prevent client-side scripts from accessing the session token.
+- **Error Handling**: Proper error handling in each function helps prevent security vulnerabilities and ensures the application remains stable and reliable.
+- **UUID for Sessions**: Using UUIDs ensures that session identifiers are unique and unpredictable, reducing the risk of session hijacking.
+
