@@ -31,3 +31,4 @@ DEBUG: 2024/04/24 16:50:56 Registration successful: de at /register
 DEBUG: 2024/04/24 16:51:03 Login successful: de at /login
 ERROR: 2024/04/24 19:10:17 Error starting the server
 ERROR: 2024/04/24 19:11:31 Error preparing the SQL statement
+ERROR: 2024/04/24 19:24:46 Error reading the message from the client

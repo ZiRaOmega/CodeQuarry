@@ -19,13 +19,15 @@ var upgrader = websocket.Upgrader{
 // The function returns an http.HandlerFunc that can be used as a handler for WebSocket requests.
 //
 // Example usage:
-//   http.HandleFunc("/websocket", WebsocketHandler(db))
+//
+//	http.HandleFunc("/websocket", WebsocketHandler(db))
 //
 // Parameters:
 //   - db: A pointer to a sql.DB object representing the database connection.
 //
 // Returns:
-//   An http.HandlerFunc that handles WebSocket requests.
+//
+//	An http.HandlerFunc that handles WebSocket requests.
 func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Upgrade the HTTP connection to a WebSocket connection
