@@ -10,6 +10,11 @@ func CssHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/styles.css")
 }
 
+func LogoHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page.
+	http.ServeFile(w, r, "public/CODEQUARRY.webp")
+}
+
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	//serve the animation js file
 	http.ServeFile(w, r, "scripts/animation.js")

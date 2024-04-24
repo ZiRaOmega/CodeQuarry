@@ -55,6 +55,7 @@ func main() {
 	http.HandleFunc("/codeQuarry", app.HandleCodeQuarry)
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
+	http.HandleFunc("/logo", app.LogoHandler)
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
