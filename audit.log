@@ -26,3 +26,6 @@ ERROR: 2024/04/24 15:36:16 Error starting the server
 ERROR: 2024/04/24 15:36:51 No user found with the provided credentialsiku,jnhgf at /login
 DEBUG: 2024/04/24 15:38:10 Registration successful: Svalbard at /register
 DEBUG: 2024/04/24 15:38:30 Login successful: svalbardmalfant@gmail.com at /login
+ERROR: 2024/04/24 16:48:35 No user found with the provided credentialsferzs at /login
+DEBUG: 2024/04/24 16:50:56 Registration successful: de at /register
+DEBUG: 2024/04/24 16:51:03 Login successful: de at /login
