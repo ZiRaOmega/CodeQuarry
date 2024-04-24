@@ -1,6 +1,10 @@
 // Declare a variable 'socket' to store the WebSocket connection object
 var socket;
-
+const getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
 // Use jQuery's document ready function to ensure the DOM is fully loaded
 $(document).ready(function () {
     // Create a WebSocket connection to the current hostname with the '/ws' endpoint
@@ -14,12 +18,29 @@ $(document).ready(function () {
         // Log a message indicating a message is being sent to the server
         console.log("Sending to server");
 
-        // Send a message to the server
-        socket.send("Hey there from client");
+        // Send a message to the server to check the session
+        let message = {
+            type: "session",
+            content: getCookie("session")
+        };
+        socket.send(JSON.stringify(message));
+        //socket.send("Hey there from client");
     };
 
     // Define the onmessage function to be called when a message is received from the server
     socket.onmessage = function (event) {
+        let msg = JSON.parse(event.data);
+        switch (msg.type) {
+            case "session":
+                if (msg.content=="expired"){
+                    console.log("Session expired, redirecting to login page");
+                    if (window.location.pathname != "/") window.location.href = "/";
+                    
+                }else if (msg.content=="valid"){
+                    // !!! TODO show the website if the session is still valid
+                    console.log("Session still valid");
+                }
+                }
         // Log the message received from the server
         console.log(`[message] Data received from server: ${event.data}`);
     };

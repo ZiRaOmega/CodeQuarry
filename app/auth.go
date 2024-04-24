@@ -156,23 +156,29 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
+// CreateSession creates a new session for the given username.
+// It retrieves the user ID from the database, generates a UUID for the session,
+// inserts the session into the database, and sets a session cookie in the response.
+// The session cookie is set to expire after a certain duration.
+// Parameters:
+//   - username: The username for which to create the session.
+//   - db: The database connection.
+//   - w: The HTTP response writer.
+//
+// Returns:
+//   - error: An error if any occurred during the session creation process.
 func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error {
-	user_id, err := getUserID(username, db)
+	user_id, err := getUserIDFromDB(username, db)
 	if err != nil {
 		return err
 	}
 	user_uuid := UUID.NewV4().String()
 	createdAt := time.Now()
 	expireAt := createdAt.Add(Cookie_Expiration)
-	stmt, err := db.Prepare("INSERT INTO Sessions(id_student,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)")
+	err = insertSessionToDB(db, user_id, user_uuid, createdAt, expireAt)
 	if err != nil {
 		return err
 	}
-	defer stmt.Close()
-	if _, err := stmt.Exec(user_id, user_uuid, createdAt, expireAt); err != nil {
-		return err
-	}
-
 	cookie := http.Cookie{
 		Name:     "session",
 		Value:    user_uuid,
@@ -181,20 +187,4 @@ func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error {
 	}
 	http.SetCookie(w, &cookie)
 	return err
-}
-func getUserID(username string, db *sql.DB) (int, error) {
-	var id int
-	stmt, err := db.Prepare("SELECT id_student FROM users WHERE username = $1 OR email = $2")
-	if err != nil {
-		return -1, err
-	}
-	defer stmt.Close()
-	err = stmt.QueryRow(username, username).Scan(&id)
-	switch {
-	case err == sql.ErrNoRows:
-		return 0, err
-	case err != nil:
-		return 0, err
-	}
-	return id, nil
 }

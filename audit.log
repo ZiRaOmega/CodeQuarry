@@ -49,3 +49,5 @@ ERROR: 2024/04/24 20:32:56 Error inserting the data into the databasepq: duplica
 ERROR: 2024/04/24 20:36:07 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
 ERROR: 2024/04/24 20:36:18 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
 DEBUG: 2024/04/24 20:36:22 Registration successful: ppp at /register
+ERROR: 2024/04/25 00:00:21 Error reading the message from the client
+ERROR: 2024/04/25 00:02:19 Error reading the message from the client

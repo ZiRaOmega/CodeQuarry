@@ -66,9 +66,101 @@ In Go, using the Gorilla WebSocket package, each of these errors needs to be app
 
 WebSockets offer a powerful method for real-time communication in modern web applications. Proper implementation and error handling are essential to harness their full potential, especially in environments where real-time data and high reliability are crucial.
 
-## `WebsocketHandler` Function Documentation
+**Language > Specialist**: Go > WebSocket Communication and Session Management Expert
+**Includes**: `net/http`, `database/sql`, `github.com/gorilla/websocket`
+**Requirements**: Detailed documentation for a WebSocket handler function in Go that manages real-time communication and session validation, including database interactions for session management.
 
-The `WebsocketHandler` function in Go is designed to facilitate real-time communication between a client and a server over WebSockets. This documentation provides a detailed explanation of the function's operation, including its parameters, core functionality, and error handling.
+## Package `websocket` Documentation
+
+This documentation covers the `WebsocketHandler` function and its associated helper functions, `isValidSession` and `DeleteSession`, which collectively manage WebSocket communications and session validations.
+
+### 1. `WebsocketHandler`
+
+**Function Signature**:
+```go
+func WebsocketHandler(db *sql.DB) http.HandlerFunc
+```
+
+**Purpose**:
+`WebsocketHandler` creates an HTTP handler function that upgrades HTTP connections to WebSocket connections and handles WebSocket messages, particularly focusing on session management messages.
+
+**Parameters**:
+- `db *sql.DB`: A pointer to a `sql.DB` object representing the database connection, used for session validation and other database operations.
+
+**Operations**:
+1. **Connection Upgrade**: The handler upgrades the incoming HTTP connection to a WebSocket connection using the `upgrader.Upgrade` method.
+2. **Message Handling**: The function enters a continuous loop to read and respond to WebSocket messages, handling session-related messages by validating session IDs stored in the database.
+3. **Session Validation**: Upon receiving a message of type "session", it validates the session ID against the database.
+
+**Error Handling**:
+- Logs and returns an error if the connection upgrade fails.
+- Ends the WebSocket connection if reading from the connection fails.
+
+**Return Value**:
+- `http.HandlerFunc`: A handler function that manages WebSocket communications.
+
+### 2. `isValidSession`
+
+**Function Signature**:
+```go
+func isValidSession(session_id string, db *sql.DB) bool
+```
+
+**Purpose**:
+Checks if a given session ID is valid based on its expiration time stored in the database.
+
+**Parameters**:
+- `session_id string`: The session ID to validate.
+- `db *sql.DB`: Database connection to query the session's expiration.
+
+**Operations**:
+1. **Query Database**: Fetches the session's expiration time from the database.
+2. **Validate Session**: Compares the current time with the expiration time to determine if the session is still valid.
+
+**Error Handling**:
+- Logs errors related to database operations or if the session has expired.
+
+**Return Value**:
+- `bool`: Returns `true` if the session is valid, otherwise `false`.
+
+### 3. `DeleteSession`
+
+**Function Signature**:
+```go
+func DeleteSession(session_id string, db *sql.DB) error
+```
+
+**Purpose**:
+Deletes a session from the database using the session ID.
+
+**Parameters**:
+- `session_id string`: The session ID to delete.
+- `db *sql.DB`: Database connection to execute the delete operation.
+
+**Operations**:
+1. **Prepare SQL Statement**: Prepares a SQL statement for deleting the session.
+2. **Execute SQL Statement**: Executes the deletion.
+
+**Error Handling**:
+- Handles and returns errors related to preparing or executing the SQL statement.
+
+**Return Value**:
+- `error`: Returns an error object if there is a failure in deleting the session.
+
+### Example Usage
+
+```go
+http.HandleFunc("/websocket", WebsocketHandler(db))
+```
+
+### Best Practices
+
+- **WebSocket Security**: Ensure WebSocket connections are only accepted from authenticated and authorized users.
+- **Database Connection Management**: Use connection pooling and handle database connections carefully to avoid leaks.
+- **Error Logging**: Implement comprehensive logging for debugging and monitoring the application's behavior.
+
+
+The `WebsocketHandler` function in Go is designed to upgrade HTTP connections to WebSocket connections, facilitating real-time communication between the client and the server. It also performs database operations to validate session information received over the WebSocket.
 
 ### Function Signature
 
@@ -78,37 +170,83 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc
 
 #### Parameters
 
-- `db *sql.DB`: A pointer to an SQL database instance. This parameter allows the function to interact with a database, although the specific usage within the function isn't demonstrated in the given snippet.
+- `db *sql.DB`: A pointer to a `sql.DB` object, representing the active database connection. This connection is used to perform queries related to session validation.
 
-#### Return Type
+#### Returns
 
-- `http.HandlerFunc`: The function returns an `http.HandlerFunc`, which is a type that handles HTTP requests in the Go standard library's `net/http` package.
+- `http.HandlerFunc`: A function that conforms to the `http.HandlerFunc` type, which can be used as a handler for WebSocket requests.
 
-### Functionality Overview
+### Detailed Breakdown
 
-The function initializes a WebSocket connection and continuously reads messages from the client, sending them back as echoes. Here's a breakdown of the process:
+**Function Behavior**:
 
-1. **HTTP to WebSocket Upgrade**: 
-   - The function begins by upgrading an incoming HTTP connection to a WebSocket connection using an `upgrader` object. This is critical for initiating WebSocket communication.
-   - If the upgrade fails, it logs the error and sends an HTTP 500 internal server error response back to the client.
+```go
+return func(w http.ResponseWriter, r *http.Request) {
+    conn, err := upgrader.Upgrade(w, r, nil)
+    if err != nil {
+        Log(ErrorLevel, "Error upgrading the HTTP connection to a WebSocket connection")
+        http.Error(w, "Error upgrading the HTTP connection to a WebSocket connection", http.StatusInternalServerError)
+        return
+    }
+    defer conn.Close()
 
-2. **Message Handling Loop**:
-   - After successfully establishing a WebSocket connection, the function enters an infinite loop, continually waiting to read messages from the client.
-   - If reading a message fails, it logs the error and sends an HTTP 500 internal server error response, then exits the loop and closes the connection.
+    for {
+        wsmessage := WSMessage{}
+        err := conn.ReadJSON(&wsmessage)
+        if err != nil {
+            Log(ErrorLevel, "Error reading the message from the client")
+            return
+        }
+        
+        // Message handling based on type
+        switch wsmessage.Type {
+        case "session":
+            handleSessionMessage(wsmessage, conn, db)
+        }
+    }
+}
+```
 
-3. **Echo Back**:
-   - For each message received, the function immediately sends it back to the client, effectively echoing the received message.
-   - If sending the message fails, it logs the error and sends an HTTP 500 internal server error response, then exits the loop and closes the connection.
+**Operations**:
 
-### Error Handling
+1. **WebSocket Upgrade**: The HTTP connection is upgraded to a WebSocket connection using an upgrader object. Errors during this process are logged and an HTTP 500 error is returned to the client.
 
-The function robustly handles errors at each step of the WebSocket communication process:
-- **Connection Upgrade Error**: Logs and notifies the client of an inability to upgrade the HTTP connection.
-- **Read Message Error**: Logs and notifies the client if a message cannot be read from the WebSocket.
-- **Write Message Error**: Logs and notifies the client if a message cannot be sent back through the WebSocket.
+2. **Message Loop**: The handler enters a continuous loop where it reads JSON-formatted messages from the client.
 
-Each error results in closing the WebSocket connection to ensure that no faulty or half-open connections persist.
+3. **Session Message Handling**: If the message type is "session", it checks the session ID against the database:
+   - **Validate Session**: Uses the `isValidSession` function to check if the session ID from the message is still valid.
+   - **Response**: Depending on the validity of the session, a response is sent back to the client using `WriteJSON`. The response indicates whether the session is "valid", "expired", or "empty".
 
+**Auxiliary Functions**:
+
+- `isValidSession(session_id string, db *sql.DB) bool`: Checks the database to see if the provided session ID corresponds to an active session.
+
+- `handleSessionMessage(wsmessage WSMessage, conn *websocket.Conn, db *sql.DB)`: Handles session-related messages by performing database checks and sending responses.
+
+### Example Usage
+
+```go
+http.HandleFunc("/websocket", WebsocketHandler(db))
+```
+
+- This line of code sets up the `WebsocketHandler` as the handler for routes directed to "/websocket", enabling WebSocket communication on this endpoint.
+
+### Best Practices
+
+- **Error Handling**: Proper logging and error responses ensure that the server can gracefully handle issues during WebSocket communication.
+- **Security Considerations**: Validate all data received through WebSockets to avoid potential security risks. Ensure that database operations do not expose sensitive information.
+- **Resource Management**: Use `defer` to ensure resources like WebSocket connections are properly closed after use to prevent resource leaks.
+
+---
+
+**History**: Documented the `WebsocketHandler` function, which provides a robust method for handling WebSocket communications in Go, including session validation via database interaction.
+
+**Source Tree**:
+- (💾=saved) WebSocket Handler
+  - ✅ Core WebSocket communication handling
+  - ✅ Database interaction for session validation
+
+**Next Task**: FINISHED. Consider enhancements such as support for more message types and integrating more complex session management features, like session renewal and detailed logging for monitoring and diagnostics.
 ## WebSocket JavaScript Client Documentation
 
 This documentation provides an overview and detailed explanation of a JavaScript script designed to establish and handle a WebSocket connection. This script utilizes the WebSockets API to communicate with a server from a web client.
