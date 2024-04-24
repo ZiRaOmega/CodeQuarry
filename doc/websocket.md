@@ -108,3 +108,75 @@ The function robustly handles errors at each step of the WebSocket communication
 - **Write Message Error**: Logs and notifies the client if a message cannot be sent back through the WebSocket.
 
 Each error results in closing the WebSocket connection to ensure that no faulty or half-open connections persist.
+
+## WebSocket JavaScript Client Documentation
+
+This documentation provides an overview and detailed explanation of a JavaScript script designed to establish and handle a WebSocket connection. This script utilizes the WebSockets API to communicate with a server from a web client.
+
+### Script Overview
+
+The script initializes a WebSocket connection when the document is ready, which ensures that all HTML is loaded before the script runs. It is encapsulated within jQuery's `$(document).ready()` to guarantee this setup.
+
+### Detailed Explanation
+
+#### Initialization
+
+```javascript
+var socket;
+$(document).ready(function () {
+    var Current_Hostname = document.location.hostname
+    socket = new WebSocket(`wss://${Current_Hostname}/ws`);
+```
+
+- **Variable Declaration**: `socket` is declared without initialization at the global scope to be accessible throughout the script.
+- **Document Ready**: Ensures that the full HTML document is loaded before executing the script.
+- **Current Hostname Retrieval**: Fetches the hostname of the current document location, which is used to dynamically set the WebSocket server's URL.
+- **WebSocket Initialization**: Initializes a new WebSocket connection using a secure WebSocket protocol (`wss://`) to the current hostname appended with `/ws`. This URL pattern typically points to a WebSocket endpoint on the server.
+
+#### WebSocket Event Handlers
+
+```javascript
+socket.onopen = function (e) {
+    console.log("[open] Connection established");
+    console.log("Sending to server");
+    socket.send("Hey there from client");
+};
+```
+
+- **Open Event**: Triggered when the WebSocket connection is successfully established.
+- **Sending Message**: Logs the connection status and sends a greeting message to the server.
+
+```javascript
+socket.onmessage = function (event) {
+    console.log(`[message] Data received from server: ${event.data}`);
+};
+```
+
+- **Message Event**: Triggered when a message is received from the server. It logs the message data received.
+
+```javascript
+socket.onclose = function (event) {
+    if (event.wasClean) {
+        console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+    } else {
+        console.error('[close] Connection died');
+    }
+};
+```
+
+- **Close Event**: Handles the closing of the WebSocket connection. It checks if the closure was clean (no errors or issues), logging appropriate messages. A clean close includes the server sending a close frame or the client successfully closing the connection.
+
+```javascript
+socket.onerror = function (error) {
+    console.error(`[error] ${error.message}`);
+};
+```
+
+- **Error Event**: Triggered on any error during the WebSocket communication. Logs the error message to the console.
+
+### Best Practices
+
+1. **Secure Connections**: Always use `wss://` (WebSocket Secure) over `ws://` to encrypt transmitted data, protecting against eavesdropping and tampering.
+2. **Error Handling**: Robust error handling in WebSocket applications is crucial for reliability. Ensure that all potential events (open, message, error, close) have corresponding handlers.
+3. **Reconnection Strategy**: Implement automatic reconnection in case of unexpected server disconnects or network issues.
+4. **Data Handling**: Validate and sanitize all data sent to and received from the server to prevent security vulnerabilities, such as XSS (Cross-Site Scripting).
