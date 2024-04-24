@@ -63,25 +63,13 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 
 			return
 		}
-		user_id, err := getUserID(username, db)
-		if err != nil {
-			return
-		}
-		user_uuid, cookie_exp, err := CreateSession(user_id, db)
+
+		err = CreateSession(username, db, w)
 		if err != nil {
 			Log(ErrorLevel, "Error creating session")
-			//http.Error(w, "Error creating session", http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error creating session"})
-
 			return
 		}
-		cookie := http.Cookie{
-			Name:     "session",
-			Value:    user_uuid,
-			Expires:  cookie_exp,
-			SameSite: http.SameSiteStrictMode,
-		}
-		http.SetCookie(w, &cookie)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Registration successful"})
 		Log(DebugLevel, "Registration successful: "+username+" at "+r.URL.Path)
@@ -110,12 +98,12 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			if err == sql.ErrNoRows {
 				Log(ErrorLevel, "No user found with the provided credentials"+username+" at "+r.URL.Path)
 				fmt.Println("No user found with the provided credentials")
-				http.Error(w, "No user found with the provided credentials", http.StatusUnauthorized)
+				json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "No user found with the provided credentials"})
 				return
 			} else {
 				Log(ErrorLevel, "Error fetching user from database"+username+" at "+r.URL.Path)
 				fmt.Println("Error fetching user from database")
-				http.Error(w, "Error fetching user from database", http.StatusInternalServerError)
+				json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error fetching user from database"})
 				return
 			}
 		}
@@ -125,7 +113,14 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			Log(DebugLevel, "Invalid login credentials"+username+" at "+r.URL.Path)
 			fmt.Println("Invalid login credentials")
-			http.Error(w, "Invalid login credentials", http.StatusUnauthorized)
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Invalid login credentials"})
+			return
+		}
+
+		err = CreateSession(username, db, w)
+		if err != nil {
+			Log(ErrorLevel, "Error creating session")
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error creating session"})
 			return
 		}
 
@@ -138,17 +133,27 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func CreateSession(user_id int, db *sql.DB) (string, time.Time, error) {
+func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error {
+	user_id, err := getUserID(username, db)
+	if err != nil {
+		return err
+	}
 	user_uuid := UUID.NewV4().String()
 	createdAt := time.Now()
 	expireAt := createdAt.Add(Cookie_Expiration)
-	_, err := db.Exec("INSERT INTO Sessions(user_id,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)", user_id, user_uuid, createdAt, expireAt)
+	_, err = db.Exec("INSERT INTO Sessions(user_id,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)", user_id, user_uuid, createdAt, expireAt)
 	if err != nil {
 		Log(ErrorLevel, "Error creating session "+err.Error())
 	}
-	return user_uuid, expireAt, err
+	cookie := http.Cookie{
+		Name:     "session",
+		Value:    user_uuid,
+		Expires:  expireAt,
+		HttpOnly: true,
+	}
+	http.SetCookie(w, &cookie)
+	return err
 }
-
 func getUserID(username string, db *sql.DB) (int, error) {
 	var id int
 	err := db.QueryRow("SELECT id_student FROM users WHERE username = $1", username).Scan(&id)
