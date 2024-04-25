@@ -1,0 +1,55 @@
+{{define "profile"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+    {{template "header" .}}
+<div class="profile">
+    <form action="/update-profile" method="POST">
+        <input type="hidden" name="id_student" value="{{.ID}}">
+        <label for="lastname">Last Name:</label>
+        <input type="text" name="lastname" value="{{.LastName}}">
+        <br>
+        <label for="firstname">First Name:</label>
+        <input type="text" name="firstname" value="{{.FirstName}}">
+        <br>
+        <label for="username">Username:</label>
+        <input type="text" name="username" value="{{.Username}}">
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" value="{{.Email}}">
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password">
+        <br>
+        <label for="avatar">Avatar:</label>
+        <input type="file" name="avatar">
+        <br>
+        <label for="birth_date">Birth Date:</label>
+        <input type="date" name="birth_date" value="{{.BirthDate}}">
+        <br>
+        <label for="bio">Bio:</label>
+        <textarea name="bio">{{.Bio}}</textarea>
+        <br>
+        <label for="website">Website:</label>
+        <input type="text" name="website" value="{{.Website}}">
+        <br>
+        <label for="github">GitHub:</label>
+        <input type="text" name="github" value="{{.GitHub}}">
+        <br>
+        <label for="xp">Experience:</label>
+        <input type="number" name="xp" value="{{.XP}}">
+        <br>
+        <label for="rang_rank_">Rank:</label>
+        <input type="number" name="rang_rank_" value="{{.Rank}}">
+        <br>
+        <label for="school_year">School Year:</label>
+        <input type="date" name="school_year" value="{{.SchoolYear}}">
+        <br>
+        <input type="submit" value="Save">
+    </form>
+</div>
+</body>
+{{template "script" .}}
+</html>
+{{end}}
