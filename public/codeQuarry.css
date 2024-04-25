@@ -1,0 +1,11 @@
+.category_cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+    width: 100px;
+    height: 100px;
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

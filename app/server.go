@@ -29,6 +29,11 @@ func CssHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/styles.css")
 }
 
+func CQcssHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/codeQuarry.css")
+}
+
 func LogoHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page.
 	http.ServeFile(w, r, "public/CODEQUARRY.webp")
@@ -42,6 +47,11 @@ func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 func ErrorsHandler(w http.ResponseWriter, r *http.Request) {
 	//serve the animation js file
 	http.ServeFile(w, r, "scripts/errors_obfuscate.js")
+}
+
+func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
+	// Serve the subjects.html file as the default page
+	http.ServeFile(w, r, "scripts/subjects.js")
 }
 
 // handle the main page
