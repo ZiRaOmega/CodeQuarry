@@ -62,3 +62,32 @@ ERROR: 2024/04/25 14:40:42 Error reading the message from the client
 DEBUG: 2024/04/25 14:45:41 Login successful: pp at /login
 ERROR: 2024/04/25 14:45:41 Error reading the message from the client
 DEBUG: 2024/04/25 14:46:38 Login successful: pp at /login
+ERROR: 2024/04/25 14:50:33 Error reading the message from the client
+ERROR: 2024/04/25 14:50:44 Error reading the message from the client
+DEBUG: 2024/04/25 14:50:44 Registration successful: toto at /register
+ERROR: 2024/04/25 14:50:52 Error reading the message from the client
+ERROR: 2024/04/25 14:50:53 Error reading the message from the client
+ERROR: 2024/04/25 14:50:53 Error reading the message from the client
+ERROR: 2024/04/25 14:50:53 Error reading the message from the client
+ERROR: 2024/04/25 14:51:04 Error reading the message from the client
+DEBUG: 2024/04/25 14:51:04 Registration successful: tutu at /register
+ERROR: 2024/04/25 14:53:49 Error reading the message from the client
+ERROR: 2024/04/25 14:53:50 Error reading the message from the client
+ERROR: 2024/04/25 14:53:50 Error reading the message from the client
+ERROR: 2024/04/25 14:54:07 Error reading the message from the client
+DEBUG: 2024/04/25 14:54:07 Registration successful: etet at /register
+ERROR: 2024/04/25 14:54:35 Error reading the message from the client
+ERROR: 2024/04/25 14:54:46 Error reading the message from the client
+DEBUG: 2024/04/25 14:54:46 Registration successful: tyty at /register
+ERROR: 2024/04/25 14:56:27 Error reading the message from the client
+ERROR: 2024/04/25 14:56:27 Error reading the message from the client
+ERROR: 2024/04/25 14:56:27 Error reading the message from the client
+DEBUG: 2024/04/25 14:56:43 Registration successful: utut at /register
+ERROR: 2024/04/25 14:56:47 Error reading the message from the client
+DEBUG: 2024/04/25 14:57:01 Login successful: utut at /login
+DEBUG: 2024/04/25 14:57:07 Login successful: utut at /login
+DEBUG: 2024/04/25 14:57:10 Login successful: utut at /login
+DEBUG: 2024/04/25 14:57:45 Registration successful: ptpt at /register
+ERROR: 2024/04/25 14:57:47 Error reading the message from the client
+DEBUG: 2024/04/25 14:57:52 Login successful: ptpt at /login
+ERROR: 2024/04/25 14:57:52 Error reading the message from the client
