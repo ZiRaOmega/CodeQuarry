@@ -44,7 +44,7 @@ func SanitizeXSS(input string) string {
 		`(?i)<iframe.*?>.*?</iframe>`,
 		`(?i)<img.*?src=['"]data:`,
 	}
-
+	
 	// Replace each pattern with an empty string
 	for _, pattern := range patterns {
 		re := regexp.MustCompile(pattern)
