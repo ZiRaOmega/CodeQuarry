@@ -89,7 +89,7 @@ $(document).ready(function () {
               confirmButtonText: "OK",
             }).then((result) => {
               if (result.value) {
-                window.location.href = "login.html"; // Redirect to login page or another page
+                window.location.href = "codeQuarry"; // Redirect to login page or another page
               }
             });
           } else {
