@@ -29,3 +29,5 @@ DEBUG: 2024/04/24 15:38:30 Login successful: svalbardmalfant@gmail.com at /login
 ERROR: 2024/04/24 16:48:35 No user found with the provided credentialsferzs at /login
 DEBUG: 2024/04/24 16:50:56 Registration successful: de at /register
 DEBUG: 2024/04/24 16:51:03 Login successful: de at /login
+DEBUG: 2024/04/25 12:51:31 Registration successful: popo at /register
+DEBUG: 2024/04/25 12:51:39 Login successful: popo at /login
