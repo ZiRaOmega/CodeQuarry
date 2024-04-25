@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"text/template"
 	"time"
 )
@@ -108,32 +109,44 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func (U *User) FormatBirthDate() string {
-	return U.BirthDate.Time.Format(time.ANSIC)
+	return U.BirthDate.Time.Format("2006-02-01")
 }
 
 func (U *User) FormatSchoolYear() string {
-	return U.SchoolYear.Time.Format(time.ANSIC)
+	return U.SchoolYear.Time.Format("2006-02-01")
+}
+
+func (U *User) FormatXP() int64 {
+	return U.XP.Int64
 }
 
 // Define User structure based on your database schema
 type User struct {
-	ID           int
-	LastName     string
-	FirstName    string
-	Username     string
-	Email        string
-	Password     string
-	Avatar       sql.NullString
-	BirthDate    sql.NullTime // Adjusted for possible NULL values
-	Bio          sql.NullString
-	Website      sql.NullString
-	GitHub       sql.NullString
-	XP           sql.NullInt64
-	Rank         sql.NullString
-	SchoolYear   sql.NullTime // Adjusted for possible NULL values
-	CreationDate sql.NullTime // Adjusted for possible NULL values
-	UpdateDate   sql.NullTime // Adjusted for possible NULL values
-	DeletingDate sql.NullTime // Adjusted for possible NULL values
+	ID        int
+	LastName  string
+	FirstName string
+	Username  string
+	Email     string
+	Password  string
+	Avatar    sql.NullString
+
+	BirthDate         sql.NullTime // Adjusted for possible NULL values
+	Birth_Date_Format string
+	Bio               sql.NullString
+
+	Website sql.NullString
+
+	GitHub sql.NullString
+
+	XP sql.NullInt64
+
+	Rank sql.NullString
+
+	SchoolYear         sql.NullTime // Adjusted for possible NULL values
+	School_Year_Format string
+	CreationDate       sql.NullTime // Adjusted for possible NULL values
+	UpdateDate         sql.NullTime // Adjusted for possible NULL values
+	DeletingDate       sql.NullTime // Adjusted for possible NULL values
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -167,6 +180,87 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	if err = stmt.QueryRow(user_id).Scan(&user.ID, &user.LastName, &user.FirstName, &user.Username, &user.Email, &user.Password, &user.Avatar, &user.BirthDate, &user.Bio, &user.Website, &user.GitHub, &user.XP, &user.Rank, &user.SchoolYear, &user.CreationDate, &user.UpdateDate, &user.DeletingDate); err != nil {
 		return user, err
 	}
+	// FormatDates formats CreationDate and
+	// UpdateDate to a human-readable format dd/mm/yyyy
+	user.Birth_Date_Format = user.FormatBirthDate()
+	user.School_Year_Format = user.FormatSchoolYear()
 
 	return user, nil // Return the populated user object
+}
+
+func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		//Check if the session is valid
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
+			return
+		}
+		session_id := cookie.Value
+		if !isValidSession(session_id, db) {
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		}
+
+		//Get form
+		user := User{}
+
+		user.ID, err = getUserIDUsingSessionID(session_id, db)
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		if strconv.Itoa(user.ID) != r.PostFormValue("id_student") {
+			http.Error(w, "Invalid user", http.StatusForbidden)
+			return
+		}
+		user.LastName = r.PostFormValue("lastname")
+		user.FirstName = r.PostFormValue("firstname")
+		user.Username = r.PostFormValue("username")
+		user.Email = r.PostFormValue("email")
+		user.Password = r.PostFormValue("password")
+
+		birthDateStr := r.PostFormValue("birth_date")
+		birthDate, err := time.Parse("2006-01-02", birthDateStr)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		user.BirthDate = sql.NullTime{Time: birthDate, Valid: true}
+		user.Bio = sql.NullString{String: r.PostFormValue("bio"), Valid: true}
+		user.Website = sql.NullString{String: r.PostFormValue("website"), Valid: true}
+		user.GitHub = sql.NullString{String: r.PostFormValue("github"), Valid: true}
+		user.SchoolYear = sql.NullTime{Time: time.Now(), Valid: true}
+		//if Password is empty, don't update it
+		if user.Password == "" {
+			//Prepare
+			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, birth_date = $5, bio = $6, website = $7, github = $8, school_year = $9 WHERE id_student = $10")
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			defer stmt.Close()
+			//Execute
+			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		} else {
+			//Prepare
+			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, password = $5, birth_date = $6, bio = $7, website = $8, github = $9, school_year = $10 WHERE id_student = $11")
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+			defer stmt.Close()
+			//Execute
+			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, user.Password, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		}
+		http.Redirect(w, r, "/profile", http.StatusSeeOther)
+
+	}
 }
