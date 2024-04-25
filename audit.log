@@ -51,3 +51,9 @@ ERROR: 2024/04/24 20:36:18 Error inserting the data into the databasepq: duplica
 DEBUG: 2024/04/24 20:36:22 Registration successful: ppp at /register
 ERROR: 2024/04/25 00:00:21 Error reading the message from the client
 ERROR: 2024/04/25 00:02:19 Error reading the message from the client
+ERROR: 2024/04/25 14:09:23 Error creating session
+ERROR: 2024/04/25 14:11:10 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 14:11:40 Error creating session
+ERROR: 2024/04/25 14:13:17 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_email_key"
+DEBUG: 2024/04/25 14:13:23 Registration successful: gjhkl at /register
+ERROR: 2024/04/25 14:13:26 Error reading the message from the client

@@ -245,7 +245,7 @@ func createTableSession(db *sql.DB) {
 // It takes a database connection, user ID, user UUID, creation timestamp, and expiration timestamp as parameters.
 // It returns an error if there was a problem inserting the session.
 func insertSessionToDB(db *sql.DB, user_id int, user_uuid string, createdAt time.Time, expireAt time.Time) error {
-	stmt, err := db.Prepare("INSERT INTO Sessions(id_student,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)")
+	stmt, err := db.Prepare("INSERT INTO Sessions(user_id,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)")
 	if err != nil {
 		return err
 	}
@@ -275,5 +275,3 @@ func getUserIDFromDB(username string, db *sql.DB) (int, error) {
 	}
 	return id, nil
 }
-
-
