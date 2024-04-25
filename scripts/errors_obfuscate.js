@@ -1,247 +1,250 @@
-function a0_0x1bfe(_0x4f85ac, _0x526963) {
-  const _0x567d29 = a0_0x567d();
-  return (
-    (a0_0x1bfe = function (_0x1bfe71, _0x49ebaf) {
-      _0x1bfe71 = _0x1bfe71 - 0x1b9;
-      let _0xb92a55 = _0x567d29[_0x1bfe71];
-      return _0xb92a55;
-    }),
-    a0_0x1bfe(_0x4f85ac, _0x526963)
-  );
-}
-const a0_0x5b642d = a0_0x1bfe;
-(function (_0x115653, _0xc24411) {
-  const _0x11b25a = a0_0x1bfe,
-    _0x1e9c6a = _0x115653();
+const a0_0x4f81f2 = a0_0x5462;
+(function (_0x4c2c74, _0x547410) {
+  const _0x437db5 = a0_0x5462,
+    _0x521150 = _0x4c2c74();
   while (!![]) {
     try {
-      const _0xaa81d5 =
-        -parseInt(_0x11b25a(0x1d1)) / 0x1 +
-        parseInt(_0x11b25a(0x1ed)) / 0x2 +
-        -parseInt(_0x11b25a(0x1b9)) / 0x3 +
-        (parseInt(_0x11b25a(0x1bc)) / 0x4) *
-          (-parseInt(_0x11b25a(0x1da)) / 0x5) +
-        parseInt(_0x11b25a(0x1e4)) / 0x6 +
-        (-parseInt(_0x11b25a(0x1e3)) / 0x7) *
-          (-parseInt(_0x11b25a(0x1be)) / 0x8) +
-        (-parseInt(_0x11b25a(0x1e8)) / 0x9) *
-          (-parseInt(_0x11b25a(0x1db)) / 0xa);
-      if (_0xaa81d5 === _0xc24411) break;
-      else _0x1e9c6a["push"](_0x1e9c6a["shift"]());
-    } catch (_0x1fb048) {
-      _0x1e9c6a["push"](_0x1e9c6a["shift"]());
+      const _0x400a8a =
+        parseInt(_0x437db5(0x1f7)) / 0x1 +
+        parseInt(_0x437db5(0x21b)) / 0x2 +
+        parseInt(_0x437db5(0x228)) / 0x3 +
+        (-parseInt(_0x437db5(0x1f3)) / 0x4) *
+          (-parseInt(_0x437db5(0x21f)) / 0x5) +
+        (-parseInt(_0x437db5(0x205)) / 0x6) *
+          (-parseInt(_0x437db5(0x20f)) / 0x7) +
+        parseInt(_0x437db5(0x202)) / 0x8 +
+        (parseInt(_0x437db5(0x218)) / 0x9) *
+          (-parseInt(_0x437db5(0x229)) / 0xa);
+      if (_0x400a8a === _0x547410) break;
+      else _0x521150["push"](_0x521150["shift"]());
+    } catch (_0x1780a8) {
+      _0x521150["push"](_0x521150["shift"]());
     }
   }
-})(a0_0x567d, 0x8550e);
-function a0_0x567d() {
-  const _0xce604e = [
-    "ready",
-    "#loginForm",
-    "registerBlock",
+})(a0_0x2f90, 0xbfe43);
+let registerLastName = document[a0_0x4f81f2(0x22e)]("registerLastName"),
+  registerFirstName = document[a0_0x4f81f2(0x22e)](a0_0x4f81f2(0x208)),
+  registerUsername = document["getElementById"](a0_0x4f81f2(0x209)),
+  registerEmail = document[a0_0x4f81f2(0x22e)](a0_0x4f81f2(0x226)),
+  registerPassword = document[a0_0x4f81f2(0x22e)](a0_0x4f81f2(0x21e)),
+  registerPasswordConfirmation = document["getElementById"](a0_0x4f81f2(0x20c)),
+  registerForm = document[a0_0x4f81f2(0x22e)](a0_0x4f81f2(0x220)),
+  registerSubmit = document["getElementById"]("registerSubmit"),
+  contentAlert = document[a0_0x4f81f2(0x22e)]("contentAlert");
+function a0_0x2f90() {
+  const _0x3a604e = [
     "registerFirstName",
-    "Password\x20must\x20be\x20at\x20least\x208\x20characters\x20long,\x20contain\x20at\x20least\x20one\x20number,\x20and\x20contain\x20at\x20least\x20one\x20special\x20character.<br>",
-    "fire",
-    "val",
-    "test",
-    "Email\x20must\x20be\x20a\x20valid\x20address.<br>",
-    "style",
-    "386520MrIail",
-    "#loginPassword",
-    "innerHTML",
-    "href",
-    "registerSubmit",
-    "usernameOrEmailLogin",
-    "submit",
-    "catch",
-    "flex",
-    "5CCtUNy",
-    "5028290oRTlrl",
-    "Invalid\x20login\x20credentials!",
-    "none",
-    "contentAlert",
-    "registerPasswordConfirmation",
-    "#registerForm",
-    "/register",
-    "display",
-    "245swgsPo",
-    "2554542tbWftQ",
-    "POST",
-    "#usernameOrEmailLogin",
+    "registerUsername",
     "Password",
-    "27sPiJHI",
+    "animation",
+    "registerPasswordConfirmation",
+    "Error:",
+    "catch",
+    "25459ZPwVve",
     "Email",
-    "login",
-    "location",
-    "loginBlock",
-    "198066kFFjSq",
-    "value",
-    "json",
-    "error",
-    "Passwords\x20do\x20not\x20match.<br>",
-    "success",
-    "forEach",
-    "2451471cjJKqw",
-    "getElementById",
-    "then",
-    "2066972kcMbhp",
+    "#registerForm",
     "preventDefault",
-    "53304xVhJGM",
-    "registerForm",
-    "message",
-    "status",
-    "name",
-    "ajax",
     "Thank\x20You!",
+    "status",
+    "Registration\x20failed",
+    "LastName",
+    "style",
+    "9ckwQxR",
+    "forEach",
+    "usernameOrEmailLogin",
+    "2161350IDEAaT",
+    "none",
+    "val",
+    "registerPassword",
+    "5sRSNuH",
+    "registerForm",
+    "ajax",
+    "Username",
+    "login.html",
+    "fire",
+    "POST",
+    "registerEmail",
+    "FirstName",
+    "1596627lSCXNJ",
+    "38560830rcShBQ",
+    "loginBlock",
     "Oops...",
+    "Password\x20must\x20be\x20at\x20least\x208\x20characters\x20long,\x20contain\x20at\x20least\x20one\x20number,\x20and\x20contain\x20at\x20least\x20one\x20special\x20character.<br>",
+    "name",
+    "getElementById",
+    "param",
+    "\x20is\x20required.<br>",
+    "display",
+    "location",
+    "value",
+    "2515124ufYhXJ",
+    "test",
+    "/register",
+    "fadeIn\x200.3s\x20ease-in-out",
+    "1013513ZnAsVP",
+    "Invalid\x20login\x20credentials!",
+    "/login",
     "application/x-www-form-urlencoded",
+    "success",
+    "flex",
+    "innerHTML",
+    "loginPassword",
+    "error",
+    "href",
+    "submit",
+    "6847120HgjZtx",
+    "json",
+    "ready",
+    "876SGgcuG",
+    "message",
+    "then",
   ];
-  a0_0x567d = function () {
-    return _0xce604e;
+  a0_0x2f90 = function () {
+    return _0x3a604e;
   };
-  return a0_0x567d();
+  return a0_0x2f90();
 }
-let registerLastName = document["getElementById"]("registerLastName"),
-  registerFirstName = document["getElementById"](a0_0x5b642d(0x1ca)),
-  registerUsername = document[a0_0x5b642d(0x1ba)]("registerUsername"),
-  registerEmail = document[a0_0x5b642d(0x1ba)]("registerEmail"),
-  registerPassword = document[a0_0x5b642d(0x1ba)]("registerPassword"),
-  registerPasswordConfirmation = document[a0_0x5b642d(0x1ba)](
-    a0_0x5b642d(0x1df)
-  ),
-  registerForm = document[a0_0x5b642d(0x1ba)](a0_0x5b642d(0x1bf)),
-  registerSubmit = document[a0_0x5b642d(0x1ba)](a0_0x5b642d(0x1d5)),
-  contentAlert = document[a0_0x5b642d(0x1ba)](a0_0x5b642d(0x1de));
-$(document)[a0_0x5b642d(0x1c7)](function () {
-  const _0x109d4c = a0_0x5b642d;
-  $(_0x109d4c(0x1e0))[_0x109d4c(0x1d7)](function (_0x155d11) {
-    const _0x4cff4e = _0x109d4c;
-    _0x155d11[_0x4cff4e(0x1bd)]();
-    const _0x28f81d = [
-      { value: registerLastName[_0x4cff4e(0x1ee)], name: "LastName" },
-      { value: registerFirstName[_0x4cff4e(0x1ee)], name: "FirstName" },
-      { value: registerUsername[_0x4cff4e(0x1ee)], name: "Username" },
-      { value: registerEmail["value"], name: _0x4cff4e(0x1e9) },
-      { value: registerPassword[_0x4cff4e(0x1ee)], name: _0x4cff4e(0x1e7) },
+function a0_0x5462(_0x35303b, _0x2169d0) {
+  const _0x2f90d5 = a0_0x2f90();
+  return (
+    (a0_0x5462 = function (_0x54620c, _0x4312fe) {
+      _0x54620c = _0x54620c - 0x1f3;
+      let _0x17d2d8 = _0x2f90d5[_0x54620c];
+      return _0x17d2d8;
+    }),
+    a0_0x5462(_0x35303b, _0x2169d0)
+  );
+}
+$(document)[a0_0x4f81f2(0x204)](function () {
+  const _0x396abc = a0_0x4f81f2;
+  $(_0x396abc(0x211))["submit"](function (_0x1e7805) {
+    const _0x10c17d = _0x396abc;
+    _0x1e7805["preventDefault"]();
+    const _0x2dcf0b = [
+      { value: registerLastName[_0x10c17d(0x233)], name: _0x10c17d(0x216) },
+      { value: registerFirstName["value"], name: _0x10c17d(0x227) },
+      { value: registerUsername[_0x10c17d(0x233)], name: _0x10c17d(0x222) },
+      { value: registerEmail["value"], name: _0x10c17d(0x210) },
+      { value: registerPassword[_0x10c17d(0x233)], name: _0x10c17d(0x20a) },
       {
-        value: registerPasswordConfirmation[_0x4cff4e(0x1ee)],
+        value: registerPasswordConfirmation[_0x10c17d(0x233)],
         name: "Password\x20Confirmation",
       },
     ];
-    let _0x6301f9 = "";
-    _0x28f81d[_0x4cff4e(0x1f3)]((_0x1768e4) => {
-      const _0x3fc6dd = _0x4cff4e;
-      _0x1768e4[_0x3fc6dd(0x1ee)] == "" &&
-        (_0x6301f9 += _0x1768e4[_0x3fc6dd(0x1c2)] + "\x20is\x20required.<br>");
+    let _0x52529f = "";
+    _0x2dcf0b[_0x10c17d(0x219)]((_0x593970) => {
+      const _0x2f7694 = _0x10c17d;
+      _0x593970[_0x2f7694(0x233)] == "" &&
+        (_0x52529f += _0x593970[_0x2f7694(0x22d)] + _0x2f7694(0x230));
     });
-    registerPassword[_0x4cff4e(0x1ee)] !==
-      registerPasswordConfirmation[_0x4cff4e(0x1ee)] &&
-      registerPassword[_0x4cff4e(0x1ee)] !== "" &&
-      registerPasswordConfirmation[_0x4cff4e(0x1ee)] !== "" &&
-      (_0x6301f9 += _0x4cff4e(0x1f1));
+    registerPassword[_0x10c17d(0x233)] !==
+      registerPasswordConfirmation[_0x10c17d(0x233)] &&
+      registerPassword[_0x10c17d(0x233)] !== "" &&
+      registerPasswordConfirmation[_0x10c17d(0x233)] !== "" &&
+      (_0x52529f += "Passwords\x20do\x20not\x20match.<br>");
     if (registerPassword["value"] !== "") {
-      var _0x4fc4a4 =
+      var _0x2c723c =
         /^(?=.*[0-9])(?=.*[^a-zA-Z0-9])[a-zA-Z0-9!@#$%^&*()_+=\-`~\[\]{};':"\\|,.<>\/?]{8,}$/;
-      !_0x4fc4a4[_0x4cff4e(0x1ce)](registerPassword[_0x4cff4e(0x1ee)]) &&
-        (_0x6301f9 += _0x4cff4e(0x1cb));
+      !_0x2c723c[_0x10c17d(0x1f4)](registerPassword[_0x10c17d(0x233)]) &&
+        (_0x52529f += _0x10c17d(0x22c));
     }
-    registerEmail[_0x4cff4e(0x1ee)] !== "" &&
-      !/^[^@]+@[^@]+\.[^@]+$/["test"](registerEmail[_0x4cff4e(0x1ee)]) &&
-      (_0x6301f9 += _0x4cff4e(0x1cf)),
-      _0x155d11["preventDefault"](),
-      !_0x6301f9
-        ? fetch(_0x4cff4e(0x1e1), {
-            method: _0x4cff4e(0x1e5),
-            headers: { "Content-Type": _0x4cff4e(0x1c6) },
+    registerEmail["value"] !== "" &&
+      !/^[^@]+@[^@]+\.[^@]+$/[_0x10c17d(0x1f4)](
+        registerEmail[_0x10c17d(0x233)]
+      ) &&
+      (_0x52529f += "Email\x20must\x20be\x20a\x20valid\x20address.<br>"),
+      _0x1e7805[_0x10c17d(0x212)](),
+      !_0x52529f
+        ? fetch(_0x10c17d(0x1f5), {
+            method: _0x10c17d(0x225),
+            headers: { "Content-Type": _0x10c17d(0x1fa) },
             body: new URLSearchParams(new FormData(registerForm)),
           })
-            ["then"]((_0x8a96b0) => _0x8a96b0[_0x4cff4e(0x1ef)]())
-            [_0x4cff4e(0x1bb)]((_0x58216e) => {
-              const _0x17e6b8 = _0x4cff4e;
-              if (_0x58216e[_0x17e6b8(0x1c1)] === _0x17e6b8(0x1f2)) {
-                let _0x508e8d = document[_0x17e6b8(0x1ba)](_0x17e6b8(0x1c9));
-                (_0x508e8d["style"][_0x17e6b8(0x1e2)] = "none"),
-                  Swal[_0x17e6b8(0x1cc)]({
-                    title: _0x17e6b8(0x1c4),
-                    text: _0x58216e[_0x17e6b8(0x1c0)],
-                    icon: _0x17e6b8(0x1f2),
+            ["then"]((_0x9b4115) => _0x9b4115[_0x10c17d(0x203)]())
+            [_0x10c17d(0x207)]((_0x2d9239) => {
+              const _0x10a934 = _0x10c17d;
+              if (_0x2d9239[_0x10a934(0x214)] === _0x10a934(0x1fb)) {
+                let _0x5963a0 = document[_0x10a934(0x22e)]("registerBlock");
+                (_0x5963a0[_0x10a934(0x217)][_0x10a934(0x231)] =
+                  _0x10a934(0x21c)),
+                  Swal[_0x10a934(0x224)]({
+                    title: _0x10a934(0x213),
+                    text: _0x2d9239[_0x10a934(0x206)],
+                    icon: _0x10a934(0x1fb),
                     confirmButtonText: "OK",
-                  })[_0x17e6b8(0x1bb)]((_0x33b0a8) => {
-                    const _0xb1191d = _0x17e6b8;
-                    _0x33b0a8[_0xb1191d(0x1ee)] &&
-                      (window[_0xb1191d(0x1eb)][_0xb1191d(0x1d4)] =
-                        "login.html");
+                  })[_0x10a934(0x207)]((_0x365c10) => {
+                    const _0x24e015 = _0x10a934;
+                    _0x365c10[_0x24e015(0x233)] &&
+                      (window[_0x24e015(0x232)][_0x24e015(0x200)] =
+                        _0x24e015(0x223));
                   });
-              } else
-                throw new Error(
-                  _0x58216e[_0x17e6b8(0x1c0)] || "Registration\x20failed"
-                );
+              } else throw new Error(_0x2d9239["message"] || _0x10a934(0x215));
             })
-            [_0x4cff4e(0x1d8)]((_0x2b7660) => {
-              const _0x32dc83 = _0x4cff4e;
-              console[_0x32dc83(0x1f0)]("Error:", _0x2b7660),
-                (contentAlert[_0x32dc83(0x1d3)] = _0x2b7660[_0x32dc83(0x1c0)]);
+            [_0x10c17d(0x20e)]((_0x322163) => {
+              const _0x310c5d = _0x10c17d;
+              console[_0x310c5d(0x1ff)](_0x310c5d(0x20d), _0x322163),
+                (contentAlert[_0x310c5d(0x1fd)] = _0x322163[_0x310c5d(0x206)]);
             })
-        : (contentAlert["innerHTML"] = _0x6301f9);
+        : (contentAlert["innerHTML"] = _0x52529f);
   });
 });
-let login = document["getElementById"](a0_0x5b642d(0x1ea)),
-  usernameOrEmailLogin = document["getElementById"](a0_0x5b642d(0x1d6)),
-  passwordLogin = document["getElementById"]("loginPassword"),
-  contentAlertLogin = document["getElementById"]("contentAlertLogin");
-$(document)[a0_0x5b642d(0x1c7)](function () {
-  const _0x47ec38 = a0_0x5b642d;
-  $(_0x47ec38(0x1c8))["submit"](function (_0x5d09a7) {
-    const _0x40d270 = _0x47ec38;
-    _0x5d09a7[_0x40d270(0x1bd)]();
-    var _0x5d0745 = {
-      usernameOrEmailLogin: $(_0x40d270(0x1e6))[_0x40d270(0x1cd)](),
-      passwordLogin: $(_0x40d270(0x1d2))["val"](),
+let login = document[a0_0x4f81f2(0x22e)]("login"),
+  usernameOrEmailLogin = document[a0_0x4f81f2(0x22e)](a0_0x4f81f2(0x21a)),
+  passwordLogin = document[a0_0x4f81f2(0x22e)](a0_0x4f81f2(0x1fe)),
+  contentAlertLogin = document[a0_0x4f81f2(0x22e)]("contentAlertLogin");
+$(document)[a0_0x4f81f2(0x204)](function () {
+  const _0x276746 = a0_0x4f81f2;
+  $("#loginForm")[_0x276746(0x201)](function (_0x49c5fd) {
+    const _0x3d930f = _0x276746;
+    _0x49c5fd[_0x3d930f(0x212)]();
+    var _0x146ef2 = {
+      usernameOrEmailLogin: $("#usernameOrEmailLogin")["val"](),
+      passwordLogin: $("#loginPassword")[_0x3d930f(0x21d)](),
     };
-    $[_0x40d270(0x1c3)]({
-      type: "POST",
-      url: "/login",
-      data: $["param"](_0x5d0745),
-      contentType: _0x40d270(0x1c6),
-      success: function (_0x5f1830) {
-        const _0x557abb = _0x40d270;
-        if (_0x5f1830["status"] === _0x557abb(0x1f2))
-          window["location"][_0x557abb(0x1d4)] = "/codeQuarry";
+    $[_0x3d930f(0x221)]({
+      type: _0x3d930f(0x225),
+      url: _0x3d930f(0x1f9),
+      data: $[_0x3d930f(0x22f)](_0x146ef2),
+      contentType: _0x3d930f(0x1fa),
+      success: function (_0x4ce6dc) {
+        const _0x2a801c = _0x3d930f;
+        if (_0x4ce6dc["status"] === _0x2a801c(0x1fb))
+          window[_0x2a801c(0x232)]["href"] = "/codeQuarry";
         else {
-          let _0x25629a = document["getElementById"](_0x557abb(0x1ec));
-          (_0x25629a[_0x557abb(0x1d0)][_0x557abb(0x1e2)] = "none"),
-            Swal[_0x557abb(0x1cc)]({
-              icon: _0x557abb(0x1f0),
-              title: _0x557abb(0x1c5),
-              text: _0x5f1830[_0x557abb(0x1c0)] || _0x557abb(0x1dc),
+          let _0x33b136 = document["getElementById"](_0x2a801c(0x22a));
+          (_0x33b136[_0x2a801c(0x217)][_0x2a801c(0x231)] = _0x2a801c(0x21c)),
+            Swal["fire"]({
+              icon: _0x2a801c(0x1ff),
+              title: _0x2a801c(0x22b),
+              text: _0x4ce6dc["message"] || _0x2a801c(0x1f8),
               confirmButtonText: "OK",
-            })["then"]((_0x504973) => {
-              const _0x456259 = _0x557abb;
-              _0x504973[_0x456259(0x1ee)] &&
+            })["then"]((_0xda2678) => {
+              const _0x3781c4 = _0x2a801c;
+              _0xda2678[_0x3781c4(0x233)] &&
                 setTimeout(() => {
-                  const _0xd7edee = _0x456259;
-                  _0x25629a[_0xd7edee(0x1d0)]["display"] = "flex";
+                  const _0x5e2bdf = _0x3781c4;
+                  _0x33b136[_0x5e2bdf(0x217)][_0x5e2bdf(0x231)] =
+                    _0x5e2bdf(0x1fc);
                 }, 0x1f4);
             });
         }
       },
       error: function () {
-        const _0x1ce5fd = _0x40d270;
-        let _0x51938c = document[_0x1ce5fd(0x1ba)](_0x1ce5fd(0x1ec));
-        (_0x51938c["style"][_0x1ce5fd(0x1e2)] = _0x1ce5fd(0x1dd)),
-          Swal["fire"]({
-            icon: _0x1ce5fd(0x1f0),
-            title: _0x1ce5fd(0x1c5),
-            text: _0x1ce5fd(0x1dc),
-          })[_0x1ce5fd(0x1bb)]((_0x3fd7f3) => {
-            const _0x4678e8 = _0x1ce5fd;
-            _0x3fd7f3["value"] &&
+        const _0xe993d5 = _0x3d930f;
+        let _0x475886 = document[_0xe993d5(0x22e)]("loginBlock");
+        (_0x475886["style"]["display"] = "none"),
+          Swal[_0xe993d5(0x224)]({
+            icon: "error",
+            title: _0xe993d5(0x22b),
+            text: _0xe993d5(0x1f8),
+          })[_0xe993d5(0x207)]((_0x1d3dd9) => {
+            const _0x5c462f = _0xe993d5;
+            _0x1d3dd9[_0x5c462f(0x233)] &&
               (setTimeout(() => {
-                const _0x43464f = a0_0x1bfe;
-                _0x51938c[_0x43464f(0x1d0)][_0x43464f(0x1e2)] =
-                  _0x43464f(0x1d9);
+                const _0x82ce4e = _0x5c462f;
+                _0x475886[_0x82ce4e(0x217)][_0x82ce4e(0x231)] = "flex";
               }, 0x12c),
-              (_0x51938c[_0x4678e8(0x1d0)]["animation"] =
-                "fadeIn\x200.3s\x20ease-in-out"));
+              (_0x475886["style"][_0x5c462f(0x20b)] = _0x5c462f(0x1f6)));
           });
       },
     });
