@@ -22,6 +22,7 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 		cookie, err := r.Cookie("session")
 		if err != nil {
 			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
 			return
 		}
 		session_id := cookie.Value
@@ -149,15 +150,12 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Username = r.PostFormValue("username")
 		user.Email = r.PostFormValue("email")
 		user.Password = r.PostFormValue("password")
-		fmt.Println(r.PostFormValue("avatar"))
 		user.Avatar = sql.NullString{String: r.PostFormValue("avatar"), Valid: true}
-
 		filename, err := FileUpload(r)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
 		user.Avatar = sql.NullString{String: filename, Valid: true}
-
 		birthDateStr := r.PostFormValue("birth_date")
 		birthDate, err := time.Parse("2006-01-02", birthDateStr)
 		if err != nil {
