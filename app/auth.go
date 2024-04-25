@@ -78,6 +78,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 
 		err = CreateSession(username, db, w)
 		if err != nil {
+			fmt.Println(err.Error())
 			Log(ErrorLevel, "Error creating session")
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error creating session"})
 			return
