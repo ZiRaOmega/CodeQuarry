@@ -67,3 +67,7 @@ ERROR: 2024/04/25 12:49:53 Error creating session
 ERROR: 2024/04/25 12:59:02 Error reading the message from the client
 ERROR: 2024/04/25 13:00:34 Error creating session
 ERROR: 2024/04/25 13:14:04 Error reading the message from the client
+DEBUG: 2024/04/25 14:23:32 Registration successful: zozo at /register
+ERROR: 2024/04/25 14:23:33 Error reading the message from the client
+DEBUG: 2024/04/25 14:23:38 Login successful: zozo at /login
+ERROR: 2024/04/25 14:23:38 Error reading the message from the client
