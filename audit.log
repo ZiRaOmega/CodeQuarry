@@ -384,3 +384,8 @@ ERROR: 2024/04/25 16:44:34 Error reading the message from the client
 DEBUG: 2024/04/25 16:44:49 Login successful: mm at /login
 ERROR: 2024/04/25 16:44:49 Error reading the message from the client
 >>>>>>> max
+ERROR: 2024/04/25 17:11:36 Error reading the message from the client
+DEBUG: 2024/04/25 17:12:24 Registration successful: rere at /register
+ERROR: 2024/04/25 17:12:25 Error reading the message from the client
+ERROR: 2024/04/25 17:18:06 Error reading the message from the client
+ERROR: 2024/04/25 17:18:08 Error reading the message from the client
