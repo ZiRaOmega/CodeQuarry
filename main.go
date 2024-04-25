@@ -59,6 +59,7 @@ func main() {
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
 	http.HandleFunc("/logo", app.LogoHandler)
+	http.HandleFunc("/logout", app.LogoutHandler(db))
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
