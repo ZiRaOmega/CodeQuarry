@@ -4,8 +4,11 @@
 <html lang="en">
 {{template "head" .}}
 <body>
-    <h1>Subjects</h1>
-    <ul id="subjectsList"></ul>
+    {{template "header" .}}
+    <div>
+        <h1>Subjects</h1>
+        <ul id="subjectsList"></ul>
+    </div>
     <script src="../scripts/subjects.js"></script>
     {{template "script" .}}
 </body>
