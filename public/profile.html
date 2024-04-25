@@ -5,7 +5,7 @@
 <body>
     {{template "header" .}}
 <div class="profile">
-    <form action="/update-profile" method="POST">
+    <form action="/update-profile" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id_student" value="{{.ID}}">
         <label for="lastname">Last Name:</label>
         <input type="text" name="lastname" value="{{.LastName}}">
@@ -22,6 +22,7 @@
         <label for="password">Password:</label>
         <input type="password" name="password">
         <br>
+        <img src="{{.Avatar.String}}" alt="avatar" width="100" height="100">
         <label for="avatar">Avatar:</label>
         <input type="file" name="avatar">
         <br>
@@ -48,6 +49,7 @@
         <br>
         <input type="submit" value="Save">
     </form>
+    
 </div>
 </body>
 {{template "script" .}}

@@ -55,6 +55,8 @@ func main() {
 	http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
+	//Serve public/img folder
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry", nil))
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
