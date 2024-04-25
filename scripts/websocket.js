@@ -7,16 +7,16 @@ const getCookie = (name) => {
 };
 // Use jQuery's document ready function to ensure the DOM is fully loaded
 $(document).ready(function () {
-    // Create a WebSocket connection to the current hostname with the '/ws' endpoint
-    socket = new WebSocket(`wss://${document.location.hostname}/ws`);
+  // Create a WebSocket connection to the current hostname with the '/ws' endpoint
+  socket = new WebSocket(`wss://${document.location.hostname}/ws`);
 
-    // Define the onopen function to be called when the WebSocket connection is established
-    socket.onopen = function (e) {
-        // Log a message indicating the connection is established
-        console.log("[open] Connection established");
+  // Define the onopen function to be called when the WebSocket connection is established
+  socket.onopen = function (e) {
+    // Log a message indicating the connection is established
+    console.log("[open] Connection established");
 
-        // Log a message indicating a message is being sent to the server
-        console.log("Sending to server");
+    // Log a message indicating a message is being sent to the server
+    console.log("Sending to server");
 
         // Send a message to the server to check the session
         let message = {
@@ -60,9 +60,10 @@ $(document).ready(function () {
         }
     };
 
-    // Define the onerror function to be called when an error occurs with the WebSocket connection
-    socket.onerror = function (error) {
-        // Log an error message indicating the error that occurred
-        console.error(`[error] ${error.message}`);
-    };
+  // Define the onerror function to be called when an error occurs with the WebSocket connection
+  socket.onerror = function (error) {
+    // Log an error message indicating the error that occurred
+    console.error(`[error] ${error.message}`);
+  };
 });
+

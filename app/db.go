@@ -14,15 +14,12 @@ func InitDB(dsn string) *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	// Check if the database is accessible by pinging it
 	if err = db.Ping(); err != nil {
 		log.Fatal(err)
 	}
-
 	return db
 }
-
 func SetupDB(db *sql.DB) {
 	createTableUsers(db)
 	createTableSession(db)
@@ -37,7 +34,6 @@ func SetupDB(db *sql.DB) {
 }
 
 /* --------- Create Funcs ----------- */
-
 func createTableUsers(db *sql.DB) {
 	// Create a User table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS users (
@@ -62,13 +58,11 @@ func createTableUsers(db *sql.DB) {
 		UNIQUE(username),
 		UNIQUE(email)
 	);`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTableSubject(db *sql.DB) {
 	// Create a Subject table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Subject(
@@ -80,13 +74,11 @@ func createTableSubject(db *sql.DB) {
 		PRIMARY KEY(id_subject),
 		UNIQUE(title)
 	);`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTableTag(db *sql.DB) {
 	// Create a Tag table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Tag(
@@ -98,13 +90,11 @@ func createTableTag(db *sql.DB) {
 		PRIMARY KEY(id_tag),
 		UNIQUE(title)
 	);`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTableQuestion(db *sql.DB) {
 	// Create a Question table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Question(
@@ -122,13 +112,11 @@ func createTableQuestion(db *sql.DB) {
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
 		FOREIGN KEY(id_subject) REFERENCES Subject(id_subject)
 	);`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTableResponse(db *sql.DB) {
 	// Create a Response table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Response(
@@ -146,13 +134,11 @@ func createTableResponse(db *sql.DB) {
 		FOREIGN KEY(id_student) REFERENCES users(id_student)
 	);
 	`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTableTagged(db *sql.DB) {
 	// Create a Tagged table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Tagged(
@@ -163,13 +149,11 @@ func createTableTagged(db *sql.DB) {
 		FOREIGN KEY(id_tag) REFERENCES Tag(id_tag)
 	);
 	`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTablePrecise(db *sql.DB) {
 	// Create a Precise table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Precise(
@@ -180,13 +164,11 @@ func createTablePrecise(db *sql.DB) {
 		FOREIGN KEY(id_tag) REFERENCES Tag(id_tag)
 	);
 	`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTableVote_response(db *sql.DB) {
 	// Create a	Vote_response table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Vote_response(
@@ -199,13 +181,11 @@ func createTableVote_response(db *sql.DB) {
 		FOREIGN KEY(id_response) REFERENCES Response(id_response)
 	);
 	`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
 }
-
 func createTableVote_question(db *sql.DB) {
 	// Create a	Vote_question table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Vote_question(
@@ -218,7 +198,6 @@ func createTableVote_question(db *sql.DB) {
 		FOREIGN KEY(id_question) REFERENCES Question(id_question)
 	);
 	`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
@@ -230,11 +209,10 @@ func createTableSession(db *sql.DB) {
 		id SERIAL NOT NULL,
 		uuid VARCHAR(50) NOT NULL,
 		user_id INT NOT NULL,
-		expire_at DATE NOT NULL,
+		expire_at TIMESTAMP NOT NULL,
 		created_at TIMESTAMP NOT NULL
 	);
 	`
-
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)

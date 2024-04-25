@@ -57,9 +57,9 @@ func InsertMultipleSubjects(db *sql.DB) {
 	}
 }
 
-func FetchAllSubjects(db *sql.DB) ([]string, error) {
-	var subjects []string
-	query := "SELECT title FROM Subject ORDER BY title ASC"
+func FetchAllSubjects(db *sql.DB) ([]map[string]string, error) {
+	var subjects []map[string]string
+	query := "SELECT title, description FROM Subject ORDER BY title ASC"
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Printf("Error querying subjects: %v", err)
@@ -67,13 +67,13 @@ func FetchAllSubjects(db *sql.DB) ([]string, error) {
 	}
 	defer rows.Close()
 
-	var title string
 	for rows.Next() {
-		if err := rows.Scan(&title); err != nil {
+		var title, description string
+		if err := rows.Scan(&title, &description); err != nil {
 			log.Printf("Error scanning subject: %v", err)
 			continue
 		}
-		subjects = append(subjects, title)
+		subjects = append(subjects, map[string]string{"title": title, "description": description})
 	}
 
 	if err := rows.Err(); err != nil {
