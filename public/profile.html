@@ -26,25 +26,25 @@
         <input type="file" name="avatar">
         <br>
         <label for="birth_date">Birth Date:</label>
-        <input type="date" name="birth_date" value="{{.BirthDate}}">
+        <input type="date" name="birth_date" value="{{.Birth_Date_Format}}">
         <br>
         <label for="bio">Bio:</label>
-        <textarea name="bio">{{.Bio}}</textarea>
+        <textarea name="bio">{{.Bio.String}}</textarea>
         <br>
         <label for="website">Website:</label>
-        <input type="text" name="website" value="{{.Website}}">
+        <input type="text" name="website" value="{{.Website.String}}">
         <br>
         <label for="github">GitHub:</label>
-        <input type="text" name="github" value="{{.GitHub}}">
+        <input type="text" name="github" value="{{.GitHub.String}}">
         <br>
         <label for="xp">Experience:</label>
-        <input type="number" name="xp" value="{{.XP}}">
+        <input type="number" name="xp" value="{{.XP.Int64}}">
         <br>
         <label for="rang_rank_">Rank:</label>
-        <input type="number" name="rang_rank_" value="{{.Rank}}">
+        <input type="number" name="rang_rank_" value="{{.Rank.String}}">
         <br>
         <label for="school_year">School Year:</label>
-        <input type="date" name="school_year" value="{{.SchoolYear}}">
+        <input type="date" name="school_year" value="{{.School_Year_Format}}">
         <br>
         <input type="submit" value="Save">
     </form>

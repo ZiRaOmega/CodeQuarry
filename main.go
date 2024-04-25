@@ -64,7 +64,7 @@ func main() {
 	http.HandleFunc("/profile", app.ProfileHandler(db))
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
-
+	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
