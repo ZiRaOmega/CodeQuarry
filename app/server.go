@@ -10,7 +10,7 @@ func SendTemplate(template_name string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
 		// This function is used to handle requests to send the index page. It logs the IP address of the client making the request.
-		tmpl, err := template.ParseFiles("public/header.html", "public/footer.html", "public/"+template_name+".html")
+		tmpl, err := template.ParseFiles("public/header.html", "public/footer.html", "public/script.html", "public/head.html", "public/"+template_name+".html")
 		if err != nil {
 			panic(err)
 			// Parsing the HTML templates for the header, footer, and index. If there is an error, the program will panic and stop execution.
