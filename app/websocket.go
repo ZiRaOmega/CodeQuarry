@@ -80,7 +80,7 @@ func isValidSession(session_id string, db *sql.DB) bool {
 	}
 	if time.Now().After(expireAt) {
 		Log(ErrorLevel, "Session expired")
-		//DeleteSession(session_id, db)
+		DeleteSession(session_id, db)
 		return false
 	} else {
 		return true
