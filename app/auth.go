@@ -23,18 +23,15 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
 			return
 		}
-
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Error parsing form", http.StatusBadRequest)
 			return
 		}
-
 		lastname := r.FormValue("lastname")
 		firstname := r.FormValue("firstname")
 		username := r.FormValue("username")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
-
 		if ContainsSQLi(lastname) || ContainsSQLi(firstname) || ContainsSQLi(username) || ContainsSQLi(email) || ContainsSQLi(password) {
 			Log(ErrorLevel, "SQL injection detected")
 			//http.Error(w, "SQL injection detected", http.StatusBadRequest)
@@ -46,7 +43,6 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
 			return
 		}
-
 		// !!! TODO : smth better than bcrypt?
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
@@ -55,7 +51,6 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error hashing password"})
 			return
 		}
-
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
 		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password) VALUES($1, $2, $3, $4, $5)")
 		if err != nil {
@@ -63,19 +58,15 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			Log(ErrorLevel, "Error preparing the SQL statement")
 			//http.Error(w, "Error preparing the SQL statement", http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error preparing the SQL statement"})
-
 			return
 		}
 		defer stmt.Close()
-
 		if _, err := stmt.Exec(lastname, firstname, username, email, string(hashedPassword)); err != nil {
 			Log(ErrorLevel, "Error inserting the data into the database"+err.Error())
 			//http.Error(w, "Error inserting the data into the database", http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error inserting the data into the database"})
-
 			return
 		}
-
 		err = CreateSession(username, db, w)
 		if err != nil {
 			fmt.Println(err.Error())
@@ -88,22 +79,18 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		Log(DebugLevel, "Registration successful: "+username+" at "+r.URL.Path)
 	}
 }
-
 func LoginHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Only POST method is allowed", http.StatusMethodNotAllowed)
 			return
 		}
-
 		if err := r.ParseForm(); err != nil {
 			http.Error(w, "Error parsing form", http.StatusBadRequest)
 			return
 		}
-
 		username := r.FormValue("usernameOrEmailLogin")
 		password := r.FormValue("passwordLogin")
-
 		if ContainsSQLi(username) || ContainsSQLi(password) {
 			Log(ErrorLevel, "SQL injection detected")
 			//http.Error(w, "SQL injection detected", http.StatusBadRequest)
@@ -131,7 +118,6 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 				return
 			}
 		}
-
 		// Compare the stored hashed password with the password that was submitted
 		err = bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(password))
 		if err != nil {
@@ -140,20 +126,17 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Invalid login credentials"})
 			return
 		}
-
 		err = CreateSession(username, db, w)
 		if err != nil {
 			Log(ErrorLevel, "Error creating session")
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error creating session"})
 			return
 		}
-
 		// Login successful
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Login successful"})
 		Log(DebugLevel, "Login successful: "+username+" at "+r.URL.Path)
 		fmt.Println("Login successful")
-
 	}
 }
 
