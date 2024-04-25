@@ -29,3 +29,36 @@ DEBUG: 2024/04/24 15:38:30 Login successful: svalbardmalfant@gmail.com at /login
 ERROR: 2024/04/24 16:48:35 No user found with the provided credentialsferzs at /login
 DEBUG: 2024/04/24 16:50:56 Registration successful: de at /register
 DEBUG: 2024/04/24 16:51:03 Login successful: de at /login
+ERROR: 2024/04/24 19:10:17 Error starting the server
+ERROR: 2024/04/24 19:11:31 Error preparing the SQL statement
+ERROR: 2024/04/24 19:24:46 Error reading the message from the client
+ERROR: 2024/04/24 20:16:31 Error preparing the SQL statement
+ERROR: 2024/04/24 20:24:13 Error preparing the SQL statement
+ERROR: 2024/04/24 20:24:42 Error preparing the SQL statement
+ERROR: 2024/04/24 20:25:17 Error preparing the SQL statement
+ERROR: 2024/04/24 20:25:23 Error preparing the SQL statement
+ERROR: 2024/04/24 20:26:04 Error preparing the SQL statement
+ERROR: 2024/04/24 20:27:15 Error creating session
+DEBUG: 2024/04/24 20:27:15 Registration successful: mm at /register
+ERROR: 2024/04/24 20:29:05 Error creating session pq: relation "session" does not exist
+DEBUG: 2024/04/24 20:29:05 Registration successful: ll at /register
+DEBUG: 2024/04/24 20:30:05 Registration successful: pp at /register
+ERROR: 2024/04/24 20:32:05 Error inserting the data into the database
+ERROR: 2024/04/24 20:32:51 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/24 20:32:56 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/24 20:36:07 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/24 20:36:18 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+DEBUG: 2024/04/24 20:36:22 Registration successful: ppp at /register
+ERROR: 2024/04/25 00:00:21 Error reading the message from the client
+ERROR: 2024/04/25 00:02:19 Error reading the message from the client
+ERROR: 2024/04/25 14:09:23 Error creating session
+ERROR: 2024/04/25 14:11:10 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 14:11:40 Error creating session
+ERROR: 2024/04/25 14:13:17 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_email_key"
+DEBUG: 2024/04/25 14:13:23 Registration successful: gjhkl at /register
+ERROR: 2024/04/25 14:13:26 Error reading the message from the client
+DEBUG: 2024/04/25 14:40:42 Login successful: pp at /login
+ERROR: 2024/04/25 14:40:42 Error reading the message from the client
+DEBUG: 2024/04/25 14:45:41 Login successful: pp at /login
+ERROR: 2024/04/25 14:45:41 Error reading the message from the client
+DEBUG: 2024/04/25 14:46:38 Login successful: pp at /login

@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"log"
+	"time"
 
 	_ "github.com/lib/pq" // Import the PostgreSQL driver
 )
@@ -24,6 +25,7 @@ func InitDB(dsn string) *sql.DB {
 
 func SetupDB(db *sql.DB) {
 	createTableUsers(db)
+	createTableSession(db)
 	createTableSubject(db)
 	createTableTag(db)
 	createTableQuestion(db)
@@ -221,4 +223,55 @@ func createTableVote_question(db *sql.DB) {
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
+}
+func createTableSession(db *sql.DB) {
+	// Create a	Vote_question table
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Sessions(
+		id SERIAL NOT NULL,
+		uuid VARCHAR(50) NOT NULL,
+		user_id INT NOT NULL,
+		expire_at DATE NOT NULL,
+		created_at TIMESTAMP NOT NULL
+	);
+	`
+
+	// Execute the table creation query
+	if _, err := db.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// insertSessionToDB inserts a new session into the database.
+// It takes a database connection, user ID, user UUID, creation timestamp, and expiration timestamp as parameters.
+// It returns an error if there was a problem inserting the session.
+func insertSessionToDB(db *sql.DB, user_id int, user_uuid string, createdAt time.Time, expireAt time.Time) error {
+	stmt, err := db.Prepare("INSERT INTO Sessions(user_id,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(user_id, user_uuid, createdAt, expireAt); err != nil {
+		return err
+	}
+	return err
+}
+
+// getUserIDFromDB retrieves the user ID from the database based on the given username.
+// It takes the username and a pointer to the SQL database connection as input parameters.
+// It returns the user ID as an integer and an error if any occurred during the database operation.
+func getUserIDFromDB(username string, db *sql.DB) (int, error) {
+	var id int
+	stmt, err := db.Prepare("SELECT id_student FROM users WHERE username = $1 OR email = $2")
+	if err != nil {
+		return -1, err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(username, username).Scan(&id)
+	switch {
+	case err == sql.ErrNoRows:
+		return 0, err
+	case err != nil:
+		return 0, err
+	}
+	return id, nil
 }
