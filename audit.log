@@ -131,3 +131,9 @@ ERROR: 2024/04/25 15:18:35 Error fetching session from databasesql: no rows in r
 DEBUG: 2024/04/25 15:18:54 Registration successful: mlp at /register
 ERROR: 2024/04/25 15:18:57 Error reading the message from the client
 ERROR: 2024/04/25 15:18:58 Error reading the message from the client
+ERROR: 2024/04/25 15:56:10 Error reading the message from the client
+ERROR: 2024/04/25 15:56:23 Error reading the message from the client
+ERROR: 2024/04/25 15:56:26 Error reading the message from the client
+ERROR: 2024/04/25 15:56:35 No user found with the provided credentialsmm at /login
+DEBUG: 2024/04/25 15:56:54 Registration successful: mm at /register
+ERROR: 2024/04/25 15:59:22 Error reading the message from the client
