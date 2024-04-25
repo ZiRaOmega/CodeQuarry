@@ -32,8 +32,8 @@ $(document).ready(function () {
         let msg = JSON.parse(event.data);
         switch (msg.type) {
             case "session":
-                if (msg.content=="expired"){
-                    console.log("Session expired, redirecting to login page");
+                if (msg.content=="expired" || msg.content=="empty"){
+                    console.log(`Session ${msg.content}, redirecting to login page`);
                     if (window.location.pathname != "/") window.location.href = "/";
                     
                 }else if (msg.content=="valid"){
