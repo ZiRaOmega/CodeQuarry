@@ -61,70 +61,68 @@ The `html/template` package automatically escapes all inputs when rendering HTML
 Templates in Go are a flexible and secure way to generate dynamic text and HTML content. Understanding the distinction between `text/template` and `html/template`, as well as following best practices for their use, is crucial for creating secure and efficient applications.
 
 
-## Function `SendTemplate` Documentation
+## Package `templatehandler` Documentation
 
-The `SendTemplate` function in Go is designed to serve a specific HTML page constructed from multiple templates (header, footer, and a main template). This function is typically used in web applications to generate dynamic web pages with a consistent layout.
+This documentation covers two main functions in the `templatehandler` package, which facilitate the dynamic rendering of HTML templates in a web application: `SendTemplate` and `ParseAndExecuteTemplate`. These functions manage the process of generating full HTML responses based on templates and data models.
 
-### Function Signature
+### 1. `SendTemplate`
 
+**Function Signature**:
 ```go
-func SendTemplate(template_name string) http.HandlerFunc
+func SendTemplate(template_name string, data interface{}) http.HandlerFunc
 ```
 
-#### Parameters
+**Purpose**:
+Creates an HTTP handler function that serves HTML content generated from specified templates. This function dynamically renders HTML by combining pre-defined templates with user-provided data.
 
-- `template_name string`: The base name of the main template file (excluding "public/" prefix and ".html" suffix) that will be combined with the header and footer to create a complete web page.
+**Parameters**:
+- `template_name string`: The base name of the template file (excluding path and extension) to be rendered.
+- `data interface{}`: The data model that will be injected into the template. This can be any type, including complex structs.
 
-#### Return Type
+**Operations**:
+1. **Logging**: Records each incoming request, noting the requested URL path and the client's IP address.
+2. **Template Rendering**: Delegates the task of parsing and executing the template to `ParseAndExecuteTemplate`.
+3. **Error Handling**: Responds with an HTTP 500 internal server error if template rendering fails.
 
-- `http.HandlerFunc`: Returns an HTTP handler function that can be used to handle HTTP requests.
+**Return Value**:
+- `http.HandlerFunc`: A handler function suitable for use with HTTP routers that manage endpoints.
 
-### Detailed Breakdown
+### 2. `ParseAndExecuteTemplate`
+
+**Function Signature**:
+```go
+func ParseAndExecuteTemplate(template_name string, data interface{}, w http.ResponseWriter) error
+```
+
+**Purpose**:
+Handles the lower-level operations of parsing HTML template files and executing them with provided data, sending the output directly to the HTTP response writer.
+
+**Parameters**:
+- `template_name string`: The specific template file name to be used for rendering, appended to a standard set of layout components.
+- `data interface{}`: The data object to populate the template, facilitating dynamic content generation.
+- `w http.ResponseWriter`: The writer object where the HTML output will be sent.
+
+**Operations**:
+1. **Template File Parsing**: Attempts to parse a set of predefined template files including headers, footers, scripts, and the specified content template.
+2. **Template Execution**: Executes the parsed template using the provided data model, writing the result directly to the response writer.
+3. **Error Management**: Returns any errors encountered during file parsing or template execution, enabling upstream error handling.
+
+**Return Value**:
+- `error`: Returns an error object if parsing or execution fails, which should be handled by the caller.
+
+### Example Usage
 
 ```go
-return func(w http.ResponseWriter, r *http.Request) {
+// Set up a web server and define a route.
+http.HandleFunc("/index", SendTemplate("index", nil))
+http.ListenAndServe(":8080", nil)
 ```
-- **Return a Closure**: This line returns an anonymous function that fits the `http.HandlerFunc` type, suitable for handling HTTP requests.
 
-```go
-log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-```
-- **Logging Access**: Logs the accessed URL path and the IP address of the client making the request, which helps in monitoring and debugging client interactions.
+### Best Practices
 
-```go
-tmpl, err := template.ParseFiles("public/header.html", "public/footer.html", "public/"+template_name+".html")
-```
-- **Parse HTML Templates**: Attempts to parse the header, footer, and a specific template from the `public` directory. These files are assembled to form the full HTML document.
-  
-- **Dynamic Template Naming**: Constructs the path to the main template using the `template_name` parameter, allowing flexibility in serving different pages using the same structure.
-
-```go
-if err != nil {
-    panic(err)
-    // Parsing the HTML templates for the header, footer, and index. If there is an error, the program will panic and stop execution.
-}
-```
-- **Error Handling**: Checks if there was an error in parsing the templates. If an error occurs, it panics, effectively stopping the server with an error message. This is a harsh way to handle errors and is not recommended for production environments.
-
-```go
-err = tmpl.ExecuteTemplate(w, template_name, nil)
-```
-- **Execute and Send Template**: Executes the specified template and sends the output directly to the client (`w`). Uses `template_name` as the identifier of the main template part to be executed.
-- **Data Passing**: The `nil` argument implies that no data is passed to the templates, which means they should be designed to operate without external data inputs.
-
-```go
-if err != nil {
-    panic(err)
-    // Executing the "index" template and sending it to the client. If there is an error, the program will panic and stop execution.
-}
-```
-- **Execution Error Handling**: Similar to the parsing error handling, it panics if there is an issue in executing the template, which terminates the server. In practice, it's better to handle such errors by logging them and sending an HTTP error response to the client.
-
-## Comprehensive Documentation on HTML Templates in Go
-
-The provided templates are structured using Go's `html/template` package, which is designed for generating HTML output that is safe against code injection. This is particularly important for web applications where user input is directly incorporated into the page. The templates defined (`header`, `footer`, `login`) are typical for a web application requiring user authentication.
-
-### Template Definitions
+- **Error Handling**: Proper error checking in `SendTemplate` ensures that the server can respond appropriately to template-related issues without crashing or hanging.
+- **Separation of Concerns**: By separating the concerns of HTTP handling and template processing, each function remains concise and more maintainable.
+- **Scalability**: Using `interface{}` for data models provides flexibility, allowing the same functions to render different parts of the site with varied data structures.
 
 #### `header` Template
 
