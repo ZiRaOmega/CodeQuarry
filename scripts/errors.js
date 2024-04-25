@@ -126,6 +126,7 @@ $(document).ready(function () {
       data: $.param(formData), // Correctly encode the data as URL-encoded string
       contentType: "application/x-www-form-urlencoded", // Ensure the content type is set correctly
       success: function (response) {
+        
         if (response.status === "success") {
           window.location.href = "/codeQuarry"; // Redirect to the forum page
         } else {
