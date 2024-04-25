@@ -57,3 +57,8 @@ ERROR: 2024/04/25 14:11:40 Error creating session
 ERROR: 2024/04/25 14:13:17 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_email_key"
 DEBUG: 2024/04/25 14:13:23 Registration successful: gjhkl at /register
 ERROR: 2024/04/25 14:13:26 Error reading the message from the client
+DEBUG: 2024/04/25 14:40:42 Login successful: pp at /login
+ERROR: 2024/04/25 14:40:42 Error reading the message from the client
+DEBUG: 2024/04/25 14:45:41 Login successful: pp at /login
+ERROR: 2024/04/25 14:45:41 Error reading the message from the client
+DEBUG: 2024/04/25 14:46:38 Login successful: pp at /login
