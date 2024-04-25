@@ -230,7 +230,7 @@ func createTableSession(db *sql.DB) {
 		id SERIAL NOT NULL,
 		uuid VARCHAR(50) NOT NULL,
 		user_id INT NOT NULL,
-		expire_at DATE NOT NULL,
+		expire_at TIMESTAMP NOT NULL,
 		created_at TIMESTAMP NOT NULL
 	);
 	`
