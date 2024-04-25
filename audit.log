@@ -71,3 +71,9 @@ DEBUG: 2024/04/25 14:23:32 Registration successful: zozo at /register
 ERROR: 2024/04/25 14:23:33 Error reading the message from the client
 DEBUG: 2024/04/25 14:23:38 Login successful: zozo at /login
 ERROR: 2024/04/25 14:23:38 Error reading the message from the client
+DEBUG: 2024/04/25 14:36:28 Registration successful: eyey at /register
+ERROR: 2024/04/25 14:36:38 Error reading the message from the client
+DEBUG: 2024/04/25 14:37:13 Login successful: eyey at /login
+ERROR: 2024/04/25 14:37:13 Error reading the message from the client
+DEBUG: 2024/04/25 14:39:17 Login successful: eyey at /login
+ERROR: 2024/04/25 14:39:17 Error reading the message from the client
