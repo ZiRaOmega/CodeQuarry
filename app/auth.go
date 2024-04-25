@@ -157,6 +157,29 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 
+// LogoutHandler
+func LogoutHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			Log(ErrorLevel, "Error getting session cookie")
+			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
+			return
+		}
+		session_id := cookie.Value
+		err = DeleteSession(session_id, db)
+		if err != nil {
+			Log(ErrorLevel, "Error deleting session")
+			http.Error(w, "Error deleting session", http.StatusInternalServerError)
+			return
+		}
+		//Remove cookie
+		cookie.Expires = time.Now().AddDate(0, 0, -1)
+		http.SetCookie(w, cookie)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	}
+}
+
 // CreateSession creates a new session for the given username.
 // It retrieves the user ID from the database, generates a UUID for the session,
 // inserts the session into the database, and sets a session cookie in the response.
