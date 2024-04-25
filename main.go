@@ -42,8 +42,8 @@ func main() {
 	defer db.Close()
 
 	app.SetupDB(db)
-	inputPath := "scripts/errors.js"
-	outputPath := "scripts/errors_obfuscate.js"
+	inputPath := "scripts/auth.js"
+	outputPath := "scripts/auth_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
 
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
@@ -52,7 +52,7 @@ func main() {
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
-	http.HandleFunc("/scripts/errors_obfuscate.js", app.ErrorsHandler)
+	http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))

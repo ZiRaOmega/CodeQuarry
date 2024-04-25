@@ -62,7 +62,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				// Check if the session ID is valid
 				if !isValidSession(session_id, db) {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "expired"})
-
 				} else {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "valid"})
 				}
@@ -70,7 +69,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 		}
 	}
 }
-
 func isValidSession(session_id string, db *sql.DB) bool {
 	var expireAt time.Time
 	err := db.QueryRow("SELECT expire_at FROM Sessions WHERE uuid = $1", session_id).Scan(&expireAt)
@@ -86,7 +84,6 @@ func isValidSession(session_id string, db *sql.DB) bool {
 		return true
 	}
 }
-
 func DeleteSession(session_id string, db *sql.DB) error {
 	stmt, err := db.Prepare("DELETE FROM Sessions WHERE uuid = $1")
 	if err != nil {
