@@ -75,7 +75,7 @@ func isValidSession(session_id string, db *sql.DB) bool {
 	var expireAt time.Time
 	err := db.QueryRow("SELECT expire_at FROM Sessions WHERE uuid = $1", session_id).Scan(&expireAt)
 	if err != nil {
-		Log(ErrorLevel, "Error fetching session from database")
+		Log(ErrorLevel, "Error fetching session from database"+err.Error())
 		return false
 	}
 	if time.Now().After(expireAt) {

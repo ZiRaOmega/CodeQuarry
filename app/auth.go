@@ -181,10 +181,9 @@ func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error {
 		return err
 	}
 	cookie := http.Cookie{
-		Name:     "session",
-		Value:    user_uuid,
-		Expires:  expireAt,
-		HttpOnly: true,
+		Name:    "session",
+		Value:   user_uuid,
+		Expires: expireAt,
 	}
 	http.SetCookie(w, &cookie)
 	return err
