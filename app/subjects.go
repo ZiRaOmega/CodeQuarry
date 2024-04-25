@@ -59,7 +59,7 @@ func InsertMultipleSubjects(db *sql.DB) {
 
 func FetchAllSubjects(db *sql.DB) ([]map[string]string, error) {
 	var subjects []map[string]string
-	query := "SELECT title, description FROM Subject ORDER BY title ASC"
+	query := "SELECT id_subject, title, description FROM Subject ORDER BY title ASC"
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Printf("Error querying subjects: %v", err)
@@ -68,12 +68,12 @@ func FetchAllSubjects(db *sql.DB) ([]map[string]string, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var title, description string
-		if err := rows.Scan(&title, &description); err != nil {
+		var id, title, description string
+		if err := rows.Scan(&id, &title, &description); err != nil {
 			log.Printf("Error scanning subject: %v", err)
 			continue
 		}
-		subjects = append(subjects, map[string]string{"title": title, "description": description})
+		subjects = append(subjects, map[string]string{"id": id, "title": title, "description": description})
 	}
 
 	if err := rows.Err(); err != nil {
@@ -93,5 +93,47 @@ func SubjectsHandler(db *sql.DB) http.HandlerFunc {
 
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(subjects)
+	}
+}
+
+// FetchQuestionsBySubject fetches questions for a specific subject from the database
+func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]string, error) {
+	var questions []string
+	query := "SELECT title FROM question WHERE id_subject = $1"
+	rows, err := db.Query(query, subjectID)
+	if err != nil {
+		log.Printf("Error querying questions: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var question string
+		if err := rows.Scan(&question); err != nil {
+			log.Printf("Error scanning question: %v", err)
+			continue
+		}
+		questions = append(questions, question)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("Error reading question rows: %v", err)
+		return nil, err
+	}
+	return questions, nil
+}
+
+// QuestionsHandler handles the API endpoint for fetching questions based on subject ID
+func QuestionsHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		subjectID := r.URL.Query().Get("subjectId")
+		questions, err := FetchQuestionsBySubject(db, subjectID)
+		if err != nil {
+			http.Error(w, "Server error", http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(questions)
 	}
 }
