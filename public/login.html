@@ -1,115 +1,68 @@
 {{define "login"}}
 <!DOCTYPE html>
 <html lang="en">
-  {{template "head" .}}
-  <body>
-    <div id="mainBlock">
-      <div class="CQ-logo"></div>
-      <div class="Title">
-        <p class="code-quarry">•CodeQuarry</p>
-        <p class="description">Excavating the Depths of<br />Code Knowledge.</p>
-      </div>
-      <div id="login-register-buttons">
-        <button id="login-button">Login</button>
-        <button id="register-button">Register</button>
-      </div>
+{{template "head" .}}
+
+<body>
+  <div id="mainBlock">
+    <div class="CQ-logo"></div>
+    <div class="Title">
+      <p class="code-quarry">•CodeQuarry</p>
+      <p class="description">Excavating the Depths of<br />Code Knowledge.</p>
     </div>
-
-    <div id="registerBlock">
-      <div class="CQ-logo"></div>
-      <div class="Title">
-        <p class="code-quarry">Welcome to Code Quarry</p>
-        <p class="description">Let's register !</p>
-      </div>
-      <form id="registerForm" action="/register" method="post">
-        <input
-          type="text"
-          name="lastname"
-          id="registerLastName"
-          placeholder="Lastname"
-          required="required"
-          autocomplete="off"
-        />
-        <input
-          type="text"
-          name="firstname"
-          id="registerFirstName"
-          placeholder="Firstname"
-          required="required"
-          autocomplete="off"
-        />
-        <input
-          type="text"
-          name="username"
-          id="registerUsername"
-          placeholder="Username"
-          required="required"
-          autocomplete="off"
-        />
-        <input
-          type="email"
-          name="email"
-          id="registerEmail"
-          placeholder="E-mail"
-          required="required"
-          autocomplete="off"
-        />
-        <input
-          type="password"
-          name="password"
-          id="registerPassword"
-          placeholder="Password"
-          required="required"
-          autocomplete="off"
-        />
-
-        <input
-          type="password"
-          name="passwordConfirmation"
-          id="registerPasswordConfirmation"
-          placeholder="Confirm Password"
-          required="required"
-          autocomplete="off"
-        />
-        <div id="contentAlert"></div>
-        <button type="submit" id="registerSubmit">Register</button>
-      </form>
-      <p>Already have an account ?</p>
-      <button id="loginRedirect">Login</button>
+    <div id="login-register-buttons">
+      <button id="login-button">Login</button>
+      <button id="register-button">Register</button>
     </div>
+  </div>
 
-    <div id="loginBlock">
-      <div class="CQ-logo"></div>
-      <div class="Title">
-        <p class="code-quarry">Welcome to Code Quarry</p>
-        <p class="description">Let's dig again !</p>
-      </div>
-      <form id="loginForm" action="/login" method="post">
-        <input
-          type="text"
-          name="usernameOrEmailLogin"
-          id="usernameOrEmailLogin"
-          placeholder="Username or Email"
-          required="required"
-          autocomplete="off"
-        />
-        <input
-          type="password"
-          name="passwordLogin"
-          id="loginPassword"
-          placeholder="Password"
-          required="required"
-          autocomplete="off"
-        />
-        <div id="contentAlertLogin"></div>
-        <button type="submit" id="login">Login</button>
-      </form>
-
-      <p>You don't have an account ?</p>
-      <button id="registerRedirect">Register</button>
+  <div id="registerBlock">
+    <div class="CQ-logo"></div>
+    <div class="Title">
+      <p class="code-quarry">Welcome to Code Quarry</p>
+      <p class="description">Let's register !</p>
     </div>
-    <script src="../scripts/errors_obfuscate.js"></script>
-    {{template "script" .}}
-  </body>
+    <form id="registerForm" action="/register" method="post">
+      <input type="text" name="lastname" id="registerLastName" placeholder="Lastname" required="required"
+        autocomplete="off" />
+      <input type="text" name="firstname" id="registerFirstName" placeholder="Firstname" required="required"
+        autocomplete="off" />
+      <input type="text" name="username" id="registerUsername" placeholder="Username" required="required"
+        autocomplete="off" />
+      <input type="email" name="email" id="registerEmail" placeholder="E-mail" required="required" autocomplete="off" />
+      <input type="password" name="password" id="registerPassword" placeholder="Password" required="required"
+        autocomplete="off" />
+
+      <input type="password" name="passwordConfirmation" id="registerPasswordConfirmation"
+        placeholder="Confirm Password" required="required" autocomplete="off" />
+      <div id="contentAlert"></div>
+      <button type="submit" id="registerSubmit">Register</button>
+    </form>
+    <p>Already have an account ?</p>
+    <button id="loginRedirect">Login</button>
+  </div>
+
+  <div id="loginBlock">
+    <div class="CQ-logo"></div>
+    <div class="Title">
+      <p class="code-quarry">Welcome to Code Quarry</p>
+      <p class="description">Let's dig again !</p>
+    </div>
+    <form id="loginForm" action="/login" method="post">
+      <input type="text" name="usernameOrEmailLogin" id="usernameOrEmailLogin" placeholder="Username or Email"
+        required="required" autocomplete="off" />
+      <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password" required="required"
+        autocomplete="off" />
+      <div id="contentAlertLogin"></div>
+      <button type="submit" id="login">Login</button>
+    </form>
+
+    <p>You don't have an account ?</p>
+    <button id="registerRedirect">Register</button>
+  </div>
+  <script src="../scripts/auth_obfuscate.js"></script>
+  {{template "script" .}}
+</body>
+
 </html>
 {{end}}
