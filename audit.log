@@ -29,5 +29,45 @@ DEBUG: 2024/04/24 15:38:30 Login successful: svalbardmalfant@gmail.com at /login
 ERROR: 2024/04/24 16:48:35 No user found with the provided credentialsferzs at /login
 DEBUG: 2024/04/24 16:50:56 Registration successful: de at /register
 DEBUG: 2024/04/24 16:51:03 Login successful: de at /login
-DEBUG: 2024/04/25 12:51:31 Registration successful: popo at /register
-DEBUG: 2024/04/25 12:51:39 Login successful: popo at /login
+ERROR: 2024/04/24 19:10:17 Error starting the server
+ERROR: 2024/04/24 19:11:31 Error preparing the SQL statement
+ERROR: 2024/04/24 19:24:46 Error reading the message from the client
+ERROR: 2024/04/24 20:16:31 Error preparing the SQL statement
+ERROR: 2024/04/24 20:24:13 Error preparing the SQL statement
+ERROR: 2024/04/24 20:24:42 Error preparing the SQL statement
+ERROR: 2024/04/24 20:25:17 Error preparing the SQL statement
+ERROR: 2024/04/24 20:25:23 Error preparing the SQL statement
+ERROR: 2024/04/24 20:26:04 Error preparing the SQL statement
+ERROR: 2024/04/24 20:27:15 Error creating session
+DEBUG: 2024/04/24 20:27:15 Registration successful: mm at /register
+ERROR: 2024/04/24 20:29:05 Error creating session pq: relation "session" does not exist
+DEBUG: 2024/04/24 20:29:05 Registration successful: ll at /register
+DEBUG: 2024/04/24 20:30:05 Registration successful: pp at /register
+ERROR: 2024/04/24 20:32:05 Error inserting the data into the database
+ERROR: 2024/04/24 20:32:51 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/24 20:32:56 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/24 20:36:07 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/24 20:36:18 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+DEBUG: 2024/04/24 20:36:22 Registration successful: ppp at /register
+ERROR: 2024/04/25 00:00:21 Error reading the message from the client
+ERROR: 2024/04/25 00:02:19 Error reading the message from the client
+ERROR: 2024/04/25 12:43:57 Error starting the server
+ERROR: 2024/04/25 12:44:56 Error reading the message from the client
+ERROR: 2024/04/25 12:45:27 Error creating session
+ERROR: 2024/04/25 12:45:54 Error reading the message from the client
+ERROR: 2024/04/25 12:46:06 Error creating session
+ERROR: 2024/04/25 12:46:31 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 12:48:01 Error creating session
+ERROR: 2024/04/25 12:48:52 Error creating session
+DEBUG: 2024/04/25 12:49:02 Invalid login credentialscaca at /login
+ERROR: 2024/04/25 12:49:06 Error creating session
+ERROR: 2024/04/25 12:49:10 Error reading the message from the client
+ERROR: 2024/04/25 12:49:25 Error creating session
+ERROR: 2024/04/25 12:49:53 Error creating session
+ERROR: 2024/04/25 12:59:02 Error reading the message from the client
+ERROR: 2024/04/25 13:00:34 Error creating session
+ERROR: 2024/04/25 13:14:04 Error reading the message from the client
+DEBUG: 2024/04/25 14:23:32 Registration successful: zozo at /register
+ERROR: 2024/04/25 14:23:33 Error reading the message from the client
+DEBUG: 2024/04/25 14:23:38 Login successful: zozo at /login
+ERROR: 2024/04/25 14:23:38 Error reading the message from the client

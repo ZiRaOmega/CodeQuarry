@@ -48,14 +48,16 @@ func main() {
 
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 
-	http.HandleFunc("/", app.AddSecurityHeaders(app.LoginhandlerPage))
+	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("login")))
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
 	http.HandleFunc("/scripts/errors_obfuscate.js", app.ErrorsHandler)
-	http.HandleFunc("/codeQuarry", app.HandleCodeQuarry)
+	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
+	http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
 	http.HandleFunc("/logo", app.LogoHandler)
+	http.HandleFunc("/ws", app.WebsocketHandler(db))
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
