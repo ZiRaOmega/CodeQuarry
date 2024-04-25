@@ -1,8 +1,4 @@
 
-## Package `app` Documentation
-
-The `app` package contains a collection of functions and types designed to manage user profiles in a web application environment. This includes handling HTTP requests for profile viewing and updating, securely fetching and storing user data, and managing file uploads.
-
 ### Functions Overview
 
 #### 1. `ProfileHandler`
