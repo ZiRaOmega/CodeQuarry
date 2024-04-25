@@ -52,7 +52,7 @@ func main() {
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
-	http.HandleFunc("/scripts/errors_obfuscate.js", app.ErrorsHandler)
+	http.HandleFunc("/scripts/errors.js", app.ErrorsHandler)
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
