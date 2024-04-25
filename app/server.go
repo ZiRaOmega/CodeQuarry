@@ -46,7 +46,7 @@ func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 
 func ErrorsHandler(w http.ResponseWriter, r *http.Request) {
 	//serve the animation js file
-	http.ServeFile(w, r, "scripts/errors_obfuscate.js")
+	http.ServeFile(w, r, "scripts/auth_obfuscate.js")
 }
 
 func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {

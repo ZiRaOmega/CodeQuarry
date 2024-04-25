@@ -6,9 +6,16 @@ document.addEventListener("DOMContentLoaded", function () {
       subjects.forEach((subject) => {
         const listItem = document.createElement("div");
         listItem.classList.add("category_cards");
-        listItem.textContent = subject;
+
+        const title = document.createElement("h2");
+        title.textContent = subject.title;
+        listItem.appendChild(title);
+
+        const description = document.createElement("p");
+        description.textContent = subject.description;
+        listItem.appendChild(description);
+
         listElement.appendChild(listItem);
       });
-    })
-    .catch((error) => console.error("Error loading subjects:", error));
+    });
 });

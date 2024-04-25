@@ -141,3 +141,165 @@ DEBUG: 2024/04/25 15:59:31 Login successful: eyey at /login
 ERROR: 2024/04/25 15:59:31 Error reading the message from the client
 DEBUG: 2024/04/25 16:04:17 Login successful: eyey at /login
 ERROR: 2024/04/25 16:04:17 Error reading the message from the client
+DEBUG: 2024/04/25 16:12:35 Login successful: eyey at /login
+ERROR: 2024/04/25 16:12:35 Error reading the message from the client
+ERROR: 2024/04/25 16:12:35 Session expired
+ERROR: 2024/04/25 16:12:35 Error reading the message from the client
+ERROR: 2024/04/25 16:12:35 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:12:37 Login successful: eyey at /login
+ERROR: 2024/04/25 16:12:37 Error reading the message from the client
+ERROR: 2024/04/25 16:12:37 Session expired
+ERROR: 2024/04/25 16:12:37 Error reading the message from the client
+ERROR: 2024/04/25 16:12:37 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:12:59 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:13:27 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:15:04 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:18:13 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:18:14 Error reading the message from the client
+ERROR: 2024/04/25 16:18:14 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:18:40 Registration successful: ue at /register
+ERROR: 2024/04/25 16:18:41 Error reading the message from the client
+ERROR: 2024/04/25 16:18:41 Session expired
+ERROR: 2024/04/25 16:18:41 Error reading the message from the client
+ERROR: 2024/04/25 16:18:41 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:18:48 Login successful: ue at /login
+ERROR: 2024/04/25 16:18:48 Error reading the message from the client
+ERROR: 2024/04/25 16:18:48 Session expired
+ERROR: 2024/04/25 16:18:48 Error reading the message from the client
+ERROR: 2024/04/25 16:18:48 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:21:50 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:23:11 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:23:29 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:23:35 Login successful: ue at /login
+ERROR: 2024/04/25 16:23:35 Error reading the message from the client
+ERROR: 2024/04/25 16:23:35 Session expired
+ERROR: 2024/04/25 16:23:35 Error reading the message from the client
+ERROR: 2024/04/25 16:23:35 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:24:01 Login successful: ue at /login
+ERROR: 2024/04/25 16:24:01 Error reading the message from the client
+ERROR: 2024/04/25 16:24:01 Session expired
+ERROR: 2024/04/25 16:24:01 Error reading the message from the client
+ERROR: 2024/04/25 16:24:02 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:25:31 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:25:34 Login successful: eyey at /login
+ERROR: 2024/04/25 16:25:34 Error reading the message from the client
+ERROR: 2024/04/25 16:25:35 Session expired
+ERROR: 2024/04/25 16:25:35 Error reading the message from the client
+ERROR: 2024/04/25 16:25:35 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:27:18 Error reading the message from the client
+ERROR: 2024/04/25 16:27:18 Error fetching session from databasepq: relation "sessions" does not exist
+ERROR: 2024/04/25 16:27:24 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:27:38 Registration successful: caca at /register
+ERROR: 2024/04/25 16:27:39 Error reading the message from the client
+ERROR: 2024/04/25 16:27:39 Session expired
+ERROR: 2024/04/25 16:27:39 Error reading the message from the client
+ERROR: 2024/04/25 16:27:40 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:28:03 Registration successful: pipi at /register
+ERROR: 2024/04/25 16:28:04 Error reading the message from the client
+ERROR: 2024/04/25 16:28:04 Session expired
+ERROR: 2024/04/25 16:28:04 Error reading the message from the client
+ERROR: 2024/04/25 16:28:04 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:28:09 Login successful: pipi at /login
+ERROR: 2024/04/25 16:28:09 Error reading the message from the client
+ERROR: 2024/04/25 16:28:09 Session expired
+ERROR: 2024/04/25 16:28:09 Error reading the message from the client
+ERROR: 2024/04/25 16:28:09 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:30:11 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:30:13 Error reading the message from the client
+ERROR: 2024/04/25 16:30:13 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:30:13 Error reading the message from the client
+ERROR: 2024/04/25 16:30:13 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:30:13 Error reading the message from the client
+ERROR: 2024/04/25 16:30:13 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/25 16:30:13 Error reading the message from the client
+ERROR: 2024/04/25 16:30:13 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/25 16:30:25 Registration successful: caca at /register
+ERROR: 2024/04/25 16:30:27 Error reading the message from the client
+ERROR: 2024/04/25 16:30:27 Error reading the message from the client
+ERROR: 2024/04/25 16:32:42 Error reading the message from the client
+ERROR: 2024/04/25 16:32:43 Error reading the message from the client
+ERROR: 2024/04/25 16:32:43 Error reading the message from the client
+ERROR: 2024/04/25 16:32:50 Error reading the message from the client
+ERROR: 2024/04/25 16:32:50 Error reading the message from the client
+ERROR: 2024/04/25 16:32:50 Error reading the message from the client
+ERROR: 2024/04/25 16:32:50 Error reading the message from the client
+ERROR: 2024/04/25 16:32:50 Error reading the message from the client
+ERROR: 2024/04/25 16:32:51 Error reading the message from the client
+ERROR: 2024/04/25 16:32:51 Error reading the message from the client
+ERROR: 2024/04/25 16:32:51 Error reading the message from the client
+ERROR: 2024/04/25 16:33:42 Error reading the message from the client
+ERROR: 2024/04/25 16:34:12 Error reading the message from the client
+ERROR: 2024/04/25 16:34:23 Error reading the message from the client
+ERROR: 2024/04/25 16:34:39 Error reading the message from the client
+ERROR: 2024/04/25 16:34:39 Error reading the message from the client
+DEBUG: 2024/04/25 16:34:55 Registration successful: zizi at /register
+ERROR: 2024/04/25 16:34:57 Error reading the message from the client
+ERROR: 2024/04/25 16:34:57 Error reading the message from the client
+ERROR: 2024/04/25 16:35:01 Error reading the message from the client
+ERROR: 2024/04/25 16:35:09 Error reading the message from the client
+ERROR: 2024/04/25 16:35:13 Error reading the message from the client
+ERROR: 2024/04/25 16:35:20 Error reading the message from the client
+ERROR: 2024/04/25 16:35:20 Error reading the message from the client
+ERROR: 2024/04/25 16:35:20 Error reading the message from the client
+ERROR: 2024/04/25 16:35:21 Error reading the message from the client
+ERROR: 2024/04/25 16:35:21 Error reading the message from the client
+ERROR: 2024/04/25 16:35:23 Error reading the message from the client
+ERROR: 2024/04/25 16:35:23 Error reading the message from the client
+ERROR: 2024/04/25 16:35:27 Error reading the message from the client
+ERROR: 2024/04/25 16:35:30 Error reading the message from the client
+ERROR: 2024/04/25 16:35:36 Error reading the message from the client
+ERROR: 2024/04/25 16:35:37 Error reading the message from the client
+ERROR: 2024/04/25 16:35:44 Error reading the message from the client
+ERROR: 2024/04/25 16:35:44 Error reading the message from the client
+DEBUG: 2024/04/25 16:35:56 Registration successful: yaya at /register
+ERROR: 2024/04/25 16:36:05 Error reading the message from the client
+ERROR: 2024/04/25 16:36:06 Error reading the message from the client
+ERROR: 2024/04/25 16:36:56 Error reading the message from the client
+ERROR: 2024/04/25 16:36:58 Error reading the message from the client
+ERROR: 2024/04/25 16:37:15 Error reading the message from the client
+ERROR: 2024/04/25 16:37:15 Error reading the message from the client
+DEBUG: 2024/04/25 16:37:27 Registration successful: tutu at /register
+ERROR: 2024/04/25 16:37:34 Error reading the message from the client
+ERROR: 2024/04/25 16:37:34 Error reading the message from the client
+ERROR: 2024/04/25 16:37:39 Error reading the message from the client
+ERROR: 2024/04/25 16:37:40 Error reading the message from the client
+ERROR: 2024/04/25 16:37:41 Error reading the message from the client
+ERROR: 2024/04/25 16:37:41 Error reading the message from the client
+ERROR: 2024/04/25 16:37:41 Error reading the message from the client
+ERROR: 2024/04/25 16:37:50 Error reading the message from the client
+ERROR: 2024/04/25 16:37:50 Error reading the message from the client
+DEBUG: 2024/04/25 16:38:05 Registration successful: tata at /register
+ERROR: 2024/04/25 16:38:31 Error reading the message from the client
+ERROR: 2024/04/25 16:38:32 Error reading the message from the client
+ERROR: 2024/04/25 16:38:32 Error reading the message from the client
+ERROR: 2024/04/25 16:38:44 Error reading the message from the client
+ERROR: 2024/04/25 16:38:45 Error reading the message from the client
+DEBUG: 2024/04/25 16:38:58 Registration successful: rara at /register
+ERROR: 2024/04/25 16:38:59 Error reading the message from the client
+ERROR: 2024/04/25 16:38:59 Error reading the message from the client
+ERROR: 2024/04/25 16:47:22 Error reading the message from the client
+ERROR: 2024/04/25 16:47:22 Error reading the message from the client
+ERROR: 2024/04/25 16:47:32 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 16:47:37 Error reading the message from the client
+DEBUG: 2024/04/25 16:47:51 Registration successful: tete at /register
+ERROR: 2024/04/25 16:47:53 Error reading the message from the client
+ERROR: 2024/04/25 16:48:06 Error reading the message from the client
+ERROR: 2024/04/25 16:59:19 Error reading the message from the client
+ERROR: 2024/04/25 16:59:36 Error reading the message from the client
+ERROR: 2024/04/25 16:59:51 Error reading the message from the client
+ERROR: 2024/04/25 17:00:01 Error reading the message from the client
+ERROR: 2024/04/25 17:00:23 Error reading the message from the client
+ERROR: 2024/04/25 17:00:33 Error reading the message from the client
+ERROR: 2024/04/25 17:00:55 Error reading the message from the client
+ERROR: 2024/04/25 17:01:07 Error reading the message from the client
+ERROR: 2024/04/25 17:02:10 Error reading the message from the client
+ERROR: 2024/04/25 17:02:25 Error reading the message from the client
+ERROR: 2024/04/25 17:02:35 Error reading the message from the client
+ERROR: 2024/04/25 17:04:32 Error reading the message from the client
+ERROR: 2024/04/25 17:06:49 Error reading the message from the client
+ERROR: 2024/04/25 17:06:58 Error reading the message from the client
+ERROR: 2024/04/25 17:06:59 Error reading the message from the client
+ERROR: 2024/04/25 17:07:28 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 17:07:51 Error reading the message from the client
+DEBUG: 2024/04/25 17:08:01 Registration successful: cucu at /register
+ERROR: 2024/04/25 17:08:02 Error reading the message from the client
