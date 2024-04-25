@@ -48,19 +48,20 @@ func main() {
 
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 
-	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("login")))
+	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("login", nil)))
 	http.HandleFunc("/styles.css", app.CssHandler)
 	http.HandleFunc("/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
 	http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
-	http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
+	http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry", nil))
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
 	http.HandleFunc("/logo", app.LogoHandler)
 	http.HandleFunc("/logout", app.LogoutHandler(db))
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
+	http.HandleFunc("/profile", app.ProfileHandler(db))
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 
