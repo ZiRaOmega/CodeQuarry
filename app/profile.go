@@ -5,12 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
-	"text/template"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -34,19 +32,8 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error getting user info", http.StatusInternalServerError)
 			return
 		}
-		//Send user info to the profile page
-		log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-		// This function is used to handle requests to send the index page. It logs the IP address of the client making the request.
-		tmpl, err := template.ParseFiles("public/header.html", "public/footer.html", "public/script.html", "public/head.html", "public/"+"profile"+".html")
-		if err != nil {
-			panic(err)
-			// Parsing the HTML templates for the header, footer, and index. If there is an error, the program will panic and stop execution.
-		}
-		err = tmpl.ExecuteTemplate(w, "profile", user)
-		if err != nil {
-			panic(err)
-			// Executing the "index" template and sending it to the client. If there is an error, the program will panic and stop execution.
-		}
+		ParseAndExecuteTemplate("profile", user, w)
+
 	}
 }
 
@@ -120,6 +107,14 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	return user, nil // Return the populated user object
 }
 
+// UpdateProfileHandler is an HTTP request handler that updates the user profile.
+// It takes a database connection as input and returns an http.HandlerFunc.
+// The handler checks if the request method is POST and if the session is valid.
+// It then retrieves the user ID from the session and compares it with the ID in the request form.
+// If the IDs match, it updates the user profile with the provided information.
+// If the password is empty, it updates the profile without changing the password.
+// If the password is not empty, it hashes the password before updating the profile.
+// Finally, it redirects the user to the profile page.
 func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -138,7 +133,6 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		//Get form
 		user := User{}
 
 		user.ID, err = getUserIDUsingSessionID(session_id, db)
@@ -216,6 +210,12 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 
 	}
 }
+
+// FileUpload handles the uploading of a file from a HTTP request.
+// It expects a multipart form with a file field named "avatar".
+// The function saves the uploaded file to the "./public/img/" directory with a generated name,
+// and returns the path to the saved file on success.
+// If there is an error during the file upload process, it returns an error.
 func FileUpload(r *http.Request) (string, error) {
 
 	r.ParseMultipartForm(32 << 20)
