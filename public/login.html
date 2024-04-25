@@ -1,15 +1,7 @@
 {{define "login"}}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Code Quarry</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+  {{template "head" .}}
   <body>
     <div id="mainBlock">
       <div class="CQ-logo"></div>
@@ -116,8 +108,8 @@
       <p>You don't have an account ?</p>
       <button id="registerRedirect">Register</button>
     </div>
-    <script src="../scripts/errors_obfuscate.js"></script>
-    {{template "footer"}}
+
+    {{template "script" .}}
   </body>
 </html>
 {{end}}

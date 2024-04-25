@@ -38,6 +38,7 @@ $(document).ready(function () {
                     
                 }else if (msg.content=="valid"){
                     // !!! TODO show the website if the session is still valid
+                    if (window.location.pathname != "/codeQuarry") window.location.pathname="/codeQuarry"
                     console.log("Session still valid");
                 }
                 }
