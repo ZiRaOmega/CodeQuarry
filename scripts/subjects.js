@@ -1,3 +1,4 @@
+let SubjectsList=[]
 document.addEventListener("DOMContentLoaded", function () {
   const listElement = document.getElementById("subjectsList");
   const questionsList = document.getElementById("questionsList");
@@ -48,7 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
       const allQestionCountDiv = document.createElement("div");
       allQestionCountDiv.classList.add("question_count_all");
       let totalQuestions = 0; // For counting all questions
+      SubjectsList=[]
       subjects.forEach((subject) => {
+        SubjectsList.push(subject)
         totalQuestions += subject.questionCount; // Sum up all questions
         console.log(totalQuestions);
 
