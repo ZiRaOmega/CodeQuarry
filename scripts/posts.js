@@ -6,11 +6,11 @@ function createPostInput() {
     let content = document.createElement("textarea");
     let subjectLists = document.createElement("select");
     SubjectsList.forEach((subject) => {
-        let option = document.createElement("option");
-        option.value = subject.id;
-        option.textContent = subject.title;
-        subjectLists.appendChild(option);
-        });
+      let option = document.createElement("option");
+      option.value = subject.id;
+      option.textContent = subject.title;
+      subjectLists.appendChild(option);
+    });
     let submit = document.createElement("button");
     title.setAttribute("type", "text");
     title.setAttribute("placeholder", "Title");
@@ -18,7 +18,7 @@ function createPostInput() {
     submit.textContent = "Submit";
     let container = document.createElement("div");
     container.id = "create_post_container";
- 
+
     submit.onclick = function () {
       let form = {
         title: title.value,
