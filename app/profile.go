@@ -151,9 +151,19 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Email = r.PostFormValue("email")
 		user.Password = r.PostFormValue("password")
 		user.Avatar = sql.NullString{String: r.PostFormValue("avatar"), Valid: true}
-		filename, err := FileUpload(r)
-		if err != nil {
-			fmt.Println(err.Error())
+		filename := ""
+		if r.PostFormValue("avatar") == "" {
+			filename, err = getAvatar(db, user.ID)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		} else {
+
+			filename, err = FileUpload(r)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
 		}
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
@@ -243,4 +253,19 @@ func FileUpload(r *http.Request) (string, error) {
 	}
 	io.Copy(f, file)
 	return "/img/" + genname, nil
+}
+
+// getAvatar
+func getAvatar(db *sql.DB, user_id int) (string, error) {
+	var avatar string
+	stmt, err := db.Prepare("SELECT avatar FROM users WHERE id_student = $1")
+	if err != nil {
+		return "", err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(user_id).Scan(&avatar)
+	if err != nil {
+		return "", err
+	}
+	return avatar, nil
 }
