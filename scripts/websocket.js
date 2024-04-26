@@ -1,4 +1,3 @@
-// Declare a variable 'socket' to store the WebSocket connection object
 var socket;
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
@@ -42,8 +41,13 @@ $(document).ready(function () {
           console.log("Session still valid");
         }
       case "voteUpdate":
-        console.log("Vote updated for question:", msg.content);
         handleVoteUpdate(msg.content);
+        break;
+      case "postCreated":
+        updateQuestionCount(msg.content); // Implement this function to update the UI
+        if (localStorage.getItem("subjectId") == msg.content.id) {
+          fetchQuestions(msg.content.id); // Implement this function to fetch and display questions
+        }
         break;
     }
     // Log the message received from the server
@@ -85,5 +89,24 @@ function handleVoteUpdate(data) {
   }
   if (downvoteCountElement) {
     downvoteCountElement.textContent = data.downvote;
+  }
+}
+
+function updateQuestionCount(subject) {
+  console.log("Updating question count for subject:", subject);
+  // Find the element displaying the question count and update it
+  const questionCountDiv = document.querySelector(
+    `.question_count[data-subject-id="${subject.id}"]`
+  );
+  if (questionCountDiv) {
+    questionCountDiv.textContent = subject.questionCount;
+  }
+
+  // Update the total questions display if needed
+  const totalQuestionsDiv = document.querySelector(".question_count_all");
+  if (totalQuestionsDiv) {
+    let totalQuestions = parseInt(totalQuestionsDiv.textContent, 10) || 0;
+    totalQuestions++; // Increment since a new question was added
+    totalQuestionsDiv.textContent = totalQuestions;
   }
 }

@@ -83,7 +83,25 @@ func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) 
 	_, err := db.Exec(query, question.Title, question.Content, time.Now(), time.Now(), user_id, subject_id)
 	if err != nil {
 		log.Printf("Error inserting question: %v", err)
+		// Additional debugging information
+		log.Printf("Attempted to insert: title='%s', user_id=%d, subject_id=%d", question.Title, user_id, subject_id)
 		return err
 	}
 	return nil
+}
+
+type Subject struct {
+	Id            int    `json:"id"`
+	Title         string `json:"title"`
+	Description   string `json:"description"`
+	QuestionCount int    `json:"questionCount"`
+}
+
+func FetchSubjectWithQuestionCount(db *sql.DB, subjectId int) (Subject, error) {
+	var subject Subject
+	err := db.QueryRow(`SELECT id_subject, title, description, (SELECT COUNT(*) FROM question WHERE id_subject = $1) AS questionCount FROM subject WHERE id_subject = $1`, subjectId).Scan(&subject.Id, &subject.Title, &subject.Description, &subject.QuestionCount)
+	if err != nil {
+		return subject, err
+	}
+	return subject, nil
 }
