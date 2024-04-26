@@ -69,7 +69,6 @@ func main() {
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
 	http.HandleFunc("/profile", app.ProfileHandler(db))
-	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
