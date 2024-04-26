@@ -37,10 +37,14 @@ $(document).ready(function () {
           if (window.location.pathname != "/") window.location.href = "/";
         } else if (msg.content == "valid") {
           // !!! TODO show the website if the session is still valid
-          if (window.location.pathname == "/"  )
+          if (window.location.pathname == "/")
             window.location.pathname = "/codeQuarry";
           console.log("Session still valid");
         }
+      case "voteUpdate":
+        console.log("Vote updated for question:", msg.content);
+        handleVoteUpdate(msg.content);
+        break;
     }
     // Log the message received from the server
     console.log(`[message] Data received from server: ${event.data}`);
@@ -66,3 +70,20 @@ $(document).ready(function () {
     console.error(`[error] ${error.message}`);
   };
 });
+
+function handleVoteUpdate(data) {
+  // Assuming 'data' contains { questionId: 123, upvotes: 10, downvotes: 5 }
+  const upvoteCountElement = document.querySelector(
+    `.upvote_count[data-question-id="${data.question_id}"]`
+  );
+  const downvoteCountElement = document.querySelector(
+    `.downvote_count[data-question-id="${data.question_id}"]`
+  );
+
+  if (upvoteCountElement) {
+    upvoteCountElement.textContent = data.upvote;
+  }
+  if (downvoteCountElement) {
+    downvoteCountElement.textContent = data.downvote;
+  }
+}
