@@ -4,6 +4,13 @@ function createPostInput() {
   } else {
     let title = document.createElement("input");
     let content = document.createElement("textarea");
+    let subjectLists = document.createElement("select");
+    SubjectsList.forEach((subject) => {
+        let option = document.createElement("option");
+        option.value = subject.id;
+        option.textContent = subject.title;
+        subjectLists.appendChild(option);
+        });
     let submit = document.createElement("button");
     title.setAttribute("type", "text");
     title.setAttribute("placeholder", "Title");
@@ -16,7 +23,7 @@ function createPostInput() {
       let form = {
         title: title.value,
         content: content.value,
-        subject_id: localStorage.getItem("subjectId")
+        subject_id: subjectLists.value,
       };
       socket.send(
         JSON.stringify({
@@ -29,6 +36,7 @@ function createPostInput() {
     };
     container.appendChild(title);
     container.appendChild(content);
+    container.appendChild(subjectLists);
     container.appendChild(submit);
 
     document.body.appendChild(container);
