@@ -13,3 +13,4 @@ function fetchQuestions(subjectId) {
       questionsList.style.display = ""; // Show the questions list
     });
 }
+

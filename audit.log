@@ -306,3 +306,13 @@ ERROR: 2024/04/26 19:33:27 Error reading the message from the client
 ERROR: 2024/04/26 19:37:38 Error reading the message from the client
 ERROR: 2024/04/26 19:38:10 Error reading the message from the client
 ERROR: 2024/04/26 19:38:13 Error reading the message from the client
+DEBUG: 2024/04/26 20:41:33 Login successful: mm at /login
+ERROR: 2024/04/26 20:41:33 Error reading the message from the client
+ERROR: 2024/04/26 20:46:10 Error reading the message from the client
+ERROR: 2024/04/26 20:48:43 Error reading the message from the client
+ERROR: 2024/04/26 20:49:10 Error reading the message from the client
+ERROR: 2024/04/26 20:57:24 Error reading the message from the client
+ERROR: 2024/04/26 20:57:27 Error reading the message from the client
+ERROR: 2024/04/26 20:57:34 Error reading the message from the client
+ERROR: 2024/04/26 20:57:56 Error reading the message from the client
+ERROR: 2024/04/26 20:59:54 Error reading the message from the client
