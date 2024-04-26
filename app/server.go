@@ -6,21 +6,27 @@ import (
 	"text/template"
 )
 
-func SendTemplate(template_name string) http.HandlerFunc {
+func SendTemplate(template_name string, data interface{}) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-		// This function is used to handle requests to send the index page. It logs the IP address of the client making the request.
-		tmpl, err := template.ParseFiles("public/header.html", "public/footer.html", "public/script.html", "public/head.html", "public/"+template_name+".html")
+		err := ParseAndExecuteTemplate(template_name, data, w)
 		if err != nil {
-			panic(err)
-			// Parsing the HTML templates for the header, footer, and index. If there is an error, the program will panic and stop execution.
-		}
-		err = tmpl.ExecuteTemplate(w, template_name, nil)
-		if err != nil {
-			panic(err)
-			// Executing the "index" template and sending it to the client. If there is an error, the program will panic and stop execution.
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 	}
+}
+func ParseAndExecuteTemplate(template_name string, data interface{}, w http.ResponseWriter) error {
+	tmpl, err := template.ParseFiles("public/header.html", "public/footer.html", "public/script.html", "public/head.html", "public/"+template_name+".html")
+	if err != nil {
+		return err
+	}
+
+	err = tmpl.ExecuteTemplate(w, template_name, data)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 // handle CSS files
