@@ -42,8 +42,6 @@ func SendComponent(componentName string) http.HandlerFunc {
 	}
 }
 
-// Assume the rest of your web server setup code is here...
-
 // handle CSS files
 func CssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
@@ -88,4 +86,9 @@ func HandleCodeQuarry(w http.ResponseWriter, r *http.Request) {
 func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "scripts/websocket.js")
+}
+
+func VoteHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "scripts/votes.js")
 }

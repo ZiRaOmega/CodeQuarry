@@ -253,3 +253,21 @@ func getUserIDFromDB(username string, db *sql.DB) (int, error) {
 	}
 	return id, nil
 }
+
+
+func getUserIDUsingSessionID(sessionID string, db *sql.DB) (int, error) {
+	var id int
+	stmt, err := db.Prepare("SELECT user_id FROM Sessions WHERE uuid = $1")
+	if err != nil {
+		return -1, err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(sessionID).Scan(&id)
+	switch {
+	case err == sql.ErrNoRows:
+		return 0, err
+	case err != nil:
+		return 0, err
+	}
+	return id, nil
+}
