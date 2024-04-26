@@ -26,13 +26,13 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 	var err error
 
 	if subjectID == "all" {
-		query := `SELECT s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject`
 		rows, err = db.Query(query)
 	} else {
-		query := `SELECT s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject
@@ -48,7 +48,7 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 
 	for rows.Next() {
 		var q Question
-		if err := rows.Scan(&q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
+		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
 			log.Printf("Error scanning question: %v", err)
 			continue
 		}
@@ -62,7 +62,6 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 	return questions, nil
 }
 
-// QuestionsHandler handles the API endpoint for fetching questions based on subject ID
 func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		subjectID := r.URL.Query().Get("subjectId")

@@ -87,13 +87,15 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function setupVoteButtons(questionId) {
-  const upvoteButton = document.getElementsByClassName("upvote_container");
-  upvoteButton.onclick = function () {
-    console.log("Upvote button clicked for question:", questionId);
-    socket.send(JSON.stringify({ type: "upvote", content: questionId }));
-  };
+  const upvoteButton = document.querySelectorAll(".upvote_container");
 
-  const downvoteButton = document.getElementsByClassName("downvote_container");
+  upvoteButton.forEach((button) => {
+    button.onclick = function () {
+      console.log("Upvote button clicked for question:", questionId);
+      socket.send(JSON.stringify({ type: "upvote", content: questionId }));
+    };
+  });
+  const downvoteButton = document.querySelectorAll(".downvote_container");
   downvoteButton.onclick = function () {
     socket.send(JSON.stringify({ type: "downvote", content: questionId }));
   };
@@ -105,6 +107,7 @@ function fetchQuestions(subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
+      console.log(questions);
       const questionsList = document.getElementById("questionsList");
       questionsList.innerHTML = ""; // Clear previous questions
       questions.forEach((question) => {
