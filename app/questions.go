@@ -12,6 +12,7 @@ import (
 type Question struct {
 	Id           int       `json:"id"`
 	SubjectTitle string    `json:"subject_title"`
+	SubjectID    int       `json:"subject_id"`
 	Title        string    `json:"title"`
 	Content      string    `json:"content"`
 	CreationDate time.Time `json:"creation_date"`
@@ -74,4 +75,15 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(questions)
 	}
+}
+
+func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) error {
+	query := `INSERT INTO question (title, content, creation_date, update_date, id_student, id_subject, upvotes, downvotes)
+			  VALUES ($1, $2, $3, $4, $5, $6, 0, 0)`
+	_, err := db.Exec(query, question.Title, question.Content, time.Now(), time.Now(), user_id, subject_id)
+	if err != nil {
+		log.Printf("Error inserting question: %v", err)
+		return err
+	}
+	return nil
 }

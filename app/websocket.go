@@ -4,6 +4,7 @@ package app
 import (
 	"database/sql"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -89,6 +90,25 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote"})
 				} else {
 					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+				}
+			case "createPost":
+				content := wsmessage.Content.(map[string]interface{})
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					Log(ErrorLevel, "Error getting user ID using session ID")
+					break
+				}
+				quest := Question{Title: content["title"].(string), Content: content["content"].(string)}
+				subject_id, err := strconv.Atoi(content["subject_id"].(string))
+				if err != nil {
+					Log(ErrorLevel, "Error converting subject ID to integer")
+					break
+				}
+				err = CreateQuestion(db, quest, user_id, subject_id)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
+				} else {
+					conn.WriteJSON(WSMessage{Type: "postCreated", Content: "Post created successfully", SessionID: wsmessage.SessionID})
 				}
 			}
 

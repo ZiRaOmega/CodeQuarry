@@ -84,3 +84,8 @@ func VoteHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "scripts/votes.js")
 }
+
+func PostsHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "scripts/posts.js")
+}
