@@ -1,4 +1,4 @@
-let SubjectsList=[]
+let SubjectsList = [];
 document.addEventListener("DOMContentLoaded", function () {
   const listElement = document.getElementById("subjectsList");
   const questionsList = document.getElementById("questionsList");
@@ -49,11 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const allQestionCountDiv = document.createElement("div");
       allQestionCountDiv.classList.add("question_count_all");
       let totalQuestions = 0; // For counting all questions
-      SubjectsList=[]
+      SubjectsList = [];
       subjects.forEach((subject) => {
-        SubjectsList.push(subject)
+        SubjectsList.push(subject);
         totalQuestions += subject.questionCount; // Sum up all questions
-        console.log(totalQuestions);
 
         allQestionCountDiv.textContent = totalQuestions;
         allSubjectsItem.appendChild(allQestionCountDiv);
@@ -63,6 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const questionCountDiv = document.createElement("div");
         questionCountDiv.classList.add("question_count");
+        questionCountDiv.setAttribute("data-subject-id", subject.id);
         questionCountDiv.textContent = subject.questionCount; // Assuming 'subject.questionCount' is the number of questions
         listItem.appendChild(questionCountDiv);
 
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function fetchQuestions(subjectId) {
+window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
@@ -187,4 +187,4 @@ function fetchQuestions(subjectId) {
       });
       questionsList.style.display = ""; // Show the questions list
     });
-}
+};
