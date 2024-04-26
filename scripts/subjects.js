@@ -45,9 +45,23 @@ document.addEventListener("DOMContentLoaded", function () {
   fetch("/api/subjects")
     .then((response) => response.json())
     .then((subjects) => {
+      const allQestionCountDiv = document.createElement("div");
+      allQestionCountDiv.classList.add("question_count_all");
+      let totalQuestions = 0; // For counting all questions
       subjects.forEach((subject) => {
+        totalQuestions += subject.questionCount; // Sum up all questions
+        console.log(totalQuestions);
+
+        allQestionCountDiv.textContent = totalQuestions;
+        allSubjectsItem.appendChild(allQestionCountDiv);
+
         const listItem = document.createElement("div");
         listItem.classList.add("category_cards");
+
+        const questionCountDiv = document.createElement("div");
+        questionCountDiv.classList.add("question_count");
+        questionCountDiv.textContent = subject.questionCount; // Assuming 'subject.questionCount' is the number of questions
+        listItem.appendChild(questionCountDiv);
 
         const title = document.createElement("h2");
         title.classList.add("category_title");
