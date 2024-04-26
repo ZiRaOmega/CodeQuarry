@@ -37,8 +37,7 @@ $(document).ready(function () {
                     if (window.location.pathname != "/") window.location.href = "/";
                 } else if (msg.content == "valid") {
                     // !!! TODO show the website if the session is still valid
-                    if (window.location.pathname != "/home")
-                        window.location.pathname = "/home";
+                    if (window.location.pathname == "/") window.location.href = "/home";
                     console.log("Session still valid");
                 }
         }
