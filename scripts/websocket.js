@@ -37,7 +37,7 @@ $(document).ready(function () {
           if (window.location.pathname != "/") window.location.href = "/";
         } else if (msg.content == "valid") {
           // !!! TODO show the website if the session is still valid
-          if (window.location.pathname != "/codeQuarry")
+          if (window.location.pathname == "/"  )
             window.location.pathname = "/codeQuarry";
           console.log("Session still valid");
         }
