@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"codequarry/app/utils"
 
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -22,7 +23,7 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 		cookie, err := r.Cookie("session")
 		if err != nil {
 			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 		session_id := cookie.Value
@@ -34,7 +35,6 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		ParseAndExecuteTemplate("profile", user, w)
-
 	}
 }
 
@@ -67,6 +67,7 @@ type User struct {
 	CreationDate       sql.NullTime // Adjusted for possible NULL values
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
+
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -130,7 +131,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		}
 		session_id := cookie.Value
 		if !isValidSession(session_id, db) {
-			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 
@@ -166,10 +167,10 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Website = sql.NullString{String: r.PostFormValue("website"), Valid: true}
 		user.GitHub = sql.NullString{String: r.PostFormValue("github"), Valid: true}
 		user.SchoolYear = sql.NullTime{Time: time.Now(), Valid: true}
-		if ContainsSQLi(user.LastName) || ContainsSQLi(user.FirstName) || ContainsSQLi(user.Username) || ContainsSQLi(user.Email) || ContainsSQLi(user.Password) || ContainsSQLi(user.Bio.String) || ContainsSQLi(user.Website.String) || ContainsSQLi(user.GitHub.String) {
+		if utils.ContainsSQLi(user.LastName) || utils.ContainsSQLi(user.FirstName) || utils.ContainsSQLi(user.Username) || utils.ContainsSQLi(user.Email) || utils.ContainsSQLi(user.Password) || utils.ContainsSQLi(user.Bio.String) || utils.ContainsSQLi(user.Website.String) || utils.ContainsSQLi(user.GitHub.String) {
 			http.Error(w, "Invalid characters", http.StatusForbidden)
 			return
-		} else if ContainsXSS(user.LastName) || ContainsXSS(user.FirstName) || ContainsXSS(user.Username) || ContainsXSS(user.Email) || ContainsXSS(user.Password) || ContainsXSS(user.Bio.String) || ContainsXSS(user.Website.String) || ContainsXSS(user.GitHub.String) {
+		} else if utils.ContainsXSS(user.LastName) || utils.ContainsXSS(user.FirstName) || utils.ContainsXSS(user.Username) || utils.ContainsXSS(user.Email) || utils.ContainsXSS(user.Password) || utils.ContainsXSS(user.Bio.String) || utils.ContainsXSS(user.Website.String) || utils.ContainsXSS(user.GitHub.String) {
 			http.Error(w, "Invalid characters", http.StatusForbidden)
 			return
 		}
@@ -227,7 +228,7 @@ func FileUpload(r *http.Request) (string, error) {
 	uuid := uuid.NewV4()
 	genname := uuid.String()[0:5] + "." + extention
 	if handler.Filename[len(handler.Filename)-4:] != ".jpg" && handler.Filename[len(handler.Filename)-5:] != ".jpeg" && handler.Filename[len(handler.Filename)-4:] != ".png" && handler.Filename[len(handler.Filename)-4:] != ".gif" {
-		return "", errors.New("Wrong File Type")
+		return "", errors.New("wrong file type")
 	}
 	if err != nil {
 		return "", err

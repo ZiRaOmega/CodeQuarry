@@ -48,10 +48,10 @@ func main() {
 
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 
-	http.HandleFunc("/styles/styles.css", app.CssHandler)
-	http.HandleFunc("/", app.AddSecurityHeaders(app.SendComponent("auth")))
+	http.HandleFunc("/global_style/global.css", app.CssHandler)
+	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("auth", nil)))
 	// http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
-	http.HandleFunc("/components/auth/auth_obfuscate.js", app.ErrorsHandler)
+	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
@@ -61,24 +61,27 @@ func main() {
 	http.HandleFunc("/create_post", app.CreatePostHandler)
 
 	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
-	http.HandleFunc("/home", app.SendComponent("home"))
+	http.HandleFunc("/home", app.SendTemplate("home" , nil))
 	// http.HandleFunc("/styles/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
 	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
 	http.HandleFunc("/templates/header/header.css", app.HeaderCssHandler)
 
 	http.HandleFunc("/logout", app.LogoutHandler(db))
-	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
-	http.HandleFunc("/votes", app.VoteHandler)
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
-
+	
+	http.HandleFunc("/votes", app.VoteHandler)
+	
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
+	
 	http.HandleFunc("/profile", app.ProfileHandler(db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
+	
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
