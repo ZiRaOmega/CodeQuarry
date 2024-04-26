@@ -1,0 +1,21 @@
+{{define "head"}}
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Quarry</title>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <link rel="stylesheet" href="/styles/styles.css" />
+  <link rel="stylesheet" href="/components/home/home.css" />
+  
+  <!-- if the template header is here put the header.css -->
+  {{if eq .Template "header" .}}
+  <link rel="stylesheet" href="/templates/header/header.css">
+  {{else}}
+  <h1>hello</h1>
+  {{end}}
+</head>
+{{end}}

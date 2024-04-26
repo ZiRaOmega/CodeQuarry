@@ -185,3 +185,55 @@ ERROR: 2024/04/25 16:47:59 Error reading the message from the client
 ERROR: 2024/04/25 16:47:59 Error reading the message from the client
 DEBUG: 2024/04/25 16:48:37 Registration successful: gg at /register
 ERROR: 2024/04/25 16:48:39 Error reading the message from the client
+DEBUG: 2024/04/25 17:54:30 Invalid login credentialsde at /login
+ERROR: 2024/04/25 17:54:43 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 17:56:19 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 17:58:00 Error inserting the data into the databasepq: duplicate key value violates unique constraint "users_username_key"
+ERROR: 2024/04/25 17:58:57 Error reading the message from the client
+ERROR: 2024/04/25 17:59:09 Email already exists
+ERROR: 2024/04/25 17:59:16 Error reading the message from the client
+ERROR: 2024/04/25 17:59:41 Username already exists
+DEBUG: 2024/04/25 18:01:29 Invalid login credentialsde@de.de at /login
+DEBUG: 2024/04/25 18:04:25 Registration successful: de at /register
+ERROR: 2024/04/25 18:04:36 Error reading the message from the client
+ERROR: 2024/04/25 18:05:22 Error reading the message from the client
+ERROR: 2024/04/25 18:06:15 Error reading the message from the client
+ERROR: 2024/04/25 18:16:52 Error reading the message from the client
+ERROR: 2024/04/25 18:40:56 Error reading the message from the client
+ERROR: 2024/04/25 18:41:48 Error reading the message from the client
+ERROR: 2024/04/25 18:41:48 Error reading the message from the client
+ERROR: 2024/04/25 18:42:12 Error reading the message from the client
+DEBUG: 2024/04/25 18:44:15 Invalid login credentialsde at /login
+DEBUG: 2024/04/25 18:44:41 Login successful: de at /login
+ERROR: 2024/04/25 18:44:41 Error reading the message from the client
+ERROR: 2024/04/25 18:44:45 Error reading the message from the client
+ERROR: 2024/04/25 18:44:46 Error reading the message from the client
+ERROR: 2024/04/25 18:44:46 Error reading the message from the client
+ERROR: 2024/04/26 15:17:51 Error reading the message from the client
+ERROR: 2024/04/26 16:43:39 Error reading the message from the client
+ERROR: 2024/04/26 17:03:06 Error reading the message from the client
+ERROR: 2024/04/26 17:06:30 Error reading the message from the client
+ERROR: 2024/04/26 17:06:43 Error reading the message from the client
+ERROR: 2024/04/26 17:10:21 Error reading the message from the client
+ERROR: 2024/04/26 17:10:21 Error reading the message from the client
+ERROR: 2024/04/26 17:10:30 Error reading the message from the client
+ERROR: 2024/04/26 17:10:30 Error reading the message from the client
+ERROR: 2024/04/26 17:10:43 Error reading the message from the client
+ERROR: 2024/04/26 17:10:43 Error reading the message from the client
+DEBUG: 2024/04/26 17:15:41 Invalid login credentialsde at /login
+ERROR: 2024/04/26 17:15:43 Error reading the message from the client
+ERROR: 2024/04/26 17:15:53 Error reading the message from the client
+ERROR: 2024/04/26 17:15:54 Error reading the message from the client
+ERROR: 2024/04/26 17:15:58 Error reading the message from the client
+DEBUG: 2024/04/26 17:19:00 Registration successful: Svalbard at /register
+ERROR: 2024/04/26 17:19:03 Error reading the message from the client
+DEBUG: 2024/04/26 17:19:06 Login successful: Svalbard at /login
+ERROR: 2024/04/26 17:19:06 Error reading the message from the client
+ERROR: 2024/04/26 17:21:44 Error reading the message from the client
+ERROR: 2024/04/26 17:21:54 Error reading the message from the client
+ERROR: 2024/04/26 17:21:56 Error reading the message from the client
+ERROR: 2024/04/26 17:21:56 Error reading the message from the client
+DEBUG: 2024/04/26 17:21:59 Login successful: Svalbard at /login
+ERROR: 2024/04/26 17:21:59 Error reading the message from the client
+ERROR: 2024/04/26 17:21:59 Error reading the message from the client
+ERROR: 2024/04/26 17:31:29 Error reading the message from the client

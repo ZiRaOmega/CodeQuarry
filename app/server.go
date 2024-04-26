@@ -3,50 +3,76 @@ package app
 import (
 	"log"
 	"net/http"
+	"path"
 	"text/template"
 )
 
-func SendTemplate(template_name string) http.HandlerFunc {
+
+func parseTemplates(componentName string, parts ...string) *template.Template {
+	// Construct the paths for common template parts.
+	templatePath := "public/templates/"
+	componentPath := "public/components/"
+	var paths []string
+	for _, part := range parts {
+		paths = append(paths, path.Join(templatePath, part, part+".html"))
+	}
+	// Add the component template.
+	paths = append(paths, path.Join(componentPath, componentName, componentName+".html"))
+	
+	// Use template.Must to panic if there's an error.
+	return template.Must(template.ParseFiles(paths...))
+}
+
+var templates = map[string]*template.Template{}
+func SendComponent(componentName string) http.HandlerFunc {
+	templates["home"] = parseTemplates("home", "head", "header", "footer", "script")
+	templates["auth"] = parseTemplates("auth", "head", "footer", "script")
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-		// This function is used to handle requests to send the index page. It logs the IP address of the client making the request.
-		tmpl, err := template.ParseFiles("public/header.html", "public/footer.html", "public/script.html", "public/head.html", "public/"+template_name+".html")
-		if err != nil {
-			panic(err)
-			// Parsing the HTML templates for the header, footer, and index. If there is an error, the program will panic and stop execution.
+		log.Printf("[SendComponent:%s] New Client with IP: %s\n", componentName, r.RemoteAddr)
+
+		tmpl, ok := templates[componentName]
+		if !ok {
+			http.Error(w, "Component not found", http.StatusNotFound)
+			return
 		}
-		err = tmpl.ExecuteTemplate(w, template_name, nil)
-		if err != nil {
-			panic(err)
-			// Executing the "index" template and sending it to the client. If there is an error, the program will panic and stop execution.
+
+		if err := tmpl.ExecuteTemplate(w, componentName, nil); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }
 
+// Assume the rest of your web server setup code is here...
+
 // handle CSS files
 func CssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
-	http.ServeFile(w, r, "public/styles.css")
+	http.ServeFile(w, r, "public/styles/styles.css")
+}
+
+func HeaderCssHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/templates/header/header.css")
 }
 
 func CQcssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
-	http.ServeFile(w, r, "public/codeQuarry.css")
+	http.ServeFile(w, r, "public/components/home/home.css")
 }
 
 func LogoHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page.
-	http.ServeFile(w, r, "public/CODEQUARRY.webp")
+	http.ServeFile(w, r, "public/images/CODEQUARRY.webp")
 }
 
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
-	//serve the animation js file
+	// serve the animation js file
 	http.ServeFile(w, r, "scripts/animation.js")
 }
 
 func ErrorsHandler(w http.ResponseWriter, r *http.Request) {
-	//serve the animation js file
-	http.ServeFile(w, r, "scripts/auth_obfuscate.js")
+	// serve the animation js file
+	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
 }
 
 func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
@@ -54,15 +80,9 @@ func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "scripts/subjects.js")
 }
 
-// handle the main page
-func LoginhandlerPage(w http.ResponseWriter, r *http.Request) {
-	// Serve the login.html file as the default page
-	http.ServeFile(w, r, "public/login.html")
-}
-
 func HandleCodeQuarry(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/codeQuarry.html")
+	http.ServeFile(w, r, "public/components/home/home.html")
 }
 
 func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {

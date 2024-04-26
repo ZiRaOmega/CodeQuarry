@@ -82,7 +82,7 @@ $(document).ready(function () {
               confirmButtonText: "OK",
             }).then((result) => {
               if (result.value) {
-                window.location.href = "codeQuarry";
+                window.location.href = "home";
               }
             });
           } else {
@@ -116,7 +116,7 @@ $(document).ready(function () {
       contentType: "application/x-www-form-urlencoded", // Ensure the content type is set correctly
       success: function (response) {
         if (response.status === "success") {
-          window.location.href = "/codeQuarry"; // Redirect to the forum page
+          window.location.href = "/home"; // Redirect to the forum page
         } else {
           let loginBlock = document.getElementById("loginBlock");
           loginBlock.style.display = "none";

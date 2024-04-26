@@ -42,25 +42,36 @@ func main() {
 	defer db.Close()
 
 	app.SetupDB(db)
-	inputPath := "scripts/auth.js"
-	outputPath := "scripts/auth_obfuscate.js"
+	inputPath := "public/components/auth/auth.js"
+	outputPath := "public/components/auth/auth_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
 
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 
-	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("login")))
-	http.HandleFunc("/styles.css", app.CssHandler)
-	http.HandleFunc("/codeQuarry.css", app.CQcssHandler)
+	http.HandleFunc("/styles/styles.css", app.CssHandler)
+	http.HandleFunc("/", app.AddSecurityHeaders(app.SendComponent("auth")))
+	// http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
+	http.HandleFunc("/components/auth/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
-	http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
-	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
-	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
-	http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
+
+	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
+
+	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
+	http.HandleFunc("/home", app.SendComponent("home"))
+	// http.HandleFunc("/styles/codeQuarry.css", app.CQcssHandler)
+	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
+	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
+	http.HandleFunc("/templates/header/header.css", app.HeaderCssHandler)
+
 	http.HandleFunc("/logout", app.LogoutHandler(db))
+
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
+	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
+
+	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 
