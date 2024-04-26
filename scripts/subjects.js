@@ -86,23 +86,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-function setupVoteButtons(questionId) {
-  const upvoteButton = document.querySelectorAll(".upvote_container");
-
-  upvoteButton.forEach((button) => {
-    button.onclick = function () {
-      console.log("Upvote button clicked for question:", questionId);
-      socket.send(JSON.stringify({ type: "upvote", content: questionId }));
-    };
-  });
-  const downvoteButton = document.querySelectorAll(".downvote_container");
-  downvoteButton.onclick = function () {
-    socket.send(JSON.stringify({ type: "downvote", content: questionId }));
-  };
-
-  return { upvoteButton, downvoteButton };
-}
-
 function fetchQuestions(subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
@@ -177,7 +160,15 @@ function fetchQuestions(subjectId) {
         voteContainer.appendChild(downvoteContainer);
         questionContainer.appendChild(voteContainer);
         questionsList.appendChild(questionContainer);
-        setupVoteButtons(question.id);
+        upvoteContainer.onclick = function () {
+          socket.send(JSON.stringify({ type: "upvote", content: question.id }));
+        };
+
+        downvoteContainer.onclick = function () {
+          socket.send(
+            JSON.stringify({ type: "downvote", content: question.id })
+          );
+        };
       });
       questionsList.style.display = ""; // Show the questions list
     });
