@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-
+	
 	UUID "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
+	
+	"codequarry/app/utils"
 )
 
 type PageData struct {
@@ -32,14 +34,15 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		username := r.FormValue("username")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
-		if ContainsSQLi(lastname) || ContainsSQLi(firstname) || ContainsSQLi(username) || ContainsSQLi(email) || ContainsSQLi(password) {
+		if utils.ContainsSQLi(lastname) || utils.ContainsSQLi(firstname) || utils.ContainsSQLi(username) || utils.ContainsSQLi(email) || utils.ContainsSQLi(password) {
 			Log(ErrorLevel, "SQL injection detected")
-			//http.Error(w, "SQL injection detected", http.StatusBadRequest)
+			// http.Error(w, "SQL injection detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "SQL injection detected"})
 			return
-		} else if ContainsXSS(lastname) || ContainsXSS(firstname) || ContainsXSS(username) || ContainsXSS(email) || ContainsXSS(password) {
+
+		} else if utils.ContainsXSS(lastname) || utils.ContainsXSS(firstname) || utils.ContainsXSS(username) || utils.ContainsXSS(email) || utils.ContainsXSS(password) {
 			Log(ErrorLevel, "XSS detected")
-			//http.Error(w, "XSS detected", http.StatusBadRequest)
+			// http.Error(w, "XSS detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
 			return
 		}
@@ -47,7 +50,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			Log(ErrorLevel, "Error hashing password")
-			//http.Error(w, "Error hashing password", http.StatusInternalServerError)
+			// http.Error(w, "Error hashing password", http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error hashing password"})
 			return
 		}
@@ -56,14 +59,25 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			fmt.Println(err)
 			Log(ErrorLevel, "Error preparing the SQL statement")
-			//http.Error(w, "Error preparing the SQL statement", http.StatusInternalServerError)
+			// http.Error(w, "Error preparing the SQL statement", http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error preparing the SQL statement"})
 			return
 		}
 		defer stmt.Close()
 		if _, err := stmt.Exec(lastname, firstname, username, email, string(hashedPassword)); err != nil {
+			if err.Error() == "pq: duplicate key value violates unique constraint \"users_username_key\"" {
+				Log(ErrorLevel, "Username already exists")
+				// http.Error(w, "Username already exists", http.StatusBadRequest)
+				json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Username already exists"})
+				return
+			} else if err.Error() == "pq: duplicate key value violates unique constraint \"users_email_key\"" {
+				Log(ErrorLevel, "Email already exists")
+				// http.Error(w, "Email already exists", http.StatusBadRequest)
+				json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Email already exists"})
+				return
+			}
 			Log(ErrorLevel, "Error inserting the data into the database"+err.Error())
-			//http.Error(w, "Error inserting the data into the database", http.StatusInternalServerError)
+			// http.Error(w, "Error inserting the data into the database", http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error inserting the data into the database"})
 			return
 		}
@@ -79,6 +93,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		Log(DebugLevel, "Registration successful: "+username+" at "+r.URL.Path)
 	}
 }
+
 func LoginHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -91,14 +106,14 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		}
 		username := r.FormValue("usernameOrEmailLogin")
 		password := r.FormValue("passwordLogin")
-		if ContainsSQLi(username) || ContainsSQLi(password) {
+		if utils.ContainsSQLi(username) || utils.ContainsSQLi(password) {
 			Log(ErrorLevel, "SQL injection detected")
-			//http.Error(w, "SQL injection detected", http.StatusBadRequest)
+			// http.Error(w, "SQL injection detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "SQL injection detected"})
 			return
-		} else if ContainsXSS(username) || ContainsXSS(password) {
+		} else if utils.ContainsXSS(username) || utils.ContainsXSS(password) {
 			Log(ErrorLevel, "XSS detected")
-			//http.Error(w, "XSS detected", http.StatusBadRequest)
+			// http.Error(w, "XSS detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
 			return
 		}
@@ -156,7 +171,7 @@ func LogoutHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error deleting session", http.StatusInternalServerError)
 			return
 		}
-		//Remove cookie
+		// Remove cookie
 		cookie.Expires = time.Now().AddDate(0, 0, -1)
 		http.SetCookie(w, cookie)
 		http.Redirect(w, r, "/", http.StatusSeeOther)

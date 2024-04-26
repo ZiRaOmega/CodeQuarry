@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -32,8 +31,6 @@ func InsertInSubject(db *sql.DB, title, description string) {
 
 	if _, err := stmt.Exec(title, description, currentTime, currentTime); err != nil {
 		log.Fatal("Error executing statement: ", err)
-	} else {
-		log.Printf("Inserted subject: %s", title)
 	}
 }
 
@@ -51,7 +48,7 @@ func InsertMultipleSubjects(db *sql.DB) {
 		{"Python", "An interpreted, high-level, general-purpose programming language"},
 		{"Java", "A high-level, class-based, object-oriented programming language"},
 	}
-	fmt.Println("Inserting subjects...")
+	// fmt.Println("Inserting subjects...")
 	for _, subject := range subjects {
 		InsertInSubject(db, subject.Title, subject.Description)
 	}
