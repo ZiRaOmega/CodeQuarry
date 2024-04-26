@@ -6,3 +6,4 @@ socket.onmessage = function (event) {
     // Update UI accordingly
   }
 };
+
