@@ -152,19 +152,18 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Password = r.PostFormValue("password")
 		user.Avatar = sql.NullString{String: r.PostFormValue("avatar"), Valid: true}
 		filename := ""
-		if r.PostFormValue("avatar") == "" {
+
+		filename, err = FileUpload(r)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		if filename == "" {
 			filename, err = getAvatar(db, user.ID)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-		} else {
-
-			filename, err = FileUpload(r)
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-
 		}
+		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
 		birthDate, err := time.Parse("2006-01-02", birthDateStr)
@@ -230,7 +229,12 @@ func FileUpload(r *http.Request) (string, error) {
 	file, handler, err := r.FormFile("avatar")
 	if err != nil {
 		fmt.Println(err)
-		return "./public/img/default.jpg", err
+		return "", err
+	}
+	//if size is null
+	if handler.Size == 0 {
+
+		return "", nil
 	}
 	filename := strings.Split(handler.Filename, ".")
 	extention := filename[len(filename)-1]
