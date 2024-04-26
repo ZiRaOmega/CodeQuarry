@@ -39,6 +39,10 @@ func LogoHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/CODEQUARRY.webp")
 }
 
+func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/create_post.webp")
+}
+
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	//serve the animation js file
 	http.ServeFile(w, r, "scripts/animation.js")
