@@ -62,6 +62,7 @@ func main() {
 	http.HandleFunc("/create_post", app.CreatePostHandler)
 	http.HandleFunc("/logout", app.LogoutHandler(db))
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
+	http.HandleFunc("/votes", app.VoteHandler)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
