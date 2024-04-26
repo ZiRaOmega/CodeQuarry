@@ -5,10 +5,10 @@
 {{template "head" .}}
 <body>
     {{template "header" .}}
-    <div>
-        <h1>Subjects</h1>
-        <ul id="subjectsList"></ul>
-    </div>
+    <ul id="subjectsList"></ul>
+    <div id="questionsList" style="display: none;"></div>
+    <div id="create_post_button"></div>
+    <div id="returnButton">Retour</div>
     <script src="../scripts/subjects.js"></script>
     
     {{template "script" .}}

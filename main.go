@@ -58,6 +58,7 @@ func main() {
 
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
+	http.HandleFunc("/create_post", app.CreatePostHandler)
 
 	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
 	http.HandleFunc("/home", app.SendComponent("home"))
@@ -67,14 +68,17 @@ func main() {
 	http.HandleFunc("/templates/header/header.css", app.HeaderCssHandler)
 
 	http.HandleFunc("/logout", app.LogoutHandler(db))
-
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
+	http.HandleFunc("/votes", app.VoteHandler)
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
-
+	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
+	http.HandleFunc("/profile", app.ProfileHandler(db))
+	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {

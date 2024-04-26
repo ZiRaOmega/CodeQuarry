@@ -47,6 +47,8 @@ func InsertMultipleSubjects(db *sql.DB) {
 		{"Rust", "A language empowering everyone to build reliable and efficient software"},
 		{"Python", "An interpreted, high-level, general-purpose programming language"},
 		{"Java", "A high-level, class-based, object-oriented programming language"},
+		{"C#", "A general-purpose, multi-paradigm programming language"},
+		{"Swift", "A powerful and intuitive programming language for macOS, iOS, watchOS, and tvOS"},
 	}
 	// fmt.Println("Inserting subjects...")
 	for _, subject := range subjects {
@@ -54,9 +56,14 @@ func InsertMultipleSubjects(db *sql.DB) {
 	}
 }
 
-func FetchAllSubjects(db *sql.DB) ([]map[string]string, error) {
-	var subjects []map[string]string
-	query := "SELECT title, description FROM Subject ORDER BY title ASC"
+func FetchAllSubjects(db *sql.DB) ([]map[string]interface{}, error) {
+	var subjects []map[string]interface{}
+	query := `
+    SELECT s.id_subject, s.title, s.description, COUNT(q.id_question) as question_count
+    FROM subject s
+    LEFT JOIN question q ON s.id_subject = q.id_subject
+    GROUP BY s.id_subject
+    ORDER BY s.title ASC`
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Printf("Error querying subjects: %v", err)
@@ -65,12 +72,15 @@ func FetchAllSubjects(db *sql.DB) ([]map[string]string, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var title, description string
-		if err := rows.Scan(&title, &description); err != nil {
+		var id, title, description string
+		var questionCount int
+		if err := rows.Scan(&id, &title, &description, &questionCount); err != nil {
 			log.Printf("Error scanning subject: %v", err)
 			continue
 		}
-		subjects = append(subjects, map[string]string{"title": title, "description": description})
+		subjects = append(subjects, map[string]interface{}{
+			"id": id, "title": title, "description": description, "questionCount": questionCount,
+		})
 	}
 
 	if err := rows.Err(); err != nil {
