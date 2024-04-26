@@ -1,9 +1,13 @@
 package app
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
 
 // HandleUpvote updates the upvote count for a question
 func HandleUpvote(db *sql.DB, questionID float64) error {
+	fmt.Println("questionID", questionID)
 	// Increment upvote and potentially decrement downvote if already voted
 	query := `UPDATE question SET upvotes = upvotes + 1 WHERE id_question = $1`
 	_, err := db.Exec(query, questionID)
