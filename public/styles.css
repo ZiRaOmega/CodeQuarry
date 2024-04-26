@@ -181,3 +181,18 @@ header{
         opacity: 1;
     }
 }
+
+#create_post_container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 500px;
+    background-color: beige;
+
+}

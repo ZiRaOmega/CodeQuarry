@@ -11,9 +11,7 @@ function createPostInput() {
     submit.textContent = "Submit";
     let container = document.createElement("div");
     container.id = "create_post_container";
-    container.style.position = "absolute"
-    container.style.backgroundColor = "beige";
-    container.style.top = "50%";
+ 
     submit.onclick = function () {
       let form = {
         title: title.value,
