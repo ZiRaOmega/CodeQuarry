@@ -143,6 +143,7 @@ function fetchQuestions(subjectId) {
         upvoteText.textContent = "+";
         const upvoteCount = document.createElement("p");
         upvoteCount.classList.add("upvote_count");
+        upvoteCount.setAttribute("data-question-id", question.id);
         upvoteCount.textContent = question.upvotes;
         upvoteContainer.appendChild(upvoteText);
         upvoteContainer.appendChild(upvoteCount);
@@ -154,6 +155,7 @@ function fetchQuestions(subjectId) {
         downvoteText.textContent = "-";
         const downvoteCount = document.createElement("p");
         downvoteCount.classList.add("downvote_count");
+        downvoteCount.setAttribute("data-question-id", question.id);
         downvoteCount.textContent = question.downvotes;
         downvoteContainer.appendChild(downvoteText);
         downvoteContainer.appendChild(downvoteCount);
@@ -161,12 +163,22 @@ function fetchQuestions(subjectId) {
         questionContainer.appendChild(voteContainer);
         questionsList.appendChild(questionContainer);
         upvoteContainer.onclick = function () {
-          socket.send(JSON.stringify({ type: "upvote", content: question.id }));
+          socket.send(
+            JSON.stringify({
+              type: "upvote",
+              content: question.id,
+              session_id: getCookie("session"),
+            })
+          );
         };
 
         downvoteContainer.onclick = function () {
           socket.send(
-            JSON.stringify({ type: "downvote", content: question.id })
+            JSON.stringify({
+              type: "downvote",
+              content: question.id,
+              session_id: getCookie("session"),
+            })
           );
         };
       });
