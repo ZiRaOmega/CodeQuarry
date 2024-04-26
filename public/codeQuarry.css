@@ -31,6 +31,42 @@
 
 }
 
+.vote_container{
+    position: absolute;
+    margin-left: 530px;
+    margin-bottom: 150px;
+    display: flex;
+    flex-direction: row;
+}
+
+.upvote_container, .downvote_container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    width: 50px;
+    height: 20px;
+    background-color: rgb(234, 234, 234);
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.upvote_container:hover, .downvote_container:hover{
+    background-color: rgb(79, 79, 192);
+    color: var(--white);
+}
+
+.upvote_text, .downvote_text{
+    width: 30px;
+    height: 30px;
+    font-size: 25px;
+    font-weight: bold;
+    
+}
+
 #subjectsList{
     display: flex;
     flex-wrap: wrap;

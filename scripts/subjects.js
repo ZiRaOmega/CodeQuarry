@@ -86,6 +86,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function setupVoteButtons(questionId) {
+  const upvoteButton = document.getElementsByClassName("upvote_container");
+  upvoteButton.onclick = function () {
+    console.log("Upvote button clicked for question:", questionId);
+    socket.send(JSON.stringify({ type: "upvote", content: questionId }));
+  };
+
+  const downvoteButton = document.getElementsByClassName("downvote_container");
+  downvoteButton.onclick = function () {
+    socket.send(JSON.stringify({ type: "downvote", content: questionId }));
+  };
+
+  return { upvoteButton, downvoteButton };
+}
+
 function fetchQuestions(subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
@@ -132,7 +147,34 @@ function fetchQuestions(subjectId) {
         ContainerCreatorAndDate.appendChild(questionCreator);
 
         questionContainer.appendChild(ContainerCreatorAndDate);
+
+        const voteContainer = document.createElement("div");
+        voteContainer.classList.add("vote_container");
+        const upvoteContainer = document.createElement("div");
+        upvoteContainer.classList.add("upvote_container");
+        const upvoteText = document.createElement("div");
+        upvoteText.classList.add("upvote_text");
+        upvoteText.textContent = "+";
+        const upvoteCount = document.createElement("p");
+        upvoteCount.classList.add("upvote_count");
+        upvoteCount.textContent = question.upvotes;
+        upvoteContainer.appendChild(upvoteText);
+        upvoteContainer.appendChild(upvoteCount);
+        voteContainer.appendChild(upvoteContainer);
+        const downvoteContainer = document.createElement("div");
+        downvoteContainer.classList.add("downvote_container");
+        const downvoteText = document.createElement("div");
+        downvoteText.classList.add("downvote_text");
+        downvoteText.textContent = "-";
+        const downvoteCount = document.createElement("p");
+        downvoteCount.classList.add("downvote_count");
+        downvoteCount.textContent = question.downvotes;
+        downvoteContainer.appendChild(downvoteText);
+        downvoteContainer.appendChild(downvoteCount);
+        voteContainer.appendChild(downvoteContainer);
+        questionContainer.appendChild(voteContainer);
         questionsList.appendChild(questionContainer);
+        setupVoteButtons(question.id);
       });
       questionsList.style.display = ""; // Show the questions list
     });

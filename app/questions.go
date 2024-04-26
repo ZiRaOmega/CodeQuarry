@@ -10,11 +10,14 @@ import (
 
 // Question represents the data structure for a question
 type Question struct {
+	Id           int       `json:"id"`
 	SubjectTitle string    `json:"subject_title"`
 	Title        string    `json:"title"`
 	Content      string    `json:"content"`
 	CreationDate time.Time `json:"creation_date"`
 	Creator      string    `json:"creator"`
+	Upvotes      int       `json:"upvotes"`
+	Downvotes    int       `json:"downvotes"`
 }
 
 func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
@@ -23,15 +26,13 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 	var err error
 
 	if subjectID == "all" {
-		// Query to fetch all questions from all subjects
-		query := `SELECT s.title AS subject_title, q.title, q.content, q.creation_date, u.username
+		query := `SELECT s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject`
-		rows, err = db.Query(query) // No need to pass subjectID
+		rows, err = db.Query(query)
 	} else {
-		// Query to fetch all questions for a specific subject
-		query := `SELECT s.title AS subject_title, q.title, q.content, q.creation_date, u.username
+		query := `SELECT s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject
@@ -47,7 +48,7 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 
 	for rows.Next() {
 		var q Question
-		if err := rows.Scan(&q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator); err != nil {
+		if err := rows.Scan(&q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
 			log.Printf("Error scanning question: %v", err)
 			continue
 		}

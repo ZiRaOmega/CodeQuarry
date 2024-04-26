@@ -65,7 +65,22 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				} else {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "valid"})
 				}
+			case "upvote":
+				err := HandleUpvote(db, wsmessage.Content.(string))
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote"})
+				} else {
+					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: wsmessage.Content})
+				}
+			case "downvote":
+				err := HandleDownvote(db, wsmessage.Content.(string))
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote"})
+				} else {
+					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: wsmessage.Content})
+				}
 			}
+
 		}
 	}
 }
