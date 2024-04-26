@@ -15,8 +15,15 @@ var upgrader = websocket.Upgrader{
 }
 
 type WSMessage struct {
-	Type    string      `json:"type"`
-	Content interface{} `json:"content"`
+	Type      string      `json:"type"`
+	Content   interface{} `json:"content"`
+	SessionID string      `json:"session_id"`
+}
+
+type Vote struct {
+	QuestionID int `json:"question_id"`
+	Upvote     int `json:"upvote"`
+	Downvote   int `json:"downvote"`
 }
 
 // WebsocketHandler is a handler function that upgrades the HTTP connection to a WebSocket connection
@@ -66,18 +73,22 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "valid"})
 				}
 			case "upvote":
-				err := HandleUpvote(db, wsmessage.Content.(float64))
+				err := HandleUpvote(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				upvote, downvote := SendNewVoteCount(db, wsmessage.Content.(float64))
+				vote := Vote{QuestionID: int(wsmessage.Content.(float64)), Upvote: upvote, Downvote: downvote}
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote"})
 				} else {
-					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: wsmessage.Content})
+					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 				}
 			case "downvote":
-				err := HandleDownvote(db, wsmessage.Content.(float64))
+				err := HandleDownvote(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				upvote, downvote := SendNewVoteCount(db, wsmessage.Content.(float64))
+				vote := Vote{QuestionID: int(wsmessage.Content.(float64)), Upvote: upvote, Downvote: downvote}
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote"})
 				} else {
-					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: wsmessage.Content})
+					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 				}
 			}
 
