@@ -25,13 +25,16 @@ type Response struct {
 func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
-		case http.MethodGet:
-			// Handle get request
 		case http.MethodPost:
 			// Handle post request
 			var response Response
 			var receive_data interface{}
 			err := json.NewDecoder(r.Body).Decode(&receive_data)
+			if err != nil {
+				json.NewEncoder(w).Encode(map[string]string{"error": "Error decoding request body"})
+				http.Error(w, "Error decoding request body", http.StatusBadRequest)
+				return
+			}
 			session_id := receive_data.(map[string]interface{})["session_id"].(string)
 			question_id := receive_data.(map[string]interface{})["response"].(map[string]interface{})["question_id"].(string)
 			description := receive_data.(map[string]interface{})["response"].(map[string]interface{})["description"].(string)
@@ -76,23 +79,7 @@ func InsertResponse(db *sql.DB, response Response) error {
 	}
 	return nil
 }
-func FetchQuestionByQuestionID(db *sql.DB, questionID int) (Question, error) {
-	var q Question
-	query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
-				  FROM question q
-				  JOIN users u ON q.id_student = u.id_student	
-				  JOIN subject s ON q.id_subject = s.id_subject
-				  WHERE q.id_question = $1`
-	err := db.QueryRow(query, questionID).Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes)
-	if err != nil {
-		return q, err
-	}
-	q.Responses, err = FetchResponseByQuestion(db, q.Id)
-	if err != nil {
-		return q, err
-	}
-	return q, nil
-}
+
 func FetchResponseByQuestion(db *sql.DB, questionID int) ([]Response, error) {
 	var responses []Response
 	query := `SELECT * FROM Response WHERE id_question = $1`

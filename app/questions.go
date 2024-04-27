@@ -24,6 +24,10 @@ type Question struct {
 	Responses    []Response `json:"responses"`
 }
 
+// FetchQuestionsBySubject retrieves a list of questions based on the subject ID.
+// If the subject ID is "all", it fetches all questions from the database.
+// Otherwise, it fetches questions only for the specified subject ID.
+// It returns a slice of Question structs and an error if any.
 func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 	var questions []Question
 	var rows *sql.Rows
@@ -71,6 +75,30 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 	}
 	return questions, nil
 }
+
+// FetchQuestionByQuestionID retrieves a question from the database based on the given question ID.
+// It returns the retrieved question and an error, if any.
+func FetchQuestionByQuestionID(db *sql.DB, questionID int) (Question, error) {
+	var q Question
+	query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+				  FROM question q
+				  JOIN users u ON q.id_student = u.id_student	
+				  JOIN subject s ON q.id_subject = s.id_subject
+				  WHERE q.id_question = $1`
+	err := db.QueryRow(query, questionID).Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes)
+	if err != nil {
+		return q, err
+	}
+	q.Responses, err = FetchResponseByQuestion(db, q.Id)
+	if err != nil {
+		return q, err
+	}
+	return q, nil
+}
+
+// GetUsernameWithUserID retrieves the username associated with the given userID from the database.
+// It takes a *sql.DB pointer and an integer userID as parameters.
+// It returns the username as a string. If an error occurs, it returns an empty string.
 func GetUsernameWithUserID(db *sql.DB, userID int) string {
 	var username string
 	err := db.QueryRow(`SELECT username FROM users WHERE id_student = $1`, userID).Scan(&username)
@@ -80,6 +108,9 @@ func GetUsernameWithUserID(db *sql.DB, userID int) string {
 	return username
 
 }
+
+// QuestionsHandler handles the HTTP request for retrieving questions by subject ID.
+// It takes a database connection as input and returns an http.HandlerFunc.
 func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		subjectID := r.URL.Query().Get("subjectId")
@@ -93,6 +124,11 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(questions)
 	}
 }
+
+// QuestionViewerHandler handles the HTTP request for viewing a question.
+// It takes a database connection as input and returns an http.HandlerFunc.
+// The returned handler function fetches the question details from the database
+// based on the provided question_id parameter and renders the question viewer template.
 func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		questionID := r.URL.Query().Get("question_id")
@@ -120,6 +156,9 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 
 }
 
+// CreateQuestion inserts a new question into the database.
+// It takes a database connection, a question object, a user ID, and a subject ID as parameters.
+// It returns an error if the insertion fails.
 func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) error {
 	query := `INSERT INTO question (title, description, content, creation_date, update_date, id_student, id_subject, upvotes, downvotes)
 			  VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0)`
@@ -139,6 +178,9 @@ type Subject struct {
 	QuestionCount int    `json:"questionCount"`
 }
 
+// FetchSubjectWithQuestionCount fetches a subject from the database along with the count of its associated questions.
+// It takes a database connection (db) and a subject ID (subjectId) as parameters.
+// It returns the fetched subject and an error, if any.
 func FetchSubjectWithQuestionCount(db *sql.DB, subjectId int) (Subject, error) {
 	var subject Subject
 	query := `SELECT s.id_subject, s.title, COUNT(q.id_question) as question_count
