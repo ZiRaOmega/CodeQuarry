@@ -1027,3 +1027,16 @@ ERROR: 2024/04/27 16:30:06 Error reading the message from the client
 ERROR: 2024/04/27 16:30:06 Error reading the message from the client
 ERROR: 2024/04/27 16:30:36 Error reading the message from the client
 ERROR: 2024/04/27 16:31:29 Error reading the message from the client
+ERROR: 2024/04/27 17:00:22 Error reading the message from the client
+DEBUG: 2024/04/27 17:01:00 Registration successful: ppp at /register
+ERROR: 2024/04/27 17:01:02 Error reading the message from the client
+ERROR: 2024/04/27 17:02:49 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/27 17:02:49 Error reading the message from the client
+ERROR: 2024/04/27 17:02:49 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/27 17:03:05 Registration successful: m at /register
+ERROR: 2024/04/27 17:03:06 Error reading the message from the client
+ERROR: 2024/04/27 17:03:10 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/27 17:03:10 Error reading the message from the client
+ERROR: 2024/04/27 17:03:10 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/27 17:03:32 Registration successful: mm at /register
+ERROR: 2024/04/27 17:03:33 Error reading the message from the client
