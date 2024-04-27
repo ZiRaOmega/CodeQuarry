@@ -27,22 +27,7 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:
-			questionID := r.URL.Query().Get("question_id")
-			if questionID == "" {
-				http.Error(w, "Missing question_id parameter", http.StatusBadRequest)
-				return
-			}
-			idint, err := strconv.Atoi(questionID)
-			if err != nil {
-				http.Error(w, "Invalid question_id parameter", http.StatusBadRequest)
-				return
-			}
-			responses, err := FetchResponseByQuestion(db, idint)
-			if err != nil {
-				http.Error(w, "Error fetching responses", http.StatusInternalServerError)
-				return
-			}
-			json.NewEncoder(w).Encode(responses)
+			// Handle get request
 		case http.MethodPost:
 			// Handle post request
 			var response Response
@@ -55,7 +40,7 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 			description := receive_data.(map[string]interface{})["response"].(map[string]interface{})["description"].(string)
 			content := receive_data.(map[string]interface{})["response"].(map[string]interface{})["content"].(string)
 			creation_date := time.Now()
-			update_date := time.Now()
+
 			userid, err := getUserIDUsingSessionID(session_id, db)
 			if userid == 0 || err != nil {
 				http.Error(w, "Invalid session", http.StatusBadRequest)
