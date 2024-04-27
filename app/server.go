@@ -63,6 +63,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
 }
+
 // CSS
 func AuthCssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
@@ -105,6 +106,11 @@ func PostsHandler(w http.ResponseWriter, r *http.Request) {
 func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/home/posts/detect_lang/detect_lang.js")
+}
+
+func QuestionViewerJSHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.js")
 }
 
 /* ======================= WEB_SOCKETS ======================= */
