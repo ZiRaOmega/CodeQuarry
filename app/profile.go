@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
 	"codequarry/app/utils"
 
 	uuid "github.com/satori/go.uuid"
@@ -17,9 +18,8 @@ import (
 )
 
 func ProfileHandler(db *sql.DB) http.HandlerFunc {
-
 	return func(w http.ResponseWriter, r *http.Request) {
-		//Get cookie
+		// Get cookie
 		cookie, err := r.Cookie("session")
 		if err != nil {
 			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
@@ -27,7 +27,7 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		session_id := cookie.Value
-		//Get user info from user_id
+		// Get user info from user_id
 		user, err := GetUser(session_id, db)
 		if err != nil {
 			fmt.Println(err.Error())
@@ -39,11 +39,11 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func (U *User) FormatBirthDate() string {
-	return U.BirthDate.Time.Format("2006-02-01")
+	return U.BirthDate.Time.Format("2006-01-02")
 }
 
 func (U *User) FormatSchoolYear() string {
-	return U.SchoolYear.Time.Format("2006-02-01")
+	return U.SchoolYear.Time.Format("2006-01-02")
 }
 
 // Define User structure based on your database schema
@@ -67,7 +67,6 @@ type User struct {
 	CreationDate       sql.NullTime // Adjusted for possible NULL values
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
-
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -123,7 +122,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		//Check if the session is valid
+		// Check if the session is valid
 		cookie, err := r.Cookie("session")
 		if err != nil {
 			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
@@ -138,7 +137,6 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user := User{}
 
 		user.ID, err = getUserIDUsingSessionID(session_id, db)
-
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -174,39 +172,38 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Invalid characters", http.StatusForbidden)
 			return
 		}
-		//if Password is empty, don't update it
+		// if Password is empty, don't update it
 		if user.Password == "" {
-			//Prepare
+			// Prepare
 			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, birth_date = $5, avatar = $11, bio = $6, website = $7, github = $8, school_year = $9 WHERE id_student = $10")
 			if err != nil {
 				fmt.Println(err.Error())
 			}
 			defer stmt.Close()
-			//Execute
+			// Execute
 			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID, user.Avatar.String)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
 		} else {
-			//Hash password
+			// Hash password
 			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
-			//Prepare
+			// Prepare
 			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, password = $5, birth_date = $6, avatar = $12, bio = $7, website = $8, github = $9, school_year = $10 WHERE id_student = $11")
 			if err != nil {
 				fmt.Println(err.Error())
 			}
 			defer stmt.Close()
-			//Execute
+			// Execute
 			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, hashedPassword, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID, user.Avatar.String)
 			if err != nil {
 				fmt.Println(err.Error())
 			}
 		}
 		http.Redirect(w, r, "/profile", http.StatusSeeOther)
-
 	}
 }
 
@@ -216,7 +213,6 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 // and returns the path to the saved file on success.
 // If there is an error during the file upload process, it returns an error.
 func FileUpload(r *http.Request) (string, error) {
-
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("avatar")
 	if err != nil {
@@ -230,9 +226,7 @@ func FileUpload(r *http.Request) (string, error) {
 	if handler.Filename[len(handler.Filename)-4:] != ".jpg" && handler.Filename[len(handler.Filename)-5:] != ".jpeg" && handler.Filename[len(handler.Filename)-4:] != ".png" && handler.Filename[len(handler.Filename)-4:] != ".gif" {
 		return "", errors.New("wrong file type")
 	}
-	if err != nil {
-		return "", err
-	}
+	
 	defer file.Close()
 	_, err = os.Create("./public/img/" + genname)
 	if err != nil {
