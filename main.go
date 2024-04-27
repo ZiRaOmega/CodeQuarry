@@ -51,6 +51,7 @@ func main() {
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 
 	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("auth", nil)))
+	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
 	// http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
