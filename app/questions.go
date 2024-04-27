@@ -14,6 +14,7 @@ type Question struct {
 	SubjectTitle string    `json:"subject_title"`
 	SubjectID    int       `json:"subject_id"`
 	Title        string    `json:"title"`
+	Description  string    `json:"description"`
 	Content      string    `json:"content"`
 	CreationDate time.Time `json:"creation_date"`
 	Creator      string    `json:"creator"`
@@ -27,13 +28,13 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 	var err error
 
 	if subjectID == "all" {
-		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject`
 		rows, err = db.Query(query)
 	} else {
-		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject
@@ -49,7 +50,7 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 
 	for rows.Next() {
 		var q Question
-		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
+		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
 			log.Printf("Error scanning question: %v", err)
 			continue
 		}
@@ -78,9 +79,9 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) error {
-	query := `INSERT INTO question (title, content, creation_date, update_date, id_student, id_subject, upvotes, downvotes)
-			  VALUES ($1, $2, $3, $4, $5, $6, 0, 0)`
-	_, err := db.Exec(query, question.Title, question.Content, time.Now(), time.Now(), user_id, subject_id)
+	query := `INSERT INTO question (title, description, content, creation_date, update_date, id_student, id_subject, upvotes, downvotes)
+			  VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0)`
+	_, err := db.Exec(query, question.Title, question.Description, question.Content, time.Now(), time.Now(), user_id, subject_id)
 	if err != nil {
 		log.Printf("Error inserting question: %v", err)
 		// Additional debugging information
@@ -93,15 +94,20 @@ func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) 
 type Subject struct {
 	Id            int    `json:"id"`
 	Title         string `json:"title"`
-	Description   string `json:"description"`
 	QuestionCount int    `json:"questionCount"`
 }
 
 func FetchSubjectWithQuestionCount(db *sql.DB, subjectId int) (Subject, error) {
 	var subject Subject
-	err := db.QueryRow(`SELECT id_subject, title, description, (SELECT COUNT(*) FROM question WHERE id_subject = $1) AS questionCount FROM subject WHERE id_subject = $1`, subjectId).Scan(&subject.Id, &subject.Title, &subject.Description, &subject.QuestionCount)
+	query := `SELECT s.id_subject, s.title, COUNT(q.id_question) as question_count
+			  FROM subject s
+			  LEFT JOIN question q ON s.id_subject = q.id_subject
+			  WHERE s.id_subject = $1
+			  GROUP BY s.id_subject`
+	err := db.QueryRow(query, subjectId).Scan(&subject.Id, &subject.Title, &subject.QuestionCount)
 	if err != nil {
-		return subject, err
+		log.Printf("Error fetching subject: %v", err)
+		return Subject{}, err
 	}
 	return subject, nil
 }
