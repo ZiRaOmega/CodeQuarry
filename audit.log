@@ -912,3 +912,13 @@ ERROR: 2024/04/27 17:23:42 Error reading the message from the client
 ERROR: 2024/04/27 17:23:49 Error reading the message from the client
 ERROR: 2024/04/27 17:23:49 Error reading the message from the client
 ERROR: 2024/04/27 17:23:59 Error reading the message from the client
+ERROR: 2024/04/27 17:37:59 Error reading the message from the client
+ERROR: 2024/04/27 17:37:59 Error reading the message from the client
+ERROR: 2024/04/27 17:38:59 Error reading the message from the client
+ERROR: 2024/04/27 17:59:30 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/04/27 17:59:30 Error reading the message from the client
+ERROR: 2024/04/27 17:59:30 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/04/27 17:59:44 Registration successful: caca at /register
+ERROR: 2024/04/27 17:59:45 Error reading the message from the client
+ERROR: 2024/04/27 18:01:03 Error reading the message from the client
+ERROR: 2024/04/27 18:07:27 Error reading the message from the client

@@ -10,6 +10,7 @@ import (
 
 type Response struct {
 	ResponseID   int
+	Description  string
 	Content      string
 	UpVotes      int
 	DownVotes    int
@@ -58,7 +59,7 @@ func FetchResponseByQuestion(db *sql.DB, questionID int) ([]Response, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var r Response
-		if err := rows.Scan(&r.ResponseID, &r.Content, &r.UpVotes, &r.DownVotes, &r.BestAnswer, &r.CreationDate, &r.UpdateDate, &r.QuestionID, &r.StudentID); err != nil {
+		if err := rows.Scan(&r.ResponseID, &r.Description, &r.Content, &r.UpVotes, &r.DownVotes, &r.BestAnswer, &r.CreationDate, &r.UpdateDate, &r.QuestionID, &r.StudentID); err != nil {
 			return nil, err
 		}
 		r.StudentName = GetUsernameWithUserID(db, r.StudentID)
