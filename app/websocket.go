@@ -3,7 +3,9 @@ package app
 //Import websocket
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -15,8 +17,15 @@ var upgrader = websocket.Upgrader{
 }
 
 type WSMessage struct {
-	Type    string      `json:"type"`
-	Content interface{} `json:"content"`
+	Type      string      `json:"type"`
+	Content   interface{} `json:"content"`
+	SessionID string      `json:"session_id"`
+}
+
+type Vote struct {
+	QuestionID int `json:"question_id"`
+	Upvote     int `json:"upvote"`
+	Downvote   int `json:"downvote"`
 }
 
 // WebsocketHandler is a handler function that upgrades the HTTP connection to a WebSocket connection
@@ -66,18 +75,45 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "valid"})
 				}
 			case "upvote":
-				err := HandleUpvote(db, wsmessage.Content.(float64))
+				err := HandleUpvote(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				upvote, downvote := SendNewVoteCount(db, wsmessage.Content.(float64))
+				vote := Vote{QuestionID: int(wsmessage.Content.(float64)), Upvote: upvote, Downvote: downvote}
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote"})
 				} else {
-					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: wsmessage.Content})
+					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 				}
 			case "downvote":
-				err := HandleDownvote(db, wsmessage.Content.(float64))
+				err := HandleDownvote(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				upvote, downvote := SendNewVoteCount(db, wsmessage.Content.(float64))
+				vote := Vote{QuestionID: int(wsmessage.Content.(float64)), Upvote: upvote, Downvote: downvote}
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote"})
 				} else {
-					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: wsmessage.Content})
+					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+				}
+			case "createPost":
+				// Assuming the content has all necessary information
+				content := wsmessage.Content.(map[string]interface{})
+				fmt.Println(content)
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				quest := Question{
+					Title:       content["title"].(string),
+					Description: content["description"].(string),
+					Content:     content["content"].(string),
+				}
+				subject_id, _ := strconv.Atoi(content["subject_id"].(string)) // handle error properly in production
+				err = CreateQuestion(db, quest, user_id, subject_id)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
+				} else {
+					// On successful question creation, send an update message
+					updatedSubject, _ := FetchSubjectWithQuestionCount(db, subject_id) // Implement this method
+					conn.WriteJSON(WSMessage{Type: "postCreated", Content: updatedSubject})
 				}
 			}
 

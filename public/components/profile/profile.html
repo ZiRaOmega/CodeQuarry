@@ -45,6 +45,14 @@
     </form>
     
 </div>
+<div id="my_post">
+    <h2>My Post</h2>
+    <ul>
+        {{range .My_Post}}
+        <li>{{.CreationDate.Format "2006-01-02 15:04:05"}} - {{.Title}} </li>
+        {{end}}
+    </ul>
+</div>
 </body>
 {{template "script" .}}
 </html>
