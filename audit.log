@@ -1027,3 +1027,7 @@ ERROR: 2024/04/27 16:30:06 Error reading the message from the client
 ERROR: 2024/04/27 16:30:06 Error reading the message from the client
 ERROR: 2024/04/27 16:30:36 Error reading the message from the client
 ERROR: 2024/04/27 16:31:29 Error reading the message from the client
+DEBUG: 2024/04/27 16:56:18 Login successful: Svalbard at /login
+ERROR: 2024/04/27 16:56:18 Error reading the message from the client
+ERROR: 2024/04/27 16:57:38 Error reading the message from the client
+ERROR: 2024/04/27 17:00:59 Error reading the message from the client
