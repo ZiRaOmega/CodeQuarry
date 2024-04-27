@@ -62,6 +62,8 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			err := conn.ReadJSON(&wsmessage)
 			if err != nil {
 				Log(ErrorLevel, "Error reading the message from the client")
+				RemoveConnFromList(conn)
+				conn.Close()
 				return
 			}
 			switch wsmessage.Type {
@@ -123,6 +125,14 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 			}
 
+		}
+	}
+}
+func RemoveConnFromList(conn *websocket.Conn) {
+	for i, c := range ConnectionList {
+		if c == conn {
+			ConnectionList = append(ConnectionList[:i], ConnectionList[i+1:]...)
+			break
 		}
 	}
 }
