@@ -63,6 +63,11 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
 }
+// CSS
+func AuthCssHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/components/auth/auth.css")
+}
 
 /* --------------- HOME ---------------- */
 // HTML
