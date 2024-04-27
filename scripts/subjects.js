@@ -114,7 +114,11 @@ window.fetchQuestions = function (subjectId) {
         const questionContent = document.createElement("p");
         questionContent.classList.add("question_content");
         questionContent.textContent = question.content;
-        questionContainer.appendChild(questionContent);
+        const preDiv = document.createElement("pre");
+        const code = document.createElement("code");
+        preDiv.appendChild(code);
+        code.innerHTML = question.content;
+        questionContainer.appendChild(preDiv);
 
         const ContainerCreatorAndDate = document.createElement("div");
         ContainerCreatorAndDate.classList.add("creator_and_date_container");
@@ -186,5 +190,7 @@ window.fetchQuestions = function (subjectId) {
         };
       });
       questionsList.style.display = ""; // Show the questions list
+      checkHighlight();
     });
 };
+
