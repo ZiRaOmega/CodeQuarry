@@ -69,6 +69,7 @@ func main() {
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
+	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
 	http.HandleFunc("/profile", app.ProfileHandler(db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	http.HandleFunc("/detect_language", app.DetectLanguageHandler)
