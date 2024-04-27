@@ -176,28 +176,9 @@ window.fetchQuestions = function (subjectId) {
           questionsList.appendChild(questionContainer);
           let responseContainer= document.createElement("div");
         responseContainer.classList.add("response_container");
-        if (question.responses!=undefined){
-
-          question.responses.forEach((response) => {
-            const responseContainer = document.createElement("div");
-            responseContainer.classList.add("response");
-            const responseContent = document.createElement("p");
-            responseContent.classList.add("response_content");
-            responseContent.textContent = response.Content;
-            responseContainer.appendChild(responseContent);
-            const responseCreator = document.createElement("p");
-            responseCreator.classList.add("response_creator");
-            responseCreator.textContent = `Réponse de ${response.StudentName}`;
-            responseContainer.appendChild(responseCreator);
-            const responseDate = document.createElement("p");
-            responseDate.classList.add("response_creation_date");
-            responseDate.textContent = `Publié le: ${new Date(response.CreationDate).toLocaleDateString()}`;
-            responseContainer.appendChild(responseDate);
-            
-            responseContainer.appendChild(responseDate);
-            questionContainer.appendChild(responseContainer);
-          });
-        }
+          questionContainer.addEventListener("click",()=>{
+            window.location.href=`https://${window.location.hostname}/question_viewer?question_id=${question.id}`
+          })
           upvoteContainer.onclick = function () {
             socket.send(
               JSON.stringify({
