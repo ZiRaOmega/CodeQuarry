@@ -10,15 +10,16 @@ import (
 
 // Question represents the data structure for a question
 type Question struct {
-	Id           int       `json:"id"`
-	SubjectTitle string    `json:"subject_title"`
-	SubjectID    int       `json:"subject_id"`
-	Title        string    `json:"title"`
-	Content      string    `json:"content"`
-	CreationDate time.Time `json:"creation_date"`
-	Creator      string    `json:"creator"`
-	Upvotes      int       `json:"upvotes"`
-	Downvotes    int       `json:"downvotes"`
+	Id           int        `json:"id"`
+	SubjectTitle string     `json:"subject_title"`
+	SubjectID    int        `json:"subject_id"`
+	Title        string     `json:"title"`
+	Content      string     `json:"content"`
+	CreationDate time.Time  `json:"creation_date"`
+	Creator      string     `json:"creator"`
+	Upvotes      int        `json:"upvotes"`
+	Downvotes    int        `json:"downvotes"`
+	Responses    []Response `json:"responses"`
 }
 
 func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
@@ -53,6 +54,12 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 			log.Printf("Error scanning question: %v", err)
 			continue
 		}
+		q.Responses, err = FetchResponseByQuestion(db, q.Id)
+		if err != nil {
+			log.Printf("Error fetching responses: %v", err)
+			continue
+		}
+
 		questions = append(questions, q)
 	}
 
@@ -62,7 +69,15 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 	}
 	return questions, nil
 }
+func GetUsernameWithUserID(db *sql.DB, userID int) string {
+	var username string
+	err := db.QueryRow(`SELECT username FROM users WHERE id_student = $1`, userID).Scan(&username)
+	if err != nil {
+		return ""
+	}
+	return username
 
+}
 func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		subjectID := r.URL.Query().Get("subjectId")
