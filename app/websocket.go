@@ -15,6 +15,7 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
+var ConnectionList = []*websocket.Conn{} // List of all connections to the server
 
 type WSMessage struct {
 	Type      string      `json:"type"`
@@ -52,6 +53,8 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error upgrading the HTTP connection to a WebSocket connection", http.StatusInternalServerError)
 			return
 		}
+		// Add the new WebSocket connection
+		ConnectionList = append(ConnectionList, conn)
 		defer conn.Close()
 		for {
 			wsmessage := WSMessage{}
@@ -82,6 +85,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote"})
 				} else {
 					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+					BroadcastMessage(WSMessage{Type: "voteUpdate", Content: vote, SessionID: ""}, conn)
 				}
 			case "downvote":
 				err := HandleDownvote(db, wsmessage.Content.(float64), wsmessage.SessionID)
@@ -91,6 +95,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote"})
 				} else {
 					conn.WriteJSON(WSMessage{Type: "voteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+					BroadcastMessage(WSMessage{Type: "voteUpdate", Content: vote, SessionID: ""}, conn)
 				}
 			case "createPost":
 				// Assuming the content has all necessary information
@@ -114,6 +119,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// On successful question creation, send an update message
 					updatedSubject, _ := FetchSubjectWithQuestionCount(db, subject_id) // Implement this method
 					conn.WriteJSON(WSMessage{Type: "postCreated", Content: updatedSubject})
+					BroadcastMessage(WSMessage{Type: "postCreated", Content: updatedSubject, SessionID: ""}, conn)
 				}
 			}
 
@@ -145,4 +151,12 @@ func DeleteSession(session_id string, db *sql.DB) error {
 		return err
 	}
 	return nil
+}
+
+func BroadcastMessage(message WSMessage, currentConn *websocket.Conn) {
+	for _, conn := range ConnectionList {
+		if conn != currentConn {
+			conn.WriteJSON(message)
+		}
+	}
 }
