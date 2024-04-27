@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
@@ -91,6 +92,32 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(questions)
 	}
+}
+func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		questionID := r.URL.Query().Get("question_id")
+		if questionID == "" {
+			http.Error(w, "Missing question_id parameter", http.StatusBadRequest)
+			return
+		}
+		idint, err := strconv.Atoi(questionID)
+		if err != nil {
+			http.Error(w, "Invalid question_id parameter", http.StatusBadRequest)
+			return
+		}
+		questions, err := FetchQuestionByQuestionID(db, idint)
+		if err != nil {
+			http.Error(w, "Error fetching responses", http.StatusInternalServerError)
+			return
+		}
+		err = ParseAndExecuteTemplate("question_viewer", questions, w)
+		if err != nil {
+			http.Error(w, "Error parsing template", http.StatusInternalServerError)
+			return
+
+		}
+	}
+
 }
 
 func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) error {

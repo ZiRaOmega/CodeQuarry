@@ -87,6 +87,7 @@ func main() {
 	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
 	http.HandleFunc("/detect_lang", app.DetectLanguageHandler)
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
+	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
 	http.HandleFunc("/profile", app.ProfileHandler(db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 
