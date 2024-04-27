@@ -7,9 +7,13 @@ header {
     height: 80px;
     color: black;
     padding: 1em;
+    background: white;
+    z-index: 2;
     text-align: center;
     display: flex;
     border-bottom: solid 1px #ECEFF1;
+    position: sticky;
+    top: 0;
 }
 
 .leftpart{
@@ -30,10 +34,12 @@ header {
 #menu{
     justify-content: flex-end;
     align-items: center;
+    flex-basis: 50%;
+    padding-right: 50px;
 }
 
 #menu ul {
-    flex-basis: 50%;
+    
     display: flex;
     gap: 30px;
 
@@ -48,21 +54,20 @@ a {
     color: black;
 }
 
+.search_bar{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: self-end;
+    gap: 10px;
+}
+
 #search-bar-input{
     border: none;
     border-bottom: 1px solid black;
     outline: none;
     height: 24px;
     position: relative;
-    top: -10px;
-}
-
-.search-bar{
-    display: flex;
-    height: 80px;
-    width: fit-content;
-    justify-content: center;
-    align-items: center;
+    top: -5px;
 }
 
 #search_button{
@@ -81,4 +86,11 @@ a {
 
 .header_icons:hover{
     transform: scale(1.1);
+}
+
+#home::after{
+    content: "";
+    width: 30px;
+    height: 10px;
+    background: red;
 }
