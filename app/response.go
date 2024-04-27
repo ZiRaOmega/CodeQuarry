@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -33,8 +32,6 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 			var response Response
 			var receive_data interface{}
 			err := json.NewDecoder(r.Body).Decode(&receive_data)
-			fmt.Println(receive_data)
-			fmt.Println(response)
 			session_id := receive_data.(map[string]interface{})["session_id"].(string)
 			question_id := receive_data.(map[string]interface{})["response"].(map[string]interface{})["question_id"].(string)
 			description := receive_data.(map[string]interface{})["response"].(map[string]interface{})["description"].(string)
@@ -43,21 +40,27 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 
 			userid, err := getUserIDUsingSessionID(session_id, db)
 			if userid == 0 || err != nil {
+				json.NewEncoder(w).Encode(map[string]string{"error": "Invalid session"})
 				http.Error(w, "Invalid session", http.StatusBadRequest)
 				return
 			}
 			question_id_convert, err := strconv.Atoi(question_id)
-			response = Response{Description: description, Content: content, UpVotes: 0, DownVotes: 0, BestAnswer: false, CreationDate: creation_date, UpdateDate: update_date, QuestionID: question_id_convert, StudentID: userid}
+			response = Response{Description: description, Content: content, UpVotes: 0, DownVotes: 0, BestAnswer: false, CreationDate: creation_date, UpdateDate: creation_date, QuestionID: question_id_convert, StudentID: userid, StudentName: GetUsernameWithUserID(db, userid)}
 			if err != nil {
+				json.NewEncoder(w).Encode(map[string]string{"error": "Invalid question_id"})
 				http.Error(w, "Invalid question_id", http.StatusBadRequest)
 				return
 			}
 			// Insert response into database
 			err = InsertResponse(db, response)
 			if err != nil {
+				json.NewEncoder(w).Encode(map[string]string{"error": "Error inserting response"})
 				http.Error(w, "Error inserting response", http.StatusInternalServerError)
 				return
 			}
+			json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Response successful"})
+			wsmessage := WSMessage{Type: "response", Content: response}
+			BroadcastMessage(wsmessage, nil)
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 
