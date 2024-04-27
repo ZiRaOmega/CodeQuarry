@@ -99,7 +99,8 @@ window.fetchQuestions = function (subjectId) {
         questions.forEach((question) => {
           const questionContainer = document.createElement("div");
           questionContainer.classList.add("question");
-
+          const clickable_container = document.createElement("div");
+          clickable_container.classList.add("clickable_container");
           // Add subject title tag
           const subjectTag = document.createElement("div");
           subjectTag.classList.add("subject_tag");
@@ -109,12 +110,12 @@ window.fetchQuestions = function (subjectId) {
           const questionTitle = document.createElement("h3");
           questionTitle.classList.add("question_title");
           questionTitle.textContent = question.title;
-          questionContainer.appendChild(questionTitle);
+          clickable_container.appendChild(questionTitle);
 
           const questionDescription = document.createElement("p");
           questionDescription.classList.add("question_description");
           questionDescription.textContent = question.description;
-          questionContainer.appendChild(questionDescription);
+          clickable_container.appendChild(questionDescription);
 
           const questionContent = document.createElement("p");
           questionContent.classList.add("question_content");
@@ -123,7 +124,7 @@ window.fetchQuestions = function (subjectId) {
           const code = document.createElement("code");
           preDiv.appendChild(code);
           code.innerHTML = question.content;
-          questionContainer.appendChild(preDiv);
+          clickable_container.appendChild(preDiv);
 
           const ContainerCreatorAndDate = document.createElement("div");
           ContainerCreatorAndDate.classList.add("creator_and_date_container");
@@ -144,7 +145,8 @@ window.fetchQuestions = function (subjectId) {
           questionCreator.appendChild(creatorName);
           ContainerCreatorAndDate.appendChild(questionCreator);
 
-          questionContainer.appendChild(ContainerCreatorAndDate);
+          clickable_container.appendChild(ContainerCreatorAndDate);
+          questionContainer.appendChild(clickable_container);
 
           const voteContainer = document.createElement("div");
           voteContainer.classList.add("vote_container");
@@ -176,7 +178,7 @@ window.fetchQuestions = function (subjectId) {
           questionsList.appendChild(questionContainer);
           let responseContainer = document.createElement("div");
           responseContainer.classList.add("response_container");
-          questionContainer.addEventListener("click", () => {
+          clickable_container.addEventListener("click", () => {
             window.location.href = `https://${window.location.hostname}/question_viewer?question_id=${question.id}`;
           });
           upvoteContainer.onclick = function () {
