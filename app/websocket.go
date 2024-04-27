@@ -111,11 +111,9 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
 				} else {
-					fmt.Println("Post created")
 					// On successful question creation, send an update message
 					updatedSubject, _ := FetchSubjectWithQuestionCount(db, subject_id) // Implement this method
 					conn.WriteJSON(WSMessage{Type: "postCreated", Content: updatedSubject})
-					fmt.Println(updatedSubject)
 				}
 			}
 

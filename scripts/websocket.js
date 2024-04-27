@@ -93,7 +93,6 @@ function handleVoteUpdate(data) {
 }
 
 function updateQuestionCount(subject) {
-  console.log("Updating question count for subject:", subject);
   // Find the element displaying the question count and update it
   const questionCountDiv = document.querySelector(
     `.question_count[data-subject-id="${subject.id}"]`

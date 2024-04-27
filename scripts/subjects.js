@@ -93,7 +93,6 @@ window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
-      console.log(questions);
       const questionsList = document.getElementById("questionsList");
       questionsList.innerHTML = ""; // Clear previous questions
       if (questions != null)

@@ -186,6 +186,11 @@ pre{
    font-size: 25px;
 }
 
+.question_description{
+    font-size: 18px;
+    color: rgb(61, 61, 61);
+}
+
 .question_content{
     font-size: 18px;
     margin-left: 5px;
