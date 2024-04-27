@@ -1,6 +1,12 @@
 header {
+    width: 100%;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
     background-color: #333;
+    margin:0;
+    padding: 0;
     color: white;
-    padding: 1em;
     text-align: center;
 }
