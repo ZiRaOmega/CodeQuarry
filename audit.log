@@ -546,3 +546,10 @@ ERROR: 2024/04/27 02:15:41 Error reading the message from the client
 ERROR: 2024/04/27 02:17:31 Error reading the message from the client
 ERROR: 2024/04/27 02:17:31 Error reading the message from the client
 ERROR: 2024/04/27 02:19:44 Error reading the message from the client
+ERROR: 2024/04/27 13:40:34 Error reading the message from the client
+DEBUG: 2024/04/27 13:40:43 Login successful: mm at /login
+ERROR: 2024/04/27 13:40:43 Error reading the message from the client
+ERROR: 2024/04/27 13:41:14 Error reading the message from the client
+ERROR: 2024/04/27 13:47:20 Error reading the message from the client
+ERROR: 2024/04/27 13:47:57 Error reading the message from the client
+ERROR: 2024/04/27 14:02:27 Error reading the message from the client

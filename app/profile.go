@@ -67,6 +67,7 @@ type User struct {
 	CreationDate       sql.NullTime // Adjusted for possible NULL values
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
+	My_Post            []Question
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -104,7 +105,12 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	// UpdateDate to a human-readable format dd/mm/yyyy
 	user.Birth_Date_Format = user.FormatBirthDate()
 	user.School_Year_Format = user.FormatSchoolYear()
-
+	Posts, err := FetchQuestionsByUserID(db, user.ID)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println(Posts)
+	user.My_Post = Posts
 	return user, nil // Return the populated user object
 }
 

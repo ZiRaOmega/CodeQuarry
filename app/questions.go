@@ -105,3 +105,32 @@ func FetchSubjectWithQuestionCount(db *sql.DB, subjectId int) (Subject, error) {
 	}
 	return subject, nil
 }
+
+func FetchQuestionsByUserID(db *sql.DB, userID int) ([]Question, error) {
+	var questions []Question
+	rows, err := db.Query(`SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+						   FROM question q
+						   JOIN users u ON q.id_student = u.id_student
+						   JOIN subject s ON q.id_subject = s.id_subject
+						   WHERE u.id_student = $1`, userID)
+	if err != nil {
+		log.Printf("Error querying questions: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var q Question
+		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
+			log.Printf("Error scanning question: %v", err)
+			continue
+		}
+		questions = append(questions, q)
+	}
+
+	if err := rows.Err(); err != nil {
+		log.Printf("Error reading question rows: %v", err)
+		return nil, err
+	}
+	return questions, nil
+}
