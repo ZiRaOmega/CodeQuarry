@@ -80,7 +80,7 @@ func CQcssHandler(w http.ResponseWriter, r *http.Request) {
 // JS
 func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
-	http.ServeFile(w, r, "public/components/home/subjects.js")
+	http.ServeFile(w, r, "public/components/home/subjects/subjects.js")
 }
 
 func VoteHandler(w http.ResponseWriter, r *http.Request) {
@@ -88,10 +88,18 @@ func VoteHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/home/votes.js")
 }
 
-/* --------------- PROFILE ---------------- */
-
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/create_post.webp")
+}
+
+func PostsHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/home/posts/posts.js")
+}
+
+func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/home/posts/detect_lang/detect_lang.js")
 }
 
 /* ======================= WEB_SOCKETS ======================= */

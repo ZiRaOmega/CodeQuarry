@@ -49,16 +49,21 @@ func main() {
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
+
 	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("auth", nil)))
 	// http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
+	//Serve public/img folder
+	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
-
+	
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
+
 	http.HandleFunc("/create_post", app.CreatePostHandler)
+	http.HandleFunc("/scripts/posts.js", app.PostsHandler)
 
 	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
 	http.HandleFunc("/home", app.SendTemplate("home" , nil))
@@ -76,11 +81,13 @@ func main() {
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
+
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
+	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
+	http.HandleFunc("/detect_lang", app.DetectLanguageHandler)
 	
 	http.HandleFunc("/profile", app.ProfileHandler(db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
-	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)

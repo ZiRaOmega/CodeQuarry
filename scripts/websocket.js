@@ -1,4 +1,3 @@
-// Declare a variable 'socket' to store the WebSocket connection object
 var socket;
 const getCookie = (name) => {
     const value = `; ${document.cookie}`;
@@ -27,23 +26,33 @@ $(document).ready(function () {
         //socket.send("Hey there from client");
     };
 
-    // Define the onmessage function to be called when a message is received from the server
-    socket.onmessage = function (event) {
-        let msg = JSON.parse(event.data);
-        switch (msg.type) {
-            case "session":
-                if (msg.content == "expired" || msg.content == "empty") {
-                    console.log(`Session ${msg.content}, redirecting to login page`);
-                    if (window.location.pathname != "/") window.location.href = "/";
-                } else if (msg.content == "valid") {
-                    // !!! TODO show the website if the session is still valid
-                    if (window.location.pathname == "/") window.location.href = "/home";
-                    console.log("Session still valid");
-                }
+  // Define the onmessage function to be called when a message is received from the server
+  socket.onmessage = function (event) {
+    let msg = JSON.parse(event.data);
+    switch (msg.type) {
+      case "session":
+        if (msg.content == "expired" || msg.content == "empty") {
+          console.log(`Session ${msg.content}, redirecting to login page`);
+          if (window.location.pathname != "/") window.location.href = "/";
+        } else if (msg.content == "valid") {
+          // !!! TODO show the website if the session is still valid
+          if (window.location.pathname == "/")
+            window.location.pathname = "/home";
+          console.log("Session still valid");
         }
-        // Log the message received from the server
-        console.log(`[message] Data received from server: ${event.data}`);
-    };
+      case "voteUpdate":
+        handleVoteUpdate(msg.content);
+        break;
+      case "postCreated":
+        updateQuestionCount(msg.content); // Implement this function to update the UI
+        if (localStorage.getItem("subjectId") == msg.content.id) {
+          fetchQuestions(msg.content.id); // Implement this function to fetch and display questions
+        }
+        break;
+    }
+    // Log the message received from the server
+    console.log(`[message] Data received from server: ${event.data}`);
+  };
 
     // Define the onclose function to be called when the WebSocket connection is closed
     socket.onclose = function (event) {
@@ -66,3 +75,37 @@ $(document).ready(function () {
   };
 });
 
+function handleVoteUpdate(data) {
+  // Assuming 'data' contains { questionId: 123, upvotes: 10, downvotes: 5 }
+  const upvoteCountElement = document.querySelector(
+    `.upvote_count[data-question-id="${data.question_id}"]`
+  );
+  const downvoteCountElement = document.querySelector(
+    `.downvote_count[data-question-id="${data.question_id}"]`
+  );
+
+  if (upvoteCountElement) {
+    upvoteCountElement.textContent = data.upvote;
+  }
+  if (downvoteCountElement) {
+    downvoteCountElement.textContent = data.downvote;
+  }
+}
+
+function updateQuestionCount(subject) {
+  // Find the element displaying the question count and update it
+  const questionCountDiv = document.querySelector(
+    `.question_count[data-subject-id="${subject.id}"]`
+  );
+  if (questionCountDiv) {
+    questionCountDiv.textContent = subject.questionCount;
+  }
+
+  // Update the total questions display if needed
+  const totalQuestionsDiv = document.querySelector(".question_count_all");
+  if (totalQuestionsDiv) {
+    let totalQuestions = parseInt(totalQuestionsDiv.textContent, 10) || 0;
+    totalQuestions++; // Increment since a new question was added
+    totalQuestionsDiv.textContent = totalQuestions;
+  }
+}

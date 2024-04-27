@@ -67,6 +67,7 @@ type User struct {
 	CreationDate       sql.NullTime // Adjusted for possible NULL values
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
+	My_Post            []Question
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -104,7 +105,12 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	// UpdateDate to a human-readable format dd/mm/yyyy
 	user.Birth_Date_Format = user.FormatBirthDate()
 	user.School_Year_Format = user.FormatSchoolYear()
-
+	Posts, err := FetchQuestionsByUserID(db, user.ID)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println(Posts)
+	user.My_Post = Posts
 	return user, nil // Return the populated user object
 }
 
@@ -150,10 +156,19 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Email = r.PostFormValue("email")
 		user.Password = r.PostFormValue("password")
 		user.Avatar = sql.NullString{String: r.PostFormValue("avatar"), Valid: true}
-		filename, err := FileUpload(r)
+		filename := ""
+
+		filename, err = FileUpload(r)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
+		if filename == "" {
+			filename, err = getAvatar(db, user.ID)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+		}
+		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
 		birthDate, err := time.Parse("2006-01-02", birthDateStr)
@@ -217,7 +232,12 @@ func FileUpload(r *http.Request) (string, error) {
 	file, handler, err := r.FormFile("avatar")
 	if err != nil {
 		fmt.Println(err)
-		return "./public/img/default.jpg", err
+		return "", err
+	}
+	//if size is null
+	if handler.Size == 0 {
+
+		return "", nil
 	}
 	filename := strings.Split(handler.Filename, ".")
 	extention := filename[len(filename)-1]
@@ -238,4 +258,19 @@ func FileUpload(r *http.Request) (string, error) {
 	}
 	io.Copy(f, file)
 	return "/img/" + genname, nil
+}
+
+// getAvatar
+func getAvatar(db *sql.DB, user_id int) (string, error) {
+	var avatar string
+	stmt, err := db.Prepare("SELECT avatar FROM users WHERE id_student = $1")
+	if err != nil {
+		return "", err
+	}
+	defer stmt.Close()
+	err = stmt.QueryRow(user_id).Scan(&avatar)
+	if err != nil {
+		return "", err
+	}
+	return avatar, nil
 }
