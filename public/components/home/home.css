@@ -158,6 +158,10 @@ pre{
     cursor: pointer;
 }
 
+.clickable_container{
+    cursor: pointer;
+}
+
 .question{
     position: relative;
     display: flex;
