@@ -164,6 +164,12 @@ pre{
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.question:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: rgb(234, 234, 234);
 }
 
 .question_count, .question_count_all{
