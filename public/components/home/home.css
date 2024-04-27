@@ -1,3 +1,8 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: fit-content;
+}
 
 pre{
     border-radius: 10px;
@@ -10,6 +15,7 @@ pre{
     overflow: auto;
     display: block;
     word-wrap: break-word;
+    background: red;
 }
 
 #menu{
