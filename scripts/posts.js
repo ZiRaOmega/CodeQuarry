@@ -1,5 +1,6 @@
 function createPostInput() {
   let title = document.createElement("input");
+  let description = document.createElement("textarea");
   let content = document.createElement("textarea");
   let subjectLists = document.createElement("select");
   SubjectsList.forEach((subject) => {
@@ -11,6 +12,7 @@ function createPostInput() {
 
   title.setAttribute("type", "text");
   title.setAttribute("placeholder", "Title");
+  description.setAttribute("placeholder", "Description");
   content.setAttribute("placeholder", "Content");
   let create_post_description = document.createElement("p");
   create_post_description.textContent = "Qu'est-ce qui vous creuse l'esprit ?";
@@ -23,6 +25,7 @@ function createPostInput() {
   submit.onclick = function () {
     let form = {
       title: title.value,
+      description: description.value,
       content: content.value,
       subject_id: subjectLists.value,
     };
@@ -41,6 +44,7 @@ function createPostInput() {
   container.appendChild(create_post_description);
   container.appendChild(cross);
   container.appendChild(title);
+  container.appendChild(description);
   container.appendChild(content);
   container.appendChild(subjectLists);
   container.appendChild(submit);

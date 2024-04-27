@@ -3,6 +3,7 @@ package app
 //Import websocket
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -94,23 +95,27 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "createPost":
 				// Assuming the content has all necessary information
 				content := wsmessage.Content.(map[string]interface{})
+				fmt.Println(content)
 				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
 				}
 				quest := Question{
-					Title:   content["title"].(string),
-					Content: content["content"].(string),
+					Title:       content["title"].(string),
+					Description: content["description"].(string),
+					Content:     content["content"].(string),
 				}
 				subject_id, _ := strconv.Atoi(content["subject_id"].(string)) // handle error properly in production
 				err = CreateQuestion(db, quest, user_id, subject_id)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
 				} else {
+					fmt.Println("Post created")
 					// On successful question creation, send an update message
 					updatedSubject, _ := FetchSubjectWithQuestionCount(db, subject_id) // Implement this method
 					conn.WriteJSON(WSMessage{Type: "postCreated", Content: updatedSubject})
+					fmt.Println(updatedSubject)
 				}
 			}
 

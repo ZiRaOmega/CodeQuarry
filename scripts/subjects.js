@@ -96,101 +96,106 @@ window.fetchQuestions = function (subjectId) {
       console.log(questions);
       const questionsList = document.getElementById("questionsList");
       questionsList.innerHTML = ""; // Clear previous questions
-      questions.forEach((question) => {
-        const questionContainer = document.createElement("div");
-        questionContainer.classList.add("question");
+      if (questions != null)
+        questions.forEach((question) => {
+          const questionContainer = document.createElement("div");
+          questionContainer.classList.add("question");
 
-        // Add subject title tag
-        const subjectTag = document.createElement("div");
-        subjectTag.classList.add("subject_tag");
-        subjectTag.textContent = question.subject_title;
-        questionContainer.appendChild(subjectTag);
+          // Add subject title tag
+          const subjectTag = document.createElement("div");
+          subjectTag.classList.add("subject_tag");
+          subjectTag.textContent = question.subject_title;
+          questionContainer.appendChild(subjectTag);
 
-        const questionTitle = document.createElement("h3");
-        questionTitle.classList.add("question_title");
-        questionTitle.textContent = question.title;
-        questionContainer.appendChild(questionTitle);
+          const questionTitle = document.createElement("h3");
+          questionTitle.classList.add("question_title");
+          questionTitle.textContent = question.title;
+          questionContainer.appendChild(questionTitle);
 
-        const questionContent = document.createElement("p");
-        questionContent.classList.add("question_content");
-        questionContent.textContent = question.content;
-        const preDiv = document.createElement("pre");
-        const code = document.createElement("code");
-        preDiv.appendChild(code);
-        code.innerHTML = question.content;
-        questionContainer.appendChild(preDiv);
+          const questionDescription = document.createElement("p");
+          questionDescription.classList.add("question_description");
+          questionDescription.textContent = question.description;
+          questionContainer.appendChild(questionDescription);
 
-        const ContainerCreatorAndDate = document.createElement("div");
-        ContainerCreatorAndDate.classList.add("creator_and_date_container");
+          const questionContent = document.createElement("p");
+          questionContent.classList.add("question_content");
+          questionContent.textContent = question.content;
+          const preDiv = document.createElement("pre");
+          const code = document.createElement("code");
+          preDiv.appendChild(code);
+          code.innerHTML = question.content;
+          questionContainer.appendChild(preDiv);
 
-        const questionDate = document.createElement("p");
-        questionDate.classList.add("question_creation_date");
-        questionDate.textContent = `Publié le: ${new Date(
-          question.creation_date
-        ).toLocaleDateString()}`;
-        ContainerCreatorAndDate.appendChild(questionDate);
+          const ContainerCreatorAndDate = document.createElement("div");
+          ContainerCreatorAndDate.classList.add("creator_and_date_container");
 
-        const questionCreator = document.createElement("p");
-        questionCreator.classList.add("question_creator");
-        questionCreator.textContent = "Crée par ";
-        const creatorName = document.createElement("span");
-        creatorName.textContent = question.creator;
-        creatorName.classList.add("creator_name");
-        questionCreator.appendChild(creatorName);
-        ContainerCreatorAndDate.appendChild(questionCreator);
+          const questionDate = document.createElement("p");
+          questionDate.classList.add("question_creation_date");
+          questionDate.textContent = `Publié le: ${new Date(
+            question.creation_date
+          ).toLocaleDateString()}`;
+          ContainerCreatorAndDate.appendChild(questionDate);
 
-        questionContainer.appendChild(ContainerCreatorAndDate);
+          const questionCreator = document.createElement("p");
+          questionCreator.classList.add("question_creator");
+          questionCreator.textContent = "Crée par ";
+          const creatorName = document.createElement("span");
+          creatorName.textContent = question.creator;
+          creatorName.classList.add("creator_name");
+          questionCreator.appendChild(creatorName);
+          ContainerCreatorAndDate.appendChild(questionCreator);
 
-        const voteContainer = document.createElement("div");
-        voteContainer.classList.add("vote_container");
-        const upvoteContainer = document.createElement("div");
-        upvoteContainer.classList.add("upvote_container");
-        const upvoteText = document.createElement("div");
-        upvoteText.classList.add("upvote_text");
-        upvoteText.textContent = "+";
-        const upvoteCount = document.createElement("p");
-        upvoteCount.classList.add("upvote_count");
-        upvoteCount.setAttribute("data-question-id", question.id);
-        upvoteCount.textContent = question.upvotes;
-        upvoteContainer.appendChild(upvoteText);
-        upvoteContainer.appendChild(upvoteCount);
-        voteContainer.appendChild(upvoteContainer);
-        const downvoteContainer = document.createElement("div");
-        downvoteContainer.classList.add("downvote_container");
-        const downvoteText = document.createElement("div");
-        downvoteText.classList.add("downvote_text");
-        downvoteText.textContent = "-";
-        const downvoteCount = document.createElement("p");
-        downvoteCount.classList.add("downvote_count");
-        downvoteCount.setAttribute("data-question-id", question.id);
-        downvoteCount.textContent = question.downvotes;
-        downvoteContainer.appendChild(downvoteText);
-        downvoteContainer.appendChild(downvoteCount);
-        voteContainer.appendChild(downvoteContainer);
-        questionContainer.appendChild(voteContainer);
-        questionsList.appendChild(questionContainer);
-        upvoteContainer.onclick = function () {
-          socket.send(
-            JSON.stringify({
-              type: "upvote",
-              content: question.id,
-              session_id: getCookie("session"),
-            })
-          );
-        };
+          questionContainer.appendChild(ContainerCreatorAndDate);
 
-        downvoteContainer.onclick = function () {
-          socket.send(
-            JSON.stringify({
-              type: "downvote",
-              content: question.id,
-              session_id: getCookie("session"),
-            })
-          );
-        };
-      });
+          const voteContainer = document.createElement("div");
+          voteContainer.classList.add("vote_container");
+          const upvoteContainer = document.createElement("div");
+          upvoteContainer.classList.add("upvote_container");
+          const upvoteText = document.createElement("div");
+          upvoteText.classList.add("upvote_text");
+          upvoteText.textContent = "+";
+          const upvoteCount = document.createElement("p");
+          upvoteCount.classList.add("upvote_count");
+          upvoteCount.setAttribute("data-question-id", question.id);
+          upvoteCount.textContent = question.upvotes;
+          upvoteContainer.appendChild(upvoteText);
+          upvoteContainer.appendChild(upvoteCount);
+          voteContainer.appendChild(upvoteContainer);
+          const downvoteContainer = document.createElement("div");
+          downvoteContainer.classList.add("downvote_container");
+          const downvoteText = document.createElement("div");
+          downvoteText.classList.add("downvote_text");
+          downvoteText.textContent = "-";
+          const downvoteCount = document.createElement("p");
+          downvoteCount.classList.add("downvote_count");
+          downvoteCount.setAttribute("data-question-id", question.id);
+          downvoteCount.textContent = question.downvotes;
+          downvoteContainer.appendChild(downvoteText);
+          downvoteContainer.appendChild(downvoteCount);
+          voteContainer.appendChild(downvoteContainer);
+          questionContainer.appendChild(voteContainer);
+          questionsList.appendChild(questionContainer);
+          upvoteContainer.onclick = function () {
+            socket.send(
+              JSON.stringify({
+                type: "upvote",
+                content: question.id,
+                session_id: getCookie("session"),
+              })
+            );
+          };
+
+          downvoteContainer.onclick = function () {
+            socket.send(
+              JSON.stringify({
+                type: "downvote",
+                content: question.id,
+                session_id: getCookie("session"),
+              })
+            );
+          };
+        });
       questionsList.style.display = ""; // Show the questions list
       checkHighlight();
     });
 };
-

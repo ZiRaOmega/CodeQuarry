@@ -100,6 +100,7 @@ func createTableQuestion(db *sql.DB) {
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Question(
 		id_question SERIAL NOT NULL,
 		title VARCHAR(50) NOT NULL,
+		description VARCHAR(1000) NOT NULL,
 		content VARCHAR(10000) NOT NULL,
 		upvotes INT,
 		downvotes INT,
