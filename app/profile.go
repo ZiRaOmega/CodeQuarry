@@ -246,7 +246,7 @@ func FileUpload(r *http.Request) (string, error) {
 	if handler.Filename[len(handler.Filename)-4:] != ".jpg" && handler.Filename[len(handler.Filename)-5:] != ".jpeg" && handler.Filename[len(handler.Filename)-4:] != ".png" && handler.Filename[len(handler.Filename)-4:] != ".gif" {
 		return "", errors.New("wrong file type")
 	}
-	
+
 	defer file.Close()
 	_, err = os.Create("./public/img/" + genname)
 	if err != nil {
