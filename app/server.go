@@ -82,11 +82,19 @@ func CQcssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/home/home.css")
 }
+func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.css")
+}
 
 // JS
 func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
 	http.ServeFile(w, r, "public/components/home/subjects/subjects.js")
+}
+func SearchBarJS(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
 }
 
 func VoteHandler(w http.ResponseWriter, r *http.Request) {
