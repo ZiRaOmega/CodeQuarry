@@ -1,12 +1,15 @@
 // {subject: "Math", marks:[
 let input = document.getElementById("search-bar-input");
 input.addEventListener("keyup", function () {
+  console.log("searching...");
   //if there is no subjectId inside localstorage
-  if (!localStorage.getItem("subjectId") || localStorage.getItem("subjectId") ==="") {
+  if (
+    !localStorage.getItem("subjectId") ||
+    localStorage.getItem("subjectId") === ""
+  ) {
     localStorage.setItem("subjectId", "all");
     localStorage.setItem("subjectTitle", "All Subjects");
     ListElement.style.display = "none"; // Hide the list
-    ReturnButton.style.display = ""; // Show return button
     fetchQuestions("all"); // Fetch all questions
   }
   const search = input.value.toLowerCase();
@@ -31,8 +34,7 @@ input.addEventListener("keyup", function () {
   }
 });
 document.getElementById("home").addEventListener("click", function () {
-    localStorage.removeItem("subjectId");
-    localStorage.removeItem("subjectTitle");
-    ListElement.style.display = "";
-    ReturnButton.style.display = "none";
-    });
+  localStorage.removeItem("subjectId");
+  localStorage.removeItem("subjectTitle");
+  ListElement.style.display = "";
+});

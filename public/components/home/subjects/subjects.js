@@ -1,7 +1,11 @@
 let SubjectsList = [];
+let QuestionsElementsList = [];
+let ListElement;
 const questionsList = document.getElementById("questionsList");
 const returnButton = document.createElement("div");
 document.addEventListener("DOMContentLoaded", function () {
+  localStorage.removeItem("subjectId");
+  localStorage.removeItem("subjectTitle");
   returnButton.id = "returnButton";
   const listElement = document.getElementById("subjectsList");
   const questionsList = document.getElementById("questionsList");
@@ -25,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Append the "All" item to the list
   listElement.appendChild(allSubjectsItem);
-
+  ListElement = listElement;
   // Event listener for the "All" subjects item
   allSubjectsItem.addEventListener("click", function () {
     localStorage.setItem("subjectId", "all");
@@ -78,7 +82,6 @@ document.addEventListener("DOMContentLoaded", function () {
           localStorage.setItem("subjectId", subject.id);
           localStorage.setItem("subjectTitle", subject.title);
           listElement.style.display = "none";
-          returnButton.style.display = "";
           fetchQuestions(subject.id);
         });
 
@@ -175,7 +178,7 @@ window.fetchQuestions = function (subjectId) {
 
           clickable_container.appendChild(ContainerCreatorAndDate);
           questionContainer.appendChild(clickable_container);
-
+          QuestionsElementsList.push(questionContainer);
           const voteContainer = document.createElement("div");
           voteContainer.classList.add("vote_container");
           const upvoteContainer = document.createElement("div");
