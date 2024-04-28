@@ -111,15 +111,21 @@ function createFilter(questions) {
   filterQuestions.classList.add("filter_questions");
   const filterPopular = document.createElement("div");
   filterPopular.classList.add("filter_popular");
-  filterPopular.textContent = "↖ Croissant";
+  filterPopular.textContent = "Croissant ↗";
   const filterUnpopular = document.createElement("div");
   filterUnpopular.classList.add("filter_unpopular");
-  filterUnpopular.textContent = "↘ Décroissant";
+  filterUnpopular.textContent = "Décroissant ↘";
   const filterNewest = document.createElement("div");
+  const filterOldest = document.createElement("div");
+  filterOldest.classList.add("filter_oldest");
   const filterNumberOfComments = document.createElement("div");
   filterNumberOfComments.classList.add("filter_number_of_comments");
   filterNewest.classList.add("filter_newest");
+  filterNumberOfComments.textContent = "↑ Commentaires";
   filterNewest.textContent = "Recent";
+  filterOldest.textContent = "Ancien";
+  filterQuestions.appendChild(filterNumberOfComments);
+  filterQuestions.appendChild(filterOldest);
   filterQuestions.appendChild(filterNewest);
   filterQuestions.appendChild(filterPopular);
   filterQuestions.appendChild(filterUnpopular);
@@ -129,9 +135,39 @@ function createFilter(questions) {
   filterContainer.appendChild(returnButton);
   filterContainer.appendChild(questionFilter);
   questionsList.appendChild(filterContainer);
-  questionTrackerCount.textContent = `${questions.length} question(s)`;
+  if (questions == null) {
+    questionTrackerCount.textContent = "0 question(s)";
+    return;
+  } else {
+    questionTrackerCount.textContent = `${questions.length} question(s)`;
+  }
+
+  filterNumberOfComments.onclick = function () {
+    console.log("sorting by number of comments", questions);
+    //check if responses is null if yes set it to 0
+    questions.forEach((question) => {
+      if (question.responses == null) {
+        question.responses = [];
+      }
+    });
+    questions.sort((a, b) => b.responses.length - a.responses.length);
+    questionsList.innerHTML = ""; // Clear previous questions
+    createFilter(questions);
+    create_questions(questions);
+  };
+
+  filterOldest.onclick = function () {
+    console.log("sorting by date", questions);
+    questions.sort(
+      (a, b) => new Date(a.creation_date) - new Date(b.creation_date)
+    );
+    questionsList.innerHTML = ""; // Clear previous questions
+    createFilter(questions);
+    create_questions(questions);
+  };
 
   filterNewest.onclick = function () {
+    console.log("sorting by date", questions);
     questions.sort(
       (a, b) => new Date(b.creation_date) - new Date(a.creation_date)
     );
@@ -141,6 +177,7 @@ function createFilter(questions) {
   };
 
   filterPopular.onclick = function () {
+    console.log("sorting by upvotes", questions);
     questions.sort((a, b) => b.upvotes - a.upvotes);
     questionsList.innerHTML = ""; // Clear previous questions
     createFilter(questions);
@@ -156,6 +193,7 @@ function createFilter(questions) {
 }
 
 function create_questions(questions) {
+  // Clear previous questions
   if (questions != null)
     questions.forEach((question) => {
       const questionContainer = document.createElement("div");
