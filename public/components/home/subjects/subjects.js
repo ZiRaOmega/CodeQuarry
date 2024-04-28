@@ -300,6 +300,11 @@ function create_questions(questions) {
         if (upvoteContainer.style.backgroundColor == "green") {
           upvoteContainer.style.backgroundColor = "";
          
+        }else{
+          upvoteContainer.style.backgroundColor = "green";
+          if (downvoteContainer.style.backgroundColor == "red") {
+            downvoteContainer.style.backgroundColor = "";
+          }
         }
         socket.send(
           JSON.stringify({
@@ -315,6 +320,11 @@ function create_questions(questions) {
         if (downvoteContainer.style.backgroundColor == "red") {
           downvoteContainer.style.backgroundColor = "";
      
+        }else{
+          downvoteContainer.style.backgroundColor = "red";
+          if (upvoteContainer.style.backgroundColor == "green") {
+            upvoteContainer.style.backgroundColor = "";
+          }
         }
         socket.send(
           JSON.stringify({
