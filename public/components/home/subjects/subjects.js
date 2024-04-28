@@ -91,8 +91,8 @@ window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
+      console.log(questions);
       questionsList.innerHTML = ""; // Clear previous questions
-
       const filterContainer = document.createElement("div");
       filterContainer.classList.add("filter_container");
       const questionFilter = document.createElement("div");
@@ -101,6 +101,20 @@ window.fetchQuestions = function (subjectId) {
       questionTrackerCount.classList.add("question_tracker_count");
       const filterQuestions = document.createElement("div");
       filterQuestions.classList.add("filter_questions");
+      const filterPopular = document.createElement("div");
+      filterPopular.classList.add("filter_popular");
+      filterPopular.textContent = "↖ Croissant";
+      const filterUnpopular = document.createElement("div");
+      filterUnpopular.classList.add("filter_unpopular");
+      filterUnpopular.textContent = "↘ Décroissant";
+      const filterNewest = document.createElement("div");
+      const filterNumberOfComments = document.createElement("div");
+      filterNumberOfComments.classList.add("filter_number_of_comments");
+      filterNewest.classList.add("filter_newest");
+      filterNewest.textContent = "Recent";
+      filterQuestions.appendChild(filterNewest);
+      filterQuestions.appendChild(filterPopular);
+      filterQuestions.appendChild(filterUnpopular);
       questionFilter.appendChild(questionTrackerCount);
       questionFilter.appendChild(filterQuestions);
       returnButton.textContent = "⬅";
@@ -110,7 +124,7 @@ window.fetchQuestions = function (subjectId) {
 
       if (questions != null)
         questions.forEach((question) => {
-          questionTrackerCount.textContent = `${questions.length} questions`;
+          questionTrackerCount.textContent = `${questions.length} question(s)`;
           const questionContainer = document.createElement("div");
           questionContainer.classList.add("question");
           const clickable_container = document.createElement("div");
@@ -217,5 +231,8 @@ window.fetchQuestions = function (subjectId) {
         });
       questionsList.style.display = ""; // Show the questions list
       checkHighlight();
+      if (questions == null) {
+        questionTrackerCount.textContent = "0 question(s)";
+      }
     });
 };
