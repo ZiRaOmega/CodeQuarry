@@ -372,9 +372,31 @@ pre{
 }
 
 #returnButton:hover{
+    padding-left: 13px;
     background-color: var(--darkblue);
     color: var(--white);
 }
+
+.filter_questions{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    width: 340px;
+    height: 50px;
+}
+
+.filter_popular,.filter_unpopular,.filter_newest{
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter_popular:hover,.filter_unpopular:hover,.filter_newest:hover{
+    color: gainsboro;
+}
+
 
 @keyframes fadeIn {
     0% {
