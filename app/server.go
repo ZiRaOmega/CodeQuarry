@@ -63,6 +63,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
 }
+
 // CSS
 func AuthCssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
@@ -112,4 +113,9 @@ func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
 func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "scripts/websocket.js")
+}
+
+func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/home/question_viewer/question_viewer.html")
 }
