@@ -272,6 +272,12 @@ function create_questions(questions) {
       voteContainer.appendChild(upvoteContainer);
       const downvoteContainer = document.createElement("div");
       downvoteContainer.classList.add("downvote_container");
+      console.log(question)
+      if (question.user_vote=="upvoted"){
+        upvoteContainer.style.backgroundColor = "green";
+      }else if (question.user_vote=="downvoted"){
+        downvoteContainer.style.backgroundColor="red";
+      }
       const downvoteText = document.createElement("div");
       downvoteText.classList.add("downvote_text");
       downvoteText.textContent = "-";
