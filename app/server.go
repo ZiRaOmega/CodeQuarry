@@ -92,6 +92,10 @@ func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
 	http.ServeFile(w, r, "public/components/home/subjects/subjects.js")
 }
+func SearchBarJS(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
+}
 
 func VoteHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
