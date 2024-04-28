@@ -49,6 +49,10 @@ pre{
 
 }
 
+.voted{
+    color: rgb(79, 79, 192);
+}
+
 .vote_container{
     position: absolute;
     top: 10px;
@@ -195,7 +199,7 @@ pre{
 }
 
 .question_description{
-    font-size: 17px;
+    font-size: 15.5px;
     color: rgb(61, 61, 61);
     margin-bottom: 25px;
 }
