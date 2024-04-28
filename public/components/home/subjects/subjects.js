@@ -1,9 +1,10 @@
 let SubjectsList = [];
+const questionsList = document.getElementById("questionsList");
+const returnButton = document.createElement("div");
 document.addEventListener("DOMContentLoaded", function () {
+  returnButton.id = "returnButton";
   const listElement = document.getElementById("subjectsList");
   const questionsList = document.getElementById("questionsList");
-  const returnButton = document.getElementById("returnButton");
-  returnButton.style.display = "none";
 
   // Create the "All" subjects item with title and description
   const allSubjectsItem = document.createElement("div");
@@ -35,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   returnButton.addEventListener("click", function () {
-    returnButton.style.display = "none";
     localStorage.removeItem("subjectId");
     localStorage.removeItem("subjectTitle");
     listElement.style.display = "";
@@ -53,10 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
       subjects.forEach((subject) => {
         SubjectsList.push(subject);
         totalQuestions += subject.questionCount; // Sum up all questions
-
         allQestionCountDiv.textContent = totalQuestions;
         allSubjectsItem.appendChild(allQestionCountDiv);
-
         const listItem = document.createElement("div");
         listItem.classList.add("category_cards");
 
@@ -93,10 +91,26 @@ window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
-      const questionsList = document.getElementById("questionsList");
       questionsList.innerHTML = ""; // Clear previous questions
+
+      const filterContainer = document.createElement("div");
+      filterContainer.classList.add("filter_container");
+      const questionFilter = document.createElement("div");
+      questionFilter.classList.add("question_filter");
+      const questionTrackerCount = document.createElement("div");
+      questionTrackerCount.classList.add("question_tracker_count");
+      const filterQuestions = document.createElement("div");
+      filterQuestions.classList.add("filter_questions");
+      questionFilter.appendChild(questionTrackerCount);
+      questionFilter.appendChild(filterQuestions);
+      returnButton.textContent = "⬅";
+      filterContainer.appendChild(returnButton);
+      filterContainer.appendChild(questionFilter);
+      questionsList.appendChild(filterContainer);
+
       if (questions != null)
         questions.forEach((question) => {
+          questionTrackerCount.textContent = `${questions.length} questions`;
           const questionContainer = document.createElement("div");
           questionContainer.classList.add("question");
           const clickable_container = document.createElement("div");
@@ -138,7 +152,7 @@ window.fetchQuestions = function (subjectId) {
 
           const questionCreator = document.createElement("p");
           questionCreator.classList.add("question_creator");
-          questionCreator.textContent = "Crée par ";
+          questionCreator.textContent = "Publié par";
           const creatorName = document.createElement("span");
           creatorName.textContent = question.creator;
           creatorName.classList.add("creator_name");
