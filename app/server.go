@@ -108,6 +108,11 @@ func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/home/posts/detect_lang/detect_lang.js")
 }
 
+func QuestionViewerJSHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.js")
+}
+
 /* ======================= WEB_SOCKETS ======================= */
 
 func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {
