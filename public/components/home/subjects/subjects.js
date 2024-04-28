@@ -94,7 +94,6 @@ window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
-      console.log(questions);
       questionsList.innerHTML = ""; // Clear previous questions
       const filterContainer = document.createElement("div");
       filterContainer.classList.add("filter_container");
@@ -174,8 +173,17 @@ window.fetchQuestions = function (subjectId) {
           creatorName.textContent = question.creator;
           creatorName.classList.add("creator_name");
           questionCreator.appendChild(creatorName);
+          const responsesCounter = document.createElement("p");
+          responsesCounter.classList.add("responses_counter");
+          if (Array.isArray(question.responses)) {
+            // Set text content to the length of the responses array
+            responsesCounter.textContent = `${question.responses.length} reponse(s)`;
+          } else {
+            // Handle cases where 'responses' might not be defined or not an array
+            responsesCounter.textContent = "0 reponse(s)";
+          }
+          ContainerCreatorAndDate.appendChild(responsesCounter);
           ContainerCreatorAndDate.appendChild(questionCreator);
-
           clickable_container.appendChild(ContainerCreatorAndDate);
           questionContainer.appendChild(clickable_container);
           QuestionsElementsList.push(questionContainer);
