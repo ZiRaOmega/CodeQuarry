@@ -51,15 +51,6 @@ $(document).ready(function () {
         break;
       case "response":
         console.log("Response received from server:", msg.content);
-        /* <div class="question-viewer__answers__answer">
-      <div class="question-viewer__answers__answer__content"><pre><code>{{.Content}}</code></pre></div>
-      <div class="question-viewer__answers__answer__author">
-        {{.StudentName}}
-      </div>
-      <div class="question-viewer__answers__answer__date">
-        {{.CreationDate.Format "2006-01-02"}}
-      </div>
-    </div>*/
         const answerContainer = document.createElement("div");
         answerContainer.classList.add("question-viewer__answers__answer");
         const answerContent = document.createElement("div");
