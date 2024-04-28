@@ -296,6 +296,11 @@ function create_questions(questions) {
         window.location.href = `https://${window.location.hostname}/question_viewer?question_id=${question.id}`;
       });
       upvoteContainer.onclick = function () {
+        //if upvoteContainer backgroundColor is green then remove the color
+        if (upvoteContainer.style.backgroundColor == "green") {
+          upvoteContainer.style.backgroundColor = "";
+         
+        }
         socket.send(
           JSON.stringify({
             type: "upvote",
@@ -306,6 +311,11 @@ function create_questions(questions) {
       };
 
       downvoteContainer.onclick = function () {
+        //if downvoteContainer backgroundColor is red then remove the color
+        if (downvoteContainer.style.backgroundColor == "red") {
+          downvoteContainer.style.backgroundColor = "";
+     
+        }
         socket.send(
           JSON.stringify({
             type: "downvote",
