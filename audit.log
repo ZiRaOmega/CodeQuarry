@@ -1201,3 +1201,9 @@ ERROR: 2024/04/28 04:22:36 Error reading the message from the client
 ERROR: 2024/04/28 04:25:18 Error reading the message from the client
 ERROR: 2024/04/28 04:25:22 Error reading the message from the client
 ERROR: 2024/04/28 04:25:35 Error reading the message from the client
+DEBUG: 2024/04/28 12:06:33 Login successful: caca at /login
+ERROR: 2024/04/28 12:06:33 Error reading the message from the client
+ERROR: 2024/04/28 12:06:37 Error reading the message from the client
+ERROR: 2024/04/28 12:06:39 Error reading the message from the client
+ERROR: 2024/04/28 12:07:00 Error reading the message from the client
+ERROR: 2024/04/28 12:07:41 Error reading the message from the client
