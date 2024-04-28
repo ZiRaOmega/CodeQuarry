@@ -1,6 +1,8 @@
 
+### Data Structures
+
 #### `Question`
-Represents the data structure for a question within the system.
+Represents a question within the application.
 
 **Fields**:
 - `Id`: Unique identifier for the question.
@@ -13,23 +15,34 @@ Represents the data structure for a question within the system.
 - `Creator`: Username of the user who created the question.
 - `Upvotes`: Number of upvotes the question has received.
 - `Downvotes`: Number of downvotes the question has received.
-- `Responses`: List of responses to the question.
+- `Responses`: A slice of `Response` objects representing the answers to the question.
+- `UserVote`: The current user's voting status on the question ("upvoted" or "downvoted").
 
 ### Functions
 
 #### `FetchQuestionsBySubject`
-Fetches questions filtered by the subject from the database.
+Retrieves questions based on a subject ID from the database, optionally filtering to include all subjects.
 
 **Parameters**:
-- `db`: Database connection.
-- `subjectID`: Identifier of the subject or "all" to fetch questions across all subjects.
+- `db`: The database connection.
+- `subjectID`: The identifier for the subject, or "all" to retrieve questions across all subjects.
+- `user_id`: The identifier of the current user to check voting status.
 
 **Returns**:
-- `[]Question`: Slice of questions.
-- `error`: Error object in case of failure.
+- `([]Question, error)`: A slice of `Question` structs and an error if the operation fails.
+
+#### `FetchQuestionByQuestionID`
+Retrieves a detailed view of a question based on its ID.
+
+**Parameters**:
+- `db`: The database connection.
+- `questionID`: The identifier of the question.
+
+**Returns**:
+- `(Question, error)`: A `Question` struct filled with detailed information and an error if the fetch is unsuccessful.
 
 #### `QuestionsHandler`
-HTTP handler function that retrieves questions based on the subject ID provided in the query parameters and sends them back as JSON.
+Provides an HTTP handler function for retrieving questions based on the subject ID provided in the HTTP request.
 
 **Usage**:
 ```go
@@ -37,43 +50,72 @@ http.HandleFunc("/questions", QuestionsHandler(db))
 ```
 
 #### `QuestionViewerHandler`
-HTTP handler for displaying individual questions based on a provided question ID.
+Serves as an HTTP handler for displaying detailed information about a single question.
 
 **Usage**:
 ```go
-http.HandleFunc("/view-question", QuestionViewerHandler(db))
+http.HandleFunc("/question/view", QuestionViewerHandler(db))
 ```
 
 #### `CreateQuestion`
 Inserts a new question into the database.
 
 **Parameters**:
-- `db`: Database connection.
-- `question`: Question object containing the details to be inserted.
-- `user_id`: User ID of the question's creator.
-- `subject_id`: Subject ID associated with the question.
+- `db`: The database connection.
+- `question`: The `Question` struct containing question data.
+- `user_id`: The user ID of the creator.
+- `subject_id`: The subject ID associated with the question.
 
 **Returns**:
-- `error`: Error object if the insertion fails.
+- `error`: An error object if the insertion fails.
 
 #### `FetchSubjectWithQuestionCount`
-Retrieves a subject along with the count of questions linked to it.
+Fetches a subject along with a count of how many questions are associated with it.
 
 **Parameters**:
-- `db`: Database connection.
-- `subjectId`: Identifier for the subject.
+- `db`: The database connection.
+- `subjectId`: The subject ID.
 
 **Returns**:
-- `Subject`: Subject object with the question count.
-- `error`: Error object in case of failure.
+- `(Subject, error)`: A `Subject` struct including a count of related questions, and an error if the fetch fails.
 
 #### `FetchQuestionsByUserID`
-Fetches questions created by a specific user.
+Retrieves all questions created by a specific user.
 
 **Parameters**:
-- `db`: Database connection.
-- `userID`: User ID whose questions are to be fetched.
+- `db`: The database connection.
+- `userID`: The user ID whose questions are to be fetched.
 
 **Returns**:
-- `[]Question`: Slice of questions.
-- `error`: Error object in case of failure.
+- `([]Question, error)`: A slice of `Question` structs and an error if the operation fails.
+
+#### `FetchVotedQuestions`
+Retrieves the voting status of questions by a specific user.
+
+**Parameters**:
+- `db`: The database connection.
+- `userID`: The user ID to fetch voting data for.
+
+**Returns**:
+- `([]QuestionVote, error)`: A slice of `QuestionVote` structs indicating the user's votes on specific questions, and an error if the operation fails.
+
+### Best Practices
+
+- **Error Handling**: All functions include comprehensive error handling to ensure robustness and reliability.
+- **Database Interactions**: SQL statements are meticulously crafted to prevent SQL injection and ensure performance.
+- **JSON Responses**: API endpoints return data in JSON format, adhering to RESTful principles and ensuring compatibility with modern web clients.
+
+### Example Usage
+
+Deploying an HTTP server with handlers for fetching and viewing questions:
+
+```go
+func main() {
+    db := app.InitDB("your-dsn")
+    http.HandleFunc("/questions", app.QuestionsHandler(db))
+    http.HandleFunc("/question/view", app.QuestionViewerHandler(db))
+    http.ListenAndServe(":8080", nil)
+}
+```
+
+This documentation provides a detailed overview of the `app` package

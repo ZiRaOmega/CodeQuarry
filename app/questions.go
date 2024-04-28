@@ -247,3 +247,38 @@ func FetchQuestionsByUserID(db *sql.DB, userID int) ([]Question, error) {
 	}
 	return questions, nil
 }
+
+type QuestionVote struct {
+	Upvote   bool
+	Downvote bool
+	Q        Question
+}
+
+func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
+	var questions []QuestionVote
+	rows, err := db.Query(`SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes, v.upvote_q, v.downvote_q
+						   FROM question q
+						   JOIN users u ON q.id_student = u.id_student
+						   JOIN subject s ON q.id_subject = s.id_subject
+						   JOIN Vote_question v ON q.id_question = v.id_question
+						   WHERE v.id_student = $1`, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var q Question
+		var qq QuestionVote
+		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes, &qq.Upvote, &qq.Downvote); err != nil {
+			continue
+		}
+		qq.Q = q
+		questions = append(questions, qq)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return questions, nil
+}
