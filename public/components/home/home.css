@@ -1,3 +1,8 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: fit-content;
+}
 
 pre{
     border-radius: 10px;
@@ -10,6 +15,7 @@ pre{
     overflow: auto;
     display: block;
     word-wrap: break-word;
+    background: #0d1117;
 }
 
 #menu{
@@ -21,8 +27,8 @@ pre{
 }
 #create_post_button {
     position: fixed; 
-    bottom: 80px;    
-    right: 80px;   
+    bottom: 50px;    
+    right: 50px;   
     height: 90px;    
     width: 90px;
     border-radius: 50%;
@@ -41,6 +47,10 @@ pre{
     transform: scale(1.1);
     background-color: #f1f1f1;
 
+}
+
+.voted{
+    color: rgb(79, 79, 192);
 }
 
 .vote_container{
@@ -118,6 +128,12 @@ pre{
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.category_cards:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: rgb(242, 242, 242);
 }
 
 
@@ -137,18 +153,7 @@ pre{
     margin: 20px;
 }
 
-
-#returnButton{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 50px;
-    padding: 10px;
-    width: 200px;
-    height: auto;
-    background-color: var(--white);
-    border-radius: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.clickable_container{
     cursor: pointer;
 }
 
@@ -157,13 +162,20 @@ pre{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 20px;
+    margin-top: 30px;
+    margin-bottom: 30px;
     padding: 20px;
     width: 700px;
     height: auto;
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.question:hover{
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    background-color: rgb(242, 242, 242);
 }
 
 .question_count, .question_count_all{
@@ -177,7 +189,7 @@ pre{
     width: 50px;
     height: 50px;
     border-radius: 180px;
-    background-color: rgb(79, 79, 192);
+    background-color: var(--darkblue);
     font-size: 20px;
     font-weight: bold;
 }
@@ -187,8 +199,9 @@ pre{
 }
 
 .question_description{
-    font-size: 18px;
+    font-size: 15.5px;
     color: rgb(61, 61, 61);
+    margin-bottom: 25px;
 }
 
 .question_content{
@@ -206,6 +219,14 @@ pre{
     color: var(--gray);
     font-size: 13px;
     margin-left: 5px;
+}
+
+.responses_counter{
+    display: flex;
+    flex-direction: row;
+    color: var(--gray);
+    font-size: 13px;
+
 }
 
 .creator_and_date_container{
@@ -279,6 +300,87 @@ pre{
 #cross:hover{
     color: red;
 }
+
+
+
+
+/* filter */
+
+.filter_container{
+    margin-top: 35px;
+    width: 740px;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.question_tracker_count{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.question_filter{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    width: 600px;
+    height: 50px;
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#returnButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 35px;
+    font-weight: bolder;
+    padding: 20px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#returnButton:hover{
+    padding-left: 13px;
+    background-color: var(--darkblue);
+    color: var(--white);
+}
+
+.filter_questions{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    width: 370px;
+    height: 70px;
+}
+
+.filter_popular,.filter_unpopular,.filter_newest, .filter_oldest, .filter_number_of_comments{
+    padding: 3px;
+    font-size: 15px;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter_popular:hover,.filter_unpopular:hover,.filter_newest:hover, .filter_oldest:hover, .filter_number_of_comments:hover{
+    color: rgb(176, 176, 176);
+}
+
 
 @keyframes fadeIn {
     0% {

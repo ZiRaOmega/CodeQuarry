@@ -122,7 +122,8 @@ func createTableResponse(db *sql.DB) {
 	// Create a Response table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Response(
 		id_response SERIAL NOT NULL,
-		content VARCHAR(500) NOT NULL,
+		description VARCHAR(1000) NOT NULL,
+		content VARCHAR(5000) NOT NULL,
 		upvotes INT,
 		downvotes INT,
 		best_answer BOOLEAN NOT NULL,

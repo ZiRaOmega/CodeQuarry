@@ -49,6 +49,30 @@ $(document).ready(function () {
           fetchQuestions(msg.content.id); // Implement this function to fetch and display questions
         }
         break;
+      case "response":
+        console.log("Response received from server:", msg.content);
+        const answerContainer = document.createElement("div");
+        answerContainer.classList.add("question-viewer__answers__answer");
+        const answerContent = document.createElement("div");
+        answerContent.classList.add("question-viewer__answers__answer__content");
+        const code = document.createElement("code");
+        code.textContent = msg.content.content;
+        const pre = document.createElement("pre");
+        pre.appendChild(code);
+        answerContent.appendChild(pre);
+        answerContainer.appendChild(answerContent);
+        const answerAuthor = document.createElement("div");
+        answerAuthor.classList.add("question-viewer__answers__answer__author");
+        answerAuthor.textContent = msg.content.studentName;
+        answerContainer.appendChild(answerAuthor);
+        const answerDate = document.createElement("div");
+        answerDate.classList.add("question-viewer__answers__answer__date");
+        answerDate.textContent = msg.content.creationDate;
+        answerContainer.appendChild(answerDate);
+        const answers = document.querySelector(".question-viewer__answers");
+        answers.appendChild(answerContainer);
+        checkHighlight()
+        break;
     }
     // Log the message received from the server
     console.log(`[message] Data received from server: ${event.data}`);
