@@ -1,33 +1,65 @@
 {{define "question_viewer"}}
-<div class="question-viewer">
-  <div class="question-viewer__question">
-    <div class="question-viewer__question__title">
-      {{.Title}}
-    </div>
-    <div class="question-viewer__question__content">
-      {{.Content}}
-    </div>
-    <div class="question-viewer__question__author">
-      {{.Creator}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+{{template "header" .}}
+  <div class="question-viewer">
+    <div class="question-viewer__question">
+      <div class="question-viewer__question__title">
+        {{.Title}}
       </div>
-      <div class="question-viewer__question__date">
-        {{.CreationDate.Format "2006-01-02 15:04:05"}}
+  
+      <div class="question-viewer_question_description">
+        {{.Description}}
+      </div>
+  
+      <div class="question-viewer__question__content">
+        <pre><code>{{.Content}}</code></pre>
+      </div>
+      <div class="question-viewer__question__author">
+        {{.Creator}}
         </div>
-  </div>
-  <div class="question-viewer__answers">
-    {{range .Responses}}
-      <div class="question-viewer__answers__answer">
-        <div class="question-viewer__answers__answer__content">
-          {{.Content}}
-        </div>
-        <div class="question-viewer__answers__answer__author">
-          {{.StudentName}}
-        </div>
-        <div class="question-viewer__answers__answer__date">
+        <div class="question-viewer__question__date">
           {{.CreationDate.Format "2006-01-02 15:04:05"}}
           </div>
-      </div>
-    {{end}}
+    </div>
+    <div class="question-viewer__answers">
+      {{range .Responses}}
+        <div class="question-viewer__answers__answer">
+          <div class="question-viewer_answers_description">
+            {{.Description}}
+          </div>
+          <div class="question-viewer__answers__answer__content">
+            {{.Content}}
+          </div>
+          <div class="question-viewer__answers__answer__author">
+            {{.StudentName}}
+          </div>
+          <div class="question-viewer__answers__answer__date">
+            {{.CreationDate.Format "2006-01-02 15:04:05"}}
+            </div>
+        </div>
+      {{end}}
+    </div>
   </div>
-</div>
-{{end}}
+  <script>
+    function checkHighlight() {
+    // Ensure both hljs and Prism are defined
+    if (typeof hljs === "undefined") {
+      console.error("Highlight.js not found!");
+      return;
+    }
+  
+    document.querySelectorAll("pre code").forEach((block) => {
+      // Apply Highlight.js
+      hljs.highlightElement(block);
+    });
+  }
+  
+  // Call checkHighlight when the DOM is fully loaded and after any AJAX content load
+  document.addEventListener("DOMContentLoaded", checkHighlight);
+  </script>
+  {{end}}
+</body>
+</html>
