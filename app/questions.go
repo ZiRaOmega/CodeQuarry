@@ -22,13 +22,14 @@ type Question struct {
 	Upvotes      int        `json:"upvotes"`
 	Downvotes    int        `json:"downvotes"`
 	Responses    []Response `json:"responses"`
+	UserVote     string     `json:"user_vote"`
 }
 
 // FetchQuestionsBySubject retrieves a list of questions based on the subject ID.
 // If the subject ID is "all", it fetches all questions from the database.
 // Otherwise, it fetches questions only for the specified subject ID.
 // It returns a slice of Question structs and an error if any.
-func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
+func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Question, error) {
 	var questions []Question
 	var rows *sql.Rows
 	var err error
@@ -53,12 +54,23 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string) ([]Question, error) {
 		return nil, err
 	}
 	defer rows.Close()
-
+	voted_question, err := FetchVotedQuestions(db, user_id)
+	if err != nil {
+		log.Printf("Error fetching voted questions: %v", err)
+		return nil, err
+	}
 	for rows.Next() {
 		var q Question
 		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
 			log.Printf("Error scanning question: %v", err)
 			continue
+		}
+		for _, voted := range voted_question {
+			if voted.Q.Id == q.Id && voted.Upvote == true {
+				q.UserVote = "upvoted"
+			} else if voted.Q.Id == q.Id && voted.Downvote == true {
+				q.UserVote = "downvoted"
+			}
 		}
 		q.Responses, err = FetchResponseByQuestion(db, q.Id)
 		if err != nil {
@@ -114,7 +126,18 @@ func GetUsernameWithUserID(db *sql.DB, userID int) string {
 func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		subjectID := r.URL.Query().Get("subjectId")
-		questions, err := FetchQuestionsBySubject(db, subjectID)
+		session_id, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Session not found", http.StatusUnauthorized)
+			return
+		}
+
+		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
+		if err != nil {
+			http.Error(w, "Session not found", http.StatusUnauthorized)
+			return
+		}
+		questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
 		if err != nil {
 			http.Error(w, "Server error", http.StatusInternalServerError)
 			return

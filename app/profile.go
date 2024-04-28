@@ -68,6 +68,7 @@ type User struct {
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
 	My_Post            []Question
+	VotedQuestion      []Question
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -111,7 +112,52 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	}
 	fmt.Println(Posts)
 	user.My_Post = Posts
+	//user.VotedQuestion, err = FetchVotedQuestions(db, user.ID)
 	return user, nil // Return the populated user object
+}
+
+type QuestionVote struct {
+	Upvote   bool
+	Downvote bool
+	Q        Question
+}
+
+func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
+	var questions []QuestionVote
+	/*Vote_question(
+	id_student INT,
+	id_question INT,
+	upvote_q BOOLEAN NOT NULL,
+	downvote_q BOOLEAN NOT NULL,
+	PRIMARY KEY(id_student, id_question),
+	FOREIGN KEY(id_student) REFERENCES users(id_student),
+	FOREIGN KEY(id_question) REFERENCES Question(id_question)*/
+	//Fetch using Vote_question
+	rows, err := db.Query(`SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes, v.upvote_q, v.downvote_q
+						   FROM question q
+						   JOIN users u ON q.id_student = u.id_student
+						   JOIN subject s ON q.id_subject = s.id_subject
+						   JOIN Vote_question v ON q.id_question = v.id_question
+						   WHERE v.id_student = $1`, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var q Question
+		var qq QuestionVote
+		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes, &qq.Upvote, &qq.Downvote); err != nil {
+			continue
+		}
+		qq.Q = q
+		questions = append(questions, qq)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	fmt.Println(questions)
+	return questions, nil
 }
 
 // UpdateProfileHandler is an HTTP request handler that updates the user profile.
