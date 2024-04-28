@@ -47,9 +47,9 @@
 </div>
 <div id="my_post">
     <h2>My Post</h2>
-    <ul>
+    <ul class="history">
         {{range .My_Post}}
-        <li>{{.CreationDate.Format "2006-01-02 15:04:05"}} - {{.Title}} </li>
+        <li class="history_element">{{.CreationDate.Format "2006-01-02"}} - <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`">{{.Title}}</a>  </li>
         {{end}}
     </ul>
 </div>

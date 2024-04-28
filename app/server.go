@@ -63,6 +63,7 @@ func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
 }
+
 // CSS
 func AuthCssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
@@ -81,11 +82,23 @@ func CQcssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/home/home.css")
 }
+func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.css")
+}
+func ProfileCSSHandler(w http.ResponseWriter, r *http.Request) {
+	// Servce profile.css
+	http.ServeFile(w, r, "public/components/profile/profile.css")
+}
 
 // JS
 func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
 	http.ServeFile(w, r, "public/components/home/subjects/subjects.js")
+}
+func SearchBarJS(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
 }
 
 func VoteHandler(w http.ResponseWriter, r *http.Request) {
@@ -107,9 +120,19 @@ func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/home/posts/detect_lang/detect_lang.js")
 }
 
+func QuestionViewerJSHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.js")
+}
+
 /* ======================= WEB_SOCKETS ======================= */
 
 func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "scripts/websocket.js")
+}
+
+func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/home/question_viewer/question_viewer.html")
 }
