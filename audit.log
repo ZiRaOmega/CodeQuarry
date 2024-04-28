@@ -1157,6 +1157,7 @@ ERROR: 2024/04/28 00:11:24 Error reading the message from the client
 ERROR: 2024/04/28 00:14:15 Error reading the message from the client
 ERROR: 2024/04/28 00:14:58 Error reading the message from the client
 ERROR: 2024/04/28 00:15:41 Error reading the message from the client
+<<<<<<< HEAD
 >>>>>>> max
 ERROR: 2024/04/28 02:03:31 Error reading the message from the client
 DEBUG: 2024/04/28 02:03:41 Login successful: caca at /login
@@ -1434,3 +1435,86 @@ ERROR: 2024/04/28 04:20:58 Error reading the message from the client
 ERROR: 2024/04/28 04:21:14 Error reading the message from the client
 ERROR: 2024/04/28 04:35:08 Error reading the message from the client
 ERROR: 2024/04/28 04:35:20 Error reading the message from the client
+=======
+ERROR: 2024/04/28 00:55:36 Error reading the message from the client
+ERROR: 2024/04/28 00:57:04 Error reading the message from the client
+ERROR: 2024/04/28 01:03:49 Error reading the message from the client
+ERROR: 2024/04/28 01:05:41 Error reading the message from the client
+ERROR: 2024/04/28 01:06:25 Error reading the message from the client
+ERROR: 2024/04/28 01:14:08 Error reading the message from the client
+ERROR: 2024/04/28 01:16:41 Error reading the message from the client
+ERROR: 2024/04/28 01:17:12 Error reading the message from the client
+ERROR: 2024/04/28 01:19:30 Error reading the message from the client
+ERROR: 2024/04/28 01:19:48 Error reading the message from the client
+ERROR: 2024/04/28 01:19:56 Error reading the message from the client
+ERROR: 2024/04/28 01:22:37 Error reading the message from the client
+ERROR: 2024/04/28 01:22:50 Error reading the message from the client
+ERROR: 2024/04/28 01:23:15 Error reading the message from the client
+ERROR: 2024/04/28 01:25:03 Error reading the message from the client
+ERROR: 2024/04/28 01:25:22 Error reading the message from the client
+ERROR: 2024/04/28 01:29:47 Error reading the message from the client
+ERROR: 2024/04/28 01:30:44 Error reading the message from the client
+ERROR: 2024/04/28 01:31:06 Error reading the message from the client
+ERROR: 2024/04/28 01:32:15 Error reading the message from the client
+ERROR: 2024/04/28 01:33:47 Error reading the message from the client
+ERROR: 2024/04/28 01:34:12 Error reading the message from the client
+ERROR: 2024/04/28 01:35:10 Error reading the message from the client
+ERROR: 2024/04/28 01:35:49 Error reading the message from the client
+ERROR: 2024/04/28 01:36:23 Error reading the message from the client
+ERROR: 2024/04/28 01:36:34 Error reading the message from the client
+ERROR: 2024/04/28 01:36:45 Error reading the message from the client
+ERROR: 2024/04/28 01:36:55 Error reading the message from the client
+ERROR: 2024/04/28 01:37:35 Error reading the message from the client
+ERROR: 2024/04/28 01:38:10 Error reading the message from the client
+ERROR: 2024/04/28 01:39:19 Error reading the message from the client
+ERROR: 2024/04/28 01:39:57 Error reading the message from the client
+ERROR: 2024/04/28 01:59:25 Error reading the message from the client
+ERROR: 2024/04/28 02:08:28 Error reading the message from the client
+ERROR: 2024/04/28 02:08:43 Error reading the message from the client
+ERROR: 2024/04/28 02:10:14 Error reading the message from the client
+ERROR: 2024/04/28 02:11:15 Error reading the message from the client
+ERROR: 2024/04/28 02:13:25 Error reading the message from the client
+ERROR: 2024/04/28 02:14:22 Error reading the message from the client
+ERROR: 2024/04/28 02:15:37 Error reading the message from the client
+ERROR: 2024/04/28 02:15:43 Error reading the message from the client
+ERROR: 2024/04/28 02:15:50 Error reading the message from the client
+ERROR: 2024/04/28 02:39:33 Error reading the message from the client
+ERROR: 2024/04/28 02:41:57 Error reading the message from the client
+ERROR: 2024/04/28 03:55:58 Error reading the message from the client
+DEBUG: 2024/04/28 03:56:10 Login successful: mm at /login
+ERROR: 2024/04/28 03:56:10 Error reading the message from the client
+ERROR: 2024/04/28 04:03:29 Error reading the message from the client
+ERROR: 2024/04/28 04:08:16 Error reading the message from the client
+ERROR: 2024/04/28 04:15:32 Error reading the message from the client
+ERROR: 2024/04/28 04:18:35 Error reading the message from the client
+ERROR: 2024/04/28 04:18:54 Error reading the message from the client
+ERROR: 2024/04/28 04:22:31 Error reading the message from the client
+ERROR: 2024/04/28 04:22:36 Error reading the message from the client
+ERROR: 2024/04/28 04:25:18 Error reading the message from the client
+ERROR: 2024/04/28 04:25:22 Error reading the message from the client
+ERROR: 2024/04/28 04:25:35 Error reading the message from the client
+DEBUG: 2024/04/28 12:06:33 Login successful: caca at /login
+ERROR: 2024/04/28 12:06:33 Error reading the message from the client
+ERROR: 2024/04/28 12:06:37 Error reading the message from the client
+ERROR: 2024/04/28 12:06:39 Error reading the message from the client
+ERROR: 2024/04/28 12:07:00 Error reading the message from the client
+ERROR: 2024/04/28 12:07:41 Error reading the message from the client
+>>>>>>> max
+ERROR: 2024/04/28 12:09:40 Error reading the message from the client
+ERROR: 2024/04/28 12:09:59 Error reading the message from the client
+ERROR: 2024/04/28 12:10:27 Error reading the message from the client
+ERROR: 2024/04/28 12:10:39 Error reading the message from the client
+ERROR: 2024/04/28 12:16:09 Error reading the message from the client
+ERROR: 2024/04/28 12:16:11 Error reading the message from the client
+ERROR: 2024/04/28 12:17:18 Error reading the message from the client
+ERROR: 2024/04/28 12:17:35 Error reading the message from the client
+ERROR: 2024/04/28 12:18:05 Error reading the message from the client
+ERROR: 2024/04/28 12:18:12 Error reading the message from the client
+ERROR: 2024/04/28 12:22:13 Error reading the message from the client
+ERROR: 2024/04/28 12:22:17 Error reading the message from the client
+ERROR: 2024/04/28 12:22:19 Error reading the message from the client
+ERROR: 2024/04/28 12:24:41 Error reading the message from the client
+ERROR: 2024/04/28 12:24:51 Error reading the message from the client
+ERROR: 2024/04/28 12:25:40 Error reading the message from the client
+ERROR: 2024/04/28 12:25:50 Error reading the message from the client
+ERROR: 2024/04/28 12:25:59 Error reading the message from the client

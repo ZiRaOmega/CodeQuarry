@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"codequarry/app/utils"
 )
 
 type Response struct {
@@ -39,6 +41,17 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 			question_id := receive_data.(map[string]interface{})["response"].(map[string]interface{})["question_id"].(string)
 			description := receive_data.(map[string]interface{})["response"].(map[string]interface{})["description"].(string)
 			content := receive_data.(map[string]interface{})["response"].(map[string]interface{})["content"].(string)
+			//CheckXSS and SQLi
+			if utils.ContainsSQLi(description) || utils.ContainsSQLi(content) {
+				json.NewEncoder(w).Encode(map[string]string{"error": "SQL injection detected"})
+				http.Error(w, "SQL injection detected", http.StatusBadRequest)
+				return
+			}
+			if utils.ContainsXSS(description) || utils.ContainsXSS(content) {
+				json.NewEncoder(w).Encode(map[string]string{"error": "XSS detected"})
+				http.Error(w, "XSS detected", http.StatusBadRequest)
+				return
+			}
 			creation_date := time.Now()
 
 			userid, err := getUserIDUsingSessionID(session_id, db)
