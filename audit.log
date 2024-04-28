@@ -2,3 +2,18 @@ ERROR: 2024/04/28 21:10:08 Error reading the message from the client
 ERROR: 2024/04/28 21:12:24 Error reading the message from the client
 ERROR: 2024/04/28 21:23:42 Error reading the message from the client
 ERROR: 2024/04/28 21:23:48 Error reading the message from the client
+ERROR: 2024/04/28 23:45:35 Error reading the message from the client
+DEBUG: 2024/04/28 23:45:47 Registration successful: zizi at /register
+ERROR: 2024/04/28 23:45:48 Error reading the message from the client
+ERROR: 2024/04/28 23:45:58 Error reading the message from the client
+ERROR: 2024/04/28 23:46:00 Error reading the message from the client
+ERROR: 2024/04/28 23:46:02 Error reading the message from the client
+ERROR: 2024/04/28 23:46:06 Error reading the message from the client
+ERROR: 2024/04/28 23:46:51 Error reading the message from the client
+ERROR: 2024/04/28 23:46:53 Error reading the message from the client
+ERROR: 2024/04/28 23:46:59 Error reading the message from the client
+ERROR: 2024/04/28 23:47:07 Error reading the message from the client
+DEBUG: 2024/04/28 23:47:14 Login successful: caca at /login
+ERROR: 2024/04/28 23:47:14 Error reading the message from the client
+ERROR: 2024/04/28 23:47:17 Error reading the message from the client
+ERROR: 2024/04/28 23:47:21 Error reading the message from the client
