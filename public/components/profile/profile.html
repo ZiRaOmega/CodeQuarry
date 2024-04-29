@@ -1,0 +1,59 @@
+{{define "profile"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+    {{template "header" .}}
+<div class="profile">
+    <form action="/update-profile" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="id_student" value="{{.ID}}">
+        <label for="lastname">Last Name:</label>
+        <input type="text" name="lastname" value="{{.LastName}}">
+        <br>
+        <label for="firstname">First Name:</label>
+        <input type="text" name="firstname" value="{{.FirstName}}">
+        <br>
+        <label for="username">Username:</label>
+        <input type="text" name="username" value="{{.Username}}">
+        <br>
+        <label for="email">Email:</label>
+        <input type="email" name="email" value="{{.Email}}">
+        <br>
+        <label for="password">Password:</label>
+        <input type="password" name="password">
+        <br>
+        <img src="{{.Avatar.String}}" alt="avatar" width="100" height="100">
+        <label for="avatar">Avatar:</label>
+        <input type="file" name="avatar">
+        <br>
+        <label for="birth_date">Birth Date:</label>
+        <input type="date" name="birth_date" value="{{.Birth_Date_Format}}">
+        <br>
+        <label for="bio">Bio:</label>
+        <textarea name="bio">{{.Bio.String}}</textarea>
+        <br>
+        <label for="website">Website:</label>
+        <input type="text" name="website" value="{{.Website.String}}">
+        <br>
+        <label for="github">GitHub:</label>
+        <input type="text" name="github" value="{{.GitHub.String}}">
+        <br>
+        <label for="school_year">School Year:</label>
+        <input type="date" name="school_year" value="{{.School_Year_Format}}">
+        <br>
+        <input type="submit" value="Save">
+    </form>
+    
+</div>
+<div id="my_post">
+    <h2>My Post</h2>
+    <ul>
+        {{range .My_Post}}
+        <li>{{.CreationDate.Format "2006-01-02 15:04:05"}} - {{.Title}} </li>
+        {{end}}
+    </ul>
+</div>
+</body>
+{{template "script" .}}
+</html>
+{{end}}

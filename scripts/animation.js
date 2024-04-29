@@ -4,7 +4,7 @@ login_button = document.getElementById("login-button");
 register_button = document.getElementById("register-button");
 registerBlock = document.getElementById("registerBlock");
 loginBlock = document.getElementById("loginBlock");
-mainBlock = document.getElementById("mainBlock");
+mainBlock = document.getElementById("auth_block");
 
 login_button.addEventListener("click", function () {
   loginBlock.style.display = "flex";

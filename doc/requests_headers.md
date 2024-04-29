@@ -17,7 +17,7 @@ L'en-tête "CSP" (Content Security Policy) vous permet de définir une politique
 L'en-tête "X-XSS-Protection" empêche les pages de se charger lorsqu'elles détectent des attaques XSS (Cross-site scripting). Dans ce cas, l'attaquant fait en sorte qu'une page charge du JavaScript malveillant, en envoyant la charge utile malveillante dans le cadre de la demande. Cet en-tête permet de spécifier si la page doit être chargée ou bloquée. La valeur "1 ; mode=block ;" bloque complètement le chargement de la page. Il s'agit d'un en-tête spécial pour les navigateurs Chrome et Internet Explorer, qui semble inutile pour les API et devrait être couvert par une politique de sécurité du contenu restrictive.
 
 `w.Header().Add("X-Frame-Options", "DENY")`
- 
+
 L'en-tête "X-Frame-Options" indique au navigateur s'il est autorisé à rendre une page dans une balise "embed,frame, iframe ou object". Cela permet d'éviter le "click-jacking", c'est-à-dire que le contenu n'est pas intégré dans d'autres sites. Ici, nous avons choisi la valeur "DENY", ce qui empêche le contenu d'être intégré dans d'autres pages.
 
 `w.Header().Add("Referrer-Policy", "strict-origin-when-cross-origin")`
