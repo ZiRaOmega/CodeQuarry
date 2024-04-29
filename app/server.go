@@ -101,6 +101,11 @@ func SearchBarJS(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
 }
 
+func ProfileJs(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/profile/profile.js")
+}
+
 func VoteHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/home/votes.js")
