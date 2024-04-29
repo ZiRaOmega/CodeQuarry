@@ -39,11 +39,11 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func (U *User) FormatBirthDate() string {
-	return U.BirthDate.Time.Format("2006-01-02")
+	return U.BirthDate.Time.Format("01/02/2006")
 }
 
 func (U *User) FormatSchoolYear() string {
-	return U.SchoolYear.Time.Format("2006-01-02")
+	return U.SchoolYear.Time.Format("01/02/2006")
 }
 
 // Define User structure based on your database schema

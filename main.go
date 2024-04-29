@@ -92,6 +92,7 @@ func main() {
 	http.HandleFunc("/profile", app.ProfileHandler(db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	http.HandleFunc("/searchbar/input.js", app.SearchBarJS)
+	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
