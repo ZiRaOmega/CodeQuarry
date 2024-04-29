@@ -36,5 +36,3 @@ Importance : Un certificat SSL/TLS valide est nécessaire pour établir une conn
 ```bash
 sudo go run .
 ```
-
-lemon was here.

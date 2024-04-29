@@ -1,0 +1,96 @@
+body{
+    overflow-x: hidden;
+}
+
+header {
+    width: 100vw;
+    height: 80px;
+    color: black;
+    padding: 1em;
+    background: white;
+    z-index: 2;
+    text-align: center;
+    display: flex;
+    border-bottom: solid 1px #ECEFF1;
+    position: sticky;
+    top: 0;
+}
+
+.leftpart{
+    flex-basis: 50%;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 50px;
+    align-items: center;
+
+}
+
+.CQ-logo{
+    width: 75px;
+    height: 75px;
+    margin-bottom: 0;
+}
+
+#menu{
+    justify-content: flex-end;
+    align-items: center;
+    flex-basis: 50%;
+    padding-right: 50px;
+}
+
+#menu ul {
+    
+    display: flex;
+    gap: 30px;
+
+}
+
+li {
+    list-style-type: none
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.search_bar{
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: self-end;
+    gap: 10px;
+}
+
+#search-bar-input{
+    border: none;
+    border-bottom: 1px solid black;
+    outline: none;
+    height: 24px;
+    position: relative;
+    top: -5px;
+}
+
+#search_button{
+    background: none;
+    border: none;
+    outline: none;
+}
+
+#search_button:hover{
+    cursor: pointer;
+}
+
+.header_icons{
+    transition: 0.3s all ease-out;
+}
+
+.header_icons:hover{
+    transform: scale(1.1);
+}
+
+#home::after{
+    content: "";
+    width: 30px;
+    height: 10px;
+    background: red;
+}

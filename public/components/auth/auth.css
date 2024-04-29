@@ -1,23 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
-:root{
-    --darkblue: #000513;
-    --white : #FFF;
-    --light-gray: #EEE;
-}
-* {
-    font-family: "Inter", sans-serif;
-}
-body{
-    display: flex;
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    justify-content: center;
-    align-items: center;
-}
-/* ---------------------------- Main block ---------------------------- */
-#mainBlock{
+/* ---------------------------- AUTH_BLOCK ---------------------------- */
+#auth_block{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -34,7 +16,7 @@ body{
     background-size: cover;
     margin-bottom: 20px;
 }
-.Title{
+.title{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -87,7 +69,7 @@ body{
     cursor: pointer;
     transform: scale(1.05);
 }
-/* ---------------------------- register block ---------------------------- */
+/* ---------------------------- REGISTER BLOCK ---------------------------- */
 #registerBlock{
     display: none;
     flex-direction: column;
@@ -126,7 +108,7 @@ body{
 #registerSubmit:hover{
     transform: scale(0.95);
 }
-/* ---------------------------- Login block ---------------------------- */
+/* ---------------------------- LOGIN BLOCK ---------------------------- */
 #loginBlock{
     display: none;
     flex-direction: column;
