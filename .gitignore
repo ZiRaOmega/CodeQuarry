@@ -1,3 +1,4 @@
-users.db
 node_modules/
-scripts/auth_obfuscate.js
+audit.log
+public/img/
+public/components/auth/auth_obfuscate.js

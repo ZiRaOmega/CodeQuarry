@@ -21,9 +21,10 @@
         <p class="downvote_count">
       </div>
     </div>
-    <div class="question-viewer__question__title">{{.Title}}</div>
-    <div class="question-viewer__question__description">{{.Description}}</div>
-    <div class="question-viewer__question__content"><pre><code>{{.Content}}</code></pre></div>
+    <div class="question-viewer__question__title"></div>
+    <div class="question-viewer__question__description"></div>
+    <div class="question-viewer__question__content">
+    </div>
     <div class="creator_and_date_container">
       <div class="question-viewer__question__date">
         Publié le: {{.CreationDate.Format "2006-01-02"}}
@@ -33,18 +34,6 @@
   </div>
   </div>
   <div class="question-viewer__answers">
-    {{range .Responses}}
-    <div class="question-viewer__answers__answer">
-      <div class="question-viewer__answers__answer__description">{{.Description}}</div>
-      <div class="question-viewer__answers__answer__content"><pre><code>{{.Content}}</code></pre></div>
-      <div class="question-viewer__answers__answer__author">
-        {{.StudentName}}
-      </div>
-      <div class="question-viewer__answers__answer__date">
-        {{.CreationDate.Format "2006-01-02"}}
-      </div>
-    </div>
-    {{end}}
   </div>
   <div id="response_input" class="question-viewer__response-input">
     <input id="question_id" question_id="{{.Id}}" style="display: none;"></input>
@@ -65,6 +54,8 @@
   </div>
 </div>
 <script src="/scripts/question_viewer.js"></script>
+<script>
+</script>
 </body>
 {{template "script" .}}
 </html>
