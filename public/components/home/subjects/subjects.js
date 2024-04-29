@@ -232,9 +232,8 @@ function create_questions(questions) {
 
       const questionDate = document.createElement("p");
       questionDate.classList.add("question_creation_date");
-      questionDate.textContent = `Publié le: ${new Date(
-        question.creation_date
-      ).toLocaleDateString()}`;
+      questionDate.textContent =
+        `Publié le: ${new Date(question.creation_date).toLocaleDateString()}`;
       ContainerCreatorAndDate.appendChild(questionDate);
       const questionCreator = document.createElement("p");
       questionCreator.classList.add("question_creator");
