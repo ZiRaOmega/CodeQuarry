@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 
 	"codequarry/app"
 
@@ -46,19 +47,23 @@ func main() {
 	outputPath := "public/components/auth/auth_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
 
+	rateLimiter := app.NewRateLimiter(10, time.Minute)
+
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 
 	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("auth", nil)))
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
-	// http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
+	// http.HandleFunc("/scriphttps://pkg.go.dev/golang.org/x/tools/internal/typesinternal?utm_source%3Dgopls#IncompatibleAssignts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
 	//Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.HandleFunc("/register", app.RegisterHandler(db))
-	http.HandleFunc("/login", app.LoginHandler(db))
+	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		rateLimiter.Handle(app.LoginHandler(db)).ServeHTTP(w, r)
+	})
 
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
