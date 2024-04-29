@@ -24,7 +24,6 @@ response_submit.addEventListener("click", function () {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
       if (data.status === "success") {
         window.location.reload();
       }

@@ -7,13 +7,32 @@
 <div>{{.}}</div>
 <div class="question-viewer">
   <div class="question-viewer__question">
+    <div class="vote_container">
+      <div class="upvote_container">
+        <div class="upvote_text">
+          +</div>
+          <p class="upvote_count">
+            {{.Upvotes}}
+          </p>
+      </div>
+      <div class="downvote_container">
+        <div class="downvote_text">
+          -
+        </div>
+        <p class="downvote_count">
+          {{.Downvotes}}
+      </div>
+    </div>
     <div class="question-viewer__question__title">{{.Title}}</div>
     <div class="question-viewer__question__description">{{.Description}}</div>
     <div class="question-viewer__question__content"><pre><code>{{.Content}}</code></pre></div>
+    <div class="creator_and_date_container">
+      <div class="question-viewer__question__date">
+        Publié le: {{.CreationDate.Format "2006-01-02"}}
+      </div>
+      <div class="responses_counter">{{len .Responses}} Réponse(s)</div>
     <div class="question-viewer__question__author">Publié par<span class="creator_name">{{.Creator}}</span></div>
-    <div class="question-viewer__question__date">
-      Publié le: {{.CreationDate.Format "2006-01-02"}}
-    </div>
+  </div>
   </div>
   <div class="question-viewer__answers">
     {{range .Responses}}
