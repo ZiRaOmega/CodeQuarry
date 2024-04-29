@@ -1,40 +1,76 @@
 let response_submit = document.getElementById("response_submit");
-response_submit.addEventListener("click", function () {
-  const question_id = document
-    .getElementById("question_id")
-    .getAttribute("question-id");
-  const response_description = document.getElementById(
-    "response_description"
-  ).value;
-  const response_content = document.getElementById("response_content").value;
-  const response = {
-    question_id: getUrlArgument("question_id"),
-    description: response_description,
-    content: response_content,
-  };
-  fetch("/api/responses", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      response: response,
-      session_id: getCookie("session"),
-    }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-      if (data.status === "success") {
-        window.location.reload();
-      }
+const response_description = document.getElementById("response_description");
+const response_content = document.getElementById("response_content");
+const error_message_response = document.getElementById(
+  "error_message_response"
+);
+
+function sendResponse() {
+  if (response_description.value == "" && response_content.value == "") {
+    error_message_response.style.display = "block";
+    error_message_response.innerText = "Veuillez remplir tous les champs.";
+  } else if (response_description.value == "") {
+    error_message_response.style.display = "block";
+    error_message_response.innerText = "Veuillez remplir la description.";
+  } else if (response_content.value == "") {
+    error_message_response.style.display = "block";
+    error_message_response.innerText = "Veuillez remplir le contenu.";
+  } else {
+    const question_id = document
+      .getElementById("question_id")
+      .getAttribute("question-id");
+    const response_description = document.getElementById(
+      "response_description"
+    ).value;
+    const response_content = document.getElementById("response_content").value;
+    const response = {
+      question_id: getUrlArgument("question_id"),
+      description: response_description,
+      content: response_content,
+    };
+    fetch("/api/responses", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        response: response,
+        session_id: getCookie("session"),
+      }),
     })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          window.location.reload();
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+}
+
+response_submit.addEventListener("click", function () {
+  sendResponse();
 });
 
+function handleKeyPress(event) {
+  if (event.keyCode === 13) {
+    // Check if the key pressed is Enter
+    event.preventDefault(); // Prevent the default action to stop from submitting the form
+    sendResponse();
+  }
+}
+
+response_description.addEventListener("keypress", handleKeyPress);
+response_content.addEventListener("keypress", handleKeyPress);
+
 function getUrlArgument(name) {
+  const response_description = document.getElementById("response_description");
+  const response_content = document.getElementById("response_content");
+  response_description.value = "";
+  response_content.value = "";
   const url = new URL(window.location.href);
   return url.searchParams.get(name);
 }
