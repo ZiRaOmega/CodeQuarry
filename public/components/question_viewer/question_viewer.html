@@ -36,21 +36,23 @@
   <div class="question-viewer__answers">
   </div>
   <div id="response_input" class="question-viewer__response-input">
+    <p id="votre_reponse">Votre réponse:</p>
     <input id="question_id" question_id="{{.Id}}" style="display: none;"></input>
     <textarea
       id="response_description"
-      placeholder="Write your description here"
+      placeholder="Votre description..."
     ></textarea>
     <textarea
       id="response_content"
-      placeholder="Write your content here"
+      placeholder="Envoyez du code ici..."
     ></textarea>
-    <button
+    <div
       id="response_submit"
       class="question-viewer__response-input__submit"
     >
       Submit
-    </button>
+  </div>
+  <div id="error_message_response"></div>
   </div>
 </div>
 <script src="/scripts/question_viewer.js"></script>

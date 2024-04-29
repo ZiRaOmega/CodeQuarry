@@ -130,6 +130,7 @@ pre{
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s;
     transition: all 0.3s ease;
 }
 
@@ -157,6 +158,13 @@ pre{
 
 .clickable_container{
     cursor: pointer;
+}
+
+#questionsList{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    animation: fadeIn 0.5s;
 }
 
 .question{
@@ -310,6 +318,7 @@ pre{
 
 .filter_container{
     margin-top: 35px;
+    margin-bottom: 10px;
     width: 740px;
     height: auto;
     display: flex;
