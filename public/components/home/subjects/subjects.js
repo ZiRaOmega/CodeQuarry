@@ -222,9 +222,11 @@ function create_questions(questions) {
       const preDiv = document.createElement("pre");
       const code = document.createElement("code");
       preDiv.appendChild(code);
-      code.innerHTML = question.content;
+      code.textContent = question.content;
+      document.querySelectorAll("pre code").forEach((block) => {
+        hljs.highlightElement(block);
+      });
       clickable_container.appendChild(preDiv);
-
       const ContainerCreatorAndDate = document.createElement("div");
       ContainerCreatorAndDate.classList.add("creator_and_date_container");
 
@@ -234,7 +236,6 @@ function create_questions(questions) {
         question.creation_date
       ).toLocaleDateString()}`;
       ContainerCreatorAndDate.appendChild(questionDate);
-
       const questionCreator = document.createElement("p");
       questionCreator.classList.add("question_creator");
       questionCreator.textContent = "Publié par";
@@ -316,7 +317,7 @@ function create_questions(questions) {
 
       downvoteContainer.onclick = function () {
         //if downvoteContainer backgroundColor is red then remove the color
-        if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
+        if (downvoteContainer.style.backgroundColor == "") {
           downvoteContainer.style.backgroundColor = "";
         } else {
           downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
