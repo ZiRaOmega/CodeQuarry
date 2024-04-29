@@ -10,10 +10,12 @@
     <div class="question-viewer__question__title">{{.Title}}</div>
     <div class="question-viewer__question__description">{{.Description}}</div>
     <div class="question-viewer__question__content"><pre><code>{{.Content}}</code></pre></div>
+    <div class="creator_and_date_container">
+      <div class="question-viewer__question__date">
+        Publié le: {{.CreationDate.Format "2006-01-02"}}
+      </div>
     <div class="question-viewer__question__author">Publié par<span class="creator_name">{{.Creator}}</span></div>
-    <div class="question-viewer__question__date">
-      Publié le: {{.CreationDate.Format "2006-01-02"}}
-    </div>
+  </div>
   </div>
   <div class="question-viewer__answers">
     {{range .Responses}}

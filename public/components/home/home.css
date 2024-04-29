@@ -49,10 +49,6 @@ pre{
 
 }
 
-.voted{
-    color: rgb(79, 79, 192);
-}
-
 .vote_container{
     position: absolute;
     top: 10px;
@@ -74,10 +70,16 @@ pre{
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.upvote_container:hover, .downvote_container:hover{
-    background-color: rgb(79, 79, 192);
+.upvote_container:hover{
+    background-color: rgb(104, 195, 163);
+    color: var(--white);
+}
+
+.downvote_container:hover{
+    background-color:rgb(196, 77, 86);
     color: var(--white);
 }
 
