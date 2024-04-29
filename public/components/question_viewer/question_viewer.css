@@ -27,6 +27,7 @@
 }
 
 .question-viewer__question{
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -46,7 +47,7 @@
 }
 
 .question-viewer__question__description{
-    font-size: 20px;
+    font-size: 17px;
     color: rgb(61, 61, 61);
     margin-bottom: 10px;
 }
