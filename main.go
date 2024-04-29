@@ -54,7 +54,7 @@ func main() {
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
 	// http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
-	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
+	http.HandleFunc("/components/auth/animation.js", app.AnimationsHandler)
 	//Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.HandleFunc("/register", app.RegisterHandler(db))
@@ -91,7 +91,7 @@ func main() {
 	http.HandleFunc("/components/question_viewer/question_viewer.css", app.QuestionViewerCSSHandler)
 	http.HandleFunc("/profile", app.ProfileHandler(db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
-	http.HandleFunc("/searchbar/input.js", app.SearchBarJS)
+	http.HandleFunc("/search_bar/input.js", app.SearchBarJS)
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)

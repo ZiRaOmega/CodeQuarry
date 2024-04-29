@@ -66,9 +66,9 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 			continue
 		}
 		for _, voted := range voted_question {
-			if voted.Q.Id == q.Id && voted.Upvote == true {
+			if voted.Q.Id == q.Id && voted.Upvote {
 				q.UserVote = "upvoted"
-			} else if voted.Q.Id == q.Id && voted.Downvote == true {
+			} else if voted.Q.Id == q.Id && voted.Downvote {
 				q.UserVote = "downvoted"
 			}
 		}
@@ -118,7 +118,6 @@ func GetUsernameWithUserID(db *sql.DB, userID int) string {
 		return ""
 	}
 	return username
-
 }
 
 // QuestionsHandler handles the HTTP request for retrieving questions by subject ID.
@@ -176,7 +175,6 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 
 		}
 	}
-
 }
 
 // CreateQuestion inserts a new question into the database.
@@ -184,7 +182,7 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 // It returns an error if the insertion fails.
 func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) error {
 	query := `INSERT INTO question (title, description, content, creation_date, update_date, id_student, id_subject, upvotes, downvotes)
-			  VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0)`
+		VALUES ($1, $2, $3, $4, $5, $6, $7, 0, 0)`
 	_, err := db.Exec(query, question.Title, question.Description, question.Content, time.Now(), time.Now(), user_id, subject_id)
 	if err != nil {
 		log.Printf("Error inserting question: %v", err)

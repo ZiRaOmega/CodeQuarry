@@ -44,7 +44,7 @@ func LogoHandler(w http.ResponseWriter, r *http.Request) {
 
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
-	http.ServeFile(w, r, "scripts/animation.js")
+	http.ServeFile(w, r, "public/components/auth/animation.js")
 }
 
 /* ======================= TEMPLATES ======================= */

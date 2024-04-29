@@ -273,10 +273,10 @@ function create_questions(questions) {
       const downvoteContainer = document.createElement("div");
       downvoteContainer.classList.add("downvote_container");
       console.log(question)
-      if (question.user_vote=="upvoted"){
+      if (question.user_vote == "upvoted") {
         upvoteContainer.style.backgroundColor = "green";
-      }else if (question.user_vote=="downvoted"){
-        downvoteContainer.style.backgroundColor="red";
+      } else if (question.user_vote == "downvoted") {
+        downvoteContainer.style.backgroundColor = "red";
       }
       const downvoteText = document.createElement("div");
       downvoteText.classList.add("downvote_text");
@@ -299,8 +299,8 @@ function create_questions(questions) {
         //if upvoteContainer backgroundColor is green then remove the color
         if (upvoteContainer.style.backgroundColor == "green") {
           upvoteContainer.style.backgroundColor = "";
-         
-        }else{
+
+        } else {
           upvoteContainer.style.backgroundColor = "green";
           if (downvoteContainer.style.backgroundColor == "red") {
             downvoteContainer.style.backgroundColor = "";
@@ -319,8 +319,8 @@ function create_questions(questions) {
         //if downvoteContainer backgroundColor is red then remove the color
         if (downvoteContainer.style.backgroundColor == "red") {
           downvoteContainer.style.backgroundColor = "";
-     
-        }else{
+
+        } else {
           downvoteContainer.style.backgroundColor = "red";
           if (upvoteContainer.style.backgroundColor == "green") {
             upvoteContainer.style.backgroundColor = "";
