@@ -61,18 +61,22 @@ fetch("/api/questions?subjectId=all")
         }
 
         upvoteContainer[0].onclick = function () {
-          upvoteCount[0].textContent = data.upvotes;
+         
+          console.log(question)
           //if upvoteContainer backgroundColor is green then remove the color
           if (
             upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
           ) {
             upvoteContainer[0].style.backgroundColor = "";
+            upvoteCount[0].textContent = parseInt(question.upvotes)-1;
           } else {
             upvoteContainer[0].style.backgroundColor = "rgb(104, 195, 163)";
+            upvoteCount[0].textContent = parseInt(question.upvotes)+1;
             if (
               downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
             ) {
               downvoteContainer[0].style.backgroundColor = "";
+              downvoteCount[0].textContent = parseInt(question.downvotes);
             }
           }
           socket.send(
@@ -86,18 +90,29 @@ fetch("/api/questions?subjectId=all")
         };
 
         downvoteContainer[0].onclick = function () {
-          downvoteCount[0].textContent = data.downvotes;
+          if (downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)") {
+            }else{
+              
+           }   
+          
           //if downvoteContainer backgroundColor is red then remove the color
           if (
             downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
           ) {
             downvoteContainer[0].style.backgroundColor = "";
+            downvoteCount[0].textContent = parseInt(question.downvotes)-1;
+           
           } else {
+            
+           downvoteCount[0].textContent = parseInt(question.downvotes)+1;
             downvoteContainer[0].style.backgroundColor = "rgb(196, 77, 86)";
             if (
               upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
             ) {
               upvoteContainer[0].style.backgroundColor = "";
+              upvoteCount[0].textContent = parseInt(question.upvotes);
+              
+
             }
           }
           socket.send(
