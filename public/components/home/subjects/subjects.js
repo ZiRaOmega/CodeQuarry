@@ -317,7 +317,7 @@ function create_questions(questions) {
 
       downvoteContainer.onclick = function () {
         //if downvoteContainer backgroundColor is red then remove the color
-        if (downvoteContainer.style.backgroundColor == "") {
+        if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
           downvoteContainer.style.backgroundColor = "";
         } else {
           downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
