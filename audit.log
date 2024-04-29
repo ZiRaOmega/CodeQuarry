@@ -1718,3 +1718,27 @@ ERROR: 2024/04/28 16:51:39 Error reading the message from the client
 ERROR: 2024/04/28 16:51:46 Error reading the message from the client
 ERROR: 2024/04/28 16:51:51 Error reading the message from the client
 ERROR: 2024/04/28 16:52:00 Error reading the message from the client
+DEBUG: 2024/04/29 10:14:58 Registration successful: lemonforthewin at /register
+ERROR: 2024/04/29 10:14:59 Error reading the message from the client
+ERROR: 2024/04/29 10:15:06 Error reading the message from the client
+ERROR: 2024/04/29 10:15:07 Error reading the message from the client
+ERROR: 2024/04/29 10:17:45 Error reading the message from the client
+ERROR: 2024/04/29 10:18:36 Error reading the message from the client
+ERROR: 2024/04/29 10:19:19 SQL injection detected
+DEBUG: 2024/04/29 10:20:27 Login successful: lemonforthewin at /login
+ERROR: 2024/04/29 10:20:27 Error reading the message from the client
+DEBUG: 2024/04/29 10:23:07 Login successful: lemonforthewin at /login
+ERROR: 2024/04/29 10:23:07 Error reading the message from the client
+ERROR: 2024/04/29 10:23:11 Error reading the message from the client
+ERROR: 2024/04/29 10:23:16 Error reading the message from the client
+ERROR: 2024/04/29 10:23:16 Error reading the message from the client
+ERROR: 2024/04/29 10:23:23 Error reading the message from the client
+ERROR: 2024/04/29 10:24:09 Error reading the message from the client
+ERROR: 2024/04/29 10:24:09 Error reading the message from the client
+ERROR: 2024/04/29 10:24:10 Error reading the message from the client
+ERROR: 2024/04/29 10:24:11 Error reading the message from the client
+ERROR: 2024/04/29 10:24:17 Error reading the message from the client
+DEBUG: 2024/04/29 10:24:28 Login successful: lemonforthewin at /login
+ERROR: 2024/04/29 10:24:28 Error reading the message from the client
+ERROR: 2024/04/29 10:24:33 Error reading the message from the client
+DEBUG: 2024/04/29 10:32:15 Login successful: lemonforthewin at /login
