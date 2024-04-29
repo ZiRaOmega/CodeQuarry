@@ -63,11 +63,11 @@ func main() {
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
 
-	http.HandleFunc("/create_post", app.CreatePostHandler)
+	http.HandleFunc("/create_post", app.AddSecurityHeaders(app.CreatePostHandler))
 	http.HandleFunc("/scripts/posts.js", app.PostsHandler)
 
 	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
-	http.HandleFunc("/home", app.SendTemplate("home", nil))
+	http.HandleFunc("/home", app.AddSecurityHeaders(app.SendTemplate("home", nil)))
 	// http.HandleFunc("/styles/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
 	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
@@ -89,7 +89,7 @@ func main() {
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
 	http.HandleFunc("/components/question_viewer/question_viewer.css", app.QuestionViewerCSSHandler)
-	http.HandleFunc("/profile", app.ProfileHandler(db))
+	http.HandleFunc("/profile", app.AddSecurityHeaders(app.ProfileHandler(db)))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	http.HandleFunc("/searchbar/input.js", app.SearchBarJS)
 
