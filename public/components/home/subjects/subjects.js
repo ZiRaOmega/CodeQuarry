@@ -290,6 +290,11 @@ function create_questions(questions) {
       voteContainer.appendChild(downvoteContainer);
       questionContainer.appendChild(voteContainer);
       questionsList.appendChild(questionContainer);
+      if (question.user_vote == "upvoted") {
+        upvoteContainer.style.backgroundColor = "rgb(104, 195, 163)";
+      } else if (question.user_vote == "downvoted") {
+        downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
+      }
       let responseContainer = document.createElement("div");
       responseContainer.classList.add("response_container");
       clickable_container.addEventListener("click", () => {
@@ -297,12 +302,11 @@ function create_questions(questions) {
       });
       upvoteContainer.onclick = function () {
         //if upvoteContainer backgroundColor is green then remove the color
-        if (upvoteContainer.style.backgroundColor == "green") {
+        if (upvoteContainer.style.backgroundColor == "rgb(104, 195, 163)") {
           upvoteContainer.style.backgroundColor = "";
-
         } else {
-          upvoteContainer.style.backgroundColor = "green";
-          if (downvoteContainer.style.backgroundColor == "red") {
+          upvoteContainer.style.backgroundColor = "rgb(104, 195, 163)";
+          if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
             downvoteContainer.style.backgroundColor = "";
           }
         }
@@ -317,12 +321,11 @@ function create_questions(questions) {
 
       downvoteContainer.onclick = function () {
         //if downvoteContainer backgroundColor is red then remove the color
-        if (downvoteContainer.style.backgroundColor == "red") {
+        if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
           downvoteContainer.style.backgroundColor = "";
-
         } else {
-          downvoteContainer.style.backgroundColor = "red";
-          if (upvoteContainer.style.backgroundColor == "green") {
+          downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
+          if (upvoteContainer.style.backgroundColor == "rgb(104, 195, 163)") {
             upvoteContainer.style.backgroundColor = "";
           }
         }
