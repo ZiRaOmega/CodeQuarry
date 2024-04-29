@@ -38,3 +38,79 @@ function getUrlArgument(name) {
   const url = new URL(window.location.href);
   return url.searchParams.get(name);
 }
+
+const upvoteContainer = document.querySelectorAll(".upvote_container");
+const downvoteContainer = document.querySelectorAll(".downvote_container");
+const upvoteCount = document.querySelectorAll(".upvote_count");
+const downvoteCount = document.querySelectorAll(".downvote_count");
+
+fetch("/api/questions?subjectId=all")
+  .then((response) => response.json())
+  .then((data) => {
+    data.forEach((question) => {
+      upvoteCount[0].setAttribute("data-question-id", question.id);
+      downvoteCount[0].setAttribute("data-question-id", question.id);
+      upvoteCount[0].textContent = question.upvotes;
+      downvoteCount[0].textContent = question.downvotes;
+      //get the question where the id is the same as the one in the url
+      if (question.id == getUrlArgument("question_id")) {
+        if (question.user_vote == "upvoted") {
+          upvoteContainer[0].style.backgroundColor = "rgb(104, 195, 163)";
+        } else if (question.user_vote == "downvoted") {
+          downvoteContainer[0].style.backgroundColor = "rgb(196, 77, 86)";
+        }
+
+        upvoteContainer[0].onclick = function () {
+          upvoteCount[0].textContent = data.upvotes;
+          //if upvoteContainer backgroundColor is green then remove the color
+          if (
+            upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
+          ) {
+            upvoteContainer[0].style.backgroundColor = "";
+          } else {
+            upvoteContainer[0].style.backgroundColor = "rgb(104, 195, 163)";
+            if (
+              downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
+            ) {
+              downvoteContainer[0].style.backgroundColor = "";
+            }
+          }
+          socket.send(
+            JSON.stringify({
+              type: "upvote",
+              content: question.id,
+              session_id: getCookie("session"),
+            })
+          );
+          console.log("upvoted");
+        };
+
+        downvoteContainer[0].onclick = function () {
+          downvoteCount[0].textContent = data.downvotes;
+          //if downvoteContainer backgroundColor is red then remove the color
+          if (
+            downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
+          ) {
+            downvoteContainer[0].style.backgroundColor = "";
+          } else {
+            downvoteContainer[0].style.backgroundColor = "rgb(196, 77, 86)";
+            if (
+              upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
+            ) {
+              upvoteContainer[0].style.backgroundColor = "";
+            }
+          }
+          socket.send(
+            JSON.stringify({
+              type: "downvote",
+              content: question.id,
+              session_id: getCookie("session"),
+            })
+          );
+        };
+      }
+    });
+  })
+  .catch((error) => {
+    console.error("Error:", error);
+  });
