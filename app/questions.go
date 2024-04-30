@@ -357,3 +357,11 @@ func CheckIfQuestionIsMine(db *sql.DB, questionID int, userID float64) bool {
 	}
 	return false
 }
+func FetchXP(db *sql.DB, user_id int) (int, error) {
+	var xp int
+	err := db.QueryRow(`SELECT xp FROM users WHERE id_student = $1`, user_id).Scan(&xp)
+	if err != nil {
+		return 0, err
+	}
+	return xp, nil
+}
