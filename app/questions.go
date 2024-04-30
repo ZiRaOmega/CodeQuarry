@@ -282,3 +282,15 @@ func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
 
 	return questions, nil
 }
+
+func CheckIfQuestionIsMine(db *sql.DB, questionID int, userID float64) bool {
+	var id float64
+	err := db.QueryRow(`SELECT id_student FROM question WHERE id_question = $1`, questionID).Scan(&id)
+	if err != nil {
+		return false
+	}
+	if id == userID {
+		return true
+	}
+	return false
+}
