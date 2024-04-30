@@ -116,6 +116,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				subject_id, _ := strconv.Atoi(content["subject_id"].(string)) // handle error properly in production
 				err = CreateQuestion(db, quest, user_id, subject_id)
 				if err != nil {
+					fmt.Println(err.Error())
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
 				} else {
 					// On successful question creation, send an update message
@@ -128,6 +129,12 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				content := wsmessage.Content.(float64)
 				questionID := int(content)
 				userID, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				question_id, err := strconv.Atoi(wsmessage.Content.(string))
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid question ID"})
+					break
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -174,6 +181,22 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					question_best_answer := GetBestAnswerFromQuestion(db, questionID)
 
 					conn.WriteJSON(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID}})
+				}
+			case "deletePost":
+				/*{
+				        type: "deletePost",
+				        content: id,
+						session_id: getCookie("session")
+				      }*/
+				err = UserDeleteQuestion(db, question_id, user_id)
+				if err != nil {
+					fmt.Println(err.Error())
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete post"})
+				} else {
+					// On successful question deletion, send an update message
+					//updatedSubject, _ := FetchSubjectWithQuestionCount(db, question_id) // Implement this method
+					/* conn.WriteJSON(WSMessage{Type: "postDeleted", Content: question_id}) */
+					BroadcastMessage(WSMessage{Type: "postDeleted", Content: question_id, SessionID: ""}, nil)
 				}
 			}
 

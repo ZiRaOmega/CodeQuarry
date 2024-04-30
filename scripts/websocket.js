@@ -96,6 +96,14 @@ $(document).ready(function () {
             element.style.display = "none";
           }
         });
+      case "postDeleted":
+        const question = document.querySelector(
+          `.question[data-question-id="${msg.content}"]`
+        );
+        if (question) {
+          question.remove();
+        }
+        break;
     }
     // Log the message received from the server
     console.log(`[message] Data received from server: ${event.data}`);

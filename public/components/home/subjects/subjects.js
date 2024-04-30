@@ -199,6 +199,7 @@ function create_questions(questions) {
     questions.forEach((question) => {
       const questionContainer = document.createElement("div");
       questionContainer.classList.add("question");
+      questionContainer.setAttribute("data-question-id", question.id);
       const clickable_container = document.createElement("div");
       clickable_container.classList.add("clickable_container");
       // Add subject title tag

@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -192,6 +193,22 @@ func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) 
 		log.Printf("Attempted to insert: title='%s', user_id=%d, subject_id=%d", question.Title, user_id, subject_id)
 		return err
 	}
+	// Insert xp for user after creating a question
+	err = InsertXP(db, user_id, 1000)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
+	return nil
+}
+
+func InsertXP(db *sql.DB, user_id int, xp int) error {
+	query := `UPDATE users SET xp = xp + $1 WHERE id_student = $2`
+	_, err := db.Exec(query, xp, user_id)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
 	return nil
 }
 
@@ -293,4 +310,51 @@ func CheckIfQuestionIsMine(db *sql.DB, questionID int, userID float64) bool {
 		return true
 	}
 	return false
+}
+
+func FetchStudentIDUsingQuestionID(db *sql.DB, questionID int) (int, error) {
+	var studentID int
+	err := db.QueryRow(`SELECT id_student FROM question WHERE id_question = $1`, questionID).Scan(&studentID)
+	if err != nil {
+		return 0, err
+	}
+	return studentID, nil
+}
+
+func UserDeleteQuestion(db *sql.DB, questionID int, userID int) error {
+	studentID, err := FetchStudentIDUsingQuestionID(db, questionID)
+	if err != nil {
+		return err
+	}
+	if studentID != userID {
+		fmt.Println("User is not the creator of the question")
+		return nil
+	}
+	//RemoveXP for question author and for all users who answer the question
+	RemoveXP(db, studentID, 1000)
+	//Remove xp for all users who answered the question
+	answers, err := FetchResponseByQuestion(db, questionID)
+	if err != nil {
+		return err
+	}
+	for _, answer := range answers {
+		RemoveXP(db, answer.StudentID, 100)
+		RemoveXP(db, studentID, 100)
+	}
+	//Delete on cascade
+	_, err = db.Exec(`DELETE FROM question WHERE id_question = $1`, questionID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func RemoveXP(db *sql.DB, user_id int, xp int) error {
+	query := `UPDATE users SET xp = xp - $1 WHERE id_student = $2`
+	_, err := db.Exec(query, xp, user_id)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
+	return nil
 }

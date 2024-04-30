@@ -117,5 +117,3 @@ func main() {
     http.ListenAndServe(":8080", nil)
 }
 ```
-
-This documentation provides a detailed overview of the `app` package
