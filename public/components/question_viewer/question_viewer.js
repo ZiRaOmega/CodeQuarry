@@ -169,6 +169,8 @@ fetch("/api/questions?subjectId=all")
           );
         };
         question.responses.forEach((answer) => {
+          const bestAnswer = document.createElement("div");
+          bestAnswer.classList.add("best_answer");
           const question_viewer__answers__answer =
             document.createElement("div");
           const question_viewer__answers__answer__description =
