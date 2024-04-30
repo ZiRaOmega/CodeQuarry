@@ -28,7 +28,7 @@
             <input type="file" name="avatar">
             <br>
             <label for="birth_date">Birth Date:</label>
-            <input type="date" name="birth_date" value="{{.Birth_Date_Format}}">
+            <input type="date" name="birth_date" id="birth_date" value="">
             <br>
             <label for="bio">Bio:</label>
             <textarea name="bio">{{.Bio.String}}</textarea>
@@ -40,7 +40,7 @@
             <input type="text" name="github" value="{{.GitHub.String}}">
             <br>
             <label for="school_year">School Year:</label>
-            <input type="date" name="school_year" value="{{.School_Year_Format}}">
+            <input type="date" name="school_year" id="school_year" value="">
             <br>
             <input type="submit" value="Save">
         </form>
@@ -53,7 +53,7 @@
             </div>
             <p class="informations" id="birthDate"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-days"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg> {{.Birth_Date_Format}}</p>
             <p class="informations"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> {{.Email}}</p>
-            <p class="informations">Started on {{.School_Year_Format}}</p>
+            <p class="informations"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-school"><path d="M14 22v-4a2 2 0 1 0-4 0v4"/><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"/><path d="M18 5v17"/><path d="m4 6 8-4 8 4"/><path d="M6 5v17"/><circle cx="12" cy="9" r="2"/></svg> {{.School_Year_Format}}</p>
             <button id="editButton" class="button"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen-line"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit Profile</div>
         </div>
     
@@ -68,6 +68,10 @@
 </div>
 </div>
 <script src="/components/profile/profile.js"></script>
+<script type="text/javascript">
+    setDateInInput("{{.BirthDate}}", "birth_date")
+    setDateInInput("{{.SchoolYear}}", "school_year")
+</script>
 </body>
 {{template "script" .}}
 </html>
