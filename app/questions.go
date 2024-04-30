@@ -192,6 +192,7 @@ func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) 
 		log.Printf("Attempted to insert: title='%s', user_id=%d, subject_id=%d", question.Title, user_id, subject_id)
 		return err
 	}
+	// Insert xp for user after creating a question
 	err = InsertXP(db, user_id, 1000)
 	if err != nil {
 		log.Printf("Error updating XP: %v", err)

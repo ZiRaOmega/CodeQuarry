@@ -90,6 +90,7 @@ func InsertResponse(db *sql.DB, response Response) error {
 	if err != nil {
 		return err
 	}
+	// Add XP to the student who answered the question
 	err = InsertXP(db, response.StudentID, 100)
 	if err != nil {
 		return err
@@ -98,6 +99,7 @@ func InsertResponse(db *sql.DB, response Response) error {
 	if err != nil {
 		return err
 	}
+	// Add XP to the student who asked the question
 	err = InsertXP(db, Question_Student_ID, 100)
 	if err != nil {
 		return err
