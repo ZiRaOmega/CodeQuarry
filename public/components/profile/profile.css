@@ -76,6 +76,14 @@ a{
 
 .editProfileForm{
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+.editProfileForm input[type=text], .editProfileForm input[type=email], .editProfileForm input[type=password], .editProfileForm input[type=date],.editProfileForm input[type=file],  .editProfileForm textarea{
+    width: 200px;
+    margin-bottom: 10px;
 }
 
 #bio{
