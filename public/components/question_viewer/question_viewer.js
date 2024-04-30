@@ -1,6 +1,11 @@
 let response_submit = document.getElementById("response_submit");
 const response_description = document.getElementById("response_description");
 const response_content = document.getElementById("response_content");
+const areYouSure = document.getElementsByClassName("areYouSure");
+const areYouSureTitle = document.getElementsByClassName("areYouSureTitle");
+const areYouSureText = document.getElementsByClassName("areYouSureText");
+const Yes = document.getElementById("Yes");
+const No = document.getElementById("No");
 const error_message_response = document.getElementById(
   "error_message_response"
 );
@@ -270,6 +275,7 @@ fetch("/api/questions?subjectId=all")
             creator_and_date_container.appendChild(bestAnswerContainer);
             if (containBestAnswer) {
               if (answer.best_answer) {
+                bestAnswer.className = "best_answer best_answer_container";
                 bestAnswer.style.display = "flex";
                 bestAnswer.style.backgroundColor = "rgb(104, 195, 163)";
               } else {
@@ -284,17 +290,42 @@ fetch("/api/questions?subjectId=all")
             );
 
             bestAnswer.onclick = function () {
-              socket.send(
-                JSON.stringify({
-                  type: "bestAnswer",
-                  content: {
-                    answer_id: bestAnswer.getAttribute("data-answer-id"),
-                    question_id: question.id.toString(),
-                  },
-                  session_id: getCookie("session"),
-                })
-              );
+              if (bestAnswer.className != "best_answer best_answer_container") {
+                // Check both RGB and HEX
+                areYouSure[0].style.display = "flex";
+
+                Yes.onclick = function () {
+                  socket.send(
+                    JSON.stringify({
+                      type: "bestAnswer",
+                      content: {
+                        answer_id: bestAnswer.getAttribute("data-answer-id"),
+                        question_id: question.id.toString(),
+                      },
+                      session_id: getCookie("session"),
+                    })
+                  );
+                  areYouSure[0].style.display = "none";
+                };
+
+                No.onclick = function () {
+                  areYouSure[0].style.display = "none";
+                };
+              } else {
+                bestAnswer.className = "best_answer";
+                socket.send(
+                  JSON.stringify({
+                    type: "bestAnswer",
+                    content: {
+                      answer_id: bestAnswer.getAttribute("data-answer-id"),
+                      question_id: question.id.toString(),
+                    },
+                    session_id: getCookie("session"),
+                  })
+                );
+              }
             };
+
             document.querySelectorAll("pre code").forEach((block) => {
               hljs.highlightElement(block);
             });
