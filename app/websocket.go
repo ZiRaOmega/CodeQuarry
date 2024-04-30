@@ -123,6 +123,58 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "postCreated", Content: updatedSubject})
 					BroadcastMessage(WSMessage{Type: "postCreated", Content: updatedSubject, SessionID: ""}, conn)
 				}
+			case "questionCompareUser":
+				fmt.Println("Checking if question is mine", wsmessage.Content.(float64))
+				content := wsmessage.Content.(float64)
+				questionID := int(content)
+				userID, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if CheckIfQuestionIsMine(db, questionID, float64(userID)) {
+					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: true})
+				} else {
+					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: false})
+				}
+			case "bestAnswer":
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				fmt.Println(contentMap)
+				if !ok {
+					fmt.Println("Invalid content type for bestAnswer")
+					// Optionally send an error response back to the client
+					continue
+				}
+
+				// Extracting the answer ID and converting it to an integer
+
+				answerID, err := strconv.Atoi(contentMap["answer_id"].(string)) // JSON numbers are decoded as floats
+				if err != nil {
+					fmt.Println("Invalid or missing answer_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+
+				questionID, err := strconv.Atoi(contentMap["question_id"].(string)) // JSON numbers are decoded as floats
+				if err != nil {
+					fmt.Println("Invalid or missing question_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+
+				// Now attempt to insert the best answer
+
+				err = InsertBestAnswer(db, answerID)
+
+				if err != nil {
+					fmt.Printf("Error inserting best answer: %v\n", err)
+					// Optionally send an error response back to the client
+				} else {
+					fmt.Println("Successfully set best answer")
+					question_best_answer := GetBestAnswerFromQuestion(db, questionID)
+
+					conn.WriteJSON(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID}})
+				}
 			}
 
 		}
