@@ -125,3 +125,44 @@ func FetchResponseByQuestion(db *sql.DB, questionID int) ([]Response, error) {
 	}
 	return responses, nil
 }
+
+// InsertBestAnswer toggles the best_answer status for a given response.
+func InsertBestAnswer(db *sql.DB, responseID int) error {
+	// First, check the current status of best_answer.
+	currentStatus := CheckIfAleadyBestAnswer(db, responseID)
+	// Toggle the status: true becomes false, false becomes true.
+	newStatus := !currentStatus
+
+	query := `UPDATE response SET best_answer = $1 WHERE id_response = $2`
+	_, err := db.Exec(query, newStatus, responseID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// CheckIfAleadyBestAnswer checks if the given response is already marked as the best answer.
+func CheckIfAleadyBestAnswer(db *sql.DB, responseID int) bool {
+	query := `SELECT best_answer FROM response WHERE id_response = $1`
+	var bestAnswer bool
+	err := db.QueryRow(query, responseID).Scan(&bestAnswer)
+	if err != nil {
+		// Handle error according to your logging or error handling strategy.
+		// For simplicity, return false on error.
+		return false
+	}
+	return bestAnswer
+}
+
+func GetBestAnswerFromQuestion(db *sql.DB, questionID int) int {
+	//find the best answer when its true
+	query := `SELECT id_response FROM response WHERE id_question = $1 AND best_answer = true`
+	var bestAnswer int
+	err := db.QueryRow(query, questionID).Scan(&bestAnswer)
+	if err != nil {
+		// Handle error according to your logging or error handling strategy.
+		// For simplicity, return false on error.
+		return -1
+	}
+	return bestAnswer
+}

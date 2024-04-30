@@ -85,6 +85,27 @@ $(document).ready(function () {
           fetchQuestions(subjectid);
         }
         break;
+      case "questionCompareUser":
+        ItsMyQuestion(msg.content);
+        break;
+      case "bestAnswer":
+        console.log("Best answer received from server:", msg.content);
+        let answersBtn = document.querySelectorAll(".best_answer");
+        answersBtn.forEach((element) => {
+          if (msg.content.question_best_answer == -1) {
+            element.style.display = "flex";
+            element.style.backgroundColor = "";
+          } else if (
+            element.dataset.answerId ==
+            msg.content.question_best_answer.toString()
+          ) {
+            element.style.display = "flex";
+            element.style.backgroundColor = "rgb(104, 195, 163)";
+            element.classList.add("best_answer_container");
+          } else {
+            element.style.display = "none";
+          }
+        });
     }
     // Log the message received from the server
     console.log(`[message] Data received from server: ${event.data}`);
@@ -144,4 +165,11 @@ function updateQuestionCount(subject) {
     totalQuestions++; // Increment since a new question was added
     totalQuestionsDiv.textContent = totalQuestions;
   }
+}
+
+function ItsMyQuestion(bool) {
+  const best_answer = document.querySelectorAll(".best_answer_container");
+  best_answer.forEach((element) => {
+    element.style.display = bool ? "flex" : "none";
+  });
 }

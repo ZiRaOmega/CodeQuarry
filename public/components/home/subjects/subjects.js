@@ -94,6 +94,7 @@ window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
+      console.log(questions);
       createFilter(questions);
       create_questions(questions);
     });

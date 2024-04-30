@@ -1,6 +1,11 @@
 let response_submit = document.getElementById("response_submit");
 const response_description = document.getElementById("response_description");
 const response_content = document.getElementById("response_content");
+const areYouSure = document.getElementsByClassName("areYouSure");
+const areYouSureTitle = document.getElementsByClassName("areYouSureTitle");
+const areYouSureText = document.getElementsByClassName("areYouSureText");
+const Yes = document.getElementById("Yes");
+const No = document.getElementById("No");
 const error_message_response = document.getElementById(
   "error_message_response"
 );
@@ -40,7 +45,6 @@ function sendResponse() {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (data.status === "success") {
           window.location.reload();
         }
@@ -105,6 +109,19 @@ fetch("/api/questions?subjectId=all")
     data.forEach((question) => {
       //get the question where the id is the same as the one in the url
       if (question.id == getUrlArgument("question_id")) {
+        console.log(question);
+        //when all is loaded
+
+        setTimeout(() => {
+          socket.send(
+            JSON.stringify({
+              type: "questionCompareUser",
+              content: question.id,
+              session_id: getCookie("session"),
+            })
+          );
+        }, 500);
+
         question_viewer__question__title.innerText = question.title;
         question_viewer__question__description.innerText = question.description;
         code.textContent = question.content;
@@ -146,7 +163,6 @@ fetch("/api/questions?subjectId=all")
               session_id: getCookie("session"),
             })
           );
-          console.log("upvoted");
         };
 
         downvoteContainer[0].onclick = function () {
@@ -178,83 +194,153 @@ fetch("/api/questions?subjectId=all")
             })
           );
         };
-        question.responses.forEach((answer) => {
-          const question_viewer__answers__answer =
-            document.createElement("div");
-          const question_viewer__answers__answer__description =
-            document.createElement("div");
-          const question_viewer__answers__answer__content =
-            document.createElement("div");
-          const question_viewer__answers__answer__date =
-            document.createElement("div");
-          const creator_name = document.createElement("span");
-          const creator_and_date_container = document.createElement("div");
-          const pre = document.createElement("pre");
-          const code = document.createElement("code");
-          creator_and_date_container.classList.add(
-            "creator_and_date_container"
-          );
-          creator_name.classList.add("creator_name");
-          question_viewer__answers__answer__date.classList.add(
-            "question-viewer__answers__answer__date"
-          );
-          const question_viewer__answers__answer__author =
-            document.createElement("div");
-          question_viewer__answers__answer__author.classList.add(
-            "question-viewer__answers__answer__author"
-          );
-          question_viewer__answers__answer__author.innerText = "Réponse de ";
-          creator_name.innerText = answer.student_name;
-          question_viewer__answers__answer__content.classList.add(
-            "question-viewer__answers__answer__content"
-          );
-          question_viewer__answers__answer__content.classList.add(
-            "question-viewer__answers__answer__content"
-          );
-          question_viewer__answers__answer.classList.add(
-            "question-viewer__answers__answer"
-          );
-          question_viewer__answers__answer__description.classList.add(
-            "question-viewer__answers__answer__description"
-          );
 
-          question_viewer__answers__answer__date.innerText = `Publié le: ${new Date(
-            question.creation_date
-          ).toLocaleDateString()}`;
+        if (question.responses != null) {
+          //explain how does the sorting works
 
-          question_viewer__answers__answer__description.innerText =
-            answer.description;
-
-          code.textContent = answer.content;
-
-          question_viewer__answers__answer__author.appendChild(creator_name);
-          pre.appendChild(code);
-          question_viewer__answers__answer__content.appendChild(pre);
-          question_viewer__answers__answer.appendChild(
-            question_viewer__answers__answer__description
+          const containBestAnswer = question.responses.some(
+            (r) => r.best_answer == true
           );
-          question_viewer__answers__answer.appendChild(
-            question_viewer__answers__answer__content
-          );
-          question_viewer__answers.appendChild(
-            question_viewer__answers__answer
-          );
-          question_viewer__answers__answer.appendChild(
-            question_viewer__answers__answer__author
-          );
-          question_viewer__answers__answer.appendChild(
-            creator_and_date_container
-          );
-          creator_and_date_container.appendChild(
-            question_viewer__answers__answer__date
-          );
-          creator_and_date_container.appendChild(
-            question_viewer__answers__answer__author
-          );
-          document.querySelectorAll("pre code").forEach((block) => {
-            hljs.highlightElement(block);
+          question.responses.sort((a, b) => {
+            return (b.best_answer === true) - (a.best_answer === true);
           });
-        });
+
+          question.responses.forEach((answer) => {
+            const bestAnswerContainer = document.createElement("div");
+            bestAnswerContainer.classList.add("best_answer_container");
+            const bestAnswer = document.createElement("div");
+            bestAnswer.classList.add("best_answer");
+            bestAnswer.setAttribute("data-answer-id", answer.response_id);
+            bestAnswer.innerText = "Best answer ✔";
+            const question_viewer__answers__answer =
+              document.createElement("div");
+            const question_viewer__answers__answer__description =
+              document.createElement("div");
+            const question_viewer__answers__answer__content =
+              document.createElement("div");
+            const question_viewer__answers__answer__date =
+              document.createElement("div");
+            const creator_name = document.createElement("span");
+            const creator_and_date_container = document.createElement("div");
+            const pre = document.createElement("pre");
+            const code = document.createElement("code");
+            creator_and_date_container.classList.add(
+              "creator_and_date_container"
+            );
+            creator_name.classList.add("creator_name");
+            question_viewer__answers__answer__date.classList.add(
+              "question-viewer__answers__answer__date"
+            );
+            const question_viewer__answers__answer__author =
+              document.createElement("div");
+            question_viewer__answers__answer__author.classList.add(
+              "question-viewer__answers__answer__author"
+            );
+            question_viewer__answers__answer__author.innerText = "Réponse de ";
+            creator_name.innerText = answer.student_name;
+            question_viewer__answers__answer__content.classList.add(
+              "question-viewer__answers__answer__content"
+            );
+            question_viewer__answers__answer__content.classList.add(
+              "question-viewer__answers__answer__content"
+            );
+            question_viewer__answers__answer.classList.add(
+              "question-viewer__answers__answer"
+            );
+            question_viewer__answers__answer__description.classList.add(
+              "question-viewer__answers__answer__description"
+            );
+
+            question_viewer__answers__answer__date.innerText = `Publié le: ${new Date(
+              question.creation_date
+            ).toLocaleDateString()}`;
+
+            question_viewer__answers__answer__description.innerText =
+              answer.description;
+
+            code.textContent = answer.content;
+
+            question_viewer__answers__answer__author.appendChild(creator_name);
+            pre.appendChild(code);
+            question_viewer__answers__answer__content.appendChild(pre);
+            question_viewer__answers__answer.appendChild(
+              question_viewer__answers__answer__description
+            );
+            question_viewer__answers__answer.appendChild(
+              question_viewer__answers__answer__content
+            );
+            question_viewer__answers.appendChild(
+              question_viewer__answers__answer
+            );
+            question_viewer__answers__answer.appendChild(
+              question_viewer__answers__answer__author
+            );
+            question_viewer__answers__answer.appendChild(
+              creator_and_date_container
+            );
+            creator_and_date_container.appendChild(
+              question_viewer__answers__answer__date
+            );
+            bestAnswerContainer.appendChild(bestAnswer);
+            creator_and_date_container.appendChild(bestAnswerContainer);
+            if (containBestAnswer) {
+              if (answer.best_answer) {
+                bestAnswer.className = "best_answer best_answer_container";
+                bestAnswer.style.display = "flex";
+                bestAnswer.style.backgroundColor = "rgb(104, 195, 163)";
+              } else {
+                bestAnswer.style.display = "none";
+              }
+            } else {
+              bestAnswer.style.display = "flex";
+            }
+
+            creator_and_date_container.appendChild(
+              question_viewer__answers__answer__author
+            );
+
+            bestAnswer.onclick = function () {
+              if (bestAnswer.className != "best_answer best_answer_container") {
+                // Check both RGB and HEX
+                areYouSure[0].style.display = "flex";
+
+                Yes.onclick = function () {
+                  socket.send(
+                    JSON.stringify({
+                      type: "bestAnswer",
+                      content: {
+                        answer_id: bestAnswer.getAttribute("data-answer-id"),
+                        question_id: question.id.toString(),
+                      },
+                      session_id: getCookie("session"),
+                    })
+                  );
+                  areYouSure[0].style.display = "none";
+                };
+
+                No.onclick = function () {
+                  areYouSure[0].style.display = "none";
+                };
+              } else {
+                bestAnswer.className = "best_answer";
+                socket.send(
+                  JSON.stringify({
+                    type: "bestAnswer",
+                    content: {
+                      answer_id: bestAnswer.getAttribute("data-answer-id"),
+                      question_id: question.id.toString(),
+                    },
+                    session_id: getCookie("session"),
+                  })
+                );
+              }
+            };
+
+            document.querySelectorAll("pre code").forEach((block) => {
+              hljs.highlightElement(block);
+            });
+          });
+        }
       }
     });
   })
