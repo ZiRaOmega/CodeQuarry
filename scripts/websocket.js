@@ -91,6 +91,7 @@ $(document).ready(function () {
           ) {
             element.style.display = "flex";
             element.style.backgroundColor = "rgb(104, 195, 163)";
+            element.classList.add("best_answer_container");
           } else {
             element.style.display = "none";
           }

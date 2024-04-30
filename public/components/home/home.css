@@ -241,8 +241,10 @@ pre{
 
 .creator_and_date_container{
     display: flex;
+    height: 40px;
     flex-direction: row;
     justify-content: space-between;
+
     color: var(--gray);
     font-size: 13px;
 }
