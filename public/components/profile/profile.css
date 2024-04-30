@@ -78,8 +78,9 @@ a{
     flex-direction: column;
 }
 
-.bio{
+#bio{
     margin-top: -10px;
+    margin-bottom: 20px;
     padding: 10px 20px;
     background-color: var(--darkblue);
     border-radius: 20px;
