@@ -81,6 +81,8 @@ $(document).ready(function () {
         );
         if (question) {
           question.remove();
+          let subjectid=localStorage.getItem("subjectId");
+          fetchQuestions(subjectid);
         }
         break;
     }
