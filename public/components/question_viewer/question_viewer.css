@@ -124,6 +124,126 @@
     
 }
 
+.best_answer_container{
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 9%;
+    height: 40px;
+    animation: FadeIn 1s;
+}
+
+.best_answer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(79, 79, 192);
+    color: var(--white);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.best_answer:hover{
+    background-color: rgb(245, 245, 245);
+    color: var(--darkblue);
+}
+
+.areYouSure{
+    position: fixed;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.699);
+    z-index: 1000;
+    animation: fadeIn 0.3s;
+}
+
+.YesOrNo{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 350px;
+    background-color: var(--white);
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.areYouSureTitle{
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.areYouSureText{
+    font-size: 16px;
+    width: 80%;
+    margin-top: 10px;
+}
+
+.YesNoContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 65%;
+    height: 100px;
+}
+
+#Yes{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 50px;
+    background-color: rgb(79, 79, 192);
+    color: var(--white);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+#Yes:hover{
+    background-color: rgb(245, 245, 245);
+    color: var(--darkblue);
+}
+
+#No{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 150px;
+    height: 50px;
+    background-color: rgb(79, 79, 192);
+    color: var(--white);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+#No:hover{
+    background-color: rgb(245, 245, 245);
+    color: var(--darkblue);
+}
+
+
 @keyframes FadeIn{
     from{
         opacity: 0;
