@@ -116,6 +116,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				subject_id, _ := strconv.Atoi(content["subject_id"].(string)) // handle error properly in production
 				err = CreateQuestion(db, quest, user_id, subject_id)
 				if err != nil {
+					fmt.Println(err.Error())
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
 				} else {
 					// On successful question creation, send an update message
