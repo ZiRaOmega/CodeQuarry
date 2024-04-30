@@ -1,8 +1,8 @@
 var socket;
 const getCookie = (name) => {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(";").shift();
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
 };
 // Use jQuery's document ready function to ensure the DOM is fully loaded
 $(document).ready(function () {
@@ -17,14 +17,14 @@ $(document).ready(function () {
     // Log a message indicating a message is being sent to the server
     console.log("Sending to server");
 
-        // Send a message to the server to check the session
-        let message = {
-            type: "session",
-            content: getCookie("session"),
-        };
-        socket.send(JSON.stringify(message));
-        //socket.send("Hey there from client");
+    // Send a message to the server to check the session
+    let message = {
+      type: "session",
+      content: getCookie("session"),
     };
+    socket.send(JSON.stringify(message));
+    //socket.send("Hey there from client");
+  };
 
   // Define the onmessage function to be called when a message is received from the server
   socket.onmessage = function (event) {
@@ -54,7 +54,9 @@ $(document).ready(function () {
         const answerContainer = document.createElement("div");
         answerContainer.classList.add("question-viewer__answers__answer");
         const answerContent = document.createElement("div");
-        answerContent.classList.add("question-viewer__answers__answer__content");
+        answerContent.classList.add(
+          "question-viewer__answers__answer__content"
+        );
         const code = document.createElement("code");
         code.textContent = msg.content.content;
         const pre = document.createElement("pre");
@@ -71,26 +73,26 @@ $(document).ready(function () {
         answerContainer.appendChild(answerDate);
         const answers = document.querySelector(".question-viewer__answers");
         answers.appendChild(answerContainer);
-        checkHighlight()
+        checkHighlight();
         break;
     }
     // Log the message received from the server
     console.log(`[message] Data received from server: ${event.data}`);
   };
 
-    // Define the onclose function to be called when the WebSocket connection is closed
-    socket.onclose = function (event) {
-        // Check if the connection was closed cleanly
-        if (event.wasClean) {
-            // Log a message indicating the connection was closed cleanly
-            console.log(
-                `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
-            );
-        } else {
-            // Log an error message indicating the connection was not closed cleanly
-            console.error("[close] Connection died");
-        }
-    };
+  // Define the onclose function to be called when the WebSocket connection is closed
+  socket.onclose = function (event) {
+    // Check if the connection was closed cleanly
+    if (event.wasClean) {
+      // Log a message indicating the connection was closed cleanly
+      console.log(
+        `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+      );
+    } else {
+      // Log an error message indicating the connection was not closed cleanly
+      console.error("[close] Connection died");
+    }
+  };
 
   // Define the onerror function to be called when an error occurs with the WebSocket connection
   socket.onerror = function (error) {
