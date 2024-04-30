@@ -192,6 +192,21 @@ func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) 
 		log.Printf("Attempted to insert: title='%s', user_id=%d, subject_id=%d", question.Title, user_id, subject_id)
 		return err
 	}
+	err = InsertXP(db, user_id, 1000)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
+	return nil
+}
+
+func InsertXP(db *sql.DB, user_id int, xp int) error {
+	query := `UPDATE users SET xp = xp + $1 WHERE id_student = $2`
+	_, err := db.Exec(query, xp, user_id)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
 	return nil
 }
 
@@ -281,4 +296,13 @@ func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
 	}
 
 	return questions, nil
+}
+
+func FetchStudentIDUsingQuestionID(db *sql.DB, questionID int) (int, error) {
+	var studentID int
+	err := db.QueryRow(`SELECT id_student FROM question WHERE id_question = $1`, questionID).Scan(&studentID)
+	if err != nil {
+		return 0, err
+	}
+	return studentID, nil
 }

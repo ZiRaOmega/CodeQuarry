@@ -90,6 +90,18 @@ func InsertResponse(db *sql.DB, response Response) error {
 	if err != nil {
 		return err
 	}
+	err = InsertXP(db, response.StudentID, 100)
+	if err != nil {
+		return err
+	}
+	Question_Student_ID, err := FetchStudentIDUsingQuestionID(db, response.QuestionID)
+	if err != nil {
+		return err
+	}
+	err = InsertXP(db, Question_Student_ID, 100)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
