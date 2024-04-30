@@ -172,9 +172,9 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
-		birthDate, err := time.Parse("2006-01-02", birthDateStr)
+		birthDate, err := time.Parse("2006-02-01", birthDateStr)
 		schoolYearStr := r.PostFormValue("school_year")
-		schoolYear, err := time.Parse("2006-01-02", schoolYearStr)
+		schoolYear, err := time.Parse("2006-02-01", schoolYearStr)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
