@@ -145,12 +145,15 @@ fetch("/api/questions?subjectId=all")
             upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
           ) {
             upvoteContainer[0].style.backgroundColor = "";
+            upvoteCount[0].textContent = parseInt(question.upvotes)-1;
           } else {
             upvoteContainer[0].style.backgroundColor = "rgb(104, 195, 163)";
+            upvoteCount[0].textContent = parseInt(question.upvotes)+1;
             if (
               downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
             ) {
               downvoteContainer[0].style.backgroundColor = "";
+              downvoteCount[0].textContent = parseInt(question.downvotes);
             }
           }
           socket.send(
@@ -168,12 +171,19 @@ fetch("/api/questions?subjectId=all")
             downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
           ) {
             downvoteContainer[0].style.backgroundColor = "";
+            downvoteCount[0].textContent = parseInt(question.downvotes)-1;
+           
           } else {
+            
+           downvoteCount[0].textContent = parseInt(question.downvotes)+1;
             downvoteContainer[0].style.backgroundColor = "rgb(196, 77, 86)";
             if (
               upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
             ) {
               upvoteContainer[0].style.backgroundColor = "";
+              upvoteCount[0].textContent = parseInt(question.upvotes);
+              
+
             }
           }
           socket.send(
