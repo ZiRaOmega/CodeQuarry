@@ -888,3 +888,22 @@ ERROR: 2024/04/30 13:31:26 Error reading the message from the client
 ERROR: 2024/04/30 13:31:30 Error reading the message from the client
 ERROR: 2024/04/30 13:31:34 Error reading the message from the client
 ERROR: 2024/04/30 13:31:37 Error reading the message from the client
+ERROR: 2024/04/30 13:34:14 Error starting the server
+DEBUG: 2024/04/30 13:42:35 Invalid login credentialserseeeeen at /login
+ERROR: 2024/04/30 13:43:05 Username already exists
+DEBUG: 2024/04/30 13:43:14 Login successful: erseeeeen at /login
+ERROR: 2024/04/30 13:43:14 Error reading the message from the client
+ERROR: 2024/04/30 13:43:21 Error reading the message from the client
+ERROR: 2024/04/30 13:43:31 Error reading the message from the client
+ERROR: 2024/04/30 13:43:45 Error reading the message from the client
+ERROR: 2024/04/30 13:44:03 Error reading the message from the client
+ERROR: 2024/04/30 13:45:26 Error reading the message from the client
+ERROR: 2024/04/30 13:45:52 Error reading the message from the client
+ERROR: 2024/04/30 13:46:40 Error reading the message from the client
+ERROR: 2024/04/30 13:47:18 Error reading the message from the client
+ERROR: 2024/04/30 13:47:29 Error starting the server
+ERROR: 2024/04/30 13:49:08 Error reading the message from the client
+ERROR: 2024/04/30 13:50:47 Error reading the message from the client
+ERROR: 2024/04/30 13:51:00 Error reading the message from the client
+ERROR: 2024/04/30 13:51:07 Error reading the message from the client
+ERROR: 2024/04/30 13:54:33 Error reading the message from the client
