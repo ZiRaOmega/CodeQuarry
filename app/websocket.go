@@ -124,6 +124,32 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "postCreated", Content: updatedSubject})
 					BroadcastMessage(WSMessage{Type: "postCreated", Content: updatedSubject, SessionID: ""}, conn)
 				}
+			case "deletePost":
+				/*{
+				        type: "deletePost",
+				        content: id,
+						session_id: getCookie("session")
+				      }*/
+				question_id, err := strconv.Atoi(wsmessage.Content.(string))
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid question ID"})
+					break
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				err = UserDeleteQuestion(db, question_id, user_id)
+				if err != nil {
+					fmt.Println(err.Error())
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete post"})
+				} else {
+					// On successful question deletion, send an update message
+					//updatedSubject, _ := FetchSubjectWithQuestionCount(db, question_id) // Implement this method
+					/* conn.WriteJSON(WSMessage{Type: "postDeleted", Content: question_id}) */
+					BroadcastMessage(WSMessage{Type: "postDeleted", Content: question_id, SessionID: ""}, nil)
+				}
 			}
 
 		}

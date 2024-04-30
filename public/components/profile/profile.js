@@ -2,13 +2,27 @@ const profileInfos = document.getElementById("profileInformations");
 const profileForm = document.getElementById("editProfileForm");
 const button = document.getElementById("editButton");
 
-const birthDate = document.getElementById("birthDate")
+const birthDate = document.getElementById("birthDate");
 
 if (birthDate.textContent == " 01/01/0001") {
-	birthDate.style.display = "none"; 
+  birthDate.style.display = "none";
 }
 
-button.addEventListener("click", function() {
-	profileInfos.style.display = "none";
-	profileForm.style.display = "flex";
-})
+button.addEventListener("click", function () {
+  profileInfos.style.display = "none";
+  profileForm.style.display = "flex";
+});
+
+let deleteButtons = document.querySelectorAll(".delete_button");
+deleteButtons.forEach((button) => {
+  button.addEventListener("click", function () {
+    let id = button.getAttribute("question-id");
+    socket.send(
+      JSON.stringify({
+        type: "deletePost",
+        content: id,
+		session_id: getCookie("session") 
+      })
+    );
+  });
+});

@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -306,4 +307,42 @@ func FetchStudentIDUsingQuestionID(db *sql.DB, questionID int) (int, error) {
 		return 0, err
 	}
 	return studentID, nil
+}
+
+func UserDeleteQuestion(db *sql.DB, questionID int, userID int) error {
+	studentID, err := FetchStudentIDUsingQuestionID(db, questionID)
+	if err != nil {
+		return err
+	}
+	if studentID != userID {
+		fmt.Println("User is not the creator of the question")
+		return nil
+	}
+	//RemoveXP for question author and for all users who answer the question
+	RemoveXP(db, studentID, 1000)
+	//Remove xp for all users who answered the question
+	answers, err := FetchResponseByQuestion(db, questionID)
+	if err != nil {
+		return err
+	}
+	for _, answer := range answers {
+		RemoveXP(db, answer.StudentID, 100)
+		RemoveXP(db, studentID, 100)
+	}
+	//Delete on cascade
+	_, err = db.Exec(`DELETE FROM question WHERE id_question = $1`, questionID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func RemoveXP(db *sql.DB, user_id int, xp int) error {
+	query := `UPDATE users SET xp = xp - $1 WHERE id_student = $2`
+	_, err := db.Exec(query, xp, user_id)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
+	return nil
 }
