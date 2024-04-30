@@ -132,7 +132,7 @@ func createTableResponse(db *sql.DB) {
 		id_question INT NOT NULL,
 		id_student INT NOT NULL,
 		PRIMARY KEY(id_response),
-		FOREIGN KEY(id_question) REFERENCES Question(id_question),
+		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE,
 		FOREIGN KEY(id_student) REFERENCES users(id_student)
 	);
 	`

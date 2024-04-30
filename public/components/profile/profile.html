@@ -63,7 +63,7 @@
         <h2>My Posts</h2>
         <ul class="history">
             {{range .My_Post}}
-            <li class="history_element">{{.CreationDate.Format "2006-01-02"}} - <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`">{{.Title}}</a>  </li>
+            <li class="history_element">{{.CreationDate.Format "2006-01-02"}} - <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`">{{.Title}}</a><button class="delete_button" question-id="{{.Id}}">X</button>  </li>
             {{end}}
         </ul>
     </div>
