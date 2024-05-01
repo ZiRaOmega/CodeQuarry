@@ -83,9 +83,9 @@ func main() {
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
-
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
 	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
+	http.HandleFunc("/api/favoris", app.FavoriHandler(db))
 	http.HandleFunc("/detect_lang", app.DetectLanguageHandler)
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
