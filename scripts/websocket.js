@@ -47,6 +47,8 @@ $(document).ready(function () {
         updateQuestionCount(msg.content); // Implement this function to update the UI
         if (localStorage.getItem("subjectId") == msg.content.id) {
           fetchQuestions(msg.content.id); // Implement this function to fetch and display questions
+        } else if (localStorage.getItem("subjectId") == "all") {
+          fetchQuestions("all");
         }
         break;
       case "response":

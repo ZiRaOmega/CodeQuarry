@@ -247,7 +247,7 @@ function create_questions(questions) {
       questionTitle.classList.add("question_title");
       questionTitle.textContent = question.title;
       clickable_container.appendChild(questionTitle);
-    
+
       const questionDescription = document.createElement("p");
       questionDescription.classList.add("question_description");
       questionDescription.textContent = question.description;
@@ -298,7 +298,7 @@ function create_questions(questions) {
       voteContainer.classList.add("vote_container");
       const addFavoriElement = document.createElement("div");
       addFavoriElement.classList.add("favori");
-      addFavoriElement.setAttribute("data-question-id", question.id); 
+      addFavoriElement.setAttribute("data-question-id", question.id);
       addFavoriElement.textContent = "Ajouter aux favoris";
       addFavoriElement.onclick = function () {
         AddFavori(question.id);
@@ -382,19 +382,19 @@ function create_questions(questions) {
   questionsList.style.display = ""; // Show the questions list
   checkHighlight();
   if (questions == null) {
+    let questionTrackerCount = document.querySelector(
+      ".question_tracker_count"
+    );
     questionTrackerCount.textContent = "0 question(s)";
   }
 }
 
-
-function AddFavori(question_id){
-  
-    socket.send(
-      JSON.stringify({
-        type: "addFavori",
-        content: question_id,
-        session_id: getCookie("session"),
-      })
-    );
-
+function AddFavori(question_id) {
+  socket.send(
+    JSON.stringify({
+      type: "addFavori",
+      content: question_id,
+      session_id: getCookie("session"),
+    })
+  );
 }
