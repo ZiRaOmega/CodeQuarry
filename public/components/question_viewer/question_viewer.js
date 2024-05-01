@@ -309,6 +309,104 @@ fetch("/api/questions?subjectId=all")
             bestAnswerContainer.appendChild(bestAnswer);
 
             creator_and_date_container.appendChild(bestAnswerContainer);
+            //upvote and downvote for response
+            const vote_responseContainer = document.createElement("div");
+            const upvote_responseContainer = document.createElement("div");
+            const downvote_responseContainer = document.createElement("div");
+            const upvote_responseCount = document.createElement("div");
+            const downvote_responseCount = document.createElement("div");
+            upvote_responseContainer.classList.add("upvote_response_container");
+            upvote_responseContainer.classList.add("upvote_container");
+            downvote_responseContainer.classList.add(
+              "downvote_response_container"
+            );
+            downvote_responseContainer.classList.add("downvote_container");
+            upvote_responseCount.classList.add("upvote_response_count");
+            downvote_responseCount.classList.add("downvote_response_count");
+            upvote_responseCount.setAttribute(
+              "data-answer-id",
+              answer.response_id
+            );
+            downvote_responseCount.setAttribute(
+              "data-answer-id",
+              answer.response_id
+            );
+            console.log(answer)
+            upvote_responseCount.textContent = answer.upvotes;
+            downvote_responseCount.textContent = answer.downvotes;
+            upvote_responseContainer.appendChild(upvote_responseCount);
+            downvote_responseContainer.appendChild(downvote_responseCount);
+            vote_responseContainer.appendChild(upvote_responseContainer);
+            vote_responseContainer.appendChild(downvote_responseContainer);
+            question_viewer__answers__answer.appendChild(
+              vote_responseContainer
+            );
+            if (answer.user_vote == "upvoted") {
+              upvote_responseContainer.style.backgroundColor = "rgb(104, 195, 163)";
+              //upvote_responseCount.style.color = "white";
+            } else if (answer.user_vote == "downvoted") {
+              downvote_responseContainer.style.backgroundColor = "rgb(196, 77, 86)";
+              //downvote_responseCount.style.color = "white";
+            }
+            
+            upvote_responseContainer.onclick = function () {
+              //if upvoteContainer backgroundColor is green then remove the color
+              if (
+                upvote_responseContainer.style.backgroundColor ==
+                "rgb(104, 195, 163)"
+              ) {
+                upvote_responseContainer.style.backgroundColor = "";
+                upvote_responseCount.textContent = parseInt(answer.upvotes) - 1;
+              } else {
+                upvote_responseCount.textContent = parseInt(answer.upvotes) + 1;
+                upvote_responseContainer.style.backgroundColor =
+                  "rgb(104, 195, 163)";
+                if (
+                  downvote_responseContainer.style.backgroundColor ==
+                  "rgb(196, 77, 86)"
+                ) {
+                  downvote_responseContainer.style.backgroundColor = "";
+                  downvote_responseCount.textContent = parseInt(
+                    answer.downvotes
+                  );
+                }
+              }
+              socket.send(
+                JSON.stringify({
+                  type: "upvote_response",
+                  content: answer.response_id,
+                  session_id: getCookie("session"),
+                })
+              );
+            };
+            downvote_responseContainer.onclick = function () {
+              //if downvote_responseContainer backgroundColor is red then remove the color
+              if (
+                downvote_responseContainer.style.backgroundColor ==
+                "rgb(196, 77, 86)"
+              ) {
+                downvote_responseContainer.style.backgroundColor = "";
+                downvoteCount.textContent = parseInt(answer.downvotes) - 1;
+              } else {
+                downvoteCount.textContent = parseInt(answer.downvotes) + 1;
+                downvote_responseContainer.style.backgroundColor =
+                  "rgb(196, 77, 86)";
+                if (
+                  upvote_responseContainer.style.backgroundColor ==
+                  "rgb(104, 195, 163)"
+                ) {
+                  upvote_responseContainer.style.backgroundColor = "";
+                  upvote_responseCount.textContent = parseInt(answer.upvotes);
+                }
+              }
+              socket.send(
+                JSON.stringify({
+                  type: "downvote_response",
+                  content: answer.response_id,
+                  session_id: getCookie("session"),
+                })
+              );
+            };
             let question_closed = document.getElementById("question_closed");
             if (containBestAnswer) {
               question_closed.style.display = "block";

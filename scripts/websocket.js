@@ -43,6 +43,9 @@ $(document).ready(function () {
       case "voteUpdate":
         handleVoteUpdate(msg.content);
         break;
+      case "responseVoteUpdate":
+        handleResponseVoteUpdate(msg.content)
+        break;
       case "postCreated":
         updateQuestionCount(msg.content); // Implement this function to update the UI
         if (localStorage.getItem("subjectId") == msg.content.id) {
@@ -261,7 +264,22 @@ function handleVoteUpdate(data) {
     downvoteCountElement.textContent = data.downvote;
   }
 }
+function handleResponseVoteUpdate(data) {
+  // Assuming 'data' contains { responseId: 123, upvotes: 10, downvotes: 5 }
+  const upvoteCountElement = document.querySelector(
+    `.upvote_response_count[data-answer-id="${data.response_id}"]`
+  );
+  const downvoteCountElement = document.querySelector(
+    `.downvote_response_count[data-answer-id="${data.response_id}"]`
+  );
 
+  if (upvoteCountElement) {
+    upvoteCountElement.textContent = data.upvote;
+  }
+  if (downvoteCountElement) {
+    downvoteCountElement.textContent = data.downvote;
+  }
+}
 function updateQuestionCount(subject) {
   // Find the element displaying the question count and update it
   const questionCountDiv = document.querySelector(

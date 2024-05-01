@@ -28,6 +28,11 @@ type Vote struct {
 	Upvote     int `json:"upvote"`
 	Downvote   int `json:"downvote"`
 }
+type Vote_response struct {
+	ResponseID int `json:"response_id"`
+	Upvote     int `json:"upvote"`
+	Downvote   int `json:"downvote"`
+}
 
 // WebsocketHandler is a handler function that upgrades the HTTP connection to a WebSocket connection
 // and handles the communication between the client and the server using WebSocket protocol.
@@ -248,6 +253,26 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					} else {
 						conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
 					}
+				}
+			case "upvote_response":
+				err := HandleUpvoteResponse(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote response"})
+				} else {
+					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
+					vote := Vote_response{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
+				}
+			case "downvote_response":
+				err := HandleDownvoteResponse(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote response"})
+				} else {
+					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
+					vote := Vote_response{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
 			}
 
