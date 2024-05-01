@@ -67,9 +67,9 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 			continue
 		}
 		for _, voted := range voted_question {
-			if voted.Q.Id == q.Id && voted.Upvote == true {
+			if voted.Q == q.Id && voted.Upvote {
 				q.UserVote = "upvoted"
-			} else if voted.Q.Id == q.Id && voted.Downvote == true {
+			} else if voted.Q == q.Id && voted.Downvote {
 				q.UserVote = "downvoted"
 			}
 		}
@@ -279,12 +279,12 @@ func FetchQuestionsByUserID(db *sql.DB, userID int) ([]Question, error) {
 type QuestionVote struct {
 	Upvote   bool
 	Downvote bool
-	Q        Question
+	Q        int
 }
 
 func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
 	var questions []QuestionVote
-	rows, err := db.Query(`SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes, v.upvote_q, v.downvote_q
+	rows, err := db.Query(`SELECT q.id_question, v.upvote_q, v.downvote_q
 						   FROM question q
 						   JOIN users u ON q.id_student = u.id_student
 						   JOIN subject s ON q.id_subject = s.id_subject
@@ -296,9 +296,9 @@ func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var q Question
+		var q int
 		var qq QuestionVote
-		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes, &qq.Upvote, &qq.Downvote); err != nil {
+		if err := rows.Scan(&q, &qq.Upvote, &qq.Downvote); err != nil {
 			continue
 		}
 		qq.Q = q

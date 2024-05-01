@@ -28,7 +28,7 @@ type Vote struct {
 	Upvote     int `json:"upvote"`
 	Downvote   int `json:"downvote"`
 }
-type Vote_response struct {
+type Vote_response_count struct {
 	ResponseID int `json:"response_id"`
 	Upvote     int `json:"upvote"`
 	Downvote   int `json:"downvote"`
@@ -227,12 +227,20 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 					}
-
-					err = AddFavori(db, user_id, question_id)
-					if err == nil {
-						conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+					if isItInFavori(db, user_id, question_id) {
+						err = DeleteFavori(db, user_id, question_id)
+						if err == nil {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+						} else {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+						}
 					} else {
-						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "already In Favori"})
+						err = AddFavori(db, user_id, question_id)
+						if err == nil {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+						} else {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: "already In Favori"})
+						}
 					}
 				}
 			case "deleteFavori":
@@ -260,7 +268,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote response"})
 				} else {
 					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
-					vote := Vote_response{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					vote := Vote_response_count{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
 					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
@@ -270,7 +278,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote response"})
 				} else {
 					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
-					vote := Vote_response{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					vote := Vote_response_count{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
 					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
@@ -300,6 +308,15 @@ func AddFavori(db *sql.DB, id_student int, question_id int) error {
 		return err
 	}
 	return nil
+}
+func isItInFavori(db *sql.DB, id_student int, question_id int) bool {
+	var exists bool
+	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM Favori WHERE id_student = $1 AND id_question = $2)", id_student, question_id).Scan(&exists)
+	if err != nil {
+		Log(ErrorLevel, "Error checking if question is in Favori: "+err.Error())
+		return false
+	}
+	return exists
 }
 func RemoveConnFromList(conn *websocket.Conn) {
 	for i, c := range ConnectionList {

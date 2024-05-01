@@ -441,6 +441,11 @@ func FavoriHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error getting user ID", http.StatusInternalServerError)
 			return
 		}
+		if !isValidSession(session_id, db) {
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
+			return
+		}
+
 		questionIDs := GetQuestionIdOfFavorite(db, userID)
 
 		if err != nil {
