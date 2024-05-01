@@ -395,7 +395,7 @@ pre{
     height: 70px;
 }
 
-.filter_popular,.filter_unpopular,.filter_newest, .filter_oldest, .filter_number_of_comments{
+.filter_popular,.filter_unpopular,.filter_newest, .filter_oldest, .filter_number_of_comments, .filter_best_answer{
     padding: 3px;
     font-size: 15px;
     margin-left: 10px;
@@ -404,7 +404,7 @@ pre{
     transition: all 0.3s ease;
 }
 
-.filter_popular:hover,.filter_unpopular:hover,.filter_newest:hover, .filter_oldest:hover, .filter_number_of_comments:hover{
+.filter_popular:hover,.filter_unpopular:hover,.filter_newest:hover, .filter_oldest:hover, .filter_number_of_comments:hover, .filter_best_answer:hover{
     color: rgb(176, 176, 176);
 }
 
