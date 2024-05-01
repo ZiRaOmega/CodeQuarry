@@ -23,6 +23,10 @@ const areYouSureText = document.getElementsByClassName("areYouSureText");
 const Yes = document.getElementById("Yes");
 const No = document.getElementById("No");
 const best_answer_check = document.getElementsByClassName("best_answer_check");
+//if best_answer_check stype display is flex, display none response_ 
+
+
+
 const error_message_response = document.getElementById(
   "error_message_response"
 );
@@ -313,9 +317,12 @@ fetch("/api/questions?subjectId=all")
                 bestAnswer.className = "best_answer best_answer_container";
                 bestAnswer.style.display = "flex";
                 bestAnswer.style.backgroundColor = "rgb(104, 195, 163)";
+                document.getElementById("response_input").style.display = "none";
               } else {
                 bestAnswerCheck.style.display = "none";
                 bestAnswer.style.display = "none";
+                
+              
               }
             } else {
               bestAnswer.style.display = "flex";
@@ -342,6 +349,8 @@ fetch("/api/questions?subjectId=all")
                     })
                   );
                   areYouSure[0].style.display = "none";
+                  document.getElementById("response_input").style.display = "none";
+                  
                 };
 
                 No.onclick = function () {
@@ -359,6 +368,7 @@ fetch("/api/questions?subjectId=all")
                     session_id: getCookie("session"),
                   })
                 );
+                document.getElementById("response_input").style.display = "flex";
               }
             };
 

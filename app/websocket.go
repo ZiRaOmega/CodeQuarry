@@ -136,7 +136,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					break
 				}
 				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
-
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
 				err = UserDeleteQuestion(db, question_id, user_id)
 				if err != nil {
 					fmt.Println(err.Error())
@@ -145,6 +148,12 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// On successful question deletion, send an update message
 					//updatedSubject, _ := FetchSubjectWithQuestionCount(db, question_id) // Implement this method
 					/* conn.WriteJSON(WSMessage{Type: "postDeleted", Content: question_id}) */
+					XP, err := FetchXP(db, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch XP"})
+						break
+					}
+					conn.WriteJSON(WSMessage{Type: "XP", Content: XP, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "postDeleted", Content: question_id, SessionID: ""}, nil)
 				}
 
