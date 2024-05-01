@@ -67,6 +67,14 @@
             {{end}}
         </ul>
     </div>
+    <div id="favori">
+        <h2>My Favorites</h2>
+        <ul class="favorites">
+            {{range .Favori}}
+            <li class="favori_element question" data-question-id="{{.Id}}">{{.CreationDate.Format "2006-01-02"}} - <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`">{{.Title}}</a><button class="delete_button_favori" question-id="{{.Id}}">X</button>  </li>
+            {{end}}
+        </ul>
+    </div>
 </div>
 </div>
 <script src="/components/profile/profile.js"></script>

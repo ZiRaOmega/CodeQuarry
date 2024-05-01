@@ -210,11 +210,70 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID, "question_id": question_id_from_answer_id}})
 					BroadcastMessage(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID, "question_id": question_id_from_answer_id}, SessionID: ""}, nil)
 				}
-
+			case "addFavori":
+				session_id := wsmessage.SessionID
+				contentMap := wsmessage.Content.(float64)
+				//Check session and get user_id
+				user_id, err := getUserIDUsingSessionID(session_id, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+				} else {
+					question_id := int(contentMap)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+					}
+					err = AddFavori(db, user_id, question_id)
+					if err == nil {
+						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "success"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+					}
+				}
+			case "deleteFavori":
+				session_id := wsmessage.SessionID
+				contentMap := wsmessage.Content.(string)
+				//Check session and get user_id
+				user_id, err := getUserIDUsingSessionID(session_id, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
+				} else {
+					question_id, err := strconv.Atoi(contentMap)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
+					}
+					err = DeleteFavori(db, user_id, question_id)
+					if err == nil {
+						conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "success"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
+					}
+				}
 			}
 
 		}
 	}
+}
+func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
+	stmt, err := db.Prepare("DELETE FROM Favori WHERE id_student = $1 AND id_question = $2")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(id_student, question_id); err != nil {
+		return err
+	}
+	return nil
+}
+func AddFavori(db *sql.DB, id_student int, question_id int) error {
+	stmt, err := db.Prepare("INSERT INTO Favori(id_student, id_question) VALUES($1, $2)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(id_student, question_id); err != nil {
+		return err
+	}
+	return nil
 }
 func RemoveConnFromList(conn *websocket.Conn) {
 	for i, c := range ConnectionList {

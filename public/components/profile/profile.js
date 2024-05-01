@@ -26,3 +26,19 @@ deleteButtons.forEach((button) => {
     );
   });
 });
+
+let deleteButtonsfavori = document.querySelectorAll(".delete_button_favori");
+deleteButtonsfavori.forEach((button) => {
+  button.addEventListener("click", function () {
+    let id = button.getAttribute("question-id");
+    socket.send(
+      JSON.stringify({
+        type: "deleteFavori",
+        content: id,
+    session_id: getCookie("session") 
+      })
+    );
+    //Delete parent
+    button.parentNode.remove();
+  });
+});
