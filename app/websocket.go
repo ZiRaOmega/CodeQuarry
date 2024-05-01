@@ -227,12 +227,20 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 					}
-
-					err = AddFavori(db, user_id, question_id)
-					if err == nil {
-						conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+					if isItInFavori(db, user_id, question_id) {
+						err = DeleteFavori(db, user_id, question_id)
+						if err == nil {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+						} else {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+						}
 					} else {
-						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "already In Favori"})
+						err = AddFavori(db, user_id, question_id)
+						if err == nil {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+						} else {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: "already In Favori"})
+						}
 					}
 				}
 			case "deleteFavori":
@@ -300,6 +308,15 @@ func AddFavori(db *sql.DB, id_student int, question_id int) error {
 		return err
 	}
 	return nil
+}
+func isItInFavori(db *sql.DB, id_student int, question_id int) bool {
+	var exists bool
+	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM Favori WHERE id_student = $1 AND id_question = $2)", id_student, question_id).Scan(&exists)
+	if err != nil {
+		Log(ErrorLevel, "Error checking if question is in Favori: "+err.Error())
+		return false
+	}
+	return exists
 }
 func RemoveConnFromList(conn *websocket.Conn) {
 	for i, c := range ConnectionList {
