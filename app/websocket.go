@@ -28,7 +28,7 @@ type Vote struct {
 	Upvote     int `json:"upvote"`
 	Downvote   int `json:"downvote"`
 }
-type Vote_response struct {
+type Vote_response_count struct {
 	ResponseID int `json:"response_id"`
 	Upvote     int `json:"upvote"`
 	Downvote   int `json:"downvote"`
@@ -268,7 +268,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote response"})
 				} else {
 					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
-					vote := Vote_response{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					vote := Vote_response_count{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
 					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
@@ -278,7 +278,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote response"})
 				} else {
 					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
-					vote := Vote_response{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					vote := Vote_response_count{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
 					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
