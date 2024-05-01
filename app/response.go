@@ -27,9 +27,9 @@ type Response struct {
 }
 
 type ResponseVote struct {
-	R        Response `json:"response"`
-	UpVote   bool     `json:"up_vote"`
-	DownVote bool     `json:"down_vote"`
+	R        int  `json:"response"`
+	UpVote   bool `json:"up_vote"`
+	DownVote bool `json:"down_vote"`
 }
 
 func ResponsesHandler(db *sql.DB) http.HandlerFunc {
@@ -140,9 +140,9 @@ func FetchResponseByQuestion(db *sql.DB, questionID int, user_id int) ([]Respons
 			return nil, err
 		}
 		for _, voted_response := range voted_responses {
-			if voted_response.R.ResponseID == r.ResponseID && voted_response.UpVote {
+			if voted_response.R == r.ResponseID && voted_response.UpVote {
 				r.UserVote = "upvoted"
-			} else if voted_response.R.ResponseID == r.ResponseID && voted_response.DownVote {
+			} else if voted_response.R == r.ResponseID && voted_response.DownVote {
 				r.UserVote = "downvoted"
 			}
 		}
@@ -156,7 +156,7 @@ func FetchResponseByQuestion(db *sql.DB, questionID int, user_id int) ([]Respons
 // FetchVotedResponses retrieves responses voted by a specific user
 func FetchVotedResponses(db *sql.DB, userID int) ([]ResponseVote, error) {
 	query := `
-        SELECT r.id_response, r.description, r.content, r.upvotes, r.downvotes, r.best_answer, r.creation_date, r.update_date, r.id_question, r.id_student, u.username, v.upvote_r, v.downvote_r
+        SELECT r.id_response, v.upvote_r, v.downvote_r
         FROM Response r
         JOIN users u ON r.id_student = u.id_student
         JOIN vote_response v ON r.id_response = v.id_response
@@ -171,11 +171,11 @@ func FetchVotedResponses(db *sql.DB, userID int) ([]ResponseVote, error) {
 
 	var responseVotes []ResponseVote
 	for rows.Next() {
-		var r Response
+		var r int
 		var rv ResponseVote
 		var upVote, downVote bool
 
-		if err := rows.Scan(&r.ResponseID, &r.Description, &r.Content, &r.UpVotes, &r.DownVotes, &r.BestAnswer, &r.CreationDate, &r.UpdateDate, &r.QuestionID, &r.StudentID, &r.StudentName, &upVote, &downVote); err != nil {
+		if err := rows.Scan(&r, &upVote, &downVote); err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 		rv.R = r
