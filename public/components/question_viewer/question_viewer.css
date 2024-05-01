@@ -161,7 +161,7 @@
   align-items: center;
   width: 9%;
   height: 40px;
-  animation: FadeIn 1s;
+  animation: FadeIn 0.3s;
 }
 
 .best_answer {
@@ -284,6 +284,13 @@
 #No:hover {
   background-color: rgb(245, 245, 245);
   color: var(--darkblue);
+}
+
+#question_closed{
+  display: none;
+  width: 90%;
+  font-size: 20px;
+  font-weight: bolder;
 }
 
 @keyframes FadeIn {
