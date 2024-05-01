@@ -112,26 +112,31 @@ function createFilter(questions) {
   filterQuestions.classList.add("filter_questions");
   const filterPopular = document.createElement("div");
   filterPopular.classList.add("filter_popular");
-  filterPopular.textContent = "Croissant ↗";
+  filterPopular.textContent = "Upvotes ↗";
   const filterUnpopular = document.createElement("div");
   filterUnpopular.classList.add("filter_unpopular");
-  filterUnpopular.textContent = "Décroissant ↘";
+  filterUnpopular.textContent = "Upvotes ↘";
   const filterNewest = document.createElement("div");
   const filterOldest = document.createElement("div");
+  const filterBestAnswer = document.createElement("div");
+  filterBestAnswer.classList.add("filter_best_answer");
   filterOldest.classList.add("filter_oldest");
   const filterNumberOfComments = document.createElement("div");
   filterNumberOfComments.classList.add("filter_number_of_comments");
   filterNewest.classList.add("filter_newest");
-  filterNumberOfComments.textContent = "↑ Commentaires";
-  filterNewest.textContent = "Recent";
-  filterOldest.textContent = "Ancien";
+  filterNumberOfComments.textContent = "↑ Comments";
+  filterNewest.textContent = "Newest";
+  filterOldest.textContent = "Oldest";
+  filterBestAnswer.textContent = "Answered ✔";
   filterQuestions.appendChild(filterNumberOfComments);
   filterQuestions.appendChild(filterOldest);
+  filterQuestions.appendChild(filterBestAnswer);
   filterQuestions.appendChild(filterNewest);
   filterQuestions.appendChild(filterPopular);
   filterQuestions.appendChild(filterUnpopular);
   questionFilter.appendChild(questionTrackerCount);
   questionFilter.appendChild(filterQuestions);
+
   returnButton.textContent = "⬅";
   filterContainer.appendChild(returnButton);
   filterContainer.appendChild(questionFilter);
@@ -172,6 +177,25 @@ function createFilter(questions) {
     questions.sort(
       (a, b) => new Date(b.creation_date) - new Date(a.creation_date)
     );
+    questionsList.innerHTML = ""; // Clear previous questions
+    createFilter(questions);
+    create_questions(questions);
+  };
+
+  filterBestAnswer.onclick = function () {
+    console.log("sorting by best answer", questions);
+    questions.sort((a, b) => {
+      if (a.responses == null) {
+        a.responses = [];
+      }
+      if (b.responses == null) {
+        b.responses = [];
+      }
+      return (
+        b.responses.filter((r) => r.best_answer == true).length -
+        a.responses.filter((r) => r.best_answer == true).length
+      );
+    });
     questionsList.innerHTML = ""; // Clear previous questions
     createFilter(questions);
     create_questions(questions);

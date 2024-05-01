@@ -164,14 +164,22 @@ $(document).ready(function () {
           }
         });
 
+        let reponse_input = document.getElementsByClassName(
+          "question-viewer__response-input"
+        );
+
         best_answer_check.forEach((check) => {
           if (msg.content.question_best_answer == -1) {
             check.style.display = "none";
+            reponse_input[0].style.display = "block";
+            document.getElementById("question_closed").style.display = "none";
           } else if (
             check.getAttribute("data-answer-id") ==
             msg.content.question_best_answer.toString()
           ) {
             check.style.display = "flex";
+            reponse_input[0].style.display = "none";
+            document.getElementById("question_closed").style.display = "block";
           }
         });
         answersBtn.forEach((element) => {
@@ -192,7 +200,7 @@ $(document).ready(function () {
         break;
       case "XP":
         let xp = document.querySelector(".xp");
-        xp.textContent = msg.content+" XP";
+        xp.textContent = msg.content + " XP";
         break;
     }
     // Log the message received from the server
