@@ -357,3 +357,12 @@ func CheckIfQuestionIsMine(db *sql.DB, questionID int, userID float64) bool {
 	}
 	return false
 }
+
+func getQuestionIDFromResponseID(db *sql.DB, responseID int) int {
+	var questionID int
+	err := db.QueryRow(`SELECT id_question FROM response WHERE id_response = $1`, responseID).Scan(&questionID)
+	if err != nil {
+		return 0
+	}
+	return questionID
+}
