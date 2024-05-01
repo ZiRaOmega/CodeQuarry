@@ -44,7 +44,7 @@ $(document).ready(function () {
         handleVoteUpdate(msg.content);
         break;
       case "responseVoteUpdate":
-        handleResponseVoteUpdate(msg.content)
+        handleResponseVoteUpdate(msg.content);
         break;
       case "postCreated":
         updateQuestionCount(msg.content); // Implement this function to update the UI
@@ -84,14 +84,14 @@ $(document).ready(function () {
         // Author info
         const answerAuthor = document.createElement("div");
         answerAuthor.classList.add("question-viewer__answers__answer__author");
-        answerAuthor.textContent = "Réponse de";
+        answerAuthor.textContent = "Response from";
         creator.textContent = msg.content.student_name;
         answerAuthor.appendChild(creator);
 
         // Date of the response
         const answerDate = document.createElement("div");
         answerDate.classList.add("question-viewer__answers__answer__date");
-        answerDate.textContent = `Publié le: ${new Date(
+        answerDate.textContent = `Posted the: ${new Date(
           msg.content.creation_date
         ).toLocaleDateString()}`;
 
@@ -274,10 +274,10 @@ function handleResponseVoteUpdate(data) {
   );
 
   if (upvoteCountElement) {
-    upvoteCountElement.textContent = data.upvote;
+    upvoteCountElement.textContent = "+ " + data.upvote;
   }
   if (downvoteCountElement) {
-    downvoteCountElement.textContent = data.downvote;
+    downvoteCountElement.textContent = "- " + data.downvote;
   }
 }
 function updateQuestionCount(subject) {

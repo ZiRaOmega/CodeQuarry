@@ -269,13 +269,13 @@ function create_questions(questions) {
 
       const questionDate = document.createElement("p");
       questionDate.classList.add("question_creation_date");
-      questionDate.textContent = `Publié le: ${new Date(
+      questionDate.textContent = `Posted the: ${new Date(
         question.creation_date
       ).toLocaleDateString()}`;
       ContainerCreatorAndDate.appendChild(questionDate);
       const questionCreator = document.createElement("p");
       questionCreator.classList.add("question_creator");
-      questionCreator.textContent = "Publié par";
+      questionCreator.textContent = "Created by";
       const creatorName = document.createElement("span");
       creatorName.textContent = question.creator;
       creatorName.classList.add("creator_name");
@@ -284,10 +284,10 @@ function create_questions(questions) {
       responsesCounter.classList.add("responses_counter");
       if (Array.isArray(question.responses)) {
         // Set text content to the length of the responses array
-        responsesCounter.textContent = `${question.responses.length} reponse(s)`;
+        responsesCounter.textContent = `${question.responses.length} response(s)`;
       } else {
         // Handle cases where 'responses' might not be defined or not an array
-        responsesCounter.textContent = "0 reponse(s)";
+        responsesCounter.textContent = "0 response(s)";
       }
       ContainerCreatorAndDate.appendChild(responsesCounter);
       ContainerCreatorAndDate.appendChild(questionCreator);
@@ -307,12 +307,11 @@ function create_questions(questions) {
             if (favoris.some((f) => f == question.id)) {
               addFavoriElement.classList.add("favori_active");
               addFavoriElement.textContent = "★";
-            }else{
+            } else {
               addFavoriElement.classList.remove("favori_active");
               addFavoriElement.textContent = "☆";
-            
             }
-          }else{
+          } else {
             addFavoriElement.classList.remove("favori_active");
             addFavoriElement.textContent = "☆";
           }
@@ -412,5 +411,3 @@ function create_questions(questions) {
     questionTrackerCount.textContent = "0 question(s)";
   }
 }
-
-
