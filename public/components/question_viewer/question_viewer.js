@@ -215,40 +215,39 @@ fetch("/api/questions?subjectId=all")
           );
         };
         const addFavoriElement = document.createElement("div");
-      addFavoriElement.classList.add("favori");
-      addFavoriElement.setAttribute("data-question-id", question.id);
-      addFavoriElement.textContent = "☆";
-      fetch("/api/favoris")
-        .then((response) => response.json())
-        .then((favoris) => {
-          console.log(Array.isArray(favoris));
-          if (Array.isArray(favoris)) {
-            if (favoris.some((f) => f == question.id)) {
-              addFavoriElement.classList.add("favori_active");
-              addFavoriElement.textContent = "★";
-            }else{
+        addFavoriElement.classList.add("favori");
+        addFavoriElement.setAttribute("data-question-id", question.id);
+        addFavoriElement.textContent = "☆";
+        fetch("/api/favoris")
+          .then((response) => response.json())
+          .then((favoris) => {
+            console.log(Array.isArray(favoris));
+            if (Array.isArray(favoris)) {
+              if (favoris.some((f) => f == question.id)) {
+                addFavoriElement.classList.add("favori_active");
+                addFavoriElement.textContent = "★";
+              } else {
+                addFavoriElement.classList.remove("favori_active");
+                addFavoriElement.textContent = "☆";
+              }
+            } else {
               addFavoriElement.classList.remove("favori_active");
               addFavoriElement.textContent = "☆";
-            
             }
-          }else{
+          });
+        addFavoriElement.onclick = function () {
+          AddFavori(question.id);
+          if (addFavoriElement.classList.contains("favori_active")) {
             addFavoriElement.classList.remove("favori_active");
             addFavoriElement.textContent = "☆";
+          } else {
+            addFavoriElement.classList.add("favori_active");
+            addFavoriElement.textContent = "★";
           }
-        });
-      addFavoriElement.onclick = function () {
-        AddFavori(question.id);
-        if (addFavoriElement.classList.contains("favori_active")) {
-          addFavoriElement.classList.remove("favori_active");
-          addFavoriElement.textContent = "☆";
-        } else {
-          addFavoriElement.classList.add("favori_active");
-          addFavoriElement.textContent = "★";
-        }
-      };
-      let voteContainer = document.querySelector(".vote_container");
-      voteContainer.appendChild(addFavoriElement);
-      
+        };
+        let voteContainer = document.querySelector(".vote_container");
+        voteContainer.appendChild(addFavoriElement);
+
         if (question.responses != null) {
           //explain how does the sorting works
 
@@ -293,7 +292,7 @@ fetch("/api/questions?subjectId=all")
             question_viewer__answers__answer__author.classList.add(
               "question-viewer__answers__answer__author"
             );
-            question_viewer__answers__answer__author.innerText = "Réponse de ";
+            question_viewer__answers__answer__author.innerText = "Reponse from";
             creator_name.innerText = answer.student_name;
             question_viewer__answers__answer__content.classList.add(
               "question-viewer__answers__answer__content"
@@ -308,7 +307,7 @@ fetch("/api/questions?subjectId=all")
               "question-viewer__answers__answer__description"
             );
 
-            question_viewer__answers__answer__date.innerText = `Publié le: ${new Date(
+            question_viewer__answers__answer__date.innerText = `Posted the: ${new Date(
               question.creation_date
             ).toLocaleDateString()}`;
 
@@ -367,8 +366,8 @@ fetch("/api/questions?subjectId=all")
               answer.response_id
             );
             console.log(answer);
-            upvote_responseCount.textContent = "+" + answer.upvotes;
-            downvote_responseCount.textContent = "-" + answer.downvotes;
+            upvote_responseCount.textContent = "+ " + answer.upvotes;
+            downvote_responseCount.textContent = "- " + answer.downvotes;
             upvote_responseContainer.appendChild(upvote_responseCount);
             downvote_responseContainer.appendChild(downvote_responseCount);
             vote_responseContainer.appendChild(upvote_responseContainer);
