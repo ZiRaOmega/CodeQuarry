@@ -214,7 +214,26 @@ fetch("/api/questions?subjectId=all")
             })
           );
         };
-
+        const addFavoriElement = document.createElement("div");
+      addFavoriElement.classList.add("favori");
+      addFavoriElement.setAttribute("data-question-id", question.id);
+      addFavoriElement.textContent = "☆";
+      fetch("/api/favoris")
+        .then((response) => response.json())
+        .then((favoris) => {
+          if (Array.isArray(favoris)) {
+            if (favoris.some((f) => f == question.id)) {
+              addFavoriElement.classList.add("favori_active");
+              addFavoriElement.textContent = "★";
+            }
+          }
+        });
+      addFavoriElement.onclick = function () {
+        AddFavori(question.id);
+      };
+      let voteContainer = document.querySelector(".vote_container");
+      voteContainer.appendChild(addFavoriElement);
+      
         if (question.responses != null) {
           //explain how does the sorting works
 

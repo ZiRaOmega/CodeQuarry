@@ -399,12 +399,4 @@ function create_questions(questions) {
   }
 }
 
-function AddFavori(question_id) {
-  socket.send(
-    JSON.stringify({
-      type: "addFavori",
-      content: question_id,
-      session_id: getCookie("session"),
-    })
-  );
-}
+
