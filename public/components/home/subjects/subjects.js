@@ -299,7 +299,17 @@ function create_questions(questions) {
       const addFavoriElement = document.createElement("div");
       addFavoriElement.classList.add("favori");
       addFavoriElement.setAttribute("data-question-id", question.id);
-      addFavoriElement.textContent = "Ajouter aux favoris";
+      addFavoriElement.textContent = "☆";
+      fetch("/api/favoris")
+        .then((response) => response.json())
+        .then((favoris) => {
+          if (Array.isArray(favoris)) {
+            if (favoris.some((f) => f == question.id)) {
+              addFavoriElement.classList.add("favori_active");
+              addFavoriElement.textContent = "★";
+            }
+          }
+        });
       addFavoriElement.onclick = function () {
         AddFavori(question.id);
       };

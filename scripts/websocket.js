@@ -207,6 +207,21 @@ $(document).ready(function () {
         let xp = document.querySelector(".xp");
         xp.textContent = msg.content + " XP";
         break;
+      case "addFavori":
+        const favori = document.querySelectorAll(".favori");
+        const favorites = msg.content; // This should be an array of question IDs
+        console.log(favorites);
+        favori.forEach((element) => {
+          const favId = element.getAttribute("data-question-id");
+          if (Array.isArray(favorites)) {
+            if (favorites.some((f) => f == favId)) {
+              element.classList.add("favori_active");
+              element.textContent = "★";
+            }
+          }
+        });
+
+        break;
     }
     // Log the message received from the server
     console.log(`[message] Data received from server: ${event.data}`);

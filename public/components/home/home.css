@@ -327,6 +327,23 @@ pre{
     color: red;
 }
 
+.favori{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    top: 5px;
+    right: 180px;
+    width: 50px;
+    height: 50px;
+    color: rgb(181, 181, 7);
+    cursor: pointer;    
+}
+
+.favori:hover{
+    color: rgb(255, 255, 0);
+}
 
 
 
