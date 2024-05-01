@@ -2,6 +2,7 @@ package app
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -400,4 +401,56 @@ func getFavori(db *sql.DB, userID int) ([]Question, error) {
 	}
 
 	return questions, nil
+}
+
+func GetQuestionIdOfFavorite(db *sql.DB, userID int) []int {
+	query := `SELECT id_question FROM Favori WHERE id_student = $1`
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+	var questionIDs []int
+	for rows.Next() {
+		var questionID int
+		if err := rows.Scan(&questionID); err != nil {
+			return nil
+		}
+		questionIDs = append(questionIDs, questionID)
+	}
+	return questionIDs
+}
+
+func GetSessionIDByCookie(cookie *http.Cookie) (string, error) {
+	if cookie == nil {
+		return "", errors.New("cookie is nil")
+	}
+	return cookie.Value, nil
+}
+
+func FavoriHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
+			return
+		}
+		session_id := cookie.Value
+		userID, err := getUserIDUsingSessionID(session_id, db)
+		if err != nil {
+			http.Error(w, "Error getting user ID", http.StatusInternalServerError)
+			return
+		}
+		questionIDs := GetQuestionIdOfFavorite(db, userID)
+
+		if err != nil {
+			http.Error(w, "Error fetching questions", http.StatusInternalServerError)
+			return
+		}
+
+		//send json
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(questionIDs)
+
+	}
 }
