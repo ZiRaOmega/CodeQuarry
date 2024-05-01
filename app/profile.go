@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -155,6 +156,7 @@ type User struct {
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
 	My_Post            []Question
+	Favori             []Question
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -199,6 +201,11 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 
 	user.My_Post = Posts
 
+	Favori, err := getFavori(db, user.ID)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	user.Favori = Favori
 	return user, nil // Return the populated user object
 }
 
@@ -361,4 +368,34 @@ func getAvatar(db *sql.DB, user_id int) (string, error) {
 		return "", err
 	}
 	return avatar, nil
+}
+
+func getFavori(db *sql.DB, userID int) ([]Question, error) {
+	query := `
+        SELECT q.id_question, q.title, q.description, q.content, q.upvotes, q.downvotes, q.creation_date, q.id_subject
+        FROM Favori f
+        JOIN Question q ON f.id_question = q.id_question
+        WHERE f.id_student = $1
+    `
+
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var questions []Question
+	for rows.Next() {
+		var q Question
+		if err := rows.Scan(&q.Id, &q.Title, &q.Description, &q.Content, &q.Upvotes, &q.Downvotes, &q.CreationDate, &q.SubjectID); err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		questions = append(questions, q)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("row error: %w", err)
+	}
+
+	return questions, nil
 }

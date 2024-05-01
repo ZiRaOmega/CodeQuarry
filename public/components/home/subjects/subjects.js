@@ -223,7 +223,7 @@ function create_questions(questions) {
       questionTitle.classList.add("question_title");
       questionTitle.textContent = question.title;
       clickable_container.appendChild(questionTitle);
-
+    
       const questionDescription = document.createElement("p");
       questionDescription.classList.add("question_description");
       questionDescription.textContent = question.description;
@@ -272,6 +272,14 @@ function create_questions(questions) {
       QuestionsElementsList.push(questionContainer);
       const voteContainer = document.createElement("div");
       voteContainer.classList.add("vote_container");
+      const addFavoriElement = document.createElement("div");
+      addFavoriElement.classList.add("favori");
+      addFavoriElement.setAttribute("data-question-id", question.id); 
+      addFavoriElement.textContent = "Ajouter aux favoris";
+      addFavoriElement.onclick = function () {
+        AddFavori(question.id);
+      };
+      voteContainer.appendChild(addFavoriElement);
       const upvoteContainer = document.createElement("div");
       upvoteContainer.classList.add("upvote_container");
       const upvoteText = document.createElement("div");
@@ -352,4 +360,17 @@ function create_questions(questions) {
   if (questions == null) {
     questionTrackerCount.textContent = "0 question(s)";
   }
+}
+
+
+function AddFavori(question_id){
+  
+    socket.send(
+      JSON.stringify({
+        type: "addFavori",
+        content: question_id,
+        session_id: getCookie("session"),
+      })
+    );
+
 }
