@@ -61,6 +61,7 @@ func main() {
 	http.HandleFunc("/login", app.LoginHandler(db))
 
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
+	http.HandleFunc("/checked", app.CheckLogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
 
 	http.HandleFunc("/create_post", app.CreatePostHandler)

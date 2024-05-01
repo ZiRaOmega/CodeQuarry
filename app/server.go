@@ -42,6 +42,11 @@ func LogoHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/images/CODEQUARRY.webp")
 }
 
+func CheckLogoHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page.
+	http.ServeFile(w, r, "public/images/checked.png")
+}
+
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "scripts/animation.js")

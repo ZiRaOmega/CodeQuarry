@@ -51,37 +51,94 @@ $(document).ready(function () {
         break;
       case "response":
         console.log("Response received from server:", msg.content);
+        const answer_description = document.createElement("span");
+        const creator = document.createElement("div");
+        creator.classList.add("creator_name");
+        answer_description.classList.add(
+          "question-viewer__answers__answer__description"
+        );
+        answer_description.textContent = msg.content.description;
         const answerContainer = document.createElement("div");
+        const creator_and_date_container = document.createElement("div");
+        creator_and_date_container.classList.add(
+          "creator_and_date_container_answers"
+        );
         answerContainer.classList.add("question-viewer__answers__answer");
+
+        // Content wrapper
         const answerContent = document.createElement("div");
         answerContent.classList.add(
           "question-viewer__answers__answer__content"
         );
+        const pre = document.createElement("pre");
         const code = document.createElement("code");
         code.textContent = msg.content.content;
-        const pre = document.createElement("pre");
         pre.appendChild(code);
         answerContent.appendChild(pre);
-        answerContainer.appendChild(answerContent);
+
+        // Author info
         const answerAuthor = document.createElement("div");
         answerAuthor.classList.add("question-viewer__answers__answer__author");
-        answerAuthor.textContent = msg.content.studentName;
-        answerContainer.appendChild(answerAuthor);
+        answerAuthor.textContent = "Réponse de";
+        creator.textContent = msg.content.student_name;
+        answerAuthor.appendChild(creator);
+
+        // Date of the response
         const answerDate = document.createElement("div");
         answerDate.classList.add("question-viewer__answers__answer__date");
-        answerDate.textContent = msg.content.creationDate;
-        answerContainer.appendChild(answerDate);
+        answerDate.textContent = `Publié le: ${new Date(
+          msg.content.creation_date
+        ).toLocaleDateString()}`;
+
+        // Best answer toggle
+        const bestAnswerContainer = document.createElement("div");
+        bestAnswerContainer.classList.add("best_answer_container");
+        const bestAnswer = document.createElement("div");
+        bestAnswer.classList.add("best_answer");
+        bestAnswer.textContent = "Best answer ✔";
+        bestAnswer.setAttribute("data-answer-id", msg.content.responseId);
+
+        // Appending everything to the main container
+        answerContainer.appendChild(answer_description);
+        answerContainer.appendChild(answerContent);
+        creator_and_date_container.appendChild(answerDate);
+        creator_and_date_container.appendChild(answerAuthor);
+        answerContainer.appendChild(creator_and_date_container);
+
+        // Check if best answer
+        if (msg.content.isBestAnswer) {
+          bestAnswer.style.backgroundColor = "rgb(104, 195, 163)";
+        }
+
+        bestAnswer.onclick = function () {
+          // Send WebSocket message to toggle best answer status
+          socket.send(
+            JSON.stringify({
+              type: "bestAnswer",
+              content: {
+                answer_id: bestAnswer.getAttribute("data-answer-id"),
+                question_id: msg.content.questionId,
+              },
+              session_id: getCookie("session"),
+            })
+          );
+        };
+
+        bestAnswerContainer.appendChild(bestAnswer);
+        creator_and_date_container.appendChild(bestAnswerContainer);
         const answers = document.querySelector(".question-viewer__answers");
         answers.appendChild(answerContainer);
+
         checkHighlight();
         break;
+
       case "postDeleted":
         const question = document.querySelector(
           `.question[data-question-id="${msg.content}"]`
         );
         if (question) {
           question.remove();
-          let subjectid=localStorage.getItem("subjectId");
+          let subjectid = localStorage.getItem("subjectId");
           fetchQuestions(subjectid);
         }
         break;
@@ -89,8 +146,34 @@ $(document).ready(function () {
         ItsMyQuestion(msg.content);
         break;
       case "bestAnswer":
+        const questionID = msg.content.question_id;
         console.log("Best answer received from server:", msg.content);
+
         let answersBtn = document.querySelectorAll(".best_answer");
+        let best_answer_check = document.querySelectorAll(".best_answer_check");
+        let question_checked = document.querySelectorAll(".question_checked");
+        question_checked.forEach((check) => {
+          console.log(check.getAttribute("data-question-id"));
+          console.log(questionID);
+          if (check.getAttribute("data-question-id") == questionID.toString()) {
+            if (check.style.display == "block") {
+              check.style.display = "none";
+            } else {
+              check.style.display = "block";
+            }
+          }
+        });
+
+        best_answer_check.forEach((check) => {
+          if (msg.content.question_best_answer == -1) {
+            check.style.display = "none";
+          } else if (
+            check.getAttribute("data-answer-id") ==
+            msg.content.question_best_answer.toString()
+          ) {
+            check.style.display = "flex";
+          }
+        });
         answersBtn.forEach((element) => {
           if (msg.content.question_best_answer == -1) {
             element.style.display = "flex";
