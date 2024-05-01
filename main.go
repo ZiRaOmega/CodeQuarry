@@ -79,7 +79,6 @@ func main() {
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 
 	http.HandleFunc("/votes", app.VoteHandler)
-
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))

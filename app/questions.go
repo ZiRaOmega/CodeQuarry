@@ -73,7 +73,7 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 				q.UserVote = "downvoted"
 			}
 		}
-		q.Responses, err = FetchResponseByQuestion(db, q.Id)
+		q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
 		if err != nil {
 			log.Printf("Error fetching responses: %v", err)
 			continue
@@ -91,7 +91,7 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 
 // FetchQuestionByQuestionID retrieves a question from the database based on the given question ID.
 // It returns the retrieved question and an error, if any.
-func FetchQuestionByQuestionID(db *sql.DB, questionID int) (Question, error) {
+func FetchQuestionByQuestionID(db *sql.DB, questionID int, user_id int) (Question, error) {
 	var q Question
 	query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
 				  FROM question q
@@ -102,7 +102,7 @@ func FetchQuestionByQuestionID(db *sql.DB, questionID int) (Question, error) {
 	if err != nil {
 		return q, err
 	}
-	q.Responses, err = FetchResponseByQuestion(db, q.Id)
+	q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
 	if err != nil {
 		return q, err
 	}
@@ -165,7 +165,18 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Invalid question_id parameter", http.StatusBadRequest)
 			return
 		}
-		questions, err := FetchQuestionByQuestionID(db, idint)
+		//get cookie session
+		session_id, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Session not found", http.StatusUnauthorized)
+			return
+		}
+		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
+		if err != nil {
+			http.Error(w, "Session not found", http.StatusUnauthorized)
+			return
+		}
+		questions, err := FetchQuestionByQuestionID(db, idint, user_id)
 		if err != nil {
 			http.Error(w, "Error fetching responses", http.StatusInternalServerError)
 			return
@@ -321,7 +332,7 @@ func UserDeleteQuestion(db *sql.DB, questionID int, userID int) error {
 	//RemoveXP for question author and for all users who answer the question
 	RemoveXP(db, studentID, 1000)
 	//Remove xp for all users who answered the question
-	answers, err := FetchResponseByQuestion(db, questionID)
+	answers, err := FetchResponseByQuestion(db, questionID, userID)
 	if err != nil {
 		return err
 	}
