@@ -192,7 +192,7 @@ $(document).ready(function () {
         break;
       case "XP":
         let xp = document.querySelector(".xp");
-        xp.textContent = msg.content;
+        xp.textContent = msg.content+" XP";
         break;
     }
     // Log the message received from the server
