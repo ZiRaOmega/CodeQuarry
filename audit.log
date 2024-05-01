@@ -1850,3 +1850,29 @@ ERROR: 2024/05/01 13:07:27 Error reading the message from the client
 ERROR: 2024/05/01 13:07:35 Error reading the message from the client
 ERROR: 2024/05/01 13:07:39 Error reading the message from the client
 ERROR: 2024/05/01 13:08:49 Error reading the message from the client
+ERROR: 2024/05/01 13:12:59 Error reading the message from the client
+ERROR: 2024/05/01 13:13:01 Error reading the message from the client
+ERROR: 2024/05/01 13:13:09 Error reading the message from the client
+ERROR: 2024/05/01 13:13:11 Error reading the message from the client
+ERROR: 2024/05/01 13:13:15 Error reading the message from the client
+ERROR: 2024/05/01 13:13:21 Error reading the message from the client
+ERROR: 2024/05/01 13:13:36 Error reading the message from the client
+ERROR: 2024/05/01 13:13:50 Error reading the message from the client
+ERROR: 2024/05/01 13:13:57 Error reading the message from the client
+ERROR: 2024/05/01 13:22:12 Error fetching session from databasesql: no rows in result set
+ERROR: 2024/05/01 13:22:12 Error reading the message from the client
+ERROR: 2024/05/01 13:22:12 Error fetching session from databasesql: no rows in result set
+DEBUG: 2024/05/01 13:22:31 Registration successful: caca at /register
+ERROR: 2024/05/01 13:22:32 Error reading the message from the client
+ERROR: 2024/05/01 13:22:54 Error reading the message from the client
+ERROR: 2024/05/01 13:23:47 Error reading the message from the client
+ERROR: 2024/05/01 13:23:51 Error reading the message from the client
+ERROR: 2024/05/01 13:23:52 Error reading the message from the client
+ERROR: 2024/05/01 13:23:55 Error reading the message from the client
+ERROR: 2024/05/01 13:24:01 Error reading the message from the client
+ERROR: 2024/05/01 13:24:05 Error reading the message from the client
+ERROR: 2024/05/01 13:24:10 Error reading the message from the client
+ERROR: 2024/05/01 13:24:16 Error reading the message from the client
+ERROR: 2024/05/01 13:24:21 Error reading the message from the client
+ERROR: 2024/05/01 13:24:23 Error reading the message from the client
+ERROR: 2024/05/01 13:24:30 Error reading the message from the client

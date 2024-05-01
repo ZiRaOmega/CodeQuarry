@@ -197,7 +197,7 @@ func createTableVote_question(db *sql.DB) {
 		downvote_q BOOLEAN NOT NULL,
 		PRIMARY KEY(id_student, id_question),
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
-		FOREIGN KEY(id_question) REFERENCES Question(id_question)
+		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE
 	);
 	`
 	// Execute the table creation query
