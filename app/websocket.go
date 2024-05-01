@@ -149,7 +149,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 
 			case "questionCompareUser":
-				fmt.Println("Checking if question is mine", wsmessage.Content.(float64))
 				content := wsmessage.Content.(float64)
 				questionID := int(content)
 				userID, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
@@ -197,9 +196,12 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				} else {
 					fmt.Println("Successfully set best answer")
 					question_best_answer := GetBestAnswerFromQuestion(db, questionID)
+					question_id_from_answer_id := getQuestionIDFromResponseID(db, answerID)
 
-					conn.WriteJSON(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID}})
+					conn.WriteJSON(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID, "question_id": question_id_from_answer_id}})
+					BroadcastMessage(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID, "question_id": question_id_from_answer_id}, SessionID: ""}, nil)
 				}
+
 			}
 
 		}

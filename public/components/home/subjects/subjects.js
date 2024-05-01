@@ -199,6 +199,17 @@ function create_questions(questions) {
     questions.forEach((question) => {
       const questionContainer = document.createElement("div");
       questionContainer.classList.add("question");
+      const questionChecked = document.createElement("div");
+      questionChecked.classList.add("question_checked");
+      questionChecked.setAttribute("data-question-id", question.id);
+      questionContainer.appendChild(questionChecked);
+      if (question.responses != null) {
+        if (question.responses.some((r) => r.best_answer == true)) {
+          questionChecked.style.display = "block";
+        } else {
+          questionChecked.style.display = "none";
+        }
+      }
       questionContainer.setAttribute("data-question-id", question.id);
       const clickable_container = document.createElement("div");
       clickable_container.classList.add("clickable_container");
