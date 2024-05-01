@@ -1,223 +1,248 @@
+
 let SubjectsList = [];
 let QuestionsElementsList = [];
 let ListElement;
 const questionsList = document.getElementById("questionsList");
-const returnButton = document.createElement("div");
+const returnButton = createReturnButton();
+
 document.addEventListener("DOMContentLoaded", function () {
-  localStorage.removeItem("subjectId");
-  localStorage.removeItem("subjectTitle");
-  returnButton.id = "returnButton";
-  const listElement = document.getElementById("subjectsList");
-  const questionsList = document.getElementById("questionsList");
+    initializeLocalStorage();
+    ListElement = document.getElementById("subjectsList");
 
-  // Create the "All" subjects item with title and description
-  const allSubjectsItem = document.createElement("div");
-  allSubjectsItem.classList.add("category_cards");
+    const allSubjectsItem = createAllSubjectsItem();
+    ListElement.appendChild(allSubjectsItem);
+    addAllSubjectsClickListener(allSubjectsItem, ListElement, returnButton);
 
-  // Create and append the title
-  const allTitle = document.createElement("h2");
-  allTitle.classList.add("category_title");
-  allTitle.textContent = "All";
-  allSubjectsItem.appendChild(allTitle);
+    returnButton.addEventListener("click", function () {
+        resetSubjectSelection(ListElement, questionsList);
+    });
 
-  // Create and append the description
-  const allDescription = document.createElement("p");
-  allDescription.classList.add("category_description");
-  allDescription.textContent =
-    "Click here to view all questions across all subjects.";
-  allSubjectsItem.appendChild(allDescription);
+    fetchSubjects(allSubjectsItem, ListElement);
+});
 
-  // Append the "All" item to the list
-  listElement.appendChild(allSubjectsItem);
-  ListElement = listElement;
-  // Event listener for the "All" subjects item
-  allSubjectsItem.addEventListener("click", function () {
-    localStorage.setItem("subjectId", "all");
-    localStorage.setItem("subjectTitle", "All Subjects");
-    listElement.style.display = "none"; // Hide the list
-    returnButton.style.display = ""; // Show return button
-    fetchQuestions("all"); // Fetch all questions
-  });
+function initializeLocalStorage() {
+    localStorage.removeItem("subjectId");
+    localStorage.removeItem("subjectTitle");
+}
 
-  returnButton.addEventListener("click", function () {
+function createReturnButton() {
+    const button = document.createElement("div");
+    button.id = "returnButton";
+    return button;
+}
+
+function createAllSubjectsItem() {
+    const item = document.createElement("div");
+    item.classList.add("category_cards");
+
+    const title = document.createElement("h2");
+    title.classList.add("category_title");
+    title.textContent = "All";
+    item.appendChild(title);
+
+    const description = document.createElement("p");
+    description.classList.add("category_description");
+    description.textContent = "Click here to view all questions across all subjects.";
+    item.appendChild(description);
+
+    return item;
+}
+
+function addAllSubjectsClickListener(allSubjectsItem, listElement, returnButton) {
+    allSubjectsItem.addEventListener("click", function () {
+        localStorage.setItem("subjectId", "all");
+        localStorage.setItem("subjectTitle", "All Subjects");
+        listElement.style.display = "none";
+        returnButton.style.display = "";
+        fetchQuestions("all");
+    });
+}
+
+function resetSubjectSelection(listElement, questionsList) {
     localStorage.removeItem("subjectId");
     localStorage.removeItem("subjectTitle");
     listElement.style.display = "";
     questionsList.style.display = "none";
     questionsList.innerHTML = ""; // Clear previous questions
-  });
+}
 
-  fetch("/api/subjects")
-    .then((response) => response.json())
-    .then((subjects) => {
-      const allQestionCountDiv = document.createElement("div");
-      allQestionCountDiv.classList.add("question_count_all");
-      let totalQuestions = 0; // For counting all questions
-      SubjectsList = [];
-      subjects.forEach((subject) => {
-        SubjectsList.push(subject);
-        totalQuestions += subject.questionCount; // Sum up all questions
-        allQestionCountDiv.textContent = totalQuestions;
-        allSubjectsItem.appendChild(allQestionCountDiv);
-        const listItem = document.createElement("div");
-        listItem.classList.add("category_cards");
+function fetchSubjects(allSubjectsItem, listElement) {
+    fetch("/api/subjects")
+        .then((response) => response.json())
+        .then((subjects) => {
+            const allQestionCountDiv = document.createElement("div");
+            allQestionCountDiv.classList.add("question_count_all");
+            let totalQuestions = 0;
 
-        const questionCountDiv = document.createElement("div");
-        questionCountDiv.classList.add("question_count");
-        questionCountDiv.setAttribute("data-subject-id", subject.id);
-        questionCountDiv.textContent = subject.questionCount; // Assuming 'subject.questionCount' is the number of questions
-        listItem.appendChild(questionCountDiv);
+            SubjectsList = [];
+            subjects.forEach((subject) => {
+                SubjectsList.push(subject);
+                totalQuestions += subject.questionCount;
+                allQestionCountDiv.textContent = totalQuestions;
+                allSubjectsItem.appendChild(allQestionCountDiv);
 
-        const title = document.createElement("h2");
-        title.classList.add("category_title");
-        title.textContent = subject.title;
-        listItem.appendChild(title);
-
-        const description = document.createElement("p");
-        description.classList.add("category_description");
-        description.textContent = subject.description;
-        listItem.appendChild(description);
-
-        listItem.addEventListener("click", function () {
-          localStorage.setItem("subjectId", subject.id);
-          localStorage.setItem("subjectTitle", subject.title);
-          listElement.style.display = "none";
-          fetchQuestions(subject.id);
+                const listItem = createSubjectItem(subject);
+                addSubjectClickListener(listItem, subject, listElement);
+                listElement.appendChild(listItem);
+            });
         });
+}
 
-        listElement.appendChild(listItem);
-      });
+function createSubjectItem(subject) {
+    const listItem = document.createElement("div");
+    listItem.classList.add("category_cards");
+
+    const questionCountDiv = document.createElement("div");
+    questionCountDiv.classList.add("question_count");
+    questionCountDiv.setAttribute("data-subject-id", subject.id);
+    questionCountDiv.textContent = subject.questionCount;
+    listItem.appendChild(questionCountDiv);
+
+    const title = document.createElement("h2");
+    title.classList.add("category_title");
+    title.textContent = subject.title;
+    listItem.appendChild(title);
+
+    const description = document.createElement("p");
+    description.classList.add("category_description");
+    description.textContent = subject.description;
+    listItem.appendChild(description);
+
+    return listItem;
+}
+
+function addSubjectClickListener(listItem, subject, listElement) {
+    listItem.addEventListener("click", function () {
+        localStorage.setItem("subjectId", subject.id);
+        localStorage.setItem("subjectTitle", subject.title);
+        listElement.style.display = "none";
+        fetchQuestions(subject.id);
     });
-});
+}
 
 window.fetchQuestions = function (subjectId) {
-  fetch(`/api/questions?subjectId=${subjectId}`)
-    .then((response) => response.json())
-    .then((questions) => {
-      console.log(questions);
-      createFilter(questions);
-      create_questions(questions);
-    });
+    fetch(`/api/questions?subjectId=${subjectId}`)
+        .then((response) => response.json())
+        .then((questions) => {
+            createFilter(questions);
+            createQuestions(questions);
+        });
 };
 
 function createFilter(questions) {
-  questionsList.innerHTML = ""; // Clear previous questions
-  const filterContainer = document.createElement("div");
-  filterContainer.classList.add("filter_container");
-  const questionFilter = document.createElement("div");
-  questionFilter.classList.add("question_filter");
-  const questionTrackerCount = document.createElement("div");
-  questionTrackerCount.classList.add("question_tracker_count");
-  const filterQuestions = document.createElement("div");
-  filterQuestions.classList.add("filter_questions");
-  const filterPopular = document.createElement("div");
-  filterPopular.classList.add("filter_popular");
-  filterPopular.textContent = "Upvotes ↗";
-  const filterUnpopular = document.createElement("div");
-  filterUnpopular.classList.add("filter_unpopular");
-  filterUnpopular.textContent = "Upvotes ↘";
-  const filterNewest = document.createElement("div");
-  const filterOldest = document.createElement("div");
-  const filterBestAnswer = document.createElement("div");
-  filterBestAnswer.classList.add("filter_best_answer");
-  filterOldest.classList.add("filter_oldest");
-  const filterNumberOfComments = document.createElement("div");
-  filterNumberOfComments.classList.add("filter_number_of_comments");
-  filterNewest.classList.add("filter_newest");
-  filterNumberOfComments.textContent = "↑ Comments";
-  filterNewest.textContent = "Newest";
-  filterOldest.textContent = "Oldest";
-  filterBestAnswer.textContent = "Answered ✔";
-  filterQuestions.appendChild(filterNumberOfComments);
-  filterQuestions.appendChild(filterOldest);
-  filterQuestions.appendChild(filterBestAnswer);
-  filterQuestions.appendChild(filterNewest);
-  filterQuestions.appendChild(filterPopular);
-  filterQuestions.appendChild(filterUnpopular);
-  questionFilter.appendChild(questionTrackerCount);
-  questionFilter.appendChild(filterQuestions);
-
-  returnButton.textContent = "⬅";
-  filterContainer.appendChild(returnButton);
-  filterContainer.appendChild(questionFilter);
-  questionsList.appendChild(filterContainer);
-  if (questions == null) {
-    questionTrackerCount.textContent = "0 question(s)";
-    return;
-  } else {
-    questionTrackerCount.textContent = `${questions.length} question(s)`;
-  }
-
-  filterNumberOfComments.onclick = function () {
-    console.log("sorting by number of comments", questions);
-    //check if responses is null if yes set it to 0
-    questions.forEach((question) => {
-      if (question.responses == null) {
-        question.responses = [];
-      }
-    });
-    questions.sort((a, b) => b.responses.length - a.responses.length);
     questionsList.innerHTML = ""; // Clear previous questions
-    createFilter(questions);
-    create_questions(questions);
-  };
+    const filterContainer = document.createElement("div");
+    filterContainer.classList.add("filter_container");
 
-  filterOldest.onclick = function () {
-    console.log("sorting by date", questions);
-    questions.sort(
-      (a, b) => new Date(a.creation_date) - new Date(b.creation_date)
-    );
-    questionsList.innerHTML = ""; // Clear previous questions
-    createFilter(questions);
-    create_questions(questions);
-  };
-
-  filterNewest.onclick = function () {
-    console.log("sorting by date", questions);
-    questions.sort(
-      (a, b) => new Date(b.creation_date) - new Date(a.creation_date)
-    );
-    questionsList.innerHTML = ""; // Clear previous questions
-    createFilter(questions);
-    create_questions(questions);
-  };
-
-  filterBestAnswer.onclick = function () {
-    console.log("sorting by best answer", questions);
-    questions.sort((a, b) => {
-      if (a.responses == null) {
-        a.responses = [];
-      }
-      if (b.responses == null) {
-        b.responses = [];
-      }
-      return (
-        b.responses.filter((r) => r.best_answer == true).length -
-        a.responses.filter((r) => r.best_answer == true).length
-      );
-    });
-    questionsList.innerHTML = ""; // Clear previous questions
-    createFilter(questions);
-    create_questions(questions);
-  };
-
-  filterPopular.onclick = function () {
-    console.log("sorting by upvotes", questions);
-    questions.sort((a, b) => b.upvotes - a.upvotes);
-    questionsList.innerHTML = ""; // Clear previous questions
-    createFilter(questions);
-    create_questions(questions);
-  };
-
-  filterUnpopular.onclick = function () {
-    questions.sort((a, b) => a.upvotes - b.upvotes);
-    questionsList.innerHTML = ""; // Clear previous questions
-    createFilter(questions);
-    create_questions(questions);
-  };
+    const questionFilter = createQuestionFilter(questions);
+    returnButton.textContent = "⬅";
+    filterContainer.appendChild(returnButton);
+    filterContainer.appendChild(questionFilter);
+    questionsList.appendChild(filterContainer);
 }
 
-function create_questions(questions) {
+function createQuestionFilter(questions) {
+    const questionFilter = document.createElement("div");
+    questionFilter.classList.add("question_filter");
+
+    const questionTrackerCount = document.createElement("div");
+    questionTrackerCount.classList.add("question_tracker_count");
+
+    const filterQuestions = document.createElement("div");
+    filterQuestions.classList.add("filter_questions");
+
+    const filters = createFilterElements();
+    filters.forEach(filter => filterQuestions.appendChild(filter));
+
+    questionFilter.appendChild(questionTrackerCount);
+    questionFilter.appendChild(filterQuestions);
+
+    updateQuestionTrackerCount(questions, questionTrackerCount);
+
+    filters[0].onclick = () => sortByNumberOfComments(questions);
+    filters[1].onclick = () => sortOldestToNewest(questions);
+    filters[2].onclick = () => sortByBestAnswer(questions);
+    filters[3].onclick = () => sortNewestToOldest(questions);
+    filters[4].onclick = () => sortByUpvotes(questions);
+    filters[5].onclick = () => sortByDownvotes(questions);
+  console.log(filters)
+    return questionFilter;
+}
+
+function createFilterElements() {
+    const filterPopular = document.createElement("div");
+    filterPopular.classList.add("filter_popular");
+    filterPopular.textContent = "Upvotes ↗";
+
+    const filterUnpopular = document.createElement("div");
+    filterUnpopular.classList.add("filter_unpopular");
+    filterUnpopular.textContent = "Upvotes ↘";
+
+    const filterNewest = document.createElement("div");
+    filterNewest.classList.add("filter_newest");
+    filterNewest.textContent = "Newest";
+
+    const filterOldest = document.createElement("div");
+    filterOldest.classList.add("filter_oldest");
+    filterOldest.textContent = "Oldest";
+
+    const filterBestAnswer = document.createElement("div");
+    filterBestAnswer.classList.add("filter_best_answer");
+    filterBestAnswer.textContent = "Answered ✔";
+
+    const filterNumberOfComments = document.createElement("div");
+    filterNumberOfComments.classList.add("filter_number_of_comments");
+    filterNumberOfComments.textContent = "↑ Comments";
+
+    return [filterNumberOfComments, filterOldest, filterBestAnswer, filterNewest, filterPopular, filterUnpopular];
+}
+
+function updateQuestionTrackerCount(questions, tracker) {
+    tracker.textContent = questions ? `${questions.length} question(s)` : "0 question(s)";
+}
+
+function sortByNumberOfComments(questions) {
+    questions.forEach(q => q.responses = q.responses || []);
+    questions.sort((a, b) => b.responses.length - a.responses.length);
+    refreshQuestionView(questions);
+}
+
+function sortOldestToNewest(questions) {
+    questions.sort((a, b) => new Date(a.creation_date) - new Date(b.creation_date));
+    refreshQuestionView(questions);
+}
+
+function sortNewestToOldest(questions) {
+    questions.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+    refreshQuestionView(questions);
+}
+
+function sortByBestAnswer(questions) {
+  questions.sort((a, b) => {
+      a.responses = a.responses || [];
+      b.responses = b.responses || [];
+      return b.responses.filter(r => r.best_answer==true).length - a.responses.filter(r => r.best_answer==true).length;
+  });
+  refreshQuestionView(questions);
+}
+
+function sortByUpvotes(questions) {
+    questions.sort((a, b) => b.upvotes - a.upvotes);
+    refreshQuestionView(questions);
+}
+
+function sortByDownvotes(questions) {
+    questions.sort((a, b) => a.upvotes - b.upvotes);
+    refreshQuestionView(questions);
+}
+
+function refreshQuestionView(questions) {
+    questionsList.innerHTML = ""; // Clear previous questions
+    createFilter(questions);
+    createQuestions(questions);
+}
+
+function createQuestions(questions) {
   // Clear previous questions
   if (questions != null)
     questions.forEach((question) => {
