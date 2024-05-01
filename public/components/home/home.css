@@ -188,6 +188,20 @@ pre{
     background-color: rgb(242, 242, 242);
 }
 
+.question_checked {
+    position: absolute;
+  display: none;
+  background: url("/checked");
+    background-size: auto;
+  background-size: auto;
+  background-size: auto;
+  background-size: cover;
+  width: 55px;
+  height: 45px;
+  left: 75px;
+  top: 10px;
+}
+
 .question_count, .question_count_all{
     position: absolute;
     margin-left: 220px;

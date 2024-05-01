@@ -1,3 +1,19 @@
+(function () {
+  var originalConsoleWarn = console.warn; // Save the original console.warn function
+
+  console.warn = function () {
+    var args = Array.prototype.slice.call(arguments);
+    // Check if the first argument (the warning message) contains 'highlight.js'
+    if (
+      args.length > 0 &&
+      typeof args[0] === "string" &&
+      args[0].includes("highlight")
+    ) {
+      return; // Do not log Highlight.js warnings
+    }
+  };
+})();
+
 let response_submit = document.getElementById("response_submit");
 const response_description = document.getElementById("response_description");
 const response_content = document.getElementById("response_content");
@@ -6,6 +22,7 @@ const areYouSureTitle = document.getElementsByClassName("areYouSureTitle");
 const areYouSureText = document.getElementsByClassName("areYouSureText");
 const Yes = document.getElementById("Yes");
 const No = document.getElementById("No");
+const best_answer_check = document.getElementsByClassName("best_answer_check");
 const error_message_response = document.getElementById(
   "error_message_response"
 );
@@ -33,6 +50,7 @@ function sendResponse() {
       description: response_description,
       content: response_content,
     };
+
     fetch("/api/responses", {
       method: "POST",
       headers: {
@@ -48,9 +66,6 @@ function sendResponse() {
         if (data.status === "success") {
           window.location.reload();
         }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
       });
   }
 }
@@ -111,16 +126,23 @@ fetch("/api/questions?subjectId=all")
       if (question.id == getUrlArgument("question_id")) {
         console.log(question);
         //when all is loaded
-
-        setTimeout(() => {
-          socket.send(
-            JSON.stringify({
-              type: "questionCompareUser",
-              content: question.id,
-              session_id: getCookie("session"),
-            })
-          );
-        }, 500);
+        let counter = 0;
+        {
+          let intervalId = setInterval(function () {
+            if (counter >= 20) {
+              clearInterval(intervalId); // Stop the interval if the counter is 10 or more
+            } else {
+              counter++;
+              socket.send(
+                JSON.stringify({
+                  type: "questionCompareUser",
+                  content: question.id,
+                  session_id: getCookie("session"),
+                })
+              );
+            }
+          }, 150);
+        }
 
         question_viewer__question__title.innerText = question.title;
         question_viewer__question__description.innerText = question.description;
@@ -145,10 +167,10 @@ fetch("/api/questions?subjectId=all")
             upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
           ) {
             upvoteContainer[0].style.backgroundColor = "";
-            upvoteCount[0].textContent = parseInt(question.upvotes)-1;
+            upvoteCount[0].textContent = parseInt(question.upvotes) - 1;
           } else {
             upvoteContainer[0].style.backgroundColor = "rgb(104, 195, 163)";
-            upvoteCount[0].textContent = parseInt(question.upvotes)+1;
+            upvoteCount[0].textContent = parseInt(question.upvotes) + 1;
             if (
               downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
             ) {
@@ -171,19 +193,15 @@ fetch("/api/questions?subjectId=all")
             downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)"
           ) {
             downvoteContainer[0].style.backgroundColor = "";
-            downvoteCount[0].textContent = parseInt(question.downvotes)-1;
-           
+            downvoteCount[0].textContent = parseInt(question.downvotes) - 1;
           } else {
-            
-           downvoteCount[0].textContent = parseInt(question.downvotes)+1;
+            downvoteCount[0].textContent = parseInt(question.downvotes) + 1;
             downvoteContainer[0].style.backgroundColor = "rgb(196, 77, 86)";
             if (
               upvoteContainer[0].style.backgroundColor == "rgb(104, 195, 163)"
             ) {
               upvoteContainer[0].style.backgroundColor = "";
               upvoteCount[0].textContent = parseInt(question.upvotes);
-              
-
             }
           }
           socket.send(
@@ -209,6 +227,9 @@ fetch("/api/questions?subjectId=all")
             const bestAnswerContainer = document.createElement("div");
             bestAnswerContainer.classList.add("best_answer_container");
             const bestAnswer = document.createElement("div");
+            const bestAnswerCheck = document.createElement("div");
+            bestAnswerCheck.classList.add("best_answer_check");
+            bestAnswerCheck.setAttribute("data-answer-id", answer.response_id);
             bestAnswer.classList.add("best_answer");
             bestAnswer.setAttribute("data-answer-id", answer.response_id);
             bestAnswer.innerText = "Best answer ✔";
@@ -225,7 +246,7 @@ fetch("/api/questions?subjectId=all")
             const pre = document.createElement("pre");
             const code = document.createElement("code");
             creator_and_date_container.classList.add(
-              "creator_and_date_container"
+              "creator_and_date_container_answers"
             );
             creator_name.classList.add("creator_name");
             question_viewer__answers__answer__date.classList.add(
@@ -281,14 +302,19 @@ fetch("/api/questions?subjectId=all")
             creator_and_date_container.appendChild(
               question_viewer__answers__answer__date
             );
+            question_viewer__answers__answer.appendChild(bestAnswerCheck);
+
             bestAnswerContainer.appendChild(bestAnswer);
+
             creator_and_date_container.appendChild(bestAnswerContainer);
             if (containBestAnswer) {
               if (answer.best_answer) {
+                bestAnswerCheck.style.display = "flex";
                 bestAnswer.className = "best_answer best_answer_container";
                 bestAnswer.style.display = "flex";
                 bestAnswer.style.backgroundColor = "rgb(104, 195, 163)";
               } else {
+                bestAnswerCheck.style.display = "none";
                 bestAnswer.style.display = "none";
               }
             } else {
@@ -343,7 +369,4 @@ fetch("/api/questions?subjectId=all")
         }
       }
     });
-  })
-  .catch((error) => {
-    console.error("Error:", error);
   });
