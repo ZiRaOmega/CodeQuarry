@@ -227,11 +227,12 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 					}
+
 					err = AddFavori(db, user_id, question_id)
 					if err == nil {
-						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "success"})
+						conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
 					} else {
-						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "already In Favori"})
 					}
 				}
 			case "deleteFavori":
