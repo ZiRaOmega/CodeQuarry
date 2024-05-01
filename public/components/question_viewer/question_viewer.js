@@ -311,6 +311,7 @@ fetch("/api/questions?subjectId=all")
             creator_and_date_container.appendChild(bestAnswerContainer);
             //upvote and downvote for response
             const vote_responseContainer = document.createElement("div");
+            vote_responseContainer.classList.add("vote_response_container");
             const upvote_responseContainer = document.createElement("div");
             const downvote_responseContainer = document.createElement("div");
             const upvote_responseCount = document.createElement("div");
@@ -331,9 +332,9 @@ fetch("/api/questions?subjectId=all")
               "data-answer-id",
               answer.response_id
             );
-            console.log(answer)
-            upvote_responseCount.textContent = answer.upvotes;
-            downvote_responseCount.textContent = answer.downvotes;
+            console.log(answer);
+            upvote_responseCount.textContent = "+" + answer.upvotes;
+            downvote_responseCount.textContent = "-" + answer.downvotes;
             upvote_responseContainer.appendChild(upvote_responseCount);
             downvote_responseContainer.appendChild(downvote_responseCount);
             vote_responseContainer.appendChild(upvote_responseContainer);
@@ -342,13 +343,15 @@ fetch("/api/questions?subjectId=all")
               vote_responseContainer
             );
             if (answer.user_vote == "upvoted") {
-              upvote_responseContainer.style.backgroundColor = "rgb(104, 195, 163)";
+              upvote_responseContainer.style.backgroundColor =
+                "rgb(104, 195, 163)";
               //upvote_responseCount.style.color = "white";
             } else if (answer.user_vote == "downvoted") {
-              downvote_responseContainer.style.backgroundColor = "rgb(196, 77, 86)";
+              downvote_responseContainer.style.backgroundColor =
+                "rgb(196, 77, 86)";
               //downvote_responseCount.style.color = "white";
             }
-            
+
             upvote_responseContainer.onclick = function () {
               //if upvoteContainer backgroundColor is green then remove the color
               if (

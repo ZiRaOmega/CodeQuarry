@@ -293,6 +293,18 @@
   font-weight: bolder;
 }
 
+.vote_response_container {
+  position: absolute;
+  right: -60px;
+  top: 0px;
+  display: flex;
+  flex-direction: column;
+  width: 5%;
+  height: 130px;
+  justify-content: center;
+  align-items: center;
+}
+
 @keyframes FadeIn {
   from {
     opacity: 0;
