@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -22,6 +23,13 @@ type Response struct {
 	QuestionID   int       `json:"question_id"`
 	StudentID    int       `json:"student_id"`
 	StudentName  string    `json:"student_name"`
+	UserVote     string    `json:"user_vote"`
+}
+
+type ResponseVote struct {
+	R        Response `json:"response"`
+	UpVote   bool     `json:"up_vote"`
+	DownVote bool     `json:"down_vote"`
 }
 
 func ResponsesHandler(db *sql.DB) http.HandlerFunc {
@@ -114,7 +122,7 @@ func InsertResponse(db *sql.DB, response Response) error {
 	return nil
 }
 
-func FetchResponseByQuestion(db *sql.DB, questionID int) ([]Response, error) {
+func FetchResponseByQuestion(db *sql.DB, questionID int, user_id int) ([]Response, error) {
 	var responses []Response
 	query := `SELECT * FROM Response WHERE id_question = $1`
 	rows, err := db.Query(query, questionID)
@@ -122,15 +130,66 @@ func FetchResponseByQuestion(db *sql.DB, questionID int) ([]Response, error) {
 		return nil, err
 	}
 	defer rows.Close()
+	voted_responses, err := FetchVotedResponses(db, user_id)
+	if err != nil {
+		return nil, err
+	}
 	for rows.Next() {
 		var r Response
 		if err := rows.Scan(&r.ResponseID, &r.Description, &r.Content, &r.UpVotes, &r.DownVotes, &r.BestAnswer, &r.CreationDate, &r.UpdateDate, &r.QuestionID, &r.StudentID); err != nil {
 			return nil, err
 		}
+		for _, voted_response := range voted_responses {
+			if voted_response.R.ResponseID == r.ResponseID && voted_response.UpVote {
+				r.UserVote = "upvoted"
+			} else if voted_response.R.ResponseID == r.ResponseID && voted_response.DownVote {
+				r.UserVote = "downvoted"
+			}
+		}
+
 		r.StudentName = GetUsernameWithUserID(db, r.StudentID)
 		responses = append(responses, r)
 	}
 	return responses, nil
+}
+
+// FetchVotedResponses retrieves responses voted by a specific user
+func FetchVotedResponses(db *sql.DB, userID int) ([]ResponseVote, error) {
+	query := `
+        SELECT r.id_response, r.description, r.content, r.upvotes, r.downvotes, r.best_answer, r.creation_date, r.update_date, r.id_question, r.id_student, u.username, v.upvote_r, v.downvote_r
+        FROM Response r
+        JOIN users u ON r.id_student = u.id_student
+        JOIN vote_response v ON r.id_response = v.id_response
+        WHERE v.id_student = $1
+    `
+
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var responseVotes []ResponseVote
+	for rows.Next() {
+		var r Response
+		var rv ResponseVote
+		var upVote, downVote bool
+
+		if err := rows.Scan(&r.ResponseID, &r.Description, &r.Content, &r.UpVotes, &r.DownVotes, &r.BestAnswer, &r.CreationDate, &r.UpdateDate, &r.QuestionID, &r.StudentID, &r.StudentName, &upVote, &downVote); err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		rv.R = r
+		rv.UpVote = upVote
+		rv.DownVote = downVote
+
+		responseVotes = append(responseVotes, rv)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("row error: %w", err)
+	}
+
+	return responseVotes, nil
 }
 
 // InsertBestAnswer toggles the best_answer status for a given response.
