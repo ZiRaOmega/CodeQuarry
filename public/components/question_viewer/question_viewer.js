@@ -321,6 +321,8 @@ fetch("/api/questions?subjectId=all")
               } else {
                 bestAnswerCheck.style.display = "none";
                 bestAnswer.style.display = "none";
+                
+              
               }
             } else {
               bestAnswer.style.display = "flex";
@@ -348,6 +350,7 @@ fetch("/api/questions?subjectId=all")
                   );
                   areYouSure[0].style.display = "none";
                   document.getElementById("response_input").style.display = "none";
+                  
                 };
 
                 No.onclick = function () {
@@ -365,6 +368,7 @@ fetch("/api/questions?subjectId=all")
                     session_id: getCookie("session"),
                   })
                 );
+                document.getElementById("response_input").style.display = "flex";
               }
             };
 
