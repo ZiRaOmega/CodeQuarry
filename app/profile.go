@@ -259,7 +259,9 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
-		birthDate, err := time.Parse("2006-01-02", birthDateStr)
+		birthDate, err := time.Parse("2006-02-01", birthDateStr)
+		schoolYearStr := r.PostFormValue("school_year")
+		schoolYear, err := time.Parse("2006-02-01", schoolYearStr)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -267,7 +269,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Bio = sql.NullString{String: r.PostFormValue("bio"), Valid: true}
 		user.Website = sql.NullString{String: r.PostFormValue("website"), Valid: true}
 		user.GitHub = sql.NullString{String: r.PostFormValue("github"), Valid: true}
-		user.SchoolYear = sql.NullTime{Time: time.Now(), Valid: true}
+		user.SchoolYear = sql.NullTime{Time: schoolYear, Valid: true}
 		if utils.ContainsSQLi(user.LastName) || utils.ContainsSQLi(user.FirstName) || utils.ContainsSQLi(user.Username) || utils.ContainsSQLi(user.Email) || utils.ContainsSQLi(user.Password) || utils.ContainsSQLi(user.Bio.String) || utils.ContainsSQLi(user.Website.String) || utils.ContainsSQLi(user.GitHub.String) {
 			http.Error(w, "Invalid characters", http.StatusForbidden)
 			return
