@@ -61,6 +61,13 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 				return
 			}
 			question_id_convert, err := strconv.Atoi(question_id)
+			//Check if question as best answer
+			question_best_answer := GetBestAnswerFromQuestion(db, question_id_convert)
+			if question_best_answer != -1 {
+				json.NewEncoder(w).Encode(map[string]string{"error": "Question already has a best answer"})
+				http.Error(w, "Question already has a best answer", http.StatusBadRequest)
+				return
+			}
 			response = Response{Description: description, Content: content, UpVotes: 0, DownVotes: 0, BestAnswer: false, CreationDate: creation_date, UpdateDate: creation_date, QuestionID: question_id_convert, StudentID: userid, StudentName: GetUsernameWithUserID(db, userid)}
 			if err != nil {
 				json.NewEncoder(w).Encode(map[string]string{"error": "Invalid question_id"})

@@ -189,6 +189,11 @@ $(document).ready(function () {
             element.style.display = "none";
           }
         });
+        break;
+      case "XP":
+        let xp = document.querySelector(".xp");
+        xp.textContent = msg.content+" XP";
+        break;
     }
     // Log the message received from the server
     console.log(`[message] Data received from server: ${event.data}`);
