@@ -94,6 +94,7 @@ window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
     .then((questions) => {
+      console.log(questions);
       createFilter(questions);
       create_questions(questions);
     });
@@ -111,26 +112,31 @@ function createFilter(questions) {
   filterQuestions.classList.add("filter_questions");
   const filterPopular = document.createElement("div");
   filterPopular.classList.add("filter_popular");
-  filterPopular.textContent = "Croissant ↗";
+  filterPopular.textContent = "Upvotes ↗";
   const filterUnpopular = document.createElement("div");
   filterUnpopular.classList.add("filter_unpopular");
-  filterUnpopular.textContent = "Décroissant ↘";
+  filterUnpopular.textContent = "Upvotes ↘";
   const filterNewest = document.createElement("div");
   const filterOldest = document.createElement("div");
+  const filterBestAnswer = document.createElement("div");
+  filterBestAnswer.classList.add("filter_best_answer");
   filterOldest.classList.add("filter_oldest");
   const filterNumberOfComments = document.createElement("div");
   filterNumberOfComments.classList.add("filter_number_of_comments");
   filterNewest.classList.add("filter_newest");
-  filterNumberOfComments.textContent = "↑ Commentaires";
-  filterNewest.textContent = "Recent";
-  filterOldest.textContent = "Ancien";
+  filterNumberOfComments.textContent = "↑ Comments";
+  filterNewest.textContent = "Newest";
+  filterOldest.textContent = "Oldest";
+  filterBestAnswer.textContent = "Answered ✔";
   filterQuestions.appendChild(filterNumberOfComments);
   filterQuestions.appendChild(filterOldest);
+  filterQuestions.appendChild(filterBestAnswer);
   filterQuestions.appendChild(filterNewest);
   filterQuestions.appendChild(filterPopular);
   filterQuestions.appendChild(filterUnpopular);
   questionFilter.appendChild(questionTrackerCount);
   questionFilter.appendChild(filterQuestions);
+
   returnButton.textContent = "⬅";
   filterContainer.appendChild(returnButton);
   filterContainer.appendChild(questionFilter);
@@ -176,6 +182,25 @@ function createFilter(questions) {
     create_questions(questions);
   };
 
+  filterBestAnswer.onclick = function () {
+    console.log("sorting by best answer", questions);
+    questions.sort((a, b) => {
+      if (a.responses == null) {
+        a.responses = [];
+      }
+      if (b.responses == null) {
+        b.responses = [];
+      }
+      return (
+        b.responses.filter((r) => r.best_answer == true).length -
+        a.responses.filter((r) => r.best_answer == true).length
+      );
+    });
+    questionsList.innerHTML = ""; // Clear previous questions
+    createFilter(questions);
+    create_questions(questions);
+  };
+
   filterPopular.onclick = function () {
     console.log("sorting by upvotes", questions);
     questions.sort((a, b) => b.upvotes - a.upvotes);
@@ -198,6 +223,18 @@ function create_questions(questions) {
     questions.forEach((question) => {
       const questionContainer = document.createElement("div");
       questionContainer.classList.add("question");
+      const questionChecked = document.createElement("div");
+      questionChecked.classList.add("question_checked");
+      questionChecked.setAttribute("data-question-id", question.id);
+      questionContainer.appendChild(questionChecked);
+      if (question.responses != null) {
+        if (question.responses.some((r) => r.best_answer == true)) {
+          questionChecked.style.display = "block";
+        } else {
+          questionChecked.style.display = "none";
+        }
+      }
+      questionContainer.setAttribute("data-question-id", question.id);
       const clickable_container = document.createElement("div");
       clickable_container.classList.add("clickable_container");
       // Add subject title tag
@@ -222,22 +259,23 @@ function create_questions(questions) {
       const preDiv = document.createElement("pre");
       const code = document.createElement("code");
       preDiv.appendChild(code);
-      code.innerHTML = question.content;
+      code.textContent = question.content;
+      document.querySelectorAll("pre code").forEach((block) => {
+        hljs.highlightElement(block);
+      });
       clickable_container.appendChild(preDiv);
-
       const ContainerCreatorAndDate = document.createElement("div");
       ContainerCreatorAndDate.classList.add("creator_and_date_container");
 
       const questionDate = document.createElement("p");
       questionDate.classList.add("question_creation_date");
-      questionDate.textContent = `Publié le: ${new Date(
+      questionDate.textContent = `Posted the: ${new Date(
         question.creation_date
       ).toLocaleDateString()}`;
       ContainerCreatorAndDate.appendChild(questionDate);
-
       const questionCreator = document.createElement("p");
       questionCreator.classList.add("question_creator");
-      questionCreator.textContent = "Publié par";
+      questionCreator.textContent = "Created by";
       const creatorName = document.createElement("span");
       creatorName.textContent = question.creator;
       creatorName.classList.add("creator_name");
@@ -246,10 +284,10 @@ function create_questions(questions) {
       responsesCounter.classList.add("responses_counter");
       if (Array.isArray(question.responses)) {
         // Set text content to the length of the responses array
-        responsesCounter.textContent = `${question.responses.length} reponse(s)`;
+        responsesCounter.textContent = `${question.responses.length} response(s)`;
       } else {
         // Handle cases where 'responses' might not be defined or not an array
-        responsesCounter.textContent = "0 reponse(s)";
+        responsesCounter.textContent = "0 response(s)";
       }
       ContainerCreatorAndDate.appendChild(responsesCounter);
       ContainerCreatorAndDate.appendChild(questionCreator);
@@ -258,6 +296,37 @@ function create_questions(questions) {
       QuestionsElementsList.push(questionContainer);
       const voteContainer = document.createElement("div");
       voteContainer.classList.add("vote_container");
+      const addFavoriElement = document.createElement("div");
+      addFavoriElement.classList.add("favori");
+      addFavoriElement.setAttribute("data-question-id", question.id);
+      addFavoriElement.textContent = "☆";
+      fetch("/api/favoris")
+        .then((response) => response.json())
+        .then((favoris) => {
+          if (Array.isArray(favoris)) {
+            if (favoris.some((f) => f == question.id)) {
+              addFavoriElement.classList.add("favori_active");
+              addFavoriElement.textContent = "★";
+            } else {
+              addFavoriElement.classList.remove("favori_active");
+              addFavoriElement.textContent = "☆";
+            }
+          } else {
+            addFavoriElement.classList.remove("favori_active");
+            addFavoriElement.textContent = "☆";
+          }
+        });
+      addFavoriElement.onclick = function () {
+        AddFavori(question.id);
+        if (addFavoriElement.classList.contains("favori_active")) {
+          addFavoriElement.classList.remove("favori_active");
+          addFavoriElement.textContent = "☆";
+        } else {
+          addFavoriElement.classList.add("favori_active");
+          addFavoriElement.textContent = "★";
+        }
+      };
+      voteContainer.appendChild(addFavoriElement);
       const upvoteContainer = document.createElement("div");
       upvoteContainer.classList.add("upvote_container");
       const upvoteText = document.createElement("div");
@@ -272,6 +341,7 @@ function create_questions(questions) {
       voteContainer.appendChild(upvoteContainer);
       const downvoteContainer = document.createElement("div");
       downvoteContainer.classList.add("downvote_container");
+      console.log(question);
       const downvoteText = document.createElement("div");
       downvoteText.classList.add("downvote_text");
       downvoteText.textContent = "-";
@@ -284,12 +354,26 @@ function create_questions(questions) {
       voteContainer.appendChild(downvoteContainer);
       questionContainer.appendChild(voteContainer);
       questionsList.appendChild(questionContainer);
+      if (question.user_vote == "upvoted") {
+        upvoteContainer.style.backgroundColor = "rgb(104, 195, 163)";
+      } else if (question.user_vote == "downvoted") {
+        downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
+      }
       let responseContainer = document.createElement("div");
       responseContainer.classList.add("response_container");
       clickable_container.addEventListener("click", () => {
         window.location.href = `https://${window.location.hostname}/question_viewer?question_id=${question.id}`;
       });
       upvoteContainer.onclick = function () {
+        //if upvoteContainer backgroundColor is green then remove the color
+        if (upvoteContainer.style.backgroundColor == "rgb(104, 195, 163)") {
+          upvoteContainer.style.backgroundColor = "";
+        } else {
+          upvoteContainer.style.backgroundColor = "rgb(104, 195, 163)";
+          if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
+            downvoteContainer.style.backgroundColor = "";
+          }
+        }
         socket.send(
           JSON.stringify({
             type: "upvote",
@@ -300,6 +384,15 @@ function create_questions(questions) {
       };
 
       downvoteContainer.onclick = function () {
+        //if downvoteContainer backgroundColor is red then remove the color
+        if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
+          downvoteContainer.style.backgroundColor = "";
+        } else {
+          downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
+          if (upvoteContainer.style.backgroundColor == "rgb(104, 195, 163)") {
+            upvoteContainer.style.backgroundColor = "";
+          }
+        }
         socket.send(
           JSON.stringify({
             type: "downvote",
@@ -312,6 +405,9 @@ function create_questions(questions) {
   questionsList.style.display = ""; // Show the questions list
   checkHighlight();
   if (questions == null) {
+    let questionTrackerCount = document.querySelector(
+      ".question_tracker_count"
+    );
     questionTrackerCount.textContent = "0 question(s)";
   }
 }

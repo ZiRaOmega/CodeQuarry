@@ -42,6 +42,11 @@ func LogoHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/images/CODEQUARRY.webp")
 }
 
+func CheckLogoHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page.
+	http.ServeFile(w, r, "public/images/checked.png")
+}
+
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "scripts/animation.js")
@@ -86,6 +91,10 @@ func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.css")
 }
+func ProfileCSSHandler(w http.ResponseWriter, r *http.Request) {
+	// Servce profile.css
+	http.ServeFile(w, r, "public/components/profile/profile.css")
+}
 
 // JS
 func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
@@ -95,6 +104,11 @@ func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 func SearchBarJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
+}
+
+func ProfileJs(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/components/profile/profile.js")
 }
 
 func VoteHandler(w http.ResponseWriter, r *http.Request) {

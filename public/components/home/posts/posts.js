@@ -15,13 +15,13 @@ function createPostInput() {
   description.setAttribute("placeholder", "Description");
   content.setAttribute("placeholder", "Content");
   let create_post_description = document.createElement("p");
-  create_post_description.textContent = "Qu'est-ce qui vous creuse l'esprit ?";
+  create_post_description.textContent = "What's Digging your mind ?";
   let container = document.createElement("div");
   container.id = "create_post_container";
   let black_background = document.createElement("div");
   black_background.id = "black_background";
   let submit = document.createElement("button");
-  submit.textContent = "Publier";
+  submit.textContent = "Publish";
   submit.onclick = function () {
     let form = {
       title: title.value,
@@ -39,7 +39,7 @@ function createPostInput() {
     black_background.remove();
   };
   let cross = document.createElement("div");
-  cross.textContent = "Annuler";
+  cross.textContent = "Cancel";
   cross.id = "cross";
   container.appendChild(create_post_description);
   container.appendChild(cross);
