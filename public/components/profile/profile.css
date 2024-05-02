@@ -11,7 +11,6 @@ a{
     flex-basis: 25%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     min-width: fit-content;
 }
@@ -28,6 +27,8 @@ a{
     justify-content: center;
     align-items: center;
     margin-bottom: 50px;
+    position: sticky;
+    top: 160px;
 }
 
 .button{
@@ -63,7 +64,9 @@ a{
 .main-part{
     display: flex;
     justify-content: center;
+    flex-direction: row;
     width: 100vw;
+    height: fit-content;
     padding-top: 50px;
 }
 
@@ -79,6 +82,8 @@ a{
     justify-content: center;
     align-items: center;
     margin-bottom: 100px;
+    position: sticky;
+    top: 160px;
 }
 
 .editProfileForm input[type=text], .editProfileForm input[type=email], .editProfileForm input[type=password], .editProfileForm input[type=date],.editProfileForm input[type=file],  .editProfileForm textarea{
@@ -102,4 +107,64 @@ a{
     justify-content: center;
     align-items: center;
     gap: 5px;
+}
+.rank{
+    margin-bottom: 30px;
+}
+
+.rankTitle{
+    font-style: italic;
+}
+
+.all-posts{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+ #favori{
+        margin: 50px 0;
+    }
+
+.question-profile {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 20px;
+    width: 500px;
+    height: fit-content;
+    padding: 20px 20px;
+    background-color: var(--darkblue);
+    color: white;
+    margin-bottom: 20px;
+
+}
+
+.history_link{
+    color: white;
+}
+
+.post-title{
+    font-weight: bolder;
+    font-size: 1.4em;
+}
+
+@media (max-width: 900px) {
+    .question-profile{
+        width: 80vw;
+    }
+
+    .main-part{
+        flex-direction: column;
+    }
+
+    .all-posts{
+        width: 100vw;
+
+    }
+
+    .titles{
+        text-align: center;
+    }
 }
