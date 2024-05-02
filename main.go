@@ -85,6 +85,7 @@ func main() {
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
 	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
 	http.HandleFunc("/api/favoris", app.FavoriHandler(db))
+	http.HandleFunc("/api/classement", app.SendUsersInfoJson(db))
 	http.HandleFunc("/detect_lang", app.DetectLanguageHandler)
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
@@ -93,6 +94,10 @@ func main() {
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	http.HandleFunc("/searchbar/input.js", app.SearchBarJS)
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
+	http.HandleFunc("/posts.css", app.PostCSSHandler)
+	http.HandleFunc("/classement", app.ClassementHandler(db))
+	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
+	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)

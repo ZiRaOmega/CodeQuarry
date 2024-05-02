@@ -162,7 +162,7 @@ func createTableTagged(db *sql.DB) {
 		id_question INT,
 		id_tag INT,
 		PRIMARY KEY(id_question, id_tag),
-		FOREIGN KEY(id_question) REFERENCES Question(id_question),
+		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE,
 		FOREIGN KEY(id_tag) REFERENCES Tag(id_tag)
 	);
 	`
@@ -195,7 +195,7 @@ func createTableVote_response(db *sql.DB) {
 		downvote_r BOOLEAN NOT NULL,
 		PRIMARY KEY(id_student, id_response),
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
-		FOREIGN KEY(id_response) REFERENCES Response(id_response)
+		FOREIGN KEY(id_response) REFERENCES Response(id_response) ON DELETE CASCADE
 	);
 	`
 	// Execute the table creation query
