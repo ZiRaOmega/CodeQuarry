@@ -96,6 +96,15 @@ func ProfileCSSHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/profile/profile.css")
 }
 
+func PostCSSHandler(w http.ResponseWriter, r *http.Request) {
+	// Servce Post.css
+	http.ServeFile(w, r, "public/components/home/posts/posts.css")
+}
+
+func ClassementCSSHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/components/classement/classement.css")
+}
+
 // JS
 func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
@@ -133,6 +142,10 @@ func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
 func QuestionViewerJSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.js")
+}
+
+func ClassementJSHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/components/classement/classement.js")
 }
 
 /* ======================= WEB_SOCKETS ======================= */
