@@ -28,6 +28,11 @@ type Vote struct {
 	Upvote     int `json:"upvote"`
 	Downvote   int `json:"downvote"`
 }
+type Vote_response_count struct {
+	ResponseID int `json:"response_id"`
+	Upvote     int `json:"upvote"`
+	Downvote   int `json:"downvote"`
+}
 
 // WebsocketHandler is a handler function that upgrades the HTTP connection to a WebSocket connection
 // and handles the communication between the client and the server using WebSocket protocol.
@@ -116,6 +121,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				subject_id, _ := strconv.Atoi(content["subject_id"].(string)) // handle error properly in production
 				err = CreateQuestion(db, quest, user_id, subject_id)
 				if err != nil {
+					fmt.Println(err.Error())
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
 				} else {
 					// On successful question creation, send an update message
@@ -123,10 +129,194 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "postCreated", Content: updatedSubject})
 					BroadcastMessage(WSMessage{Type: "postCreated", Content: updatedSubject, SessionID: ""}, conn)
 				}
+			case "deletePost":
+				/*{
+				        type: "deletePost",
+				        content: id,
+						session_id: getCookie("session")
+				      }*/
+				question_id, err := strconv.Atoi(wsmessage.Content.(string))
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid question ID"})
+					break
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				err = UserDeleteQuestion(db, question_id, user_id)
+				if err != nil {
+					fmt.Println(err.Error())
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete post"})
+				} else {
+					// On successful question deletion, send an update message
+					//updatedSubject, _ := FetchSubjectWithQuestionCount(db, question_id) // Implement this method
+					/* conn.WriteJSON(WSMessage{Type: "postDeleted", Content: question_id}) */
+					XP, err := FetchXP(db, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch XP"})
+						break
+					}
+					conn.WriteJSON(WSMessage{Type: "XP", Content: XP, SessionID: wsmessage.SessionID})
+					BroadcastMessage(WSMessage{Type: "postDeleted", Content: question_id, SessionID: ""}, nil)
+				}
+
+			case "questionCompareUser":
+				content := wsmessage.Content.(float64)
+				questionID := int(content)
+				userID, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if CheckIfQuestionIsMine(db, questionID, float64(userID)) {
+					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: true})
+				} else {
+					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: false})
+				}
+			case "bestAnswer":
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				fmt.Println(contentMap)
+				if !ok {
+					fmt.Println("Invalid content type for bestAnswer")
+					// Optionally send an error response back to the client
+					continue
+				}
+
+				// Extracting the answer ID and converting it to an integer
+
+				answerID, err := strconv.Atoi(contentMap["answer_id"].(string)) // JSON numbers are decoded as floats
+				if err != nil {
+					fmt.Println("Invalid or missing answer_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+
+				questionID, err := strconv.Atoi(contentMap["question_id"].(string)) // JSON numbers are decoded as floats
+				if err != nil {
+					fmt.Println("Invalid or missing question_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+
+				// Now attempt to insert the best answer
+
+				err = InsertBestAnswer(db, answerID)
+
+				if err != nil {
+					fmt.Printf("Error inserting best answer: %v\n", err)
+					// Optionally send an error response back to the client
+				} else {
+					fmt.Println("Successfully set best answer")
+					question_best_answer := GetBestAnswerFromQuestion(db, questionID)
+					question_id_from_answer_id := getQuestionIDFromResponseID(db, answerID)
+
+					conn.WriteJSON(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID, "question_id": question_id_from_answer_id}})
+					BroadcastMessage(WSMessage{Type: "bestAnswer", Content: map[string]interface{}{"question_best_answer": question_best_answer, "answer_id": answerID, "question_id": question_id_from_answer_id}, SessionID: ""}, nil)
+				}
+			case "addFavori":
+				session_id := wsmessage.SessionID
+				contentMap := wsmessage.Content.(float64)
+				//Check session and get user_id
+				user_id, err := getUserIDUsingSessionID(session_id, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+				} else {
+					question_id := int(contentMap)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+					}
+					if isItInFavori(db, user_id, question_id) {
+						err = DeleteFavori(db, user_id, question_id)
+						if err == nil {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+						} else {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
+						}
+					} else {
+						err = AddFavori(db, user_id, question_id)
+						if err == nil {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: GetQuestionIdOfFavorite(db, user_id)})
+						} else {
+							conn.WriteJSON(WSMessage{Type: "addFavori", Content: "already In Favori"})
+						}
+					}
+				}
+			case "deleteFavori":
+				session_id := wsmessage.SessionID
+				contentMap := wsmessage.Content.(string)
+				//Check session and get user_id
+				user_id, err := getUserIDUsingSessionID(session_id, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
+				} else {
+					question_id, err := strconv.Atoi(contentMap)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
+					}
+					err = DeleteFavori(db, user_id, question_id)
+					if err == nil {
+						conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "success"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
+					}
+				}
+			case "upvote_response":
+				err := HandleUpvoteResponse(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote response"})
+				} else {
+					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
+					vote := Vote_response_count{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
+				}
+			case "downvote_response":
+				err := HandleDownvoteResponse(db, wsmessage.Content.(float64), wsmessage.SessionID)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote response"})
+				} else {
+					up, down := SendNewVoteCountResponse(db, wsmessage.Content.(float64))
+					vote := Vote_response_count{ResponseID: int(wsmessage.Content.(float64)), Upvote: up, Downvote: down}
+					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
+					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
+				}
 			}
 
 		}
 	}
+}
+func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
+	stmt, err := db.Prepare("DELETE FROM Favori WHERE id_student = $1 AND id_question = $2")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(id_student, question_id); err != nil {
+		return err
+	}
+	return nil
+}
+func AddFavori(db *sql.DB, id_student int, question_id int) error {
+	stmt, err := db.Prepare("INSERT INTO Favori(id_student, id_question) VALUES($1, $2)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(id_student, question_id); err != nil {
+		return err
+	}
+	return nil
+}
+func isItInFavori(db *sql.DB, id_student int, question_id int) bool {
+	var exists bool
+	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM Favori WHERE id_student = $1 AND id_question = $2)", id_student, question_id).Scan(&exists)
+	if err != nil {
+		Log(ErrorLevel, "Error checking if question is in Favori: "+err.Error())
+		return false
+	}
+	return exists
 }
 func RemoveConnFromList(conn *websocket.Conn) {
 	for i, c := range ConnectionList {

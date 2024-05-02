@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"net/http"
 	"time"
-	
+
 	UUID "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
-	
+
 	"codequarry/app/utils"
 )
 
@@ -55,7 +55,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
-		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password) VALUES($1, $2, $3, $4, $5)")
+		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, xp) VALUES($1, $2, $3, $4, $5, 0)")
 		if err != nil {
 			fmt.Println(err)
 			Log(ErrorLevel, "Error preparing the SQL statement")

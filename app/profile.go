@@ -2,9 +2,11 @@ package app
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -34,16 +36,103 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error getting user info", http.StatusInternalServerError)
 			return
 		}
+		user.Rank.String, err = SetRankByXp(user)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		ParseAndExecuteTemplate("profile", user, w)
 	}
 }
+func SetRankByXp(u User) (string, error) {
+	/*>Le nombre de Rank est limité à 10. Un nombre trop petit de Rank peut être frustrant pour les élèves. Un nombre trop grand peut être difficile à gérer pour les administrateurs.
 
+	Les Rank sont définis par des seuils. Les seuils sont définis en fonction de la moyenne des critères. Les seuils sont les suivants :
+
+	1. ****0 - 10 : Script Kiddie****
+
+	- Un terme souvent utilisé pour désigner quelqu'un qui utilise des scripts ou des programmes écrits par d'autres sans comprendre réellement ce qu'ils font.
+
+	2. ****11 - 20 : Bug Hunter****
+
+	- Quelqu'un qui aime trouver et résoudre des bugs, un pas au-delà du simple script kiddie.
+
+	3. ****21 - 30 : Code Monkey****
+
+	- Terme affectueux pour un développeur qui écrit beaucoup de code sans nécessairement participer à la conception.
+
+	4. ****31 - 40 : Git Guru****
+
+	- Un expert en utilisation de Git, l'outil de contrôle de version indispensable pour les développeurs.
+
+	5. ****41 - 50 : Stack Overflow Savant****
+
+	- Une référence à l'habileté de trouver ou fournir des réponses sur le célèbre site de questions-réponses pour développeurs.
+
+	6. ****51 - 60 : Refactoring Rogue****
+
+	- Quelqu'un qui excelle à réorganiser et optimiser le code existant.
+
+	7. ****61 - 70 : Agile Archmage****
+
+	- Un maître des méthodologies agiles, capable de naviguer avec aisance dans les sprints et les scrums.
+
+	8. ****71 - 80 : Code Whisperer****
+
+	- Un développeur capable de "parler" au code, le comprenant et le manipulant à un niveau presque mystique.
+
+	9. ****81 - 90 : Heisenbug Debugger****
+
+	- Nom donné à un développeur capable de gérer les heisenbugs, ces bugs qui semblent disparaître ou se modifier lorsqu'on tente de les isoler ou de les étudier.
+
+	10. ****91 - 100 : Keyboard Warrior****
+
+	- Une touche humoristique pour décrire quelqu'un qui est un combattant acharné du développement, toujours prêt à taper des lignes de code.
+
+	**## Calcul du Rank**
+
+	!!! TODO : à modifier
+
+	>Le total d'xp possible est de 10 millions.
+
+	- une question posée rapporte 1000 xp
+	- une réponse posée rapporte 100 xp
+	- une réponse marquée comme meilleure réponse rapporte 1000 xp
+	- une réponse reçue rapporte 100 xp
+	- la pertinence d'une question ou d'une réponse est notée sur 10. La note est multipliée par 100. Exemple : 8/10 = 800 xp. Cette note est calculée par le nombre d'upvote et de downvote.*/
+	fmt.Println(u.XP.Int64)
+	if u.XP.Int64 >= 0 {
+		u.XP.Int64 /= 100000
+	}
+	if u.XP.Int64 >= 0 && u.XP.Int64 <= 10 {
+		return "Script Kiddie", nil
+	} else if u.XP.Int64 >= 11 && u.XP.Int64 <= 20 {
+		return "Bug Hunter", nil
+	} else if u.XP.Int64 >= 21 && u.XP.Int64 <= 30 {
+		return "Code Monkey", nil
+	} else if u.XP.Int64 >= 31 && u.XP.Int64 <= 40 {
+		return "Git Guru", nil
+	} else if u.XP.Int64 >= 41 && u.XP.Int64 <= 50 {
+		return "Stack Overflow Savant", nil
+	} else if u.XP.Int64 >= 51 && u.XP.Int64 <= 60 {
+		return "Refactoring Rogue", nil
+	} else if u.XP.Int64 >= 61 && u.XP.Int64 <= 70 {
+		return "Agile Archmage", nil
+	} else if u.XP.Int64 >= 71 && u.XP.Int64 <= 80 {
+		return "Code Whisperer", nil
+	} else if u.XP.Int64 >= 81 && u.XP.Int64 <= 90 {
+		return "Heisenbug Debugger", nil
+	} else if u.XP.Int64 >= 91 && u.XP.Int64 <= 100 {
+		return "Keyboard Warrior", nil
+	} else {
+		return "", errors.New("XP out of range")
+	}
+}
 func (U *User) FormatBirthDate() string {
-	return U.BirthDate.Time.Format("2006-01-02")
+	return U.BirthDate.Time.Format("01/02/2006")
 }
 
 func (U *User) FormatSchoolYear() string {
-	return U.SchoolYear.Time.Format("2006-01-02")
+	return U.SchoolYear.Time.Format("01/02/2006")
 }
 
 // Define User structure based on your database schema
@@ -68,6 +157,7 @@ type User struct {
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
 	My_Post            []Question
+	Favori             []Question
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -109,8 +199,14 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println(Posts)
+
 	user.My_Post = Posts
+
+	Favori, err := getFavori(db, user.ID)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	user.Favori = Favori
 	return user, nil // Return the populated user object
 }
 
@@ -171,7 +267,9 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
-		birthDate, err := time.Parse("2006-01-02", birthDateStr)
+		birthDate, err := time.Parse("2006-02-01", birthDateStr)
+		schoolYearStr := r.PostFormValue("school_year")
+		schoolYear, err := time.Parse("2006-02-01", schoolYearStr)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -179,7 +277,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Bio = sql.NullString{String: r.PostFormValue("bio"), Valid: true}
 		user.Website = sql.NullString{String: r.PostFormValue("website"), Valid: true}
 		user.GitHub = sql.NullString{String: r.PostFormValue("github"), Valid: true}
-		user.SchoolYear = sql.NullTime{Time: time.Now(), Valid: true}
+		user.SchoolYear = sql.NullTime{Time: schoolYear, Valid: true}
 		if utils.ContainsSQLi(user.LastName) || utils.ContainsSQLi(user.FirstName) || utils.ContainsSQLi(user.Username) || utils.ContainsSQLi(user.Email) || utils.ContainsSQLi(user.Password) || utils.ContainsSQLi(user.Bio.String) || utils.ContainsSQLi(user.Website.String) || utils.ContainsSQLi(user.GitHub.String) {
 			http.Error(w, "Invalid characters", http.StatusForbidden)
 			return
@@ -273,4 +371,91 @@ func getAvatar(db *sql.DB, user_id int) (string, error) {
 		return "", err
 	}
 	return avatar, nil
+}
+
+func getFavori(db *sql.DB, userID int) ([]Question, error) {
+	query := `
+        SELECT q.id_question, q.title, q.description, q.content, q.upvotes, q.downvotes, q.creation_date, q.id_subject
+        FROM Favori f
+        JOIN Question q ON f.id_question = q.id_question
+        WHERE f.id_student = $1
+    `
+
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var questions []Question
+	for rows.Next() {
+		var q Question
+		if err := rows.Scan(&q.Id, &q.Title, &q.Description, &q.Content, &q.Upvotes, &q.Downvotes, &q.CreationDate, &q.SubjectID); err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		questions = append(questions, q)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("row error: %w", err)
+	}
+
+	return questions, nil
+}
+
+func GetQuestionIdOfFavorite(db *sql.DB, userID int) []int {
+	query := `SELECT id_question FROM Favori WHERE id_student = $1`
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+	var questionIDs []int
+	for rows.Next() {
+		var questionID int
+		if err := rows.Scan(&questionID); err != nil {
+			return nil
+		}
+		questionIDs = append(questionIDs, questionID)
+	}
+	return questionIDs
+}
+
+func GetSessionIDByCookie(cookie *http.Cookie) (string, error) {
+	if cookie == nil {
+		return "", errors.New("cookie is nil")
+	}
+	return cookie.Value, nil
+}
+
+func FavoriHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
+			return
+		}
+		session_id := cookie.Value
+		userID, err := getUserIDUsingSessionID(session_id, db)
+		if err != nil {
+			http.Error(w, "Error getting user ID", http.StatusInternalServerError)
+			return
+		}
+		if !isValidSession(session_id, db) {
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
+			return
+		}
+
+		questionIDs := GetQuestionIdOfFavorite(db, userID)
+
+		if err != nil {
+			http.Error(w, "Error fetching questions", http.StatusInternalServerError)
+			return
+		}
+
+		//send json
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(questionIDs)
+
+	}
 }

@@ -66,6 +66,7 @@ func main() {
 	})
 
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
+	http.HandleFunc("/checked", app.CheckLogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
 
 	http.HandleFunc("/create_post", app.AddSecurityHeaders(app.CreatePostHandler))
@@ -77,19 +78,18 @@ func main() {
 	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
 	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
 	http.HandleFunc("/templates/header/header.css", app.HeaderCssHandler)
-
+	http.HandleFunc("/components/profile/profile.css", app.ProfileCSSHandler)
 	http.HandleFunc("/logout", app.LogoutHandler(db))
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 
 	http.HandleFunc("/votes", app.VoteHandler)
-
 	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
-
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
 	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
+	http.HandleFunc("/api/favoris", app.FavoriHandler(db))
 	http.HandleFunc("/detect_lang", app.DetectLanguageHandler)
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
@@ -97,6 +97,7 @@ func main() {
 	http.HandleFunc("/profile", app.AddSecurityHeaders(app.ProfileHandler(db)))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	http.HandleFunc("/searchbar/input.js", app.SearchBarJS)
+	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)

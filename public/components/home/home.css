@@ -49,10 +49,6 @@ pre{
 
 }
 
-.voted{
-    color: rgb(79, 79, 192);
-}
-
 .vote_container{
     position: absolute;
     top: 10px;
@@ -74,10 +70,16 @@ pre{
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.upvote_container:hover, .downvote_container:hover{
-    background-color: rgb(79, 79, 192);
+.upvote_container:hover{
+    background-color: rgb(104, 195, 163);
+    color: var(--white);
+}
+
+.downvote_container:hover{
+    background-color:rgb(196, 77, 86);
     color: var(--white);
 }
 
@@ -128,6 +130,7 @@ pre{
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.5s;
     transition: all 0.3s ease;
 }
 
@@ -157,6 +160,13 @@ pre{
     cursor: pointer;
 }
 
+#questionsList{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    animation: fadeIn 0.5s;
+}
+
 .question{
     position: relative;
     display: flex;
@@ -176,6 +186,20 @@ pre{
 .question:hover{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     background-color: rgb(242, 242, 242);
+}
+
+.question_checked {
+    position: absolute;
+  display: none;
+  background: url("/checked");
+    background-size: auto;
+  background-size: auto;
+  background-size: auto;
+  background-size: cover;
+  width: 55px;
+  height: 45px;
+  left: 75px;
+  top: 10px;
 }
 
 .question_count, .question_count_all{
@@ -231,8 +255,10 @@ pre{
 
 .creator_and_date_container{
     display: flex;
+    height: 40px;
     flex-direction: row;
     justify-content: space-between;
+
     color: var(--gray);
     font-size: 13px;
 }
@@ -301,6 +327,23 @@ pre{
     color: red;
 }
 
+.favori{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    top: 5px;
+    right: 180px;
+    width: 50px;
+    height: 50px;
+    color: rgb(181, 181, 7);
+    cursor: pointer;    
+}
+
+.favori:hover{
+    color: rgb(255, 255, 0);
+}
 
 
 
@@ -308,6 +351,7 @@ pre{
 
 .filter_container{
     margin-top: 35px;
+    margin-bottom: 10px;
     width: 740px;
     height: auto;
     display: flex;
@@ -368,7 +412,7 @@ pre{
     height: 70px;
 }
 
-.filter_popular,.filter_unpopular,.filter_newest, .filter_oldest, .filter_number_of_comments{
+.filter_popular,.filter_unpopular,.filter_newest, .filter_oldest, .filter_number_of_comments, .filter_best_answer{
     padding: 3px;
     font-size: 15px;
     margin-left: 10px;
@@ -377,7 +421,7 @@ pre{
     transition: all 0.3s ease;
 }
 
-.filter_popular:hover,.filter_unpopular:hover,.filter_newest:hover, .filter_oldest:hover, .filter_number_of_comments:hover{
+.filter_popular:hover,.filter_unpopular:hover,.filter_newest:hover, .filter_oldest:hover, .filter_number_of_comments:hover, .filter_best_answer:hover{
     color: rgb(176, 176, 176);
 }
 

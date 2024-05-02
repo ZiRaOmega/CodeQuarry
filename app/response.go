@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"time"
@@ -22,6 +23,13 @@ type Response struct {
 	QuestionID   int       `json:"question_id"`
 	StudentID    int       `json:"student_id"`
 	StudentName  string    `json:"student_name"`
+	UserVote     string    `json:"user_vote"`
+}
+
+type ResponseVote struct {
+	R        int  `json:"response"`
+	UpVote   bool `json:"up_vote"`
+	DownVote bool `json:"down_vote"`
 }
 
 func ResponsesHandler(db *sql.DB) http.HandlerFunc {
@@ -61,6 +69,13 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 				return
 			}
 			question_id_convert, err := strconv.Atoi(question_id)
+			//Check if question as best answer
+			question_best_answer := GetBestAnswerFromQuestion(db, question_id_convert)
+			if question_best_answer != -1 {
+				json.NewEncoder(w).Encode(map[string]string{"error": "Question already has a best answer"})
+				http.Error(w, "Question already has a best answer", http.StatusBadRequest)
+				return
+			}
 			response = Response{Description: description, Content: content, UpVotes: 0, DownVotes: 0, BestAnswer: false, CreationDate: creation_date, UpdateDate: creation_date, QuestionID: question_id_convert, StudentID: userid, StudentName: GetUsernameWithUserID(db, userid)}
 			if err != nil {
 				json.NewEncoder(w).Encode(map[string]string{"error": "Invalid question_id"})
@@ -90,10 +105,24 @@ func InsertResponse(db *sql.DB, response Response) error {
 	if err != nil {
 		return err
 	}
+	// Add XP to the student who answered the question
+	err = InsertXP(db, response.StudentID, 100)
+	if err != nil {
+		return err
+	}
+	Question_Student_ID, err := FetchStudentIDUsingQuestionID(db, response.QuestionID)
+	if err != nil {
+		return err
+	}
+	// Add XP to the student who asked the question
+	err = InsertXP(db, Question_Student_ID, 100)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func FetchResponseByQuestion(db *sql.DB, questionID int) ([]Response, error) {
+func FetchResponseByQuestion(db *sql.DB, questionID int, user_id int) ([]Response, error) {
 	var responses []Response
 	query := `SELECT * FROM Response WHERE id_question = $1`
 	rows, err := db.Query(query, questionID)
@@ -101,13 +130,105 @@ func FetchResponseByQuestion(db *sql.DB, questionID int) ([]Response, error) {
 		return nil, err
 	}
 	defer rows.Close()
+	voted_responses, err := FetchVotedResponses(db, user_id)
+	if err != nil {
+		return nil, err
+	}
 	for rows.Next() {
 		var r Response
 		if err := rows.Scan(&r.ResponseID, &r.Description, &r.Content, &r.UpVotes, &r.DownVotes, &r.BestAnswer, &r.CreationDate, &r.UpdateDate, &r.QuestionID, &r.StudentID); err != nil {
 			return nil, err
 		}
+		for _, voted_response := range voted_responses {
+			if voted_response.R == r.ResponseID && voted_response.UpVote {
+				r.UserVote = "upvoted"
+			} else if voted_response.R == r.ResponseID && voted_response.DownVote {
+				r.UserVote = "downvoted"
+			}
+		}
+
 		r.StudentName = GetUsernameWithUserID(db, r.StudentID)
 		responses = append(responses, r)
 	}
 	return responses, nil
+}
+
+// FetchVotedResponses retrieves responses voted by a specific user
+func FetchVotedResponses(db *sql.DB, userID int) ([]ResponseVote, error) {
+	query := `
+        SELECT r.id_response, v.upvote_r, v.downvote_r
+        FROM Response r
+        JOIN users u ON r.id_student = u.id_student
+        JOIN vote_response v ON r.id_response = v.id_response
+        WHERE v.id_student = $1
+    `
+
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var responseVotes []ResponseVote
+	for rows.Next() {
+		var r int
+		var rv ResponseVote
+		var upVote, downVote bool
+
+		if err := rows.Scan(&r, &upVote, &downVote); err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		rv.R = r
+		rv.UpVote = upVote
+		rv.DownVote = downVote
+
+		responseVotes = append(responseVotes, rv)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("row error: %w", err)
+	}
+
+	return responseVotes, nil
+}
+
+// InsertBestAnswer toggles the best_answer status for a given response.
+func InsertBestAnswer(db *sql.DB, responseID int) error {
+	// First, check the current status of best_answer.
+	currentStatus := CheckIfAleadyBestAnswer(db, responseID)
+	// Toggle the status: true becomes false, false becomes true.
+	newStatus := !currentStatus
+
+	query := `UPDATE response SET best_answer = $1 WHERE id_response = $2`
+	_, err := db.Exec(query, newStatus, responseID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// CheckIfAleadyBestAnswer checks if the given response is already marked as the best answer.
+func CheckIfAleadyBestAnswer(db *sql.DB, responseID int) bool {
+	query := `SELECT best_answer FROM response WHERE id_response = $1`
+	var bestAnswer bool
+	err := db.QueryRow(query, responseID).Scan(&bestAnswer)
+	if err != nil {
+		// Handle error according to your logging or error handling strategy.
+		// For simplicity, return false on error.
+		return false
+	}
+	return bestAnswer
+}
+
+func GetBestAnswerFromQuestion(db *sql.DB, questionID int) int {
+	//find the best answer when its true
+	query := `SELECT id_response FROM response WHERE id_question = $1 AND best_answer = true`
+	var bestAnswer int
+	err := db.QueryRow(query, questionID).Scan(&bestAnswer)
+	if err != nil {
+		// Handle error according to your logging or error handling strategy.
+		// For simplicity, return false on error.
+		return -1
+	}
+	return bestAnswer
 }

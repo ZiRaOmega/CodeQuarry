@@ -31,6 +31,7 @@ func SetupDB(db *sql.DB) {
 	createTablePrecise(db)
 	createTableVote_response(db)
 	createTableVote_question(db)
+	createTableFavorite(db)
 }
 
 /* --------- Create Funcs ----------- */
@@ -95,6 +96,20 @@ func createTableTag(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
+func createTableFavorite(db *sql.DB) {
+	// Create a Favorite table
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Favori(
+		id_student INT,
+		id_question INT,
+		PRIMARY KEY(id_student, id_question),
+		FOREIGN KEY(id_student) REFERENCES users(id_student),
+		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE
+	);`
+	// Execute the table creation query
+	if _, err := db.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+}
 func createTableQuestion(db *sql.DB) {
 	// Create a Question table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Question(
@@ -132,7 +147,7 @@ func createTableResponse(db *sql.DB) {
 		id_question INT NOT NULL,
 		id_student INT NOT NULL,
 		PRIMARY KEY(id_response),
-		FOREIGN KEY(id_question) REFERENCES Question(id_question),
+		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE,
 		FOREIGN KEY(id_student) REFERENCES users(id_student)
 	);
 	`
@@ -197,7 +212,7 @@ func createTableVote_question(db *sql.DB) {
 		downvote_q BOOLEAN NOT NULL,
 		PRIMARY KEY(id_student, id_question),
 		FOREIGN KEY(id_student) REFERENCES users(id_student),
-		FOREIGN KEY(id_question) REFERENCES Question(id_question)
+		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE
 	);
 	`
 	// Execute the table creation query
