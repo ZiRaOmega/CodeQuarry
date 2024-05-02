@@ -1,8 +1,12 @@
 function createPostInput() {
   let title = document.createElement("input");
+  title.classList.add("create_post_input_title");
   let description = document.createElement("textarea");
+  description.classList.add("create_post_input_description");
   let content = document.createElement("textarea");
+  content.classList.add("create_post_input_content");
   let subjectLists = document.createElement("select");
+  subjectLists.classList.add("create_post_input_select");
   SubjectsList.forEach((subject) => {
     let option = document.createElement("option");
     option.value = subject.id;
@@ -15,12 +19,14 @@ function createPostInput() {
   description.setAttribute("placeholder", "Description");
   content.setAttribute("placeholder", "Content");
   let create_post_description = document.createElement("p");
+  create_post_description.id = "create_post_description";
   create_post_description.textContent = "What's Digging your mind ?";
   let container = document.createElement("div");
   container.id = "create_post_container";
   let black_background = document.createElement("div");
   black_background.id = "black_background";
   let submit = document.createElement("button");
+  submit.id = "submit";
   submit.textContent = "Publish";
   submit.onclick = function () {
     let form = {
