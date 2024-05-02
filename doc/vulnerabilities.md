@@ -15,4 +15,6 @@ L'url peut être modifier afin d'inclure une balise script et executer du code n
 Résultat :
 ![Réussite faille XSS](/doc/images/xss-dom-passed.png)
 
-On peux voir ici que l'alerte écrit en javascript qui affiche `a` s'affiche bien sur la page. 
+On peux voir ici que l'alerte écrit en javascript qui affiche `a` s'affiche bien sur la page.
+
+this is a test to add
