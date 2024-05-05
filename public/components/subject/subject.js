@@ -387,3 +387,10 @@ function switchVoteColor(question, upvoteContainer, downvoteContainer) {
         );
     });
 }
+
+// TODO: 
+/* 
+const filterBestAnswer = document.createElement("div");
+    filterBestAnswer.classList.add("filter_best_answer");
+    filterBestAnswer.textContent = "Answered ✔";
+*/

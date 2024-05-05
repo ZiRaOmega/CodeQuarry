@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -66,13 +67,13 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 			continue
 		}
 		for _, voted := range voted_question {
-			if voted.Q.Id == q.Id && voted.Upvote {
+			if voted.Q == q.Id && voted.Upvote {
 				q.UserVote = "upvoted"
-			} else if voted.Q.Id == q.Id && voted.Downvote {
+			} else if voted.Q == q.Id && voted.Downvote {
 				q.UserVote = "downvoted"
 			}
 		}
-		q.Responses, err = FetchResponseByQuestion(db, q.Id)
+		q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
 		if err != nil {
 			log.Printf("Error fetching responses: %v", err)
 			continue
@@ -90,7 +91,7 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 
 // FetchQuestionByQuestionID retrieves a question from the database based on the given question ID.
 // It returns the retrieved question and an error, if any.
-func FetchQuestionByQuestionID(db *sql.DB, questionID int) (Question, error) {
+func FetchQuestionByQuestionID(db *sql.DB, questionID int, user_id int) (Question, error) {
 	var q Question
 	query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
 				  FROM question q
@@ -101,7 +102,7 @@ func FetchQuestionByQuestionID(db *sql.DB, questionID int) (Question, error) {
 	if err != nil {
 		return q, err
 	}
-	q.Responses, err = FetchResponseByQuestion(db, q.Id)
+	q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
 	if err != nil {
 		return q, err
 	}
@@ -163,7 +164,18 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Invalid question_id parameter", http.StatusBadRequest)
 			return
 		}
-		questions, err := FetchQuestionByQuestionID(db, idint)
+		//get cookie session
+		session_id, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Session not found", http.StatusUnauthorized)
+			return
+		}
+		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
+		if err != nil {
+			http.Error(w, "Session not found", http.StatusUnauthorized)
+			return
+		}
+		questions, err := FetchQuestionByQuestionID(db, idint, user_id)
 		if err != nil {
 			http.Error(w, "Error fetching responses", http.StatusInternalServerError)
 			return
@@ -188,6 +200,22 @@ func CreateQuestion(db *sql.DB, question Question, user_id int, subject_id int) 
 		log.Printf("Error inserting question: %v", err)
 		// Additional debugging information
 		log.Printf("Attempted to insert: title='%s', user_id=%d, subject_id=%d", question.Title, user_id, subject_id)
+		return err
+	}
+	// Insert xp for user after creating a question
+	err = InsertXP(db, user_id, 1000)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
+	return nil
+}
+
+func InsertXP(db *sql.DB, user_id int, xp int) error {
+	query := `UPDATE users SET xp = xp + $1 WHERE id_student = $2`
+	_, err := db.Exec(query, xp, user_id)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
 		return err
 	}
 	return nil
@@ -249,12 +277,12 @@ func FetchQuestionsByUserID(db *sql.DB, userID int) ([]Question, error) {
 type QuestionVote struct {
 	Upvote   bool
 	Downvote bool
-	Q        Question
+	Q        int
 }
 
 func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
 	var questions []QuestionVote
-	rows, err := db.Query(`SELECT q.id_question, s.title AS subject_title, q.title, q.content, q.creation_date, u.username, q.upvotes, q.downvotes, v.upvote_q, v.downvote_q
+	rows, err := db.Query(`SELECT q.id_question, v.upvote_q, v.downvote_q
 						   FROM question q
 						   JOIN users u ON q.id_student = u.id_student
 						   JOIN subject s ON q.id_subject = s.id_subject
@@ -266,9 +294,9 @@ func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		var q Question
+		var q int
 		var qq QuestionVote
-		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes, &qq.Upvote, &qq.Downvote); err != nil {
+		if err := rows.Scan(&q, &qq.Upvote, &qq.Downvote); err != nil {
 			continue
 		}
 		qq.Q = q
@@ -279,4 +307,78 @@ func FetchVotedQuestions(db *sql.DB, userID int) ([]QuestionVote, error) {
 	}
 
 	return questions, nil
+}
+
+func FetchStudentIDUsingQuestionID(db *sql.DB, questionID int) (int, error) {
+	var studentID int
+	err := db.QueryRow(`SELECT id_student FROM question WHERE id_question = $1`, questionID).Scan(&studentID)
+	if err != nil {
+		return 0, err
+	}
+	return studentID, nil
+}
+
+func UserDeleteQuestion(db *sql.DB, questionID int, userID int) error {
+	studentID, err := FetchStudentIDUsingQuestionID(db, questionID)
+	if err != nil {
+		return err
+	}
+	if studentID != userID {
+		fmt.Println("User is not the creator of the question")
+		return nil
+	}
+	//RemoveXP for question author and for all users who answer the question
+	RemoveXP(db, studentID, 1000)
+	//Remove xp for all users who answered the question
+	answers, err := FetchResponseByQuestion(db, questionID, userID)
+	if err != nil {
+		return err
+	}
+	for _, answer := range answers {
+		RemoveXP(db, answer.StudentID, 100)
+		RemoveXP(db, studentID, 100)
+	}
+	//Delete on cascade
+	_, err = db.Exec(`DELETE FROM question WHERE id_question = $1`, questionID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func RemoveXP(db *sql.DB, user_id int, xp int) error {
+	query := `UPDATE users SET xp = xp - $1 WHERE id_student = $2`
+	_, err := db.Exec(query, xp, user_id)
+	if err != nil {
+		log.Printf("Error updating XP: %v", err)
+		return err
+	}
+	return nil
+}
+func CheckIfQuestionIsMine(db *sql.DB, questionID int, userID float64) bool {
+	var id float64
+	err := db.QueryRow(`SELECT id_student FROM question WHERE id_question = $1`, questionID).Scan(&id)
+	if err != nil {
+		return false
+	}
+	if id == userID {
+		return true
+	}
+	return false
+}
+func FetchXP(db *sql.DB, user_id int) (int, error) {
+	var xp int
+	err := db.QueryRow(`SELECT xp FROM users WHERE id_student = $1`, user_id).Scan(&xp)
+	if err != nil {
+		return 0, err
+	}
+	return xp, nil
+}
+func getQuestionIDFromResponseID(db *sql.DB, responseID int) int {
+	var questionID int
+	err := db.QueryRow(`SELECT id_question FROM response WHERE id_response = $1`, responseID).Scan(&questionID)
+	if err != nil {
+		return 0
+	}
+	return questionID
 }

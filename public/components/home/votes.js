@@ -1,4 +1,4 @@
-// Handling WebSocket messages for votes
+/* // Handling WebSocket messages for votes
 socket.onmessage = function (event) {
   let msg = JSON.parse(event.data);
   if (msg.type === "voteUpdate") {
@@ -6,3 +6,4 @@ socket.onmessage = function (event) {
     // Update UI accordingly
   }
 };
+ */
