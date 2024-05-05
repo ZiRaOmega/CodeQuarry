@@ -72,6 +72,7 @@ func main() {
 	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
 	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
 	http.HandleFunc("/templates/header/header.css", app.HeaderHandlerCss)
+	http.HandleFunc("/templates/footer/footer.css", app.FooterHandlerCss)
 
 	http.HandleFunc("/components/profile/profile.css", app.ProfileCSSHandler)
 	http.HandleFunc("/logout", app.LogoutHandler(db))

@@ -59,6 +59,8 @@ func init() {
 	templates["home"] = parseTemplates("home", "head", "header", "all_subjects", "footer", "script")
 	templates["auth"] = parseTemplates("auth", "head", "script")
 	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script")
+	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
+	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
@@ -113,6 +115,11 @@ func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 func HeaderHandlerCss(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/templates/header/header.css")
+}
+/* --------------- FOOTER ---------------- */
+func FooterHandlerCss(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/templates/footer/footer.css")
 }
 
 /* --------------- ALL SUBJECTS ---------------- */
