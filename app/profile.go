@@ -16,8 +16,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
-
-func ProfileHandler(db *sql.DB) http.HandlerFunc {
+/* 
+func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get cookie
 		cookie, err := r.Cookie("session")
@@ -34,9 +34,9 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error getting user info", http.StatusInternalServerError)
 			return
 		}
-		ParseAndExecuteTemplate("profile", user, w)
+		ParseAndExecuteTemplate(template_name, user, w)
 	}
-}
+} */
 
 func (U *User) FormatBirthDate() string {
 	return U.BirthDate.Time.Format("2006-01-02")

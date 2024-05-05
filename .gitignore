@@ -1,5 +1,5 @@
-users.db
 node_modules/
 audit.log
 public/img/
 public/components/auth/auth_obfuscate.js
+.prettierrc

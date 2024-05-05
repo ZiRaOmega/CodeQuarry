@@ -82,7 +82,7 @@ $(document).ready(function () {
               confirmButtonText: "OK",
             }).then((result) => {
               if (result.value) {
-                window.location.href = "home";
+                window.location.href = "/home";
               }
             });
           } else {

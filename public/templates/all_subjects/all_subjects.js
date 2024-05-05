@@ -1,44 +1,24 @@
 let SubjectsList = [];
-let QuestionsElementsList = [];
 let ListElement;
+
+/* let QuestionsElementsList = [];
 const questionsList = document.getElementById("questionsList");
-const returnButton = document.createElement("div");
-document.addEventListener("DOMContentLoaded", function () {
+*/
+//const returnButton = document.createElement("div");
+function initializeLocalStorage() {
   localStorage.removeItem("subjectId");
   localStorage.removeItem("subjectTitle");
-  returnButton.id = "returnButton";
-  const listElement = document.getElementById("subjectsList");
-  const questionsList = document.getElementById("questionsList");
+}
 
-  // Create the "All" subjects item with title and description
-  const allSubjectsItem = document.createElement("div");
-  allSubjectsItem.classList.add("category_cards");
+document.addEventListener("DOMContentLoaded", function () {
 
-  // Create and append the title
-  const allTitle = document.createElement("h2");
-  allTitle.classList.add("category_title");
-  allTitle.textContent = "All";
-  allSubjectsItem.appendChild(allTitle);
+  initializeLocalStorage();
+  //returnButton.id = "returnButton";
+  //const questionsList = document.getElementById("questionsList");
 
-  // Create and append the description
-  const allDescription = document.createElement("p");
-  allDescription.classList.add("category_description");
-  allDescription.textContent =
-    "Click here to view all questions across all subjects.";
-  allSubjectsItem.appendChild(allDescription);
+  ListElement = document.getElementById("all_subjects_list");
 
-  // Append the "All" item to the list
-  listElement.appendChild(allSubjectsItem);
-  ListElement = listElement;
-  // Event listener for the "All" subjects item
-  allSubjectsItem.addEventListener("click", function () {
-    localStorage.setItem("subjectId", "all");
-    localStorage.setItem("subjectTitle", "All Subjects");
-    listElement.style.display = "none"; // Hide the list
-    returnButton.style.display = ""; // Show return button
-    fetchQuestions("all"); // Fetch all questions
-  });
-
+  /*
   returnButton.addEventListener("click", function () {
     localStorage.removeItem("subjectId");
     localStorage.removeItem("subjectTitle");
@@ -46,50 +26,115 @@ document.addEventListener("DOMContentLoaded", function () {
     questionsList.style.display = "none";
     questionsList.innerHTML = ""; // Clear previous questions
   });
+  */
+  // to make the fetch asynchronous
+  (async () => {
+    try {
+      const response = await fetch("/api/subjects");
+      const subjects = await response.json();
 
-  fetch("/api/subjects")
-    .then((response) => response.json())
-    .then((subjects) => {
-      const allQestionCountDiv = document.createElement("div");
-      allQestionCountDiv.classList.add("question_count_all");
-      let totalQuestions = 0; // For counting all questions
-      SubjectsList = [];
-      subjects.forEach((subject) => {
-        SubjectsList.push(subject);
-        totalQuestions += subject.questionCount; // Sum up all questions
-        allQestionCountDiv.textContent = totalQuestions;
-        allSubjectsItem.appendChild(allQestionCountDiv);
-        const listItem = document.createElement("div");
-        listItem.classList.add("category_cards");
+      /* =============== THE ALL CATEGORY =============== */
 
-        const questionCountDiv = document.createElement("div");
-        questionCountDiv.classList.add("question_count");
-        questionCountDiv.setAttribute("data-subject-id", subject.id);
-        questionCountDiv.textContent = subject.questionCount; // Assuming 'subject.questionCount' is the number of questions
-        listItem.appendChild(questionCountDiv);
+      // Create the "All" subjects item with title and description
+      const allSubjectsItem = createAllSubjectsItem();
+      // Append the "All" item to the list
+      ListElement.appendChild(allSubjectsItem);
+      // Event listener for the "All" subject item
+      addAllSubjectsClickListener(allSubjectsItem, ListElement);
 
-        const title = document.createElement("h2");
-        title.classList.add("category_title");
-        title.textContent = subject.title;
-        listItem.appendChild(title);
+      /* =============== REST OF CATEGORIES =============== */
+      // Create the rest of the subject items
+      createSubjectItems(allSubjectsItem, ListElement, subjects);
 
-        const description = document.createElement("p");
-        description.classList.add("category_description");
-        description.textContent = subject.description;
-        listItem.appendChild(description);
-
-        listItem.addEventListener("click", function () {
-          localStorage.setItem("subjectId", subject.id);
-          localStorage.setItem("subjectTitle", subject.title);
-          listElement.style.display = "none";
-          fetchQuestions(subject.id);
-        });
-
-        listElement.appendChild(listItem);
-      });
-    });
+    } catch (error) {
+      const errorH1 = document.createElement("h1");
+      errorH1.textContent = "An error occured while fetching the subjects";
+      errorH1.style.color = "red";
+      ListElement.appendChild(errorH1);
+      console.error('There was a problem with your fetch operation:', error);
+    }
+  })();
 });
 
+function createAllSubjectsItem() {
+  // Create the "All" subjects item with title and description
+  const item = document.createElement("div");
+  item.classList.add("category_cards");
+  const allTitle = document.createElement("h2");
+  allTitle.classList.add("category_title");
+  allTitle.textContent = "All";
+  item.appendChild(allTitle);
+
+  // Create the "All" subjects item with title and description
+  const allDescription = document.createElement("p");
+  allDescription.classList.add("category_description");
+  allDescription.textContent =
+    "Click here to view all questions across all subjects.";
+  item.appendChild(allDescription);
+
+  return item;
+}
+
+function addAllSubjectsClickListener(allSubjectsItem, listElement) {
+  allSubjectsItem.addEventListener("click", function () {
+    localStorage.setItem("subjectId", "all");
+    localStorage.setItem("subjectTitle", "All Subjects");
+    window.location.href = `/subject/all`;
+  });
+}
+
+function createSubjectItems(allSubjectsItem, listElement, subjects) {
+  const allQestionCountDiv = document.createElement("div");
+  allQestionCountDiv.classList.add("question_count_all");
+  let totalQuestions = 0;
+
+  SubjectsList = [];
+  subjects.forEach((subject) => {
+    SubjectsList.push(subject);
+    totalQuestions += subject.questionCount;
+    allQestionCountDiv.textContent = totalQuestions;
+    allSubjectsItem.appendChild(allQestionCountDiv);
+
+    const listItem = createItem(subject);
+    addSubjectClickListener(listItem, subject, listElement);
+    listElement.appendChild(listItem);
+  });
+}
+
+function createItem(subject) {
+  const listItem = document.createElement("div");
+  listItem.classList.add("category_cards");
+
+  const questionCountDiv = document.createElement("div");
+  questionCountDiv.classList.add("question_count");
+  questionCountDiv.setAttribute("data-subject-id", subject.id);
+  questionCountDiv.textContent = subject.questionCount;
+  listItem.appendChild(questionCountDiv);
+
+  const title = document.createElement("h2");
+  title.classList.add("category_title");
+  title.textContent = subject.title;
+  listItem.appendChild(title);
+
+  const description = document.createElement("p");
+  description.classList.add("category_description");
+  description.textContent = subject.description;
+  listItem.appendChild(description);
+
+  return listItem;
+}
+
+function addSubjectClickListener(listItem, subject, listElement) {
+  listItem.addEventListener("click", function () {
+    localStorage.setItem("subjectId", subject.id);
+    localStorage.setItem("subjectTitle", subject.title);
+    // make subject.title lowercase
+    subject.title = subject.title.toLowerCase();
+    window.location.href = `/subject/${subject.id}/${subject.title}`;
+  });
+}
+
+/* 
 window.fetchQuestions = function (subjectId) {
   fetch(`/api/questions?subjectId=${subjectId}`)
     .then((response) => response.json())
@@ -344,3 +389,4 @@ function create_questions(questions) {
     questionTrackerCount.textContent = "0 question(s)";
   }
 }
+ */
