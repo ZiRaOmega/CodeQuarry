@@ -2,9 +2,11 @@ package app
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -16,7 +18,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
-/* 
+
 func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get cookie
@@ -34,16 +36,65 @@ func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error getting user info", http.StatusInternalServerError)
 			return
 		}
-		ParseAndExecuteTemplate(template_name, user, w)
+		user.Rank.String, err = SetRankByXp(user)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		ParseAndExecuteTemplate("profile", user, w)
 	}
-} */
+}
+func SetRankByXp(u User) (string, error) {
+	// Adjust these thresholds for each level, with max XP at 10 million
+	thresholds := []int64{
+		0,        // Script Kiddie
+		5000,     // Bug Hunter
+		15000,    // Code Monkey
+		40000,    // Git Guru
+		100000,   // Stack Overflow Savant
+		500000,   // Refactoring Rogue
+		1500000,  // Agile Archmage
+		3500000,  // Code Whisperer
+		6000000,  // Heisenbug Debugger
+		10000000, // Keyboard Warrior (max)
+	}
+
+	ranks := []string{
+		"Script Kiddie",
+		"Bug Hunter",
+		"Code Monkey",
+		"Git Guru",
+		"Stack Overflow Savant",
+		"Refactoring Rogue",
+		"Agile Archmage",
+		"Code Whisperer",
+		"Heisenbug Debugger",
+		"Keyboard Warrior",
+	}
+
+	// Find the appropriate rank for the given XP
+	for i, threshold := range thresholds {
+		if u.XP.Int64 < threshold {
+			if i == 0 {
+				return ranks[0], nil
+			}
+			return ranks[i-1], nil
+		}
+	}
+
+	// Assign the maximum rank if XP is above or equal to 10 million
+	if u.XP.Int64 >= thresholds[len(thresholds)-1] {
+		return ranks[len(ranks)-1], nil
+	}
+
+	return "", errors.New("XP out of range")
+}
 
 func (U *User) FormatBirthDate() string {
-	return U.BirthDate.Time.Format("2006-01-02")
+	return U.BirthDate.Time.Format("01/02/2006")
 }
 
 func (U *User) FormatSchoolYear() string {
-	return U.SchoolYear.Time.Format("2006-01-02")
+	return U.SchoolYear.Time.Format("01/02/2006")
 }
 
 // Define User structure based on your database schema
@@ -68,6 +119,7 @@ type User struct {
 	UpdateDate         sql.NullTime // Adjusted for possible NULL values
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
 	My_Post            []Question
+	Favori             []Question
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -112,6 +164,11 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 
 	user.My_Post = Posts
 
+	Favori, err := getFavori(db, user.ID)
+	if err != nil {
+		log.Fatalf("%v", err)
+	}
+	user.Favori = Favori
 	return user, nil // Return the populated user object
 }
 
@@ -172,7 +229,9 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
-		birthDate, err := time.Parse("2006-01-02", birthDateStr)
+		birthDate, err := time.Parse("2006-02-01", birthDateStr)
+		schoolYearStr := r.PostFormValue("school_year")
+		schoolYear, err := time.Parse("2006-02-01", schoolYearStr)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -180,7 +239,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user.Bio = sql.NullString{String: r.PostFormValue("bio"), Valid: true}
 		user.Website = sql.NullString{String: r.PostFormValue("website"), Valid: true}
 		user.GitHub = sql.NullString{String: r.PostFormValue("github"), Valid: true}
-		user.SchoolYear = sql.NullTime{Time: time.Now(), Valid: true}
+		user.SchoolYear = sql.NullTime{Time: schoolYear, Valid: true}
 		if utils.ContainsSQLi(user.LastName) || utils.ContainsSQLi(user.FirstName) || utils.ContainsSQLi(user.Username) || utils.ContainsSQLi(user.Email) || utils.ContainsSQLi(user.Password) || utils.ContainsSQLi(user.Bio.String) || utils.ContainsSQLi(user.Website.String) || utils.ContainsSQLi(user.GitHub.String) {
 			http.Error(w, "Invalid characters", http.StatusForbidden)
 			return
@@ -274,4 +333,91 @@ func getAvatar(db *sql.DB, user_id int) (string, error) {
 		return "", err
 	}
 	return avatar, nil
+}
+
+func getFavori(db *sql.DB, userID int) ([]Question, error) {
+	query := `
+        SELECT q.id_question, q.title, q.description, q.content, q.upvotes, q.downvotes, q.creation_date, q.id_subject
+        FROM Favori f
+        JOIN Question q ON f.id_question = q.id_question
+        WHERE f.id_student = $1
+    `
+
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to execute query: %w", err)
+	}
+	defer rows.Close()
+
+	var questions []Question
+	for rows.Next() {
+		var q Question
+		if err := rows.Scan(&q.Id, &q.Title, &q.Description, &q.Content, &q.Upvotes, &q.Downvotes, &q.CreationDate, &q.SubjectID); err != nil {
+			return nil, fmt.Errorf("failed to scan row: %w", err)
+		}
+		questions = append(questions, q)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("row error: %w", err)
+	}
+
+	return questions, nil
+}
+
+func GetQuestionIdOfFavorite(db *sql.DB, userID int) []int {
+	query := `SELECT id_question FROM Favori WHERE id_student = $1`
+	rows, err := db.Query(query, userID)
+	if err != nil {
+		return nil
+	}
+	defer rows.Close()
+	var questionIDs []int
+	for rows.Next() {
+		var questionID int
+		if err := rows.Scan(&questionID); err != nil {
+			return nil
+		}
+		questionIDs = append(questionIDs, questionID)
+	}
+	return questionIDs
+}
+
+func GetSessionIDByCookie(cookie *http.Cookie) (string, error) {
+	if cookie == nil {
+		return "", errors.New("cookie is nil")
+	}
+	return cookie.Value, nil
+}
+
+func FavoriHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
+			return
+		}
+		session_id := cookie.Value
+		userID, err := getUserIDUsingSessionID(session_id, db)
+		if err != nil {
+			http.Error(w, "Error getting user ID", http.StatusInternalServerError)
+			return
+		}
+		if !isValidSession(session_id, db) {
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
+			return
+		}
+
+		questionIDs := GetQuestionIdOfFavorite(db, userID)
+
+		if err != nil {
+			http.Error(w, "Error fetching questions", http.StatusInternalServerError)
+			return
+		}
+
+		//send json
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(questionIDs)
+
+	}
 }

@@ -61,6 +61,7 @@ func main() {
 	http.HandleFunc("/login", app.LoginHandler(db))
 
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
+	http.HandleFunc("/checked", app.CheckLogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
 
 	http.HandleFunc("/create_post", app.CreatePostHandler)
@@ -85,22 +86,28 @@ func main() {
 	// ONE SUBJECT
 	http.HandleFunc("/subject/", app.SendComponent("subject", db))
 	http.HandleFunc("/components/subject/subject.css", app.SubjectCSSHandler)
-	http.HandleFunc("/scripts/subject.js", app.SubjectJSHandler)
+	http.HandleFunc("/scripts/subject.js", app.SubjectHandlerJS)
 
 	http.HandleFunc("/scripts/all_subjects.js", app.AllSubjectsHandlerJS)
 	http.HandleFunc("/templates/all_subjects/all_subjects.css", app.AllSubjectsHandlerCSS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
-
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
 	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
+	http.HandleFunc("/api/favoris", app.FavoriHandler(db))
+	http.HandleFunc("/api/classement", app.SendUsersInfoJson(db))
 	http.HandleFunc("/detect_lang", app.DetectLanguageHandler)
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
 	http.HandleFunc("/components/question_viewer/question_viewer.css", app.QuestionViewerCSSHandler)
 	http.HandleFunc("/profile", app.SendComponent("profile", db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
-	http.HandleFunc("/search_bar/input.js", app.SearchBarJS)
+	http.HandleFunc("/searchbar/input.js", app.SearchBarJS)
+	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
+	http.HandleFunc("/posts.css", app.PostCSSHandler)
+	http.HandleFunc("/classement", app.ClassementHandler(db))
+	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
+	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
 
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)

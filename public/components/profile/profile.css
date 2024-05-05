@@ -1,3 +1,105 @@
 .history_link:hover{
     cursor: pointer;
 }
+
+a{
+    text-decoration: none;
+    color: var(--darkblue);
+}
+
+.profile{
+    flex-basis: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-width: fit-content;
+}
+
+.avatarViewer{
+    object-fit: cover;
+    border-radius: 50px;
+}
+
+.profileInformations{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    min-width: fit-content;
+    border-radius: 20px 20px 0 20px;
+    border : none;
+    background-color: var(--white);
+    border: solid 3px var(--darkblue);
+    color: var(--darkblue);
+    font-size: 1.1em;
+    transition: 0.2s all ease-out;
+    padding: 0 10px;
+    margin-top: 50px;
+}
+.button{
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.websites{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.main-part{
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    padding-top: 50px;
+}
+
+#my_post{
+    flex-basis:75%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.editProfileForm{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+.editProfileForm input[type=text], .editProfileForm input[type=email], .editProfileForm input[type=password], .editProfileForm input[type=date],.editProfileForm input[type=file],  .editProfileForm textarea{
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+#bio{
+    margin-top: -10px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: var(--darkblue);
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+}
+
+.informations{
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
