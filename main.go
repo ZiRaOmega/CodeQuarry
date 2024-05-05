@@ -50,12 +50,12 @@ func main() {
 
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 
-	http.HandleFunc("/", app.AddSecurityHeaders(app.SendTemplate("auth", nil)))
+	http.HandleFunc("/", app.AddSecurityHeaders(app.SendComponent("auth", db)))
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
 	// http.HandleFunc("/scripts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/components/auth/animation.js", app.AnimationsHandler)
-	//Serve public/img folder
+	// Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/login", app.LoginHandler(db))
@@ -67,19 +67,27 @@ func main() {
 	http.HandleFunc("/scripts/posts.js", app.PostsHandler)
 
 	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
-	http.HandleFunc("/home", app.SendTemplate("home", nil))
+	http.HandleFunc("/home", app.SendComponent("home", db))
 	// http.HandleFunc("/styles/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
 	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
-	http.HandleFunc("/templates/header/header.css", app.HeaderCssHandler)
+	http.HandleFunc("/templates/header/header.css", app.HeaderHandlerCss)
+
 	http.HandleFunc("/components/profile/profile.css", app.ProfileCSSHandler)
 	http.HandleFunc("/logout", app.LogoutHandler(db))
+
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
 
 	http.HandleFunc("/votes", app.VoteHandler)
 
-	http.HandleFunc("/scripts/subjects.js", app.SubjectsHandlerJS)
+	// ONE SUBJECT
+	http.HandleFunc("/subject/", app.SendComponent("subject", db))
+	http.HandleFunc("/components/subject/subject.css", app.SubjectCSSHandler)
+	http.HandleFunc("/scripts/subject.js", app.SubjectJSHandler)
+
+	http.HandleFunc("/scripts/all_subjects.js", app.AllSubjectsHandlerJS)
+	http.HandleFunc("/templates/all_subjects/all_subjects.css", app.AllSubjectsHandlerCSS)
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 
@@ -89,7 +97,7 @@ func main() {
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
 	http.HandleFunc("/components/question_viewer/question_viewer.css", app.QuestionViewerCSSHandler)
-	http.HandleFunc("/profile", app.ProfileHandler(db))
+	http.HandleFunc("/profile", app.SendComponent("profile", db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	http.HandleFunc("/search_bar/input.js", app.SearchBarJS)
 
