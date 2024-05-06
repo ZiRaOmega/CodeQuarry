@@ -58,7 +58,7 @@ func init() {
 	// Pre-parse all templates.
 	templates["home"] = parseTemplates("home", "head", "header", "all_subjects", "footer", "script")
 	templates["auth"] = parseTemplates("auth", "head", "script")
-	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script")
+	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script", "all_subjects")
 	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
 	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
 	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
