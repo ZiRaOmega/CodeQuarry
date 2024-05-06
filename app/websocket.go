@@ -282,11 +282,41 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
+			case "modify_question":
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for modify_question")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				question_id, err := strconv.Atoi(contentMap["question_id"].(string))
+				if err != nil {
+					fmt.Println("Invalid or missing question_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+				if isValidSession(wsmessage.SessionID, db) {
+					ModifyQuestion(db, question_id, contentMap["title"].(string), contentMap["description"].(string), contentMap["content"].(string), user_id)
+					/* updatedQuestion, err := Fetch(db, question_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated question"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "questionModified", Content: updatedQuestion})
+						BroadcastMessage(WSMessage{Type: "questionModified", Content: updatedQuestion, SessionID: ""}, conn)
+					} */
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid session"})
+				}
 			}
-
 		}
 	}
 }
+
 func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Favori WHERE id_student = $1 AND id_question = $2")
 	if err != nil {

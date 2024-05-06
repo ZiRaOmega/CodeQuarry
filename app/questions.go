@@ -382,3 +382,26 @@ func getQuestionIDFromResponseID(db *sql.DB, responseID int) int {
 	}
 	return questionID
 }
+
+func ModifyQuestion(db *sql.DB, questionID int, title string, description string, content string, user_id int) error {
+	//Fetch question
+	question, err := FetchQuestionByQuestionID(db, questionID, user_id)
+	if err != nil {
+		return err
+	}
+	//if title description or content is empty, keep the old value
+	if title == "" {
+		title = question.Title
+	}
+	if description == "" {
+		description = question.Description
+	}
+	if content == "" {
+		content = question.Content
+	}
+	_, err = db.Exec(`UPDATE question SET title = $1, description = $2, content = $3 WHERE id_question = $4`, title, description, content, questionID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
