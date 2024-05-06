@@ -331,21 +331,6 @@ $(document).ready(function () {
     //console.log(`[message] Data received from server: ${event.data}`);
   };
 
-<<<<<<< HEAD
-    // Define the onclose function to be called when the WebSocket connection is closed
-    socket.onclose = function (event) {
-        // Check if the connection was closed cleanly
-        if (event.wasClean) {
-            // Log a message indicating the connection was closed cleanly
-            /* console.log(
-                `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
-            ); */
-        } else {
-            // Log an error message indicating the connection was not closed cleanly
-            console.error("[close] Connection died");
-        }
-    };
-=======
   // Define the onclose function to be called when the WebSocket connection is closed
   socket.onclose = function (event) {
     // Check if the connection was closed cleanly
@@ -359,7 +344,6 @@ $(document).ready(function () {
       console.error("[close] Connection died");
     }
   };
->>>>>>> max
 
   // Define the onerror function to be called when an error occurs with the WebSocket connection
   socket.onerror = function (error) {
