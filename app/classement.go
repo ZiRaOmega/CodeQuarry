@@ -9,7 +9,6 @@ import (
 
 func ClassementHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		cookie, err := r.Cookie("session")
 		if err != nil {
 			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
@@ -25,7 +24,6 @@ func ClassementHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		ParseAndExecuteTemplate("classement", user, w)
-
 	}
 }
 

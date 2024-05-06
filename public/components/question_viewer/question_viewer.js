@@ -392,9 +392,9 @@ fetch("/api/questions?subjectId=all")
                 "rgb(104, 195, 163)"
               ) {
                 upvote_responseContainer.style.backgroundColor = "";
-                upvote_responseCount.textContent = parseInt(answer.upvotes) - 1;
+                //upvote_responseCount.textContent = parseInt(answer.upvotes) - 1;
               } else {
-                upvote_responseCount.textContent = parseInt(answer.upvotes) + 1;
+                //upvote_responseCount.textContent = parseInt(answer.upvotes) + 1;
                 upvote_responseContainer.style.backgroundColor =
                   "rgb(104, 195, 163)";
                 if (
@@ -402,9 +402,9 @@ fetch("/api/questions?subjectId=all")
                   "rgb(196, 77, 86)"
                 ) {
                   downvote_responseContainer.style.backgroundColor = "";
-                  downvote_responseCount.textContent = parseInt(
+                  /* downvote_responseCount.textContent = parseInt(
                     answer.downvotes
-                  );
+                  ); */
                 }
               }
               socket.send(
