@@ -341,6 +341,15 @@ $(document).ready(function () {
           question_view.querySelector(".question-viewer__question__content pre code").textContent = msg.content.content
         }
         break;
+      case "responseModified":
+        const response = document.querySelector(
+          `.question-viewer__answers__answer[data-answer-id="${msg.content.response_id}"]`
+        );
+        if (response) {
+          response.querySelector(".question-viewer__answers__answer__description").textContent = msg.content.description;
+          response.querySelector(".question-viewer__answers__answer__content pre code").textContent = msg.content.content;
+        }
+        break;
     }
     // Log the message received from the server
     //console.log(`[message] Data received from server: ${event.data}`);
@@ -366,7 +375,22 @@ $(document).ready(function () {
     console.error(`[error] ${error.message}`);
   };
 });
-
+function ModifyResponse( response_id, content, description,question_id) {
+  console.log("modifyResponse")
+  console.log(response_id,content,description,question_id)
+  socket.send(
+    JSON.stringify({
+      type: "modify_response",
+      content: {
+        response_id: response_id,
+        question_id: question_id,
+        content: content,
+        description: description
+      },
+      session_id: getCookie("session"),
+    })
+  );
+}
 function handleVoteUpdate(data) {
   // Assuming 'data' contains { questionId: 123, upvotes: 10, downvotes: 5 }
   const upvoteCountElement = document.querySelector(
