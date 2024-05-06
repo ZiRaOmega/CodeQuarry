@@ -19,7 +19,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func ProfileHandler(db *sql.DB) http.HandlerFunc {
+func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get cookie
 		cookie, err := r.Cookie("session")
