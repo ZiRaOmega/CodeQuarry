@@ -112,7 +112,7 @@ func main() {
 	http.HandleFunc("/components/question_viewer/question_viewer.css", app.QuestionViewerCSSHandler)
 	http.HandleFunc("/profile", app.SendComponent("profile", db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
-	http.HandleFunc("/searchbar/input.js", app.SearchBarJS)
+	http.HandleFunc("/search_bar/input.js", app.SearchBarJS)
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 	http.HandleFunc("/posts.css", app.PostCSSHandler)
 	http.HandleFunc("/classement", app.ClassementHandler(db))
