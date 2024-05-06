@@ -94,166 +94,26 @@ function createQuestions(questions) {
   checkHighlight();
 }
 
-function trololo(questions) {
-  // Clear previous questions
-  if (questions != null)
-    questions.forEach((question) => {
-      const questionContainer = document.createElement("div");
-      questionContainer.classList.add("question");
-      const clickable_container = document.createElement("div");
-      clickable_container.classList.add("clickable_container");
-      // Add subject title tag
-      const subjectTag = document.createElement("div");
-      subjectTag.classList.add("subject_tag");
-      subjectTag.textContent = question.subject_title;
-      questionContainer.appendChild(subjectTag);
-
-      const questionTitle = document.createElement("h3");
-      questionTitle.classList.add("question_title");
-      questionTitle.textContent = question.title;
-      clickable_container.appendChild(questionTitle);
-
-      const questionDescription = document.createElement("p");
-      questionDescription.classList.add("question_description");
-      questionDescription.textContent = question.description;
-      clickable_container.appendChild(questionDescription);
-
-      const questionContent = document.createElement("p");
-      questionContent.classList.add("question_content");
-      questionContent.textContent = question.content;
-      const preDiv = document.createElement("pre");
-      const code = document.createElement("code");
-      preDiv.appendChild(code);
-      code.innerHTML = question.content;
-      clickable_container.appendChild(preDiv);
-
-      const ContainerCreatorAndDate = document.createElement("div");
-      ContainerCreatorAndDate.classList.add("creator_and_date_container");
-
-      const questionDate = document.createElement("p");
-      questionDate.classList.add("question_creation_date");
-      questionDate.textContent = `Publié le: ${new Date(
-        question.creation_date
-      ).toLocaleDateString()}`;
-      ContainerCreatorAndDate.appendChild(questionDate);
-
-      const questionCreator = document.createElement("p");
-      questionCreator.classList.add("question_creator");
-      questionCreator.textContent = "Publié par";
-      const creatorName = document.createElement("span");
-      creatorName.textContent = question.creator;
-      creatorName.classList.add("creator_name");
-      questionCreator.appendChild(creatorName);
-      const responsesCounter = document.createElement("p");
-      responsesCounter.classList.add("responses_counter");
-      if (Array.isArray(question.responses)) {
-        // Set text content to the length of the responses array
-        responsesCounter.textContent = `${question.responses.length} reponse(s)`;
-      } else {
-        // Handle cases where 'responses' might not be defined or not an array
-        responsesCounter.textContent = "0 reponse(s)";
-      }
-      ContainerCreatorAndDate.appendChild(responsesCounter);
-      ContainerCreatorAndDate.appendChild(questionCreator);
-      clickable_container.appendChild(ContainerCreatorAndDate);
-      questionContainer.appendChild(clickable_container);
-      QuestionsElementsList.push(questionContainer);
-      const voteContainer = document.createElement("div");
-      voteContainer.classList.add("vote_container");
-      const upvoteContainer = document.createElement("div");
-      upvoteContainer.classList.add("upvote_container");
-      const upvoteText = document.createElement("div");
-      upvoteText.classList.add("upvote_text");
-      upvoteText.textContent = "+";
-      const upvoteCount = document.createElement("p");
-      upvoteCount.classList.add("upvote_count");
-      upvoteCount.setAttribute("data-question-id", question.id);
-      upvoteCount.textContent = question.upvotes;
-      upvoteContainer.appendChild(upvoteText);
-      upvoteContainer.appendChild(upvoteCount);
-      voteContainer.appendChild(upvoteContainer);
-      const downvoteContainer = document.createElement("div");
-      downvoteContainer.classList.add("downvote_container");
-      if (question.user_vote == "upvoted") {
-        upvoteContainer.style.backgroundColor = "green";
-      } else if (question.user_vote == "downvoted") {
-        downvoteContainer.style.backgroundColor = "red";
-      }
-      const downvoteText = document.createElement("div");
-      downvoteText.classList.add("downvote_text");
-      downvoteText.textContent = "-";
-      const downvoteCount = document.createElement("p");
-      downvoteCount.classList.add("downvote_count");
-      downvoteCount.setAttribute("data-question-id", question.id);
-      downvoteCount.textContent = question.downvotes;
-      downvoteContainer.appendChild(downvoteText);
-      downvoteContainer.appendChild(downvoteCount);
-      voteContainer.appendChild(downvoteContainer);
-      questionContainer.appendChild(voteContainer);
-      questionsList.appendChild(questionContainer);
-      if (question.user_vote == "upvoted") {
-        upvoteContainer.style.backgroundColor = "rgb(104, 195, 163)";
-      } else if (question.user_vote == "downvoted") {
-        downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
-      }
-      let responseContainer = document.createElement("div");
-      responseContainer.classList.add("response_container");
-      clickable_container.addEventListener("click", () => {
-        window.location.href = `https://${window.location.hostname}/question_viewer?question_id=${question.id}`;
-      });
-      upvoteContainer.onclick = function () {
-        //if upvoteContainer backgroundColor is green then remove the color
-        if (upvoteContainer.style.backgroundColor == "rgb(104, 195, 163)") {
-          upvoteContainer.style.backgroundColor = "";
-        } else {
-          upvoteContainer.style.backgroundColor = "rgb(104, 195, 163)";
-          if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
-            downvoteContainer.style.backgroundColor = "";
-          }
-        }
-        socket.send(
-          JSON.stringify({
-            type: "upvote",
-            content: question.id,
-            session_id: getCookie("session"),
-          })
-        );
-      };
-
-      downvoteContainer.onclick = function () {
-        //if downvoteContainer backgroundColor is red then remove the color
-        if (downvoteContainer.style.backgroundColor == "rgb(196, 77, 86)") {
-          downvoteContainer.style.backgroundColor = "";
-        } else {
-          downvoteContainer.style.backgroundColor = "rgb(196, 77, 86)";
-          if (upvoteContainer.style.backgroundColor == "rgb(104, 195, 163)") {
-            upvoteContainer.style.backgroundColor = "";
-          }
-        }
-        socket.send(
-          JSON.stringify({
-            type: "downvote",
-            content: question.id,
-            session_id: getCookie("session"),
-          })
-        );
-      };
-    });
-  questionsList.style.display = ""; // Show the questions list
-  checkHighlight();
-  if (questions == null) {
-    questionTrackerCount.textContent = "0 question(s)";
-  }
-}
 
 function createQuestionElement(question) {
   const questionElement = document.createElement("div");
   questionElement.classList.add("question");
+  const questionChecked = document.createElement("div");
+  questionChecked.classList.add("question_checked");
+  questionChecked.setAttribute("data-question-id", question.id);
+  if (question.responses != null) {
+    if (question.responses.some((r) => r.best_answer == true)) {
+      questionChecked.style.display = "block";
+    } else {
+      questionChecked.style.display = "none";
+    }
+  }
   if (question.responses == null) {
     question.responses = [];
   }
-
+  
   questionElement.innerHTML = htmlQuestionConstructor(question);
+  questionElement.appendChild(questionChecked);
 
   // Highlight the code block
   // !!! TODO : use checkHighlight() function from detect_lang.js
