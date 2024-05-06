@@ -1,52 +1,54 @@
 
 let SubjectsList = [];
 let ListElement;
-
-/* let QuestionsElementsList = [];
-const questionsList = document.getElementById("questionsList");
-*/
-//const returnButton = document.createElement("div");
 function initializeLocalStorage() {
   localStorage.removeItem("subjectId");
   localStorage.removeItem("subjectTitle");
 }
 
-document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", function () {
+  
+    initializeLocalStorage();
+    //returnButton.id = "returnButton";
+    //const questionsList = document.getElementById("questionsList");
+  
+    ListElement = document.getElementById("all_subjects_list") || document.createElement("div");
+  
+    // to make the fetch asynchronous
+    (async () => {
+      try {
+        const response = await fetch("/api/subjects");
+        const subjects = await response.json();
+  
+        /* =============== THE ALL CATEGORY =============== */
+  
+        // Create the "All" subjects item with title and description
+        const allSubjectsItem = createAllSubjectsItem();
+        // Append the "All" item to the list
+        ListElement.appendChild(allSubjectsItem);
+        // Event listener for the "All" subject item
+        addAllSubjectsClickListener(allSubjectsItem, ListElement);
+  
+        /* =============== REST OF CATEGORIES =============== */
+        // Create the rest of the subject items
+        createSubjectItems(allSubjectsItem, ListElement, subjects);
+  
+      } catch (error) {
+        const errorH1 = document.createElement("h1");
+        errorH1.textContent = "An error occured while fetching the subjects";
+        errorH1.style.color = "red";
+        ListElement.appendChild(errorH1);
+        console.error('There was a problem with your fetch operation:', error);
+      }
+    })();
+  });
 
-  initializeLocalStorage();
-  //returnButton.id = "returnButton";
-  //const questionsList = document.getElementById("questionsList");
 
-  ListElement = document.getElementById("all_subjects_list");
+/* let QuestionsElementsList = [];
+const questionsList = document.getElementById("questionsList");
+*/
+//const returnButton = document.createElement("div");
 
-  // to make the fetch asynchronous
-  (async () => {
-    try {
-      const response = await fetch("/api/subjects");
-      const subjects = await response.json();
-
-      /* =============== THE ALL CATEGORY =============== */
-
-      // Create the "All" subjects item with title and description
-      const allSubjectsItem = createAllSubjectsItem();
-      // Append the "All" item to the list
-      ListElement.appendChild(allSubjectsItem);
-      // Event listener for the "All" subject item
-      addAllSubjectsClickListener(allSubjectsItem, ListElement);
-
-      /* =============== REST OF CATEGORIES =============== */
-      // Create the rest of the subject items
-      createSubjectItems(allSubjectsItem, ListElement, subjects);
-
-    } catch (error) {
-      const errorH1 = document.createElement("h1");
-      errorH1.textContent = "An error occured while fetching the subjects";
-      errorH1.style.color = "red";
-      ListElement.appendChild(errorH1);
-      console.error('There was a problem with your fetch operation:', error);
-    }
-  })();
-});
 
 function createAllSubjectsItem() {
   // Create the "All" subjects item with title and description
