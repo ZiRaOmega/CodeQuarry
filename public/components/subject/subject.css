@@ -1,8 +1,22 @@
 /* ========== FILTER ========== */
 
+#questions_container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+#return_filter_container{
+    display: flex;
+    flex-direction: row;
+    width: 800px;
+
+}
+
 #filter_container {
     margin-top: 35px;
-    width: 740px;
+    width: 650px;
     height: auto;
     display: flex;
     flex-direction: row;
@@ -17,6 +31,7 @@
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-left: 20px;
 }
 
 #question_tracker_count {
@@ -37,9 +52,10 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* #return_button {
+ #return_button {
     display: flex;
     justify-content: center;
+    margin-top: 35px;
     align-items: center;
     font-size: 35px;
     font-weight: bolder;
@@ -53,12 +69,12 @@
     transition: all 0.3s ease;
 }
 
-#returnButton:hover {
-    padding-left: 10px;
-    padding-right: 30px;
+#return_button:hover {
+    padding-left: 16px;
+    padding-right: 24px;
     background-color: var(--darkblue);
     color: var(--white);
-} */
+} 
 
 #filter_questions {
     display: flex;
@@ -94,6 +110,15 @@
 
 /* ========== QUESTION ========== */
 
+#questions_list{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 0px;
+}
+
 .question{
     position: relative;
     display: flex;
@@ -102,7 +127,7 @@
     margin-top: 30px;
     margin-bottom: 30px;
     padding: 20px;
-    width: 700px;
+    width: 760px;
     height: auto;
     background-color: var(--white);
     border-radius: 20px;
