@@ -24,6 +24,7 @@ type Response struct {
 	StudentID    int       `json:"student_id"`
 	StudentName  string    `json:"student_name"`
 	UserVote     string    `json:"user_vote"`
+	IsAuthor     bool      `json:"is_author"`
 }
 
 type ResponseVote struct {
@@ -145,6 +146,9 @@ func FetchResponseByQuestion(db *sql.DB, questionID int, user_id int) ([]Respons
 			} else if voted_response.R == r.ResponseID && voted_response.DownVote {
 				r.UserVote = "downvoted"
 			}
+		}
+		if user_id == r.StudentID {
+			r.IsAuthor = true
 		}
 
 		r.StudentName = GetUsernameWithUserID(db, r.StudentID)

@@ -282,12 +282,89 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
+			case "modify_question":
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for modify_question")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				question_id, err := strconv.Atoi(contentMap["question_id"].(string))
+				if err != nil {
+					fmt.Println("Invalid or missing question_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+				if isValidSession(wsmessage.SessionID, db) {
+					ModifyQuestion(db, question_id, contentMap["title"].(string), contentMap["description"].(string), contentMap["content"].(string), user_id)
+					updatedQuestion, err := FetchQuestionByQuestionID(db, question_id, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated question"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "questionModified", Content: updatedQuestion})
+						BroadcastMessage(WSMessage{Type: "questionModified", Content: updatedQuestion, SessionID: ""}, conn)
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid session"})
+				}
+			case "modify_response":
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for modify_response")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				response_id := int(contentMap["response_id"].(float64))
+				if err != nil {
+					fmt.Println("Invalid or missing response_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+				question_id := int(contentMap["question_id"].(float64))
+				if err != nil {
+					fmt.Println("Invalid or missing response_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+				err = ModifyResponse(db, response_id, contentMap["content"].(string), contentMap["description"].(string), user_id)
+				if err != nil {
+					fmt.Println(err)
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify response"})
+				} else {
+					updatedResponse, err := FetchResponseByQuestion(db, question_id, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated response"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "responseModified", Content: updatedResponse})
+						BroadcastMessage(WSMessage{Type: "responseModified", Content: updatedResponse, SessionID: ""}, conn)
+					}
+				}
 			}
-
 		}
 	}
 }
-
+func ModifyResponse(db *sql.DB, response_id int, content string, description string, user_id int) error {
+	fmt.Println(content)
+	stmt, err := db.Prepare("UPDATE Response SET content = $1, description = $2 WHERE id_response = $3 AND id_student = $4")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(content, description, response_id, user_id); err != nil {
+		return err
+	}
+	return nil
+}
 func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Favori WHERE id_student = $1 AND id_question = $2")
 	if err != nil {

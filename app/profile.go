@@ -18,31 +18,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
-/* 
-func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// Get cookie
-		cookie, err := r.Cookie("session")
-		if err != nil {
-			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
-			http.Redirect(w, r, "/auth", http.StatusSeeOther)
-			return
-		}
-		session_id := cookie.Value
-		// Get user info from user_id
-		user, err := GetUser(session_id, db)
-		if err != nil {
-			fmt.Println(err.Error())
-			http.Error(w, "Error getting user info", http.StatusInternalServerError)
-			return
-		}
-		user.Rank.String, err = SetRankByXp(user)
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-		ParseAndExecuteTemplate("profile", user, w)
-	}
-} */
+
 func SetRankByXp(u User) (string, error) {
 	// Adjust these thresholds for each level, with max XP at 10 million
 	thresholds := []int64{

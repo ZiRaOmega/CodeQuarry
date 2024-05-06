@@ -30,7 +30,7 @@ func ClassementHandler(db *sql.DB) http.HandlerFunc {
 func GetUsersInfo(db *sql.DB) ([]User, error) {
 	var users []User
 	query := `
-	SELECT id_student, lastname, firstname, username, xp
+	SELECT id_student, username,lastname, firstname, xp
 	FROM users
 	ORDER BY xp DESC`
 	rows, err := db.Query(query)
