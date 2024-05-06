@@ -245,8 +245,57 @@ fetch("/api/questions?subjectId=all")
             addFavoriElement.textContent = "★";
           }
         };
+        const modifyButton = document.createElement("button");
+        modifyButton.classList.add("modify_button");
+        modifyButton.textContent = "Modify";
+        modifyButton.onclick = function () {
+          //if already exist just remove
+          if (document.querySelector(".modify_container")){
+            document.querySelector(".modify_container").remove()
+            return
+          }
+          //create input with default value
+          const question_title_input = document.createElement("input");
+          question_title_input.setAttribute("type", "text");
+          question_title_input.setAttribute("value", question.title);
+          question_title_input.setAttribute("id", "question_title");
+          question_title_input.classList.add("question_title_input");
+          const question_description_input = document.createElement("textarea");
+          question_description_input.innerText = question.description;
+          question_description_input.setAttribute("id", "question_description");
+          question_description_input.classList.add(
+            "question_description_input"
+          );
+          const question_content_input = document.createElement("textarea");
+          question_content_input.innerText = question.content;
+          question_content_input.setAttribute("id", "question_content");
+          question_content_input.classList.add("question_content_input");
+          const modify_question = document.createElement("button");
+          modify_question.classList.add("modify_question");
+          modify_question.textContent = "Modify";
+          modify_question.onclick = function () {
+            ModifyQuestion();
+          };
+          const modifyContainer = document.createElement("div");
+          const cancel_button = document.createElement("button")
+          cancel_button.innerText = "X"
+          cancel_button.onclick = ()=>{
+            modifyContainer.remove()
+          }
+          modifyContainer.appendChild(cancel_button)
+          modifyContainer.classList.add("modify_container");
+          modifyContainer.appendChild(question_title_input);
+          modifyContainer.appendChild(question_description_input);
+          modifyContainer.appendChild(question_content_input);
+          modifyContainer.appendChild(modify_question);
+          document
+            .querySelector(".question-viewer__question")
+            .appendChild(modifyContainer);
+        };
+
         let voteContainer = document.querySelector(".vote_container");
         voteContainer.appendChild(addFavoriElement);
+        voteContainer.appendChild(modifyButton);
 
         if (question.responses != null) {
           //explain how does the sorting works
@@ -515,3 +564,25 @@ fetch("/api/questions?subjectId=all")
       }
     });
   });
+
+function ModifyQuestion() {
+  const question_id = getUrlArgument("question_id");
+  const question_title = document.getElementById("question_title").value;
+  const question_description = document.getElementById(
+    "question_description"
+  ).value;
+  const question_content = document.getElementById("question_content").value;
+
+  socket.send(
+    JSON.stringify({
+      type: "modify_question",
+      content: {
+        question_id: question_id,
+        title: question_title,
+        description: question_description,
+        content: question_content,
+      },
+      session_id: getCookie("session"),
+    })
+  );
+}
