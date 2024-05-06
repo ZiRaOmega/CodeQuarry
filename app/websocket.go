@@ -302,13 +302,13 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 				if isValidSession(wsmessage.SessionID, db) {
 					ModifyQuestion(db, question_id, contentMap["title"].(string), contentMap["description"].(string), contentMap["content"].(string), user_id)
-					/* updatedQuestion, err := Fetch(db, question_id)
+					updatedQuestion, err := FetchQuestionByQuestionID(db, question_id, user_id)
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated question"})
 					} else {
 						conn.WriteJSON(WSMessage{Type: "questionModified", Content: updatedQuestion})
 						BroadcastMessage(WSMessage{Type: "questionModified", Content: updatedQuestion, SessionID: ""}, conn)
-					} */
+					}
 				} else {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid session"})
 				}

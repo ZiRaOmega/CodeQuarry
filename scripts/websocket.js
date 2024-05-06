@@ -326,6 +326,21 @@ $(document).ready(function () {
         });
 
         break;
+      case "questionModified":
+        const questionn = document.querySelector(
+          `.question[data-question-id="${msg.content.id}"]`
+        );
+        const question_view = document.querySelector(".question-viewer__question")
+        if (questionn) {
+          questionn.querySelector(".question__title").textContent = msg.content.title;
+          questionn.querySelector(".question__description").textContent = msg.content.description;
+          questionn.querySelector(".question__content pre code").textContent = msg.content.content
+        }else if (question_view){
+          question_view.querySelector(".question-viewer__question__title").textContent = msg.content.title;
+          question_view.querySelector(".question-viewer__question__description").textContent = msg.content.description;
+          question_view.querySelector(".question-viewer__question__content pre code").textContent = msg.content.content
+        }
+        break;
     }
     // Log the message received from the server
     //console.log(`[message] Data received from server: ${event.data}`);
