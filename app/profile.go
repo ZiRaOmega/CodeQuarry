@@ -19,7 +19,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func ProfileHandler(db *sql.DB) http.HandlerFunc {
+func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get cookie
 		cookie, err := r.Cookie("session")
@@ -44,89 +44,51 @@ func ProfileHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 func SetRankByXp(u User) (string, error) {
-	/*>Le nombre de Rank est limité à 10. Un nombre trop petit de Rank peut être frustrant pour les élèves. Un nombre trop grand peut être difficile à gérer pour les administrateurs.
-
-	Les Rank sont définis par des seuils. Les seuils sont définis en fonction de la moyenne des critères. Les seuils sont les suivants :
-
-	1. ****0 - 10 : Script Kiddie****
-
-	- Un terme souvent utilisé pour désigner quelqu'un qui utilise des scripts ou des programmes écrits par d'autres sans comprendre réellement ce qu'ils font.
-
-	2. ****11 - 20 : Bug Hunter****
-
-	- Quelqu'un qui aime trouver et résoudre des bugs, un pas au-delà du simple script kiddie.
-
-	3. ****21 - 30 : Code Monkey****
-
-	- Terme affectueux pour un développeur qui écrit beaucoup de code sans nécessairement participer à la conception.
-
-	4. ****31 - 40 : Git Guru****
-
-	- Un expert en utilisation de Git, l'outil de contrôle de version indispensable pour les développeurs.
-
-	5. ****41 - 50 : Stack Overflow Savant****
-
-	- Une référence à l'habileté de trouver ou fournir des réponses sur le célèbre site de questions-réponses pour développeurs.
-
-	6. ****51 - 60 : Refactoring Rogue****
-
-	- Quelqu'un qui excelle à réorganiser et optimiser le code existant.
-
-	7. ****61 - 70 : Agile Archmage****
-
-	- Un maître des méthodologies agiles, capable de naviguer avec aisance dans les sprints et les scrums.
-
-	8. ****71 - 80 : Code Whisperer****
-
-	- Un développeur capable de "parler" au code, le comprenant et le manipulant à un niveau presque mystique.
-
-	9. ****81 - 90 : Heisenbug Debugger****
-
-	- Nom donné à un développeur capable de gérer les heisenbugs, ces bugs qui semblent disparaître ou se modifier lorsqu'on tente de les isoler ou de les étudier.
-
-	10. ****91 - 100 : Keyboard Warrior****
-
-	- Une touche humoristique pour décrire quelqu'un qui est un combattant acharné du développement, toujours prêt à taper des lignes de code.
-
-	**## Calcul du Rank**
-
-	!!! TODO : à modifier
-
-	>Le total d'xp possible est de 10 millions.
-
-	- une question posée rapporte 1000 xp
-	- une réponse posée rapporte 100 xp
-	- une réponse marquée comme meilleure réponse rapporte 1000 xp
-	- une réponse reçue rapporte 100 xp
-	- la pertinence d'une question ou d'une réponse est notée sur 10. La note est multipliée par 100. Exemple : 8/10 = 800 xp. Cette note est calculée par le nombre d'upvote et de downvote.*/
-	fmt.Println(u.XP.Int64)
-	if u.XP.Int64 >= 0 {
-		u.XP.Int64 /= 100000
+	// Adjust these thresholds for each level, with max XP at 10 million
+	thresholds := []int64{
+		0,        // Script Kiddie
+		5000,     // Bug Hunter
+		15000,    // Code Monkey
+		40000,    // Git Guru
+		100000,   // Stack Overflow Savant
+		500000,   // Refactoring Rogue
+		1500000,  // Agile Archmage
+		3500000,  // Code Whisperer
+		6000000,  // Heisenbug Debugger
+		10000000, // Keyboard Warrior (max)
 	}
-	if u.XP.Int64 >= 0 && u.XP.Int64 <= 10 {
-		return "Script Kiddie", nil
-	} else if u.XP.Int64 >= 11 && u.XP.Int64 <= 20 {
-		return "Bug Hunter", nil
-	} else if u.XP.Int64 >= 21 && u.XP.Int64 <= 30 {
-		return "Code Monkey", nil
-	} else if u.XP.Int64 >= 31 && u.XP.Int64 <= 40 {
-		return "Git Guru", nil
-	} else if u.XP.Int64 >= 41 && u.XP.Int64 <= 50 {
-		return "Stack Overflow Savant", nil
-	} else if u.XP.Int64 >= 51 && u.XP.Int64 <= 60 {
-		return "Refactoring Rogue", nil
-	} else if u.XP.Int64 >= 61 && u.XP.Int64 <= 70 {
-		return "Agile Archmage", nil
-	} else if u.XP.Int64 >= 71 && u.XP.Int64 <= 80 {
-		return "Code Whisperer", nil
-	} else if u.XP.Int64 >= 81 && u.XP.Int64 <= 90 {
-		return "Heisenbug Debugger", nil
-	} else if u.XP.Int64 >= 91 && u.XP.Int64 <= 100 {
-		return "Keyboard Warrior", nil
-	} else {
-		return "", errors.New("XP out of range")
+
+	ranks := []string{
+		"Script Kiddie",
+		"Bug Hunter",
+		"Code Monkey",
+		"Git Guru",
+		"Stack Overflow Savant",
+		"Refactoring Rogue",
+		"Agile Archmage",
+		"Code Whisperer",
+		"Heisenbug Debugger",
+		"Keyboard Warrior",
 	}
+
+	// Find the appropriate rank for the given XP
+	for i, threshold := range thresholds {
+		if u.XP.Int64 < threshold {
+			if i == 0 {
+				return ranks[0], nil
+			}
+			return ranks[i-1], nil
+		}
+	}
+
+	// Assign the maximum rank if XP is above or equal to 10 million
+	if u.XP.Int64 >= thresholds[len(thresholds)-1] {
+		return ranks[len(ranks)-1], nil
+	}
+
+	return "", errors.New("XP out of range")
 }
+
 func (U *User) FormatBirthDate() string {
 	return U.BirthDate.Time.Format("01/02/2006")
 }

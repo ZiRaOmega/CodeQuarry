@@ -1,30 +1,92 @@
 package app
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
+	"path"
 	"text/template"
 )
 
 /* ======================= GLOBAL ======================= */
 
-func SendTemplate(template_name string, data interface{}) http.HandlerFunc {
+func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-		err := ParseAndExecuteTemplate(template_name, data, w)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+		fmt.Println(component_name)
+		if component_name == "auth" {
+			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
+			err := ParseAndExecuteTemplate(component_name, nil, w)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 			return
+		}
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			log.Printf("Error getting session cookie: %v", err)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		session_id := cookie.Value
+		if isValidSession(session_id, db) {
+			// Get user info from user_id
+			var user User
+			if component_name == "profile" {
+				user, err = GetUser(session_id, db)
+				if err != nil {
+					fmt.Println(err.Error())
+					http.Error(w, "Error getting user info", http.StatusInternalServerError)
+					return
+				}
+			}
+			err = ParseAndExecuteTemplate(component_name, user, w)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
 		}
 	}
 }
 
-func ParseAndExecuteTemplate(template_name string, data interface{}, w http.ResponseWriter) error {
-	tmpl, err := template.ParseFiles("public/templates/head/head.html", "public/templates/header/header.html", "public/templates/footer/footer.html", "public/templates/script/script.html", "public/components/"+template_name+"/"+template_name+".html")
-	if err != nil {
-		return err
+// Let's make a list of all the templates we need in each case
+var templates = map[string]*template.Template{}
+
+func init() {
+	// Pre-parse all templates.
+	templates["home"] = parseTemplates("home", "head", "header", "all_subjects", "footer", "script")
+	templates["auth"] = parseTemplates("auth", "head", "script")
+	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script")
+	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
+	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
+	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
+}
+
+func parseTemplates(component_name string, parts ...string) *template.Template {
+
+	// Construct the paths for common template parts.
+	templatePath := "public/templates/"
+	componentPath := "public/components/"
+	var paths []string
+	for _, part := range parts {
+		paths = append(paths, path.Join(templatePath, part, part+".html"))
 	}
-	err = tmpl.ExecuteTemplate(w, template_name, data)
+	// Add the component template.
+	paths = append(paths, path.Join(componentPath, component_name, component_name+".html"))
+
+	// Use template.Must to panic if there's an error.
+	return template.Must(template.ParseFiles(paths...))
+}
+
+func ParseAndExecuteTemplate(component_name string, data interface{}, w http.ResponseWriter) error {
+	// Execute the template with the given data.
+	tmpl, ok := templates[component_name]
+	if !ok {
+		http.Error(w, "Component not found", http.StatusNotFound)
+	}
+	err := tmpl.ExecuteTemplate(w, component_name, data)
 	if err != nil {
 		return err
 	}
@@ -49,15 +111,35 @@ func CheckLogoHandler(w http.ResponseWriter, r *http.Request) {
 
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
-	http.ServeFile(w, r, "scripts/animation.js")
+	http.ServeFile(w, r, "public/components/auth/animation.js")
 }
 
 /* ======================= TEMPLATES ======================= */
 
-// HEADER CSS
-func HeaderCssHandler(w http.ResponseWriter, r *http.Request) {
+/* --------------- HEADER ---------------- */
+// CSS
+func HeaderHandlerCss(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/templates/header/header.css")
+}
+
+/* --------------- FOOTER ---------------- */
+func FooterHandlerCss(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/templates/footer/footer.css")
+}
+
+/* --------------- ALL SUBJECTS ---------------- */
+// JS
+func AllSubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
+	// Serve the subjects.html file as the default page
+	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects.js")
+}
+
+// CSS
+func AllSubjectsHandlerCSS(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects.css")
 }
 
 /* ======================= COMPONENTS ======================= */
@@ -77,20 +159,26 @@ func AuthCssHandler(w http.ResponseWriter, r *http.Request) {
 
 /* --------------- HOME ---------------- */
 // HTML
-func HandleCodeQuarry(w http.ResponseWriter, r *http.Request) {
+/* func HandleCodeQuarry(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/home/home.html")
-}
+} */
 
 // CSS
 func CQcssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/home/home.css")
 }
+
+/* --------------- Question viouheur ---------------- */
+
 func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.css")
 }
+
+/* --------------- PROFILE ---------------- */
+
 func ProfileCSSHandler(w http.ResponseWriter, r *http.Request) {
 	// Servce profile.css
 	http.ServeFile(w, r, "public/components/profile/profile.css")
@@ -106,10 +194,17 @@ func ClassementCSSHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // JS
-func SubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
+func SubjectHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
-	http.ServeFile(w, r, "public/components/home/subjects/subjects.js")
+	http.ServeFile(w, r, "public/components/subject/subject.js")
 }
+
+// CSS
+func SubjectCSSHandler(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/components/subject/subject.css")
+}
+
 func SearchBarJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
@@ -126,7 +221,7 @@ func VoteHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "public/create_post.webp")
+	http.ServeFile(w, r, "public/images/create_post.webp")
 }
 
 func PostsHandler(w http.ResponseWriter, r *http.Request) {
