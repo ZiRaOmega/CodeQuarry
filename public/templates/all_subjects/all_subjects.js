@@ -1,125 +1,132 @@
 
 let SubjectsList = [];
-let QuestionsElementsList = [];
 let ListElement;
+
+/* let QuestionsElementsList = [];
 const questionsList = document.getElementById("questionsList");
-const returnButton = createReturnButton();
+*/
+//const returnButton = document.createElement("div");
+function initializeLocalStorage() {
+  localStorage.removeItem("subjectId");
+  localStorage.removeItem("subjectTitle");
+}
 
 document.addEventListener("DOMContentLoaded", function () {
-    initializeLocalStorage();
-    ListElement = document.getElementById("subjectsList");
 
-    const allSubjectsItem = createAllSubjectsItem();
-    ListElement.appendChild(allSubjectsItem);
-    addAllSubjectsClickListener(allSubjectsItem, ListElement, returnButton);
+  initializeLocalStorage();
+  //returnButton.id = "returnButton";
+  //const questionsList = document.getElementById("questionsList");
 
-    returnButton.addEventListener("click", function () {
-        resetSubjectSelection(ListElement, questionsList);
-    });
+  ListElement = document.getElementById("all_subjects_list");
 
-    fetchSubjects(allSubjectsItem, ListElement);
+  // to make the fetch asynchronous
+  (async () => {
+    try {
+      const response = await fetch("/api/subjects");
+      const subjects = await response.json();
+
+      /* =============== THE ALL CATEGORY =============== */
+
+      // Create the "All" subjects item with title and description
+      const allSubjectsItem = createAllSubjectsItem();
+      // Append the "All" item to the list
+      ListElement.appendChild(allSubjectsItem);
+      // Event listener for the "All" subject item
+      addAllSubjectsClickListener(allSubjectsItem, ListElement);
+
+      /* =============== REST OF CATEGORIES =============== */
+      // Create the rest of the subject items
+      createSubjectItems(allSubjectsItem, ListElement, subjects);
+
+    } catch (error) {
+      const errorH1 = document.createElement("h1");
+      errorH1.textContent = "An error occured while fetching the subjects";
+      errorH1.style.color = "red";
+      ListElement.appendChild(errorH1);
+      console.error('There was a problem with your fetch operation:', error);
+    }
+  })();
 });
 
-function initializeLocalStorage() {
-    localStorage.removeItem("subjectId");
-    localStorage.removeItem("subjectTitle");
-}
-
-function createReturnButton() {
-    const button = document.createElement("div");
-    button.id = "returnButton";
-    return button;
-}
-
 function createAllSubjectsItem() {
-    const item = document.createElement("div");
-    item.classList.add("category_cards");
+  // Create the "All" subjects item with title and description
+  const item = document.createElement("div");
+  item.classList.add("category_cards");
+  const allTitle = document.createElement("h2");
+  allTitle.classList.add("category_title");
+  allTitle.textContent = "All";
+  item.appendChild(allTitle);
 
-    const title = document.createElement("h2");
-    title.classList.add("category_title");
-    title.textContent = "All";
-    item.appendChild(title);
+  // Create the "All" subjects item with title and description
+  const allDescription = document.createElement("p");
+  allDescription.classList.add("category_description");
+  allDescription.textContent =
+    "Click here to view all questions across all subjects.";
+  item.appendChild(allDescription);
 
-    const description = document.createElement("p");
-    description.classList.add("category_description");
-    description.textContent = "Click here to view all questions across all subjects.";
-    item.appendChild(description);
-
-    return item;
+  return item;
 }
 
-function addAllSubjectsClickListener(allSubjectsItem, listElement, returnButton) {
-    allSubjectsItem.addEventListener("click", function () {
-        localStorage.setItem("subjectId", "all");
-        localStorage.setItem("subjectTitle", "All Subjects");
-        listElement.style.display = "none";
-        returnButton.style.display = "";
-        fetchQuestions("all");
-    });
+function addAllSubjectsClickListener(allSubjectsItem, listElement) {
+  allSubjectsItem.addEventListener("click", function () {
+    localStorage.setItem("subjectId", "all");
+    localStorage.setItem("subjectTitle", "All Subjects");
+    window.location.href = `/subject/all`;
+  });
 }
 
-function resetSubjectSelection(listElement, questionsList) {
-    localStorage.removeItem("subjectId");
-    localStorage.removeItem("subjectTitle");
-    listElement.style.display = "";
-    questionsList.style.display = "none";
-    questionsList.innerHTML = ""; // Clear previous questions
+function createSubjectItems(allSubjectsItem, listElement, subjects) {
+  const allQestionCountDiv = document.createElement("div");
+  allQestionCountDiv.classList.add("question_count_all");
+  let totalQuestions = 0;
+
+  SubjectsList = [];
+  subjects.forEach((subject) => {
+    SubjectsList.push(subject);
+    totalQuestions += subject.questionCount;
+    allQestionCountDiv.textContent = totalQuestions;
+    allSubjectsItem.appendChild(allQestionCountDiv);
+
+    const listItem = createItem(subject);
+    addSubjectClickListener(listItem, subject, listElement);
+    listElement.appendChild(listItem);
+  });
 }
 
-function fetchSubjects(allSubjectsItem, listElement) {
-    fetch("/api/subjects")
-        .then((response) => response.json())
-        .then((subjects) => {
-            const allQestionCountDiv = document.createElement("div");
-            allQestionCountDiv.classList.add("question_count_all");
-            let totalQuestions = 0;
+function createItem(subject) {
+  const listItem = document.createElement("div");
+  listItem.classList.add("category_cards");
 
-            SubjectsList = [];
-            subjects.forEach((subject) => {
-                SubjectsList.push(subject);
-                totalQuestions += subject.questionCount;
-                allQestionCountDiv.textContent = totalQuestions;
-                allSubjectsItem.appendChild(allQestionCountDiv);
+  const questionCountDiv = document.createElement("div");
+  questionCountDiv.classList.add("question_count");
+  questionCountDiv.setAttribute("data-subject-id", subject.id);
+  questionCountDiv.textContent = subject.questionCount;
+  listItem.appendChild(questionCountDiv);
 
-                const listItem = createSubjectItem(subject);
-                addSubjectClickListener(listItem, subject, listElement);
-                listElement.appendChild(listItem);
-            });
-        });
-}
+  const title = document.createElement("h2");
+  title.classList.add("category_title");
+  title.textContent = subject.title;
+  listItem.appendChild(title);
 
-function createSubjectItem(subject) {
-    const listItem = document.createElement("div");
-    listItem.classList.add("category_cards");
+  const description = document.createElement("p");
+  description.classList.add("category_description");
+  description.textContent = subject.description;
+  listItem.appendChild(description);
 
-    const questionCountDiv = document.createElement("div");
-    questionCountDiv.classList.add("question_count");
-    questionCountDiv.setAttribute("data-subject-id", subject.id);
-    questionCountDiv.textContent = subject.questionCount;
-    listItem.appendChild(questionCountDiv);
-
-    const title = document.createElement("h2");
-    title.classList.add("category_title");
-    title.textContent = subject.title;
-    listItem.appendChild(title);
-
-    const description = document.createElement("p");
-    description.classList.add("category_description");
-    description.textContent = subject.description;
-    listItem.appendChild(description);
-
-    return listItem;
+  return listItem;
 }
 
 function addSubjectClickListener(listItem, subject, listElement) {
-    listItem.addEventListener("click", function () {
-        localStorage.setItem("subjectId", subject.id);
-        localStorage.setItem("subjectTitle", subject.title);
-        listElement.style.display = "none";
-        fetchQuestions(subject.id);
-    });
+  listItem.addEventListener("click", function () {
+    localStorage.setItem("subjectId", subject.id);
+    localStorage.setItem("subjectTitle", subject.title);
+    // make subject.title lowercase
+    subject.title = subject.title.toLowerCase();
+    window.location.href = `/subject/${subject.id}/${subject.title}`;
+  });
 }
 
+/* 
 window.fetchQuestions = function (subjectId) {
     fetch(`/api/questions?subjectId=${subjectId}`)
         .then((response) => response.json())
@@ -366,7 +373,12 @@ function createQuestions(questions) {
       voteContainer.appendChild(upvoteContainer);
       const downvoteContainer = document.createElement("div");
       downvoteContainer.classList.add("downvote_container");
-      console.log(question);
+      console.log(question)
+      if (question.user_vote == "upvoted") {
+        upvoteContainer.style.backgroundColor = "green";
+      } else if (question.user_vote == "downvoted") {
+        downvoteContainer.style.backgroundColor = "red";
+      }
       const downvoteText = document.createElement("div");
       downvoteText.classList.add("downvote_text");
       downvoteText.textContent = "-";
@@ -436,3 +448,4 @@ function createQuestions(questions) {
     questionTrackerCount.textContent = "0 question(s)";
   }
 }
+ */

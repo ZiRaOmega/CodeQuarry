@@ -1,3 +1,7 @@
+// Les websocket sont overkill, la taille et la fréquence des messages ne justifie pas leur utilisation
+// On pourrait utiliser HTTP Server-Sent Events (SSE) pour envoyer des messages du serveur au client
+// et les requêtes HTTP pour envoyer des messages du client au serveur
+// https://ably.com/blog/websockets-vs-sse
 var socket;
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
@@ -12,10 +16,10 @@ $(document).ready(function () {
   // Define the onopen function to be called when the WebSocket connection is established
   socket.onopen = function (e) {
     // Log a message indicating the connection is established
-    console.log("[open] Connection established");
+    //console.log("[open] Connection established");
 
     // Log a message indicating a message is being sent to the server
-    console.log("Sending to server");
+    //console.log("Sending to server");
 
     // Send a message to the server to check the session
     let message = {
@@ -324,9 +328,24 @@ $(document).ready(function () {
         break;
     }
     // Log the message received from the server
-    console.log(`[message] Data received from server: ${event.data}`);
+    //console.log(`[message] Data received from server: ${event.data}`);
   };
 
+<<<<<<< HEAD
+    // Define the onclose function to be called when the WebSocket connection is closed
+    socket.onclose = function (event) {
+        // Check if the connection was closed cleanly
+        if (event.wasClean) {
+            // Log a message indicating the connection was closed cleanly
+            /* console.log(
+                `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+            ); */
+        } else {
+            // Log an error message indicating the connection was not closed cleanly
+            console.error("[close] Connection died");
+        }
+    };
+=======
   // Define the onclose function to be called when the WebSocket connection is closed
   socket.onclose = function (event) {
     // Check if the connection was closed cleanly
@@ -340,6 +359,7 @@ $(document).ready(function () {
       console.error("[close] Connection died");
     }
   };
+>>>>>>> max
 
   // Define the onerror function to be called when an error occurs with the WebSocket connection
   socket.onerror = function (error) {

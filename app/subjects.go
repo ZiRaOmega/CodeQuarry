@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -64,6 +65,15 @@ func FetchAllSubjects(db *sql.DB) ([]map[string]interface{}, error) {
     LEFT JOIN question q ON s.id_subject = q.id_subject
     GROUP BY s.id_subject
     ORDER BY s.title ASC`
+	// this query can be explained as follows:
+	// 1. Select the subject id, title, description, and count of questions
+	// 2. From the subject table
+	// 3. Left join the question table on the subject id.
+	// 4. Group the results by the subject id.
+	// 5. Order the results by the subject title in ascending order
+
+	// this query can be optimized by using a subquery to get the count of questions
+	
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Printf("Error querying subjects: %v", err)
@@ -97,7 +107,7 @@ func SubjectsHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Server error", http.StatusInternalServerError)
 			return
 		}
-
+		fmt.Println("Subjects fetched successfully")
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(subjects)
 	}

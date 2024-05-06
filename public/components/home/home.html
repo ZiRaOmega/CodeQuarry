@@ -5,14 +5,16 @@
 {{template "head" .}}
 <body>
     {{template "header" .}}
-    <ul id="subjectsList"></ul>
+    {{template "all_subjects" .}}
+    <!-- <ul id="subjectsList"></ul> -->
     <div id="questionsList" style="display: none;">
     </div>
     <div id="create_post_button"></div>
-    
 </body>
-<script src="../scripts/subjects.js"></script>
-<script src="../scripts/posts.js"></script>
+<!-- <script src="scripts/all_subjects.js"></script> -->
+<script src="scripts/posts.js"></script>
+
 {{template "script" .}}
+
 </html>
 {{end}}

@@ -1,0 +1,27 @@
+{{define "subject"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+
+<body>
+    {{template "header" .}}
+    <div id="questions_container">
+        <div id="filter_container">
+            <div id="question_tracker_count"></div>
+            <div id="filter_questions">
+                <div id="filter_nbr_of_comments">↑ Commentaires</div>
+                <div id="filter_old">Oldest</div>
+                <div id="filter_new">Newest</div>
+                <div id="filter_popular">↗ Croissant</div>
+                <div id="filter_unpopular">↘ Décroissant</div>
+            </div>
+        </div>
+        <ul id="questions_list"></ul>
+    </div>
+    {{template "footer" .}}
+</body>
+<script src="/scripts/subject.js"></script>
+{{template "script" .}}
+
+</html>
+{{end}}
