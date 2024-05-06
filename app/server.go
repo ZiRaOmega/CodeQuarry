@@ -58,13 +58,14 @@ func init() {
 	// Pre-parse all templates.
 	templates["home"] = parseTemplates("home", "head", "header", "all_subjects", "footer", "script")
 	templates["auth"] = parseTemplates("auth", "head", "script")
-	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script")
+	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script", "all_subjects")
 	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
 	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
+	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
-	
+
 	// Construct the paths for common template parts.
 	templatePath := "public/templates/"
 	componentPath := "public/components/"
@@ -121,6 +122,7 @@ func HeaderHandlerCss(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/templates/header/header.css")
 }
+
 /* --------------- FOOTER ---------------- */
 func FooterHandlerCss(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
@@ -133,6 +135,7 @@ func AllSubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
 	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects.js")
 }
+
 // CSS
 func AllSubjectsHandlerCSS(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
@@ -166,12 +169,14 @@ func CQcssHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/home/home.css")
 }
+
 /* --------------- Question viouheur ---------------- */
 
 func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.css")
 }
+
 /* --------------- PROFILE ---------------- */
 
 func ProfileCSSHandler(w http.ResponseWriter, r *http.Request) {
@@ -193,6 +198,7 @@ func SubjectHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
 	http.ServeFile(w, r, "public/components/subject/subject.js")
 }
+
 // CSS
 func SubjectCSSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed

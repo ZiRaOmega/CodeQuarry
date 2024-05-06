@@ -5,6 +5,7 @@
 
 <body>
     {{template "header" .}}
+    <script src="/scripts/all_subjects.js"></script>
     <div id="questions_container">
         <div id="filter_container">
             <div id="question_tracker_count"></div>
@@ -18,9 +19,13 @@
         </div>
         <ul id="questions_list"></ul>
     </div>
+    <div id="create_post_button"></div>
     {{template "footer" .}}
 </body>
 <script src="/scripts/subject.js"></script>
+<script src="/scripts/posts.js"></script>
+
+
 {{template "script" .}}
 
 </html>
