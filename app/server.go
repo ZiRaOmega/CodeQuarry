@@ -40,6 +40,11 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 					http.Error(w, "Error getting user info", http.StatusInternalServerError)
 					return
 				}
+				user.Rank.String, err = SetRankByXp(user)
+				if err != nil {
+					http.Error(w, "Error getting user rank", http.StatusInternalServerError)
+					return
+				}
 			}
 			err = ParseAndExecuteTemplate(component_name, user, w)
 			if err != nil {
