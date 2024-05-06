@@ -94,3 +94,22 @@ a {
     height: 10px;
     background: red;
 }
+
+.medal{
+    margin-left: 50px;
+}
+
+@media (max-width: 700px) {
+    #menu {
+        display: none;
+    }
+    .leftpart{
+        flex-basis: 100%;
+        justify-content: center;
+        padding-left: 0;
+
+    }
+    .medal{
+        display: none;
+    }
+}
