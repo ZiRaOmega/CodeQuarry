@@ -33,7 +33,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 		if isValidSession(session_id, db) {
 			// Get user info from user_id
 			var user User
-			if component_name == "profile" {
+			if component_name == "profile" || component_name == "classement"{
 				user, err = GetUser(session_id, db)
 				if err != nil {
 					fmt.Println(err.Error())
@@ -61,6 +61,7 @@ func init() {
 	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script")
 	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
 	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
+	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
