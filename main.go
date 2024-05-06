@@ -47,7 +47,9 @@ func main() {
 	outputPath := "public/components/auth/auth_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
 
-	rateLimiter := app.NewRateLimiter(10, time.Minute)
+	RegisterRateLimiter := app.NewRateLimiter(1, time.Hour.Abs())
+
+	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
 
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 
@@ -60,9 +62,12 @@ func main() {
 	http.HandleFunc("/scripts/animation.js", app.AnimationsHandler)
 	//Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
-	http.HandleFunc("/register", app.RegisterHandler(db))
+	//http.HandleFunc("/register", app.RegisterHandler(db))
+	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+		RegisterRateLimiter.Handle(app.RegisterHandler(db)).ServeHTTP(w, r)
+	}) 
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
-		rateLimiter.Handle(app.LoginHandler(db)).ServeHTTP(w, r)
+		GlobalrateLimiter.Handle(app.LoginHandler(db)).ServeHTTP(w, r)
 	})
 
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
