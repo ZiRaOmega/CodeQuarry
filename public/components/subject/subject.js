@@ -98,6 +98,7 @@ function createQuestions(questions) {
 function createQuestionElement(question) {
   const questionElement = document.createElement("div");
   questionElement.classList.add("question");
+  questionElement.setAttribute("data-question-id",question.id)
   const questionChecked = document.createElement("div");
   questionChecked.classList.add("question_checked");
   questionChecked.setAttribute("data-question-id", question.id);

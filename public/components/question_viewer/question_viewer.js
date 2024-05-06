@@ -115,7 +115,7 @@ const question_viewer__question__content = document.querySelector(
 const question_viewer__answers = document.querySelector(
   ".question-viewer__answers"
 );
-
+const question_viewer = document.querySelector(".question-viewer__question")
 const preDiv = document.createElement("pre");
 const code = document.createElement("code");
 preDiv.appendChild(code);
@@ -126,6 +126,7 @@ fetch("/api/questions?subjectId=all")
     data.forEach((question) => {
       //get the question where the id is the same as the one in the url
       if (question.id == getUrlArgument("question_id")) {
+        question_viewer.setAttribute("data-question-id",question.id)
         console.log(question);
         //when all is loaded
         let counter = 0;
@@ -150,6 +151,7 @@ fetch("/api/questions?subjectId=all")
         question_viewer__question__description.innerText = question.description;
         code.textContent = question.content;
         question_viewer__question__content.appendChild(preDiv);
+        
         document.querySelectorAll("pre code").forEach((block) => {
           // Apply Highlight.js
           hljs.highlightElement(block);
@@ -273,10 +275,11 @@ fetch("/api/questions?subjectId=all")
           const modify_question = document.createElement("button");
           modify_question.classList.add("modify_question");
           modify_question.textContent = "Modify";
+          const modifyContainer = document.createElement("div");
           modify_question.onclick = function () {
             ModifyQuestion();
+            modifyContainer.remove()  
           };
-          const modifyContainer = document.createElement("div");
           const cancel_button = document.createElement("button")
           cancel_button.innerText = "X"
           cancel_button.onclick = ()=>{
