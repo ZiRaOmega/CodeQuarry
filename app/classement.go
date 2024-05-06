@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 )
-
+/* 
 func ClassementHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("session")
@@ -25,7 +25,7 @@ func ClassementHandler(db *sql.DB) http.HandlerFunc {
 		}
 		ParseAndExecuteTemplate("classement", user, w)
 	}
-}
+} */
 
 func GetUsersInfo(db *sql.DB) ([]User, error) {
 	var users []User

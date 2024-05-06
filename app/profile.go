@@ -18,7 +18,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
-
+/* 
 func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Get cookie
@@ -42,7 +42,7 @@ func ProfileHandler(template_name string,db *sql.DB) http.HandlerFunc {
 		}
 		ParseAndExecuteTemplate("profile", user, w)
 	}
-}
+} */
 func SetRankByXp(u User) (string, error) {
 	// Adjust these thresholds for each level, with max XP at 10 million
 	thresholds := []int64{
@@ -229,9 +229,12 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
-		birthDate, err := time.Parse("2006-02-01", birthDateStr)
+		birthDate, err := time.Parse("2006-01-02", birthDateStr)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		schoolYearStr := r.PostFormValue("school_year")
-		schoolYear, err := time.Parse("2006-02-01", schoolYearStr)
+		schoolYear, err := time.Parse("2006-01-02", schoolYearStr)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -410,10 +413,10 @@ func FavoriHandler(db *sql.DB) http.HandlerFunc {
 
 		questionIDs := GetQuestionIdOfFavorite(db, userID)
 
-		if err != nil {
+		/* if err != nil {
 			http.Error(w, "Error fetching questions", http.StatusInternalServerError)
 			return
-		}
+		} */
 
 		//send json
 		w.Header().Set("Content-Type", "application/json")

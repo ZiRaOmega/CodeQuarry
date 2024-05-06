@@ -1,6 +1,6 @@
 package app
 
-//Import websocket
+// Import websocket
 import (
 	"database/sql"
 	"fmt"
@@ -131,10 +131,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 			case "deletePost":
 				/*{
-				        type: "deletePost",
-				        content: id,
-						session_id: getCookie("session")
-				      }*/
+					content: id,
+					type: "deletePost",
+					session_id: getCookie("session")
+				}*/
 				question_id, err := strconv.Atoi(wsmessage.Content.(string))
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid question ID"})
@@ -218,15 +218,15 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "addFavori":
 				session_id := wsmessage.SessionID
 				contentMap := wsmessage.Content.(float64)
-				//Check session and get user_id
+				// Check session and get user_id
 				user_id, err := getUserIDUsingSessionID(session_id, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 				} else {
 					question_id := int(contentMap)
-					if err != nil {
+					/* if err != nil {
 						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
-					}
+					} */
 					if isItInFavori(db, user_id, question_id) {
 						err = DeleteFavori(db, user_id, question_id)
 						if err == nil {
@@ -246,7 +246,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "deleteFavori":
 				session_id := wsmessage.SessionID
 				contentMap := wsmessage.Content.(string)
-				//Check session and get user_id
+				// Check session and get user_id
 				user_id, err := getUserIDUsingSessionID(session_id, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
@@ -287,6 +287,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 		}
 	}
 }
+
 func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Favori WHERE id_student = $1 AND id_question = $2")
 	if err != nil {
@@ -298,6 +299,7 @@ func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
 	}
 	return nil
 }
+
 func AddFavori(db *sql.DB, id_student int, question_id int) error {
 	stmt, err := db.Prepare("INSERT INTO Favori(id_student, id_question) VALUES($1, $2)")
 	if err != nil {
@@ -309,6 +311,7 @@ func AddFavori(db *sql.DB, id_student int, question_id int) error {
 	}
 	return nil
 }
+
 func isItInFavori(db *sql.DB, id_student int, question_id int) bool {
 	var exists bool
 	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM Favori WHERE id_student = $1 AND id_question = $2)", id_student, question_id).Scan(&exists)
@@ -318,6 +321,7 @@ func isItInFavori(db *sql.DB, id_student int, question_id int) bool {
 	}
 	return exists
 }
+
 func RemoveConnFromList(conn *websocket.Conn) {
 	for i, c := range ConnectionList {
 		if c == conn {
@@ -326,6 +330,7 @@ func RemoveConnFromList(conn *websocket.Conn) {
 		}
 	}
 }
+
 func isValidSession(session_id string, db *sql.DB) bool {
 	var expireAt time.Time
 	err := db.QueryRow("SELECT expire_at FROM Sessions WHERE uuid = $1", session_id).Scan(&expireAt)
@@ -341,6 +346,7 @@ func isValidSession(session_id string, db *sql.DB) bool {
 		return true
 	}
 }
+
 func DeleteSession(session_id string, db *sql.DB) error {
 	stmt, err := db.Prepare("DELETE FROM Sessions WHERE uuid = $1")
 	if err != nil {
