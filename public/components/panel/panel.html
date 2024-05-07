@@ -31,16 +31,20 @@
     </div>
     <div id="all_subjects">
         {{range .Subjects}}
-        <div class="subject">
+        <div class="subject" data-subject-id="{{.Id}}">
             <input class="input-field" type="text" value="{{.Title}}" /><br>
             <textarea class="textarea-field">{{.Description}}</textarea><br>
             <input class="input-field" type="text" value="{{.CreationDate}}" /><br>
             <input class="input-field" type="text" value="{{.UpdateDate}}" /><br>
-            <input class="input-field" type="number" value="{{.QuestionCount}}" /><br>
-            <button data-subject-id="{{.Id}}">Edit</button>
-            <button data-subject-id="{{.Id}}">Delete</button>
+            <button  onclick=editSubject({{.Id}})>Edit</button>
+            <button >Delete</button>
         </div>
         {{end}}
+        <div id="add_subject">
+            <input class="input-field" type="text" placeholder="Title" /><br>
+            <textarea class="textarea-field" placeholder="Description"></textarea><br>
+            <button onclick=addSubject()>Add</button>
+        </div>
     </div>
     <div id="all_questions">
         {{range .Questions}}
@@ -52,8 +56,8 @@
             <input class="input-field" type="text" value="{{.CreationDate}}" /><br>
             <input class="input-field" type="text" value="{{.UpdateDate}}" /><br>
             <input class="input-field" type="number" value="{{.Upvotes}}" style="width: 50px;">, <input class="input-field" type="number" value="{{.Downvotes}}" style="width: 50px;"><br>
-            <button data-question-id="{{.Id}}" onclick=editQuestion({{.Id}})>Edit</button>
-            <button data-question-id="{{.Id}}">Delete</button>
+            <button  onclick=editQuestion({{.Id}})>Edit</button>
+            <button >Delete</button>
        
             <div class="all_responses">
                 <h5>Responses:</h5>
@@ -66,8 +70,8 @@
                 <input class="input-field" type="number" value="{{.UpVotes}}" style="width: 50px;">, <input class="input-field" type="number" value="{{.DownVotes}}" style="width: 50px;"><br>
             
                 
-                <button data-response-id="{{.ResponseID}}"onclick=editResponse({{.ResponseID}},{{$Id}})>Edit</button>
-                <button data-response-id="{{.ResponseID}}">Delete</button>
+                <button onclick=editResponse({{.ResponseID}},{{$Id}})>Edit</button>
+                <button >Delete</button>
                 </div>
                 {{end}}
             </div>

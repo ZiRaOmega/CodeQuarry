@@ -10,29 +10,31 @@ import (
 )
 
 // insertInSubject inserts a new subject into the database with additional fields
-func InsertInSubject(db *sql.DB, title, description string) {
+func InsertInSubject(db *sql.DB, title, description string) error {
 	currentTime := time.Now().Format("2006-01-02")
 
 	// Check if the subject already exists
 	var exists bool
 	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM Subject WHERE title = $1)", title).Scan(&exists)
 	if err != nil {
-		log.Fatal("Error checking if subject exists: ", err)
+		return err
 	}
 
 	if exists {
-		return // Exit the function if the subject already exists
+		//return new error
+		return fmt.Errorf("Subject with title %s already exists", title)
 	}
 
 	stmt, err := db.Prepare("INSERT INTO Subject(title, description, creation_date, update_date) VALUES($1, $2, $3, $4)")
 	if err != nil {
-		log.Fatal("Error preparing statement: ", err)
+		return err
 	}
 	defer stmt.Close()
 
 	if _, err := stmt.Exec(title, description, currentTime, currentTime); err != nil {
-		log.Fatal("Error executing statement: ", err)
+		return err
 	}
+	return err
 }
 
 // Function to insert multiple subjects
@@ -53,7 +55,10 @@ func InsertMultipleSubjects(db *sql.DB) {
 	}
 	// fmt.Println("Inserting subjects...")
 	for _, subject := range subjects {
-		InsertInSubject(db, subject.Title, subject.Description)
+		err := InsertInSubject(db, subject.Title, subject.Description)
+		if err != nil {
+			log.Printf("Error inserting subject %s: %v", subject.Title, err)
+		}
 	}
 }
 
@@ -73,7 +78,7 @@ func FetchAllSubjects(db *sql.DB) ([]map[string]interface{}, error) {
 	// 5. Order the results by the subject title in ascending order
 
 	// this query can be optimized by using a subquery to get the count of questions
-	
+
 	rows, err := db.Query(query)
 	if err != nil {
 		log.Printf("Error querying subjects: %v", err)

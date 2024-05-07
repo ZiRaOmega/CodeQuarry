@@ -47,3 +47,46 @@ function editResponse(responseId,question_id) {
     // Send the JSON stringified data through the WebSocket
     socket.send(JSON.stringify(data));
 }
+
+function editSubject(id){
+    const subjectElement = document.querySelector(`[data-subject-id="${id}"]`);
+    const inputs = subjectElement.querySelectorAll('.input-field');
+    const textareas = subjectElement.querySelectorAll('.textarea-field');
+
+    const data = {
+        type: "editSubjectPanel",
+        content: {
+            id: id,
+            title: inputs[0].value,
+            description: textareas[0].value,
+            creationDate: inputs[1].value,
+            updateDate: inputs[2].value,
+        },
+        session_id: getCookie("session")
+    };
+    socket.send(JSON.stringify(data));
+}
+
+function addSubject(){
+    const newSubjectElement = document.querySelector("#add_subject")
+    const inputs = newSubjectElement.querySelector('.input-field');
+    const textareas = newSubjectElement.querySelector('.textarea-field');
+    console.log(newSubjectElement)
+    console.log(inputs)
+    console.log(textareas)
+    if (textareas.value == "" || inputs.value == ""){return}
+
+    const data = {
+        type: "addSubjectPanel",
+        content: {
+            title: inputs.value,
+            description: textareas.value,
+        },
+        session_id: getCookie("session")
+    };
+    socket.send(JSON.stringify(data));
+    //Reset fields
+    inputs.value = "";
+    textareas.value = "";
+
+}
