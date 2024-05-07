@@ -14,6 +14,7 @@
             width="100"
             height="100"
           />
+          <button onclick=deleteAvatar({{.ID}})>X</button>
           {{else}}
           <img
             src="default_avatar.png"
@@ -58,9 +59,12 @@
             <option value="1" {{if eq .Rank_Panel.Int64 1}}selected{{end}}>
               Moderator
             </option>
+           {{if eq $.Rank 2}}
             <option value="2" {{if eq .Rank_Panel.Int64 2}}selected{{end}}>
               Admin
-            </option></select>
+            </option>
+            {{end}}
+        </select>
           <br />
           <input
             class="input-field"
@@ -68,7 +72,9 @@
             value="{{if .SchoolYear.Valid}}{{.SchoolYear.Time}}{{end}}"
           /><br />
           <button onclick="editUser({{.ID}})">Edit</button>
+          {{if eq $.Rank 2}}
           <button onclick="deleteUser({{.ID}})">Delete</button>
+            {{end}}
         </div>
       </div>
       {{end}}

@@ -712,7 +712,8 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
 				}
-				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+				editor_rank := FetchRankByUserID(db, user_id)
+				if editor_rank > 0 && isValidSession(wsmessage.SessionID, db) {
 					user_id := int(contentMap["id"].(float64))
 					firstname := contentMap["firstname"].(string)
 					lastname := contentMap["lastname"].(string)
@@ -723,6 +724,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					github := contentMap["github"].(string)
 					xp, err := strconv.Atoi(contentMap["xp"].(string))
 					rank, err := strconv.Atoi(contentMap["rank"].(string))
+					if editor_rank < rank {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+						break
+					}
 					schoolyear, err := time.Parse("2024-04-30", contentMap["schoolyear"].(string))
 					err = ModifyUserPanel(db, user_id, firstname, lastname, username, email, bio, website, github, xp, rank, schoolyear)
 					if err != nil {
@@ -762,9 +767,49 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				} else {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
+			case "deleteAvatarPanel":
+				/*const data = {
+				    type: "deleteAvatarPanel",
+				    content: {
+				        user_id: user_id,
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for deleteAvatarPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+					user_id := int(contentMap["user_id"].(float64))
+					err := DeleteAvatar(db, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete avatar"})
+						break
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+				}
 			}
 		}
 	}
+}
+func DeleteAvatar(db *sql.DB, user_id int) error {
+	stmt, err := db.Prepare("UPDATE users SET avatar = NULL WHERE id_student = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(user_id); err != nil {
+		return err
+	}
+	return nil
 }
 func DeleteUserPanel(db *sql.DB, user_id int) error {
 	stmt, err := db.Prepare("DELETE FROM users WHERE id_student = $1")
