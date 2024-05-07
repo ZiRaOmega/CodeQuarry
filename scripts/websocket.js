@@ -314,7 +314,7 @@ $(document).ready(function () {
       case "addFavori":
         const favori = document.querySelectorAll(".favori");
         const favorites = msg.content; // This should be an array of question IDs
-        console.log(favorites);
+      
         favori.forEach((element) => {
           const favId = element.getAttribute("data-question-id");
           if (Array.isArray(favorites)) {
@@ -327,32 +327,11 @@ $(document).ready(function () {
 
         break;
       case "questionModified":
-        const questionn = document.querySelector(
-          `.question[data-question-id="${msg.content.id}"]`
-        );
-        const question_view = document.querySelector(".question-viewer__question")
-        if (questionn) {
-          questionn.querySelector(".question__title").textContent = msg.content.title;
-          questionn.querySelector(".question__description").textContent = msg.content.description;
-          questionn.querySelector(".question__content pre code").textContent = msg.content.content
-        }else if (question_view){
-          question_view.querySelector(".question-viewer__question__title").textContent = msg.content.title;
-          question_view.querySelector(".question-viewer__question__description").textContent = msg.content.description;
-          question_view.querySelector(".question-viewer__question__content pre code").textContent = msg.content.content
-        }
+        handleQuestionUpdate(msg.content)
         break;
       case "responseModified":
-        for (let i =0;i<msg.content.length;i++){
-
-          const response = document.querySelector(
-            `.question-viewer__answers__answer[data-answer-id="${msg.content[i].response_id}"]`
-          );
-          console.log(response)
-          console.log(msg.content)
-          if (response) {
-            response.querySelector(".question-viewer__answers__answer__description").textContent = msg.content[i].description;
-            response.querySelector(".question-viewer__answers__answer__content pre code").textContent = msg.content[i].content;
-          }
+        for (let i = 0; i < msg.content.length; i++) {
+          handleAnswerUpdate(msg.content[i])
         }
         break;
     }
@@ -380,9 +359,9 @@ $(document).ready(function () {
     console.error(`[error] ${error.message}`);
   };
 });
-function ModifyResponse( response_id, content, description,question_id) {
-  console.log("modifyResponse")
-  console.log(response_id,content,description,question_id)
+function ModifyResponse(response_id, content, description, question_id) {
+  console.log("modifyResponse");
+  console.log(response_id, content, description, question_id);
   socket.send(
     JSON.stringify({
       type: "modify_response",
@@ -390,11 +369,51 @@ function ModifyResponse( response_id, content, description,question_id) {
         response_id: response_id,
         question_id: question_id,
         content: content,
-        description: description
+        description: description,
       },
       session_id: getCookie("session"),
     })
   );
+}
+function handleAnswerUpdate(data) {
+  const response = document.querySelector(
+    `.question-viewer__answers__answer[data-answer-id="${data.response_id}"]`
+  );
+
+  if (response) {
+    response.querySelector(
+      ".question-viewer__answers__answer__description"
+    ).textContent = data.description;
+    response.querySelector(
+      ".question-viewer__answers__answer__content pre code"
+    ).textContent = data.content;
+  }
+}
+function handleQuestionUpdate(data){
+  const questionn = document.querySelector(
+    `.question[data-question-id="${data.id}"]`
+  );
+  const question_view = document.querySelector(
+    ".question-viewer__question"
+  );
+  if (questionn) {
+    questionn.querySelector(".question__title").textContent =
+      data.title;
+    questionn.querySelector(".question__description").textContent =
+      data.description;
+    questionn.querySelector(".question__content pre code").textContent =
+      data.content;
+  } else if (question_view) {
+    question_view.querySelector(
+      ".question-viewer__question__title"
+    ).textContent = data.title;
+    question_view.querySelector(
+      ".question-viewer__question__description"
+    ).textContent = data.description;
+    question_view.querySelector(
+      ".question-viewer__question__content pre code"
+    ).textContent = data.content;
+  }
 }
 function handleVoteUpdate(data) {
   // Assuming 'data' contains { questionId: 123, upvotes: 10, downvotes: 5 }
