@@ -85,6 +85,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "valid"})
 				}
 			case "upvote":
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				err := HandleUpvote(db, wsmessage.Content.(float64), wsmessage.SessionID)
 				upvote, downvote := SendNewVoteCount(db, wsmessage.Content.(float64))
 				vote := Vote{QuestionID: int(wsmessage.Content.(float64)), Upvote: upvote, Downvote: downvote}
@@ -95,6 +99,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					BroadcastMessage(WSMessage{Type: "voteUpdate", Content: vote, SessionID: ""}, conn)
 				}
 			case "downvote":
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				err := HandleDownvote(db, wsmessage.Content.(float64), wsmessage.SessionID)
 				upvote, downvote := SendNewVoteCount(db, wsmessage.Content.(float64))
 				vote := Vote{QuestionID: int(wsmessage.Content.(float64)), Upvote: upvote, Downvote: downvote}
@@ -109,6 +117,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				content := wsmessage.Content.(map[string]interface{})
 				fmt.Println(content)
 				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -141,6 +153,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					break
 				}
 				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -166,6 +182,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				content := wsmessage.Content.(float64)
 				questionID := int(content)
 				userID, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -177,6 +197,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 			case "bestAnswer":
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				fmt.Println(contentMap)
 				if !ok {
 					fmt.Println("Invalid content type for bestAnswer")
@@ -218,6 +242,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "addFavori":
 				session_id := wsmessage.SessionID
 				contentMap := wsmessage.Content.(float64)
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				// Check session and get user_id
 				user_id, err := getUserIDUsingSessionID(session_id, db)
 				if err != nil {
@@ -246,6 +274,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "deleteFavori":
 				session_id := wsmessage.SessionID
 				contentMap := wsmessage.Content.(string)
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				// Check session and get user_id
 				user_id, err := getUserIDUsingSessionID(session_id, db)
 				if err != nil {
@@ -263,6 +295,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					}
 				}
 			case "upvote_response":
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				err := HandleUpvoteResponse(db, wsmessage.Content.(float64), wsmessage.SessionID)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to upvote response"})
@@ -273,6 +309,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
 			case "downvote_response":
+				if !isValidSession(wsmessage.SessionID, db) {
+					http.Redirect(w, r, "/", http.StatusSeeOther)
+					return
+				}
 				err := HandleDownvoteResponse(db, wsmessage.Content.(float64), wsmessage.SessionID)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to downvote response"})
@@ -311,6 +351,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					}
 				} else {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid session"})
+					http.Redirect(w, r, "/", http.StatusSeeOther)
 				}
 			case "modify_response":
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
@@ -322,6 +363,11 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if !isValidSession(wsmessage.SessionID, db) {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid session"})
+					http.Redirect(w, r, "/", http.StatusSeeOther)
 					break
 				}
 				response_id := int(contentMap["response_id"].(float64))

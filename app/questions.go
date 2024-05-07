@@ -126,6 +126,7 @@ func GetUsernameWithUserID(db *sql.DB, userID int) string {
 func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		subjectID := r.URL.Query().Get("subjectId")
+		question_id := r.URL.Query().Get("question_id")
 		session_id, err := r.Cookie("session")
 		if err != nil {
 			http.Error(w, "Session not found", http.StatusUnauthorized)
@@ -139,16 +140,31 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
-		questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
-		if err != nil {
-			http.Error(w, "Server error", http.StatusInternalServerError)
-			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 
-			return
+		if question_id == "" && subjectID != "" {
+
+			questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
+			if err != nil {
+				fmt.Println(err.Error())
+				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(questions)
+		} else if question_id != "" && subjectID == "" {
+			question_id_int, err := strconv.Atoi(question_id)
+			if err != nil {
+				fmt.Println(err.Error())
+				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+			}
+			questions, err := FetchQuestionByQuestionID(db, question_id_int, user_id)
+			if err != nil {
+				fmt.Println(err.Error())
+				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode([]Question{questions})
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(questions)
 	}
 }
 
