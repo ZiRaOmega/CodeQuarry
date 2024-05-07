@@ -187,7 +187,7 @@ function deleteUser(id){
 
 function addOneUpVoteResponse(Responseid){
     // Select the response element by its data attribute
-    const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
+    const responseElement = document.querySelector(`.response[data-response-id="${Responseid}"]`);
 
     // Retrieve content from input field
     const inputs = responseElement.querySelectorAll('.input-field')[3];
@@ -198,7 +198,7 @@ function addOneUpVoteResponse(Responseid){
 
 function removeOneUpVoteResponse(Responseid){
     // Select the response element by its data attribute
-    const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
+    const responseElement = document.querySelector(`.response[data-response-id="${Responseid}"]`);
 
     // Retrieve content from input field
     const inputs = responseElement.querySelectorAll('.input-field')[3];
@@ -240,7 +240,7 @@ function removeOneUpVoteQuestion(questionId){
 
 function addOneDownVoteResponse(Responseid){
     // Select the response element by its data attribute
-    const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
+    const responseElement = document.querySelector(`.response[data-response-id="${Responseid}"]`);
 
     // Retrieve content from input field
     const inputs = responseElement.querySelectorAll('.input-field')[4];
@@ -251,7 +251,7 @@ function addOneDownVoteResponse(Responseid){
 
 function removeOneDownVoteResponse(Responseid){
     // Select the response element by its data attribute
-    const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
+    const responseElement = document.querySelector(`.response[data-response-id="${Responseid}"]`);
 
     // Retrieve content from input field
     const inputs = responseElement.querySelectorAll('.input-field')[4];
