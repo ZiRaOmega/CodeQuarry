@@ -312,26 +312,14 @@ $(document).ready(function () {
         xp.textContent = msg.content + " XP";
         break;
       case "addFavori":
-        const favori = document.querySelectorAll(".favori");
-        const favorites = msg.content; // This should be an array of question IDs
-      
-        favori.forEach((element) => {
-          const favId = element.getAttribute("data-question-id");
-          if (Array.isArray(favorites)) {
-            if (favorites.some((f) => f == favId)) {
-              element.classList.add("favori_active");
-              element.textContent = "★";
-            }
-          }
-        });
-
+        handlFavoriUpdate(msg.content)
         break;
       case "questionModified":
-        handleQuestionUpdate(msg.content)
+        handleQuestionUpdate(msg.content);
         break;
       case "responseModified":
         for (let i = 0; i < msg.content.length; i++) {
-          handleAnswerUpdate(msg.content[i])
+          handleAnswerUpdate(msg.content[i]);
         }
         break;
     }
@@ -389,16 +377,13 @@ function handleAnswerUpdate(data) {
     ).textContent = data.content;
   }
 }
-function handleQuestionUpdate(data){
+function handleQuestionUpdate(data) {
   const questionn = document.querySelector(
     `.question[data-question-id="${data.id}"]`
   );
-  const question_view = document.querySelector(
-    ".question-viewer__question"
-  );
+  const question_view = document.querySelector(".question-viewer__question");
   if (questionn) {
-    questionn.querySelector(".question__title").textContent =
-      data.title;
+    questionn.querySelector(".question__title").textContent = data.title;
     questionn.querySelector(".question__description").textContent =
       data.description;
     questionn.querySelector(".question__content pre code").textContent =
@@ -414,6 +399,20 @@ function handleQuestionUpdate(data){
       ".question-viewer__question__content pre code"
     ).textContent = data.content;
   }
+}
+function handlFavoriUpdate(data) {
+  const favori = document.querySelectorAll(".favori");
+  const favorites = data; // This should be an array of question IDs
+
+  favori.forEach((element) => {
+    const favId = element.getAttribute("data-question-id");
+    if (Array.isArray(favorites)) {
+      if (favorites.some((f) => f == favId)) {
+        element.classList.add("favori_active");
+        element.textContent = "★";
+      }
+    }
+  });
 }
 function handleVoteUpdate(data) {
   // Assuming 'data' contains { questionId: 123, upvotes: 10, downvotes: 5 }
