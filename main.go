@@ -115,7 +115,8 @@ func main() {
 	http.HandleFunc("/search_bar/input.js", app.SearchBarJS)
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 	http.HandleFunc("/posts.css", app.PostCSSHandler)
-	http.HandleFunc("/classement", app.ClassementHandler(db))
+	//http.HandleFunc("/classement", app.ClassementHandler(db))
+	http.HandleFunc("/classement", app.SendComponent("classement",db))
 	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
 	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
 
