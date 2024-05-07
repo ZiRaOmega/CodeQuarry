@@ -73,7 +73,7 @@ func init() {
 	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
 	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
 	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
-	templates["panel"] = parseTemplates("panel", "script", "head")
+	templates["panel"] = parseTemplates("panel", "script", "head", "header")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
