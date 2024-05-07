@@ -355,6 +355,7 @@ fetch("/api/questions?subjectId=all")
             question_viewer__answers__answer.classList.add(
               "question-viewer__answers__answer"
             );
+            question_viewer__answers__answer.setAttribute("data-answer-id",answer.response_id)
             question_viewer__answers__answer__description.classList.add(
               "question-viewer__answers__answer__description"
             );
