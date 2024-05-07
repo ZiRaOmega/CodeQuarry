@@ -44,6 +44,7 @@
     </div>
     <div id="all_questions">
         {{range .Questions}}
+        {{$Id:=.Id}}
         <div class="question" data-question-id="{{.Id}}">
             <input class="title input-field" type="text" value="{{.Title}}" /><br>
             <textarea class="description textarea-field">{{.Description}}</textarea><br>
@@ -65,7 +66,7 @@
                 <input class="input-field" type="number" value="{{.UpVotes}}" style="width: 50px;">, <input class="input-field" type="number" value="{{.DownVotes}}" style="width: 50px;"><br>
             
                 
-                <button data-response-id="{{.ResponseID}}"onclick=editResponse({{.ResponseID}},{{.Id}})>Edit</button>
+                <button data-response-id="{{.ResponseID}}"onclick=editResponse({{.ResponseID}},{{$Id}})>Edit</button>
                 <button data-response-id="{{.ResponseID}}">Delete</button>
                 </div>
                 {{end}}
@@ -79,3 +80,4 @@
 </body>
 </html>
 {{end}}
+
