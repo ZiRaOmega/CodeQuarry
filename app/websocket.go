@@ -752,7 +752,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
 				}
-				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+				if FetchRankByUserID(db, user_id) > 1 && isValidSession(wsmessage.SessionID, db) {
 					user_id := int(contentMap["id"].(float64))
 					err := DeleteUserPanel(db, user_id)
 					if err != nil {
