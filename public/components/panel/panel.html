@@ -14,7 +14,7 @@
             width="100"
             height="100"
           />
-          <button onclick=deleteAvatar({{.ID}})>X</button>
+          <button onclick="deleteAvatar({{.ID}})">X</button>
           {{else}}
           <img
             src="default_avatar.png"
@@ -59,23 +59,24 @@
             <option value="1" {{if eq .Rank_Panel.Int64 1}}selected{{end}}>
               Moderator
             </option>
-           {{if eq $.Rank 2}}
+            {{if eq $.Rank 2}}
             <option value="2" {{if eq .Rank_Panel.Int64 2}}selected{{end}}>
               Admin
             </option>
             {{end}}
-        </select>
+          </select>
           <br />
           <input
             class="input-field"
             type="date"
-            value="{{if .SchoolYear.Valid}}{{.SchoolYear.Time}}{{end}}"
+            value="{{if .SchoolYear.Valid}}{{.SchoolYear.Time.Format "2006-01-02"}}{{end}}"
           /><br />
           <button onclick="editUser({{.ID}})">Edit</button>
           {{if eq $.Rank 2}}
           <button onclick="deleteUser({{.ID}})">Delete</button>
-            {{end}}
+          {{end}}
         </div>
+        <br />
       </div>
       {{end}}
     </div>
@@ -86,13 +87,14 @@
         <textarea class="textarea-field">{{.Description}}</textarea><br />
         <input
           class="input-field"
-          type="text"
-          value="{{.CreationDate}}"
+          type="date"
+          value="{{.CreationDate.Format "2006-01-02"}}"
         /><br />
-        <input class="input-field" type="text" value="{{.UpdateDate}}" /><br />
+        <input class="input-field" type="date" value="{{.UpdateDate.Format "2006-01-02"}}" /><br />
         <button onclick="editSubject({{.Id}})">Edit</button>
         <button onclick="deleteSubject({{.Id}})">Delete</button>
       </div>
+      <br />
       {{end}}
       <div id="add_subject">
         <input class="input-field" type="text" placeholder="Title" /><br />
