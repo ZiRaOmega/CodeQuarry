@@ -116,10 +116,10 @@ func main() {
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 	http.HandleFunc("/posts.css", app.PostCSSHandler)
 	//http.HandleFunc("/classement", app.ClassementHandler(db))
-	http.HandleFunc("/classement", app.SendComponent("classement",db))
+	http.HandleFunc("/classement", app.SendComponent("classement", db))
 	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
 	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
-
+	http.HandleFunc("/panel", app.PanelAdminHandler(db))
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {

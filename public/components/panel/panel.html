@@ -1,0 +1,72 @@
+{{define "panel"}}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Panel Administration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+    <div id="all_users">
+        {{range .Users}}
+        <div class="user">
+            <div class="user_avatar">
+                {{if .Avatar.Valid}}
+                <img src="{{.Avatar.String}}" alt="User avatar" width="100" height="100" />
+                {{else}}
+                <img src="default_avatar.png" alt="Default avatar" width="100" height="100" />
+                {{end}}
+            </div>
+            <div class="user_details">
+                <p>Name: {{.FirstName}} {{.LastName}}</p>
+                <p>Username: @{{.Username}}</p>
+                <p>Email: {{.Email}}</p>
+                <p>Biography: {{if .Bio.Valid}}{{.Bio.String}}{{else}}Not provided{{end}}</p>
+                <p>Website: {{if .Website.Valid}}<a href="{{.Website.String}}">{{.Website.String}}</a>{{else}}Not provided{{end}}</p>
+                <p>GitHub: {{if .GitHub.Valid}}<a href="{{.GitHub.String}}">{{.GitHub.String}}</a>{{else}}Not provided{{end}}</p>
+                <p>Experience Points: {{if .XP.Valid}}{{.XP.Int64}}{{else}}0{{end}}</p>
+                <p>Rank: {{if .Rank.Valid}}{{.Rank.String}}{{else}}Unranked{{end}}</p>
+                <p>School Year: {{if .SchoolYear.Valid}}{{.SchoolYear.Time }}{{else}}Not provided{{end}}</p>
+                <p>Account Created: {{if .CreationDate.Valid}}{{.CreationDate.Time }}{{else}}Unknown{{end}}</p>
+                <p>Last Updated: {{if .UpdateDate.Valid}}{{.UpdateDate.Time}}{{else}}Unknown{{end}}</p>
+            </div>
+        </div>
+        {{end}}
+    </div>
+    <div id="all_subjects">
+        {{range .Subjects}}
+        <div class="subject">
+            <h3>{{.Title}}</h3>
+            <p>Description: {{.Description}}</p>
+            <p>Created on: {{.CreationDate }}</p>
+            <p>Last Updated: {{.UpdateDate }}</p>
+            <p>Questions Count: {{.QuestionCount}}</p>
+        </div>
+        {{end}}
+    </div>
+    <div id="all_questions">
+        {{range .Questions}}
+        <div class="question">
+            <h4>{{.Title}}</h4>
+            <p>Description: {{.Description}}</p>
+            <p>Content: {{.Content}}</p>
+            <p>Posted by: {{.Creator}}</p>
+            <p>Subject: {{.SubjectTitle}}</p>
+            <p>Created on: {{.CreationDate }}</p>
+            <p>Last Updated: {{.UpdateDate }}</p>
+            <p>Upvotes: {{.Upvotes}}, Downvotes: {{.Downvotes}}</p>
+            {{if .Responses}}
+            <div class="responses">
+                <h5>Responses:</h5>
+                {{range .Responses}}
+                <p>{{.Content}}</p>
+                {{end}}
+            </div>
+            {{end}}
+        </div>
+        {{end}}
+    </div>
+</body>
+</html>
+{{end}}

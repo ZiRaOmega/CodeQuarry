@@ -13,12 +13,14 @@ import (
 // Question represents the data structure for a question
 type Question struct {
 	Id           int        `json:"id"`
+	User_Id      int        `json:"user_id"`
 	SubjectTitle string     `json:"subject_title"`
 	SubjectID    int        `json:"subject_id"`
 	Title        string     `json:"title"`
 	Description  string     `json:"description"`
 	Content      string     `json:"content"`
 	CreationDate time.Time  `json:"creation_date"`
+	UpdateDate   time.Time  `json:"update_date"`
 	Creator      string     `json:"creator"`
 	Upvotes      int        `json:"upvotes"`
 	Downvotes    int        `json:"downvotes"`
@@ -245,9 +247,12 @@ func InsertXP(db *sql.DB, user_id int, xp int) error {
 }
 
 type Subject struct {
-	Id            int    `json:"id"`
-	Title         string `json:"title"`
-	QuestionCount int    `json:"questionCount"`
+	Id            int       `json:"id"`
+	Title         string    `json:"title"`
+	Description   string    `json:"description"`
+	CreationDate  time.Time `json:"creation_date"`
+	UpdateDate    time.Time `json:"update_date"`
+	QuestionCount int       `json:"questionCount"`
 }
 
 // FetchSubjectWithQuestionCount fetches a subject from the database along with the count of its associated questions.

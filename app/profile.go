@@ -89,6 +89,7 @@ type User struct {
 	GitHub             sql.NullString
 	XP                 sql.NullInt64
 	Rank               sql.NullString
+	Rank_Panel         sql.NullInt64
 	SchoolYear         sql.NullTime // Adjusted for possible NULL values
 	School_Year_Format string
 	CreationDate       sql.NullTime // Adjusted for possible NULL values
