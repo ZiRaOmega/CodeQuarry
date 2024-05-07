@@ -71,6 +71,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				conn.Close()
 				return
 			}
+			fmt.Println(wsmessage)
 			switch wsmessage.Type {
 			case "session":
 				if wsmessage.Content == nil {
@@ -395,9 +396,131 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 						BroadcastMessage(WSMessage{Type: "responseModified", Content: updatedResponse, SessionID: ""}, conn)
 					}
 				}
+			case "editQuestionPanel":
+				/*const data = {
+				    type: "editQuestionPanel",
+				    content: {
+				        id: id,
+				        title: inputs[0].value,
+				        description: textareas[0].value,
+				        content: textareas[1].value,
+				        creationDate: inputs[1].value,
+				        updateDate: inputs[2].value,
+				        upvotes: inputs[3].value,
+				        downvotes: inputs[4].value
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for editQuestionPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				question_id := int(contentMap["id"].(float64))
+				question_title := contentMap["title"].(string)
+				question_description := contentMap["description"].(string)
+				question_content := contentMap["content"].(string)
+				question_creation_date, err := time.Parse("2024-05-01", contentMap["creationDate"].(string))
+				question_update_date, err := time.Parse("2024-05-0", contentMap["updateDate"].(string))
+				question_upvotes, err := strconv.Atoi(contentMap["upvotes"].(string))
+				question_downvotes, err := strconv.Atoi(contentMap["downvotes"].(string))
+				if FetchRankByUserID(db, user_id) > 0 {
+					err := ModifyQuestionPanel(db, question_id, question_title, question_description, question_content, question_creation_date, question_update_date, question_upvotes, question_downvotes)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify question"})
+						break
+					}
+					updatedQuestion, err := FetchQuestionByQuestionID(db, question_id, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated question"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "questionModified", Content: updatedQuestion})
+						BroadcastMessage(WSMessage{Type: "questionModified", Content: updatedQuestion, SessionID: ""}, conn)
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+				}
+			case "editResponsePanel":
+				/*const data = {
+				    type: "editResponsePanel",
+				    content: {
+				        id: responseId,
+						question_id: question_id,
+				        content: textareas[0].value,
+				        description: inputs[0].value,
+				        creationDate: inputs[1].value,
+				        updateDate: inputs[2].value,
+				        upvotes: inputs[3].value,
+				        downvotes: inputs[4].value
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for editResponsePanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				response_id := int(contentMap["id"].(float64))
+				question_id := int(contentMap["question_id"].(float64))
+				response_content := contentMap["content"].(string)
+				response_description := contentMap["description"].(string)
+				response_creation_date, err := time.Parse("2024-05-01", contentMap["creationDate"].(string))
+				response_update_date, err := time.Parse("2024-05-0", contentMap["updateDate"].(string))
+				response_upvotes, err := strconv.Atoi(contentMap["upvotes"].(string))
+				response_downvotes, err := strconv.Atoi(contentMap["downvotes"].(string))
+				if FetchRankByUserID(db, user_id) > 0 {
+					err := ModifyResponsePanel(db, response_id, response_content, response_description, response_creation_date, response_update_date, response_upvotes, response_downvotes)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify response"})
+						break
+					}
+					updatedQuestion, err := FetchQuestionByQuestionID(db, question_id, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated question"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "questionModified", Content: updatedQuestion})
+						BroadcastMessage(WSMessage{Type: "questionModified", Content: updatedQuestion, SessionID: ""}, conn)
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+				}
 			}
 		}
 	}
+}
+func ModifyResponsePanel(db *sql.DB, response_id int, content string, description string, creationDate time.Time, updateDate time.Time, upVotes int, downVotes int) error {
+	stmt, err := db.Prepare("UPDATE Response SET content = $1, description = $2, creation_date = $3, update_date = $4, upvotes = $5, downvotes = $6 WHERE id_response = $7")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(content, description, creationDate, updateDate, upVotes, downVotes, response_id); err != nil {
+		return err
+	}
+	return nil
+}
+func ModifyQuestionPanel(db *sql.DB, question_id int, title string, description string, content string, creation_date time.Time, update_date time.Time, upvotes int, downvotes int) error {
+	stmt, err := db.Prepare("UPDATE Question SET title = $1, description = $2, content = $3, creation_date = $4, update_date = $5, upvotes = $6, downvotes = $7 WHERE id_question = $8")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(title, description, content, creation_date, update_date, upvotes, downvotes, question_id); err != nil {
+		return err
+	}
+	return nil
 }
 func ModifyResponse(db *sql.DB, response_id int, content string, description string, user_id int) error {
 	fmt.Println(content)
@@ -411,6 +534,7 @@ func ModifyResponse(db *sql.DB, response_id int, content string, description str
 	}
 	return nil
 }
+
 func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Favori WHERE id_student = $1 AND id_question = $2")
 	if err != nil {

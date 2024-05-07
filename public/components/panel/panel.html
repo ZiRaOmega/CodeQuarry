@@ -1,12 +1,7 @@
 {{define "panel"}}
 <!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Panel Administration</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-</head>
+{{template "head" .}}
 <body>
     <div id="all_users">
         {{range .Users}}
@@ -19,17 +14,17 @@
                 {{end}}
             </div>
             <div class="user_details">
-                <p>Name: {{.FirstName}} {{.LastName}}</p>
-                <p>Username: @{{.Username}}</p>
-                <p>Email: {{.Email}}</p>
-                <p>Biography: {{if .Bio.Valid}}{{.Bio.String}}{{else}}Not provided{{end}}</p>
-                <p>Website: {{if .Website.Valid}}<a href="{{.Website.String}}">{{.Website.String}}</a>{{else}}Not provided{{end}}</p>
-                <p>GitHub: {{if .GitHub.Valid}}<a href="{{.GitHub.String}}">{{.GitHub.String}}</a>{{else}}Not provided{{end}}</p>
-                <p>Experience Points: {{if .XP.Valid}}{{.XP.Int64}}{{else}}0{{end}}</p>
-                <p>Rank: {{if .Rank.Valid}}{{.Rank.String}}{{else}}Unranked{{end}}</p>
-                <p>School Year: {{if .SchoolYear.Valid}}{{.SchoolYear.Time }}{{else}}Not provided{{end}}</p>
-                <p>Account Created: {{if .CreationDate.Valid}}{{.CreationDate.Time }}{{else}}Unknown{{end}}</p>
-                <p>Last Updated: {{if .UpdateDate.Valid}}{{.UpdateDate.Time}}{{else}}Unknown{{end}}</p>
+                <input class="input-field" type="text" value="{{.FirstName}} {{.LastName}}" /><br>
+                <input class="input-field" type="text" value="@{{.Username}}" /><br>
+                <input class="input-field" type="email" value="{{.Email}}" /><br>
+                <textarea class="textarea-field">{{if .Bio.Valid}}{{.Bio.String}}{{else}}Not provided{{end}}</textarea><br>
+                <input class="input-field" type="url" value="{{if .Website.Valid}}{{.Website.String}}{{end}}" /><br>
+                <input class="input-field" type="url" value="{{if .GitHub.Valid}}{{.GitHub.String}}{{end}}" /><br>
+                <input class="input-field" type="number" value="{{if .XP.Valid}}{{.XP.Int64}}{{else}}0{{end}}" /><br>
+                <input class="input-field" type="text" value="{{if .Rank.Valid}}{{.Rank.String}}{{else}}Unranked{{end}}" /><br>
+                <input class="input-field" type="date" value="{{if .SchoolYear.Valid}}{{.SchoolYear.Time}}{{end}}" /><br>
+                <button data-user-id="{{.ID}}">Edit</button>
+                <button data-user-id="{{.ID}}">Delete</button>
             </div>
         </div>
         {{end}}
@@ -37,36 +32,50 @@
     <div id="all_subjects">
         {{range .Subjects}}
         <div class="subject">
-            <h3>{{.Title}}</h3>
-            <p>Description: {{.Description}}</p>
-            <p>Created on: {{.CreationDate }}</p>
-            <p>Last Updated: {{.UpdateDate }}</p>
-            <p>Questions Count: {{.QuestionCount}}</p>
+            <input class="input-field" type="text" value="{{.Title}}" /><br>
+            <textarea class="textarea-field">{{.Description}}</textarea><br>
+            <input class="input-field" type="text" value="{{.CreationDate}}" /><br>
+            <input class="input-field" type="text" value="{{.UpdateDate}}" /><br>
+            <input class="input-field" type="number" value="{{.QuestionCount}}" /><br>
+            <button data-subject-id="{{.Id}}">Edit</button>
+            <button data-subject-id="{{.Id}}">Delete</button>
         </div>
         {{end}}
     </div>
     <div id="all_questions">
         {{range .Questions}}
-        <div class="question">
-            <h4>{{.Title}}</h4>
-            <p>Description: {{.Description}}</p>
-            <p>Content: {{.Content}}</p>
-            <p>Posted by: {{.Creator}}</p>
-            <p>Subject: {{.SubjectTitle}}</p>
-            <p>Created on: {{.CreationDate }}</p>
-            <p>Last Updated: {{.UpdateDate }}</p>
-            <p>Upvotes: {{.Upvotes}}, Downvotes: {{.Downvotes}}</p>
-            {{if .Responses}}
-            <div class="responses">
+        <div class="question" data-question-id="{{.Id}}">
+            <input class="title input-field" type="text" value="{{.Title}}" /><br>
+            <textarea class="description textarea-field">{{.Description}}</textarea><br>
+            <textarea class="content textarea-field">{{.Content}}</textarea><br>
+            <input class="input-field" type="text" value="{{.CreationDate}}" /><br>
+            <input class="input-field" type="text" value="{{.UpdateDate}}" /><br>
+            <input class="input-field" type="number" value="{{.Upvotes}}" style="width: 50px;">, <input class="input-field" type="number" value="{{.Downvotes}}" style="width: 50px;"><br>
+            <button data-question-id="{{.Id}}" onclick=editQuestion({{.Id}})>Edit</button>
+            <button data-question-id="{{.Id}}">Delete</button>
+       
+            <div class="all_responses">
                 <h5>Responses:</h5>
                 {{range .Responses}}
-                <p>{{.Content}}</p>
+                <div class="response" data-response-id="{{.ResponseID}}">
+                <textarea class="response-content textarea-field" data-response-id="{{.ResponseID}}">{{.Content}}</textarea>
+                <input class="input-field" type="text" value="{{.Description}}" /><br>
+                <input class="input-field" type="text" value="{{.CreationDate}}" /><br>
+                <input class="input-field" type="text" value="{{.UpdateDate}}" /><br>
+                <input class="input-field" type="number" value="{{.UpVotes}}" style="width: 50px;">, <input class="input-field" type="number" value="{{.DownVotes}}" style="width: 50px;"><br>
+            
+                
+                <button data-response-id="{{.ResponseID}}"onclick=editResponse({{.ResponseID}},{{.Id}})>Edit</button>
+                <button data-response-id="{{.ResponseID}}">Delete</button>
+                </div>
                 {{end}}
             </div>
-            {{end}}
+   
         </div>
         {{end}}
     </div>
+    {{template "script" .}}
+    <script src="/scripts/panel.js"></script>
 </body>
 </html>
 {{end}}

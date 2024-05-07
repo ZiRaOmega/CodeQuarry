@@ -120,6 +120,7 @@ func main() {
 	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
 	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
 	http.HandleFunc("/panel", app.PanelAdminHandler(db))
+	http.HandleFunc("/scripts/panel.js", app.PanelJSHandler)
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
