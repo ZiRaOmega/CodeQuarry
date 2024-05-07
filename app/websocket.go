@@ -496,9 +496,99 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				} else {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
+			case "editSubjectPanel":
+				/*const data = {
+				    type: "editSubjectPanel",
+				    content: {
+				        id: id,
+				        title: inputs[0].value,
+				        description: textareas[0].value,
+				        creationDate: inputs[1].value,
+				        updateDate: inputs[2].value,
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for editSubjectPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				subject_id := int(contentMap["id"].(float64))
+				subject_title := contentMap["title"].(string)
+				subject_description := contentMap["description"].(string)
+				subject_creation_date, err := time.Parse("2024-05-01", contentMap["creationDate"].(string))
+				subject_update_date, err := time.Parse("2024-05-0", contentMap["updateDate"].(string))
+
+				if FetchRankByUserID(db, user_id) > 0 {
+					err := ModifySubjectPanel(db, subject_id, subject_title, subject_description, subject_creation_date, subject_update_date)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify subject"})
+						break
+					}
+					updatedSubject := FetchSubjects(db)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated subject"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "subjectModified", Content: updatedSubject})
+						BroadcastMessage(WSMessage{Type: "subjectModified", Content: updatedSubject, SessionID: ""}, conn)
+					}
+				}
+			case "addSubjectPanel":
+				/* const data = {
+				    type: "addSubjectPanel",
+				    content: {
+				        title: inputs[0].value,
+				        description: textareas[0].value,
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok || len(contentMap) == 0 {
+					fmt.Println("Invalid content type for addSubjectPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				subject_title := contentMap["title"].(string)
+				subject_description := contentMap["description"].(string)
+				if FetchRankByUserID(db, user_id) > 0 {
+					err := InsertInSubject(db, subject_title, subject_description)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create subject"})
+						break
+					}
+					updatedSubject := FetchSubjects(db)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated subject"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "subjectModified", Content: updatedSubject})
+						BroadcastMessage(WSMessage{Type: "subjectModified", Content: updatedSubject, SessionID: ""}, conn)
+					}
+				}
 			}
 		}
 	}
+}
+func ModifySubjectPanel(db *sql.DB, subject_id int, title string, description string, creation_date time.Time, update_date time.Time) error {
+	stmt, err := db.Prepare("UPDATE Subject SET title = $1, description = $2, creation_date = $3, update_date = $4 WHERE id_subject = $5")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(title, description, creation_date, update_date, subject_id); err != nil {
+		return err
+	}
+	return nil
 }
 func ModifyResponsePanel(db *sql.DB, response_id int, content string, description string, creationDate time.Time, updateDate time.Time, upVotes int, downVotes int) error {
 	stmt, err := db.Prepare("UPDATE Response SET content = $1, description = $2, creation_date = $3, update_date = $4, upvotes = $5, downvotes = $6 WHERE id_response = $7")

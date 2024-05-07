@@ -2837,3 +2837,8 @@ ERROR: 2024/05/07 21:15:02 Error reading the message from the client
 ERROR: 2024/05/07 21:18:56 Error reading the message from the client
 ERROR: 2024/05/07 22:34:29 Error reading the message from the client
 ERROR: 2024/05/07 22:34:45 Error reading the message from the client
+DEBUG: 2024/05/07 22:45:37 Login successful: mm at /login
+ERROR: 2024/05/07 22:45:37 Error reading the message from the client
+ERROR: 2024/05/07 22:45:44 Error reading the message from the client
+ERROR: 2024/05/07 22:46:24 Error reading the message from the client
+ERROR: 2024/05/07 23:01:57 Error reading the message from the client
