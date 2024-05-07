@@ -3,6 +3,7 @@
 <html>
   {{template "head" .}}
   <body>
+    {{template "header" .}}
     <div id="all_users">
       {{range .Users}}
       <div class="user">
@@ -59,7 +60,7 @@
             <option value="1" {{if eq .Rank_Panel.Int64 1}}selected{{end}}>
               Moderator
             </option>
-            {{if eq $.Rank 2}}
+            {{if eq $.Rank_Panel.Int64 2}}
             <option value="2" {{if eq .Rank_Panel.Int64 2}}selected{{end}}>
               Admin
             </option>
@@ -72,7 +73,7 @@
             value="{{if .SchoolYear.Valid}}{{.SchoolYear.Time.Format "2006-01-02"}}{{end}}"
           /><br />
           <button onclick="editUser({{.ID}})">Edit</button>
-          {{if eq $.Rank 2}}
+          {{if eq $.Rank_Panel.Int64 2}}
           <button onclick="deleteUser({{.ID}})">Delete</button>
           {{end}}
         </div>
@@ -122,14 +123,16 @@
           value="{{.Upvotes}}"
           style="width: 50px"
         />
-        <button onclick=addOneVoteQuestion({{.Id}})>+</button>
+        <button onclick=addOneUpVoteQuestion({{.Id}})>+</button>
+        <button onclick=removeOneUpVoteQuestion({{.Id}})>-</button>
         <input
           class="input-field"
           type="number"
           value="{{.Downvotes}}"
           style="width: 50px"
         />
-        <button onclick=addOneVoteQuestion({{.Id}})>+</button>
+        <button onclick=addOneDownVoteQuestion({{.Id}})>+</button>
+        <button onclick=removeOneDownVoteQuestion({{.Id}})>-</button>
         <br />
         <button onclick="editQuestion({{.Id}})">Edit</button>
         <button onclick="deleteQuestion({{.Id}})">Delete</button>
@@ -165,14 +168,16 @@
               value="{{.UpVotes}}"
               style="width: 50px"
             />
-            <button onclick=addOneVoteResponse({{.ResponseID}})>+</button>
+            <button onclick=addOneUpVoteResponse({{.ResponseID}})>+</button>
+            <button onclick=removeOneUpVoteResponse({{.ResponseID}})>-</button>
             <input
               class="input-field"
               type="number"
               value="{{.DownVotes}}"
               style="width: 50px"
             />
-            <button onclick=removeOneVoteResponse({{.ResponseID}})>-</button>
+            <button onclick=addOneDownVoteResponse({{.ResponseID}})>+</button>
+            <button onclick=removeOneDownVoteResponse({{.ResponseID}})>-</button>
             <br />
 
             <button onclick="editResponse({{.ResponseID}},{{$Id}})">

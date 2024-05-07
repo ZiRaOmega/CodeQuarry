@@ -185,7 +185,7 @@ function deleteUser(id){
     socket.send(JSON.stringify(data));
 }
 
-function addOneVoteResponse(Responseid){
+function addOneUpVoteResponse(Responseid){
     // Select the response element by its data attribute
     const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
 
@@ -196,7 +196,60 @@ function addOneVoteResponse(Responseid){
     inputs.value = parseInt(inputs.value) + 1;
 }
 
-function removeOneVoteResponse(Responseid){
+function removeOneUpVoteResponse(Responseid){
+    // Select the response element by its data attribute
+    const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
+
+    // Retrieve content from input field
+    const inputs = responseElement.querySelectorAll('.input-field')[3];
+
+    //update the input content
+    inputs.value = parseInt(inputs.value) - 1;
+    
+    if (parseInt(inputs.value) < 0){
+        inputs.value = 0;
+    }
+}
+
+function addOneUpVoteQuestion(questionId){
+    // Select the response element by its data attribute
+    const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
+
+    // Retrieve content from input field
+    const inputs = questionElement.querySelectorAll('.input-field')[3];
+
+    //update the input content
+    inputs.value = parseInt(inputs.value) + 1;
+}
+
+function removeOneUpVoteQuestion(questionId){
+    // Select the response element by its data attribute
+    const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
+
+    // Retrieve content from input field
+    const inputs = questionElement.querySelectorAll('.input-field')[3];
+
+    //update the input content
+    inputs.value = parseInt(inputs.value) - 1;
+    
+    if (parseInt(inputs.value) < 0){
+        inputs.value = 0;
+    }
+}
+
+
+function addOneDownVoteResponse(Responseid){
+    // Select the response element by its data attribute
+    const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
+
+    // Retrieve content from input field
+    const inputs = responseElement.querySelectorAll('.input-field')[4];
+
+    //update the input content
+    inputs.value = parseInt(inputs.value) + 1;
+}
+
+function removeOneDownVoteResponse(Responseid){
     // Select the response element by its data attribute
     const responseElement = document.querySelector(`.response[data-response-id="${responseId}"]`);
 
@@ -211,18 +264,18 @@ function removeOneVoteResponse(Responseid){
     }
 }
 
-function addOneVoteQuestion(questionId){
+function addOneDownVoteQuestion(questionId){
     // Select the response element by its data attribute
     const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
 
     // Retrieve content from input field
-    const inputs = questionElement.querySelectorAll('.input-field')[3];
+    const inputs = questionElement.querySelectorAll('.input-field')[4];
 
     //update the input content
     inputs.value = parseInt(inputs.value) + 1;
 }
 
-function removeOneVoteQuestion(questionId){
+function removeOneDownVoteQuestion(questionId){
     // Select the response element by its data attribute
     const questionElement = document.querySelector(`[data-question-id="${questionId}"]`);
 

@@ -8,10 +8,10 @@ import (
 )
 
 type Panel struct {
-	Questions []Question
-	Users     []User
-	Subjects  []Subject
-	Rank      int
+	Questions  []Question
+	Users      []User
+	Subjects   []Subject
+	Rank_Panel sql.NullInt64
 }
 
 func PanelAdminHandler(db *sql.DB) http.HandlerFunc {
@@ -29,7 +29,7 @@ func PanelAdminHandler(db *sql.DB) http.HandlerFunc {
 		fmt.Println(user_id)
 		data := Panel{}
 		rank := FetchRankByUserID(db, user_id)
-		data.Rank = rank
+		data.Rank_Panel = sql.NullInt64{Int64: int64(rank), Valid: true}
 		data.Subjects = FetchSubjects(db)
 		data.Questions = FetchQuestions(db)
 		data.Users, err = FetchUsers(db)
