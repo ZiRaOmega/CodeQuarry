@@ -8,12 +8,16 @@ import (
 	"path"
 	"text/template"
 )
-
+type AuthInfo struct {
+	Rank int
+}
 /* ======================= GLOBAL ======================= */
 
 func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(component_name)
+		//Get cookie session 
+		
 		if component_name == "auth" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
 			err := ParseAndExecuteTemplate(component_name, nil, w)

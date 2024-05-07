@@ -112,22 +112,25 @@
         <textarea class="content textarea-field">{{.Content}}</textarea><br />
         <input
           class="input-field"
-          type="text"
-          value="{{.CreationDate}}"
+          type="date"
+          value="{{.CreationDate.Format "2006-01-02"}}"
         /><br />
-        <input class="input-field" type="text" value="{{.UpdateDate}}" /><br />
+        <input class="input-field" type="date" value="{{.UpdateDate.Format "2006-01-02"}}" /><br />
         <input
           class="input-field"
           type="number"
           value="{{.Upvotes}}"
           style="width: 50px"
-        />,
+        />
+        <button onclick=addOneVoteQuestion({{.Id}})>+</button>
         <input
           class="input-field"
           type="number"
           value="{{.Downvotes}}"
           style="width: 50px"
-        /><br />
+        />
+        <button onclick=addOneVoteQuestion({{.Id}})>+</button>
+        <br />
         <button onclick="editQuestion({{.Id}})">Edit</button>
         <button onclick="deleteQuestion({{.Id}})">Delete</button>
 
@@ -148,26 +151,29 @@
             /><br />
             <input
               class="input-field"
-              type="text"
-              value="{{.CreationDate}}"
+              type="date"
+              value="{{.CreationDate.Format "2006-01-02"}}"
             /><br />
             <input
               class="input-field"
-              type="text"
-              value="{{.UpdateDate}}"
+              type="date"
+              value="{{.UpdateDate.Format "2006-01-02"}}"
             /><br />
             <input
               class="input-field"
               type="number"
               value="{{.UpVotes}}"
               style="width: 50px"
-            />,
+            />
+            <button onclick=addOneVoteResponse({{.ResponseID}})>+</button>
             <input
               class="input-field"
               type="number"
               value="{{.DownVotes}}"
               style="width: 50px"
-            /><br />
+            />
+            <button onclick=removeOneVoteResponse({{.ResponseID}})>-</button>
+            <br />
 
             <button onclick="editResponse({{.ResponseID}},{{$Id}})">
               Edit
