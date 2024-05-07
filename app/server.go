@@ -8,16 +8,18 @@ import (
 	"path"
 	"text/template"
 )
+
 type AuthInfo struct {
 	Rank int
 }
+
 /* ======================= GLOBAL ======================= */
 
 func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(component_name)
-		//Get cookie session 
-		
+		//Get cookie session
+
 		if component_name == "auth" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
 			err := ParseAndExecuteTemplate(component_name, nil, w)
@@ -37,8 +39,8 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 		if isValidSession(session_id, db) {
 			// Get user info from user_id
 			var user User
+			user, err = GetUser(session_id, db)
 			if component_name == "profile" || component_name == "classement" {
-				user, err = GetUser(session_id, db)
 				if err != nil {
 					fmt.Println(err.Error())
 					http.Error(w, "Error getting user info", http.StatusInternalServerError)
