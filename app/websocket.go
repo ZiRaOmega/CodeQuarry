@@ -430,7 +430,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				question_update_date, err := time.Parse("2024-05-0", contentMap["updateDate"].(string))
 				question_upvotes, err := strconv.Atoi(contentMap["upvotes"].(string))
 				question_downvotes, err := strconv.Atoi(contentMap["downvotes"].(string))
-				if FetchRankByUserID(db, user_id) > 0 {
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
 					err := ModifyQuestionPanel(db, question_id, question_title, question_description, question_content, question_creation_date, question_update_date, question_upvotes, question_downvotes)
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify question"})
@@ -480,7 +480,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				response_update_date, err := time.Parse("2024-05-0", contentMap["updateDate"].(string))
 				response_upvotes, err := strconv.Atoi(contentMap["upvotes"].(string))
 				response_downvotes, err := strconv.Atoi(contentMap["downvotes"].(string))
-				if FetchRankByUserID(db, user_id) > 0 {
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
 					err := ModifyResponsePanel(db, response_id, response_content, response_description, response_creation_date, response_update_date, response_upvotes, response_downvotes)
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify response"})
@@ -525,7 +525,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				subject_creation_date, err := time.Parse("2024-05-01", contentMap["creationDate"].(string))
 				subject_update_date, err := time.Parse("2024-05-0", contentMap["updateDate"].(string))
 
-				if FetchRankByUserID(db, user_id) > 0 {
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
 					err := ModifySubjectPanel(db, subject_id, subject_title, subject_description, subject_creation_date, subject_update_date)
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify subject"})
@@ -561,7 +561,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 				subject_title := contentMap["title"].(string)
 				subject_description := contentMap["description"].(string)
-				if FetchRankByUserID(db, user_id) > 0 {
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
 					err := InsertInSubject(db, subject_title, subject_description)
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create subject"})
@@ -575,9 +575,248 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 						BroadcastMessage(WSMessage{Type: "subjectModified", Content: updatedSubject, SessionID: ""}, conn)
 					}
 				}
+			case "deleteSubjectPanel":
+				/*const data = {
+				    type: "deleteSubjectPanel",
+				    content: {
+				        id: id,
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for deleteSubjectPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				panel_id := int(contentMap["id"].(float64))
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+					err := DeleteSubjectPanel(db, panel_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete subject"})
+						break
+					}
+					updatedSubject := FetchSubjects(db)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated subject"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "subjectModified", Content: updatedSubject})
+						BroadcastMessage(WSMessage{Type: "subjectModified", Content: updatedSubject, SessionID: ""}, conn)
+					}
+				}
+			case "deleteQuestionPanel":
+				/*const data = {
+				    type: "deleteQuestionPanel",
+				    content: {
+				        id: id,
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for deleteQuestionPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				question_id := int(contentMap["id"].(float64))
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+					err := DeleteQuestionPanel(db, question_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete question"})
+						break
+					}
+
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated subject"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "postDeleted", Content: question_id})
+						BroadcastMessage(WSMessage{Type: "postDeleted", Content: question_id, SessionID: ""}, conn)
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+				}
+			case "deleteResponsePanel":
+				/* const data = {
+				    type: "deleteResponsePanel",
+				    content: {
+				        id: id,
+				        question_id: question_id
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for deleteResponsePanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				response_id := int(contentMap["id"].(float64))
+				question_id := int(contentMap["question_id"].(float64))
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+					err := DeleteResponsePanel(db, response_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete response"})
+						break
+					}
+					updatedQuestion, err := FetchQuestionByQuestionID(db, question_id, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated question"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "questionModified", Content: updatedQuestion})
+						BroadcastMessage(WSMessage{Type: "questionModified", Content: updatedQuestion, SessionID: ""}, conn)
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+				}
+			case "editUserPanel":
+				/*const data = {
+				    type: "editUserPanel",
+				    content: {
+				        id: id,
+				        firstname : inputs[0].value,
+				        lastname : inputs[1].value,
+				        username : inputs[2].value,
+				        email : inputs[3].value,
+				        bio : textareas[0].value,
+				        website : inputs[4].value,
+				        github : inputs[5].value,
+				        xp : inputs[6].value,
+				        rank : inputs[7].value,
+				        schoolyear : inputs[8].value
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for editUserPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+					user_id := int(contentMap["id"].(float64))
+					firstname := contentMap["firstname"].(string)
+					lastname := contentMap["lastname"].(string)
+					username := contentMap["username"].(string)
+					email := contentMap["email"].(string)
+					bio := contentMap["bio"].(string)
+					website := contentMap["website"].(string)
+					github := contentMap["github"].(string)
+					xp, err := strconv.Atoi(contentMap["xp"].(string))
+					rank, err := strconv.Atoi(contentMap["rank"].(string))
+					schoolyear, err := time.Parse("2024-04-30", contentMap["schoolyear"].(string))
+					err = ModifyUserPanel(db, user_id, firstname, lastname, username, email, bio, website, github, xp, rank, schoolyear)
+					if err != nil {
+						fmt.Println(err.Error())
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify user"})
+						break
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+				}
+			case "deleteUserPanel":
+				/* const data = {
+				    type: "deleteUserPanel",
+				    content: {
+				        id: id,
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for deleteUserPanel")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+					user_id := int(contentMap["id"].(float64))
+					err := DeleteUserPanel(db, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete user"})
+						break
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
+				}
 			}
 		}
 	}
+}
+func DeleteUserPanel(db *sql.DB, user_id int) error {
+	stmt, err := db.Prepare("DELETE FROM users WHERE id_student = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(user_id); err != nil {
+		return err
+	}
+	return nil
+}
+func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string, username string, email string, bio string, website string, github string, xp int, rank int, schoolyear time.Time) error {
+	stmt, err := db.Prepare("UPDATE users SET firstname = $1, lastname = $2, username = $3, email = $4, bio = $5, website = $6, github = $7, xp = $8, rang_rank_ = $9, school_year = $10 WHERE id_student = $11")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(firstname, lastname, username, email, bio, website, github, xp, rank, schoolyear, user_id); err != nil {
+		return err
+	}
+	return nil
+}
+func DeleteResponsePanel(db *sql.DB, response_id int) error {
+	stmt, err := db.Prepare("DELETE FROM Response WHERE id_response = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(response_id); err != nil {
+		return err
+	}
+	return nil
+}
+func DeleteQuestionPanel(db *sql.DB, question_id int) error {
+	stmt, err := db.Prepare("DELETE FROM Question WHERE id_question = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(question_id); err != nil {
+		return err
+	}
+	return nil
+}
+func DeleteSubjectPanel(db *sql.DB, subject_id int) error {
+	stmt, err := db.Prepare("DELETE FROM Subject WHERE id_subject = $1")
+	if err != nil {
+		return err
+	}
+	_, err2 := stmt.Exec(subject_id)
+	return err2
 }
 func ModifySubjectPanel(db *sql.DB, subject_id int, title string, description string, creation_date time.Time, update_date time.Time) error {
 	stmt, err := db.Prepare("UPDATE Subject SET title = $1, description = $2, creation_date = $3, update_date = $4 WHERE id_subject = $5")
