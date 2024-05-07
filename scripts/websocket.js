@@ -342,12 +342,17 @@ $(document).ready(function () {
         }
         break;
       case "responseModified":
-        const response = document.querySelector(
-          `.question-viewer__answers__answer[data-answer-id="${msg.content.response_id}"]`
-        );
-        if (response) {
-          response.querySelector(".question-viewer__answers__answer__description").textContent = msg.content.description;
-          response.querySelector(".question-viewer__answers__answer__content pre code").textContent = msg.content.content;
+        for (let i =0;i<msg.content.length;i++){
+
+          const response = document.querySelector(
+            `.question-viewer__answers__answer[data-answer-id="${msg.content[i].response_id}"]`
+          );
+          console.log(response)
+          console.log(msg.content)
+          if (response) {
+            response.querySelector(".question-viewer__answers__answer__description").textContent = msg.content[i].description;
+            response.querySelector(".question-viewer__answers__answer__content pre code").textContent = msg.content[i].content;
+          }
         }
         break;
     }
