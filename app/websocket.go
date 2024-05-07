@@ -1,6 +1,6 @@
 package app
 
-//Import websocket
+// Import websocket
 import (
 	"database/sql"
 	"fmt"
@@ -131,10 +131,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 			case "deletePost":
 				/*{
-				        type: "deletePost",
-				        content: id,
-						session_id: getCookie("session")
-				      }*/
+					content: id,
+					type: "deletePost",
+					session_id: getCookie("session")
+				}*/
 				question_id, err := strconv.Atoi(wsmessage.Content.(string))
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid question ID"})
@@ -218,15 +218,15 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "addFavori":
 				session_id := wsmessage.SessionID
 				contentMap := wsmessage.Content.(float64)
-				//Check session and get user_id
+				// Check session and get user_id
 				user_id, err := getUserIDUsingSessionID(session_id, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 				} else {
 					question_id := int(contentMap)
-					if err != nil {
+					/* if err != nil {
 						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
-					}
+					} */
 					if isItInFavori(db, user_id, question_id) {
 						err = DeleteFavori(db, user_id, question_id)
 						if err == nil {
@@ -246,7 +246,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "deleteFavori":
 				session_id := wsmessage.SessionID
 				contentMap := wsmessage.Content.(string)
-				//Check session and get user_id
+				// Check session and get user_id
 				user_id, err := getUserIDUsingSessionID(session_id, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
@@ -282,10 +282,88 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: wsmessage.SessionID})
 					BroadcastMessage(WSMessage{Type: "responseVoteUpdate", Content: vote, SessionID: ""}, conn)
 				}
+			case "modify_question":
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for modify_question")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				question_id, err := strconv.Atoi(contentMap["question_id"].(string))
+				if err != nil {
+					fmt.Println("Invalid or missing question_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+				if isValidSession(wsmessage.SessionID, db) {
+					ModifyQuestion(db, question_id, contentMap["title"].(string), contentMap["description"].(string), contentMap["content"].(string), user_id)
+					updatedQuestion, err := FetchQuestionByQuestionID(db, question_id, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated question"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "questionModified", Content: updatedQuestion})
+						BroadcastMessage(WSMessage{Type: "questionModified", Content: updatedQuestion, SessionID: ""}, conn)
+					}
+				} else {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid session"})
+				}
+			case "modify_response":
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+					fmt.Println("Invalid content type for modify_response")
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				response_id := int(contentMap["response_id"].(float64))
+				if err != nil {
+					fmt.Println("Invalid or missing response_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+				question_id := int(contentMap["question_id"].(float64))
+				if err != nil {
+					fmt.Println("Invalid or missing response_id")
+					// Optionally send an error response back to the client
+					continue
+				}
+				err = ModifyResponse(db, response_id, contentMap["content"].(string), contentMap["description"].(string), user_id)
+				if err != nil {
+					fmt.Println(err)
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify response"})
+				} else {
+					updatedResponse, err := FetchResponseByQuestion(db, question_id, user_id)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch updated response"})
+					} else {
+						conn.WriteJSON(WSMessage{Type: "responseModified", Content: updatedResponse})
+						BroadcastMessage(WSMessage{Type: "responseModified", Content: updatedResponse, SessionID: ""}, conn)
+					}
+				}
 			}
-
 		}
 	}
+}
+func ModifyResponse(db *sql.DB, response_id int, content string, description string, user_id int) error {
+	fmt.Println(content)
+	stmt, err := db.Prepare("UPDATE Response SET content = $1, description = $2 WHERE id_response = $3 AND id_student = $4")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(content, description, response_id, user_id); err != nil {
+		return err
+	}
+	return nil
 }
 func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Favori WHERE id_student = $1 AND id_question = $2")
@@ -298,6 +376,7 @@ func DeleteFavori(db *sql.DB, id_student int, question_id int) error {
 	}
 	return nil
 }
+
 func AddFavori(db *sql.DB, id_student int, question_id int) error {
 	stmt, err := db.Prepare("INSERT INTO Favori(id_student, id_question) VALUES($1, $2)")
 	if err != nil {
@@ -309,6 +388,7 @@ func AddFavori(db *sql.DB, id_student int, question_id int) error {
 	}
 	return nil
 }
+
 func isItInFavori(db *sql.DB, id_student int, question_id int) bool {
 	var exists bool
 	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM Favori WHERE id_student = $1 AND id_question = $2)", id_student, question_id).Scan(&exists)
@@ -318,6 +398,7 @@ func isItInFavori(db *sql.DB, id_student int, question_id int) bool {
 	}
 	return exists
 }
+
 func RemoveConnFromList(conn *websocket.Conn) {
 	for i, c := range ConnectionList {
 		if c == conn {
@@ -326,6 +407,7 @@ func RemoveConnFromList(conn *websocket.Conn) {
 		}
 	}
 }
+
 func isValidSession(session_id string, db *sql.DB) bool {
 	var expireAt time.Time
 	err := db.QueryRow("SELECT expire_at FROM Sessions WHERE uuid = $1", session_id).Scan(&expireAt)
@@ -341,6 +423,7 @@ func isValidSession(session_id string, db *sql.DB) bool {
 		return true
 	}
 }
+
 func DeleteSession(session_id string, db *sql.DB) error {
 	stmt, err := db.Prepare("DELETE FROM Sessions WHERE uuid = $1")
 	if err != nil {

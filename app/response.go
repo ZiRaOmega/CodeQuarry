@@ -24,6 +24,7 @@ type Response struct {
 	StudentID    int       `json:"student_id"`
 	StudentName  string    `json:"student_name"`
 	UserVote     string    `json:"user_vote"`
+	IsAuthor     bool      `json:"is_author"`
 }
 
 type ResponseVote struct {
@@ -100,7 +101,7 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 }
 func InsertResponse(db *sql.DB, response Response) error {
 	query := `INSERT INTO response (description, content, upvotes, downvotes, best_answer, creation_date, update_date, id_question, id_student) 
-			  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
+			VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 	_, err := db.Exec(query, response.Description, response.Content, 0, 0, false, response.CreationDate, response.UpdateDate, response.QuestionID, response.StudentID)
 	if err != nil {
 		return err
@@ -145,6 +146,9 @@ func FetchResponseByQuestion(db *sql.DB, questionID int, user_id int) ([]Respons
 			} else if voted_response.R == r.ResponseID && voted_response.DownVote {
 				r.UserVote = "downvoted"
 			}
+		}
+		if user_id == r.StudentID {
+			r.IsAuthor = true
 		}
 
 		r.StudentName = GetUsernameWithUserID(db, r.StudentID)
