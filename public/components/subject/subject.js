@@ -146,6 +146,7 @@ function manageFavorite(favori, questionId) {
     .then((response) => response.json())
     .then((favoris) => {
       if (Array.isArray(favoris)) {
+        console.log(favori)
         if (favoris.some((f) => f == questionId)) {
           favori.classList.add("favori_active");
           favori.textContent = "★";
@@ -166,7 +167,7 @@ function manageFavorite(favori, questionId) {
     });
 
   favori.onclick = function () {
-    //AddFavori(questionId);
+    AddFavori(questionId);
     if (favori.classList.contains("favori_active")) {
       favori.classList.remove("favori_active");
       favori.textContent = "☆";
@@ -176,6 +177,7 @@ function manageFavorite(favori, questionId) {
       favori.textContent = "★";
       favori.style.backgroundColor = "gold";
     }
+    
   };
 }
 

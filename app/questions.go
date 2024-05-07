@@ -135,11 +135,15 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
 			http.Error(w, "Session not found", http.StatusUnauthorized)
+			//Redirect to auth
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 		questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
 		if err != nil {
 			http.Error(w, "Server error", http.StatusInternalServerError)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
+
 			return
 		}
 
@@ -166,13 +170,16 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 		}
 		//get cookie session
 		session_id, err := r.Cookie("session")
+
 		if err != nil {
-			http.Error(w, "Session not found", http.StatusUnauthorized)
+			//http.Error(w, "Session not found", http.StatusUnauthorized)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
-			http.Error(w, "Session not found", http.StatusUnauthorized)
+			//http.Error(w, "Session not found", http.StatusUnauthorized)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 		questions, err := FetchQuestionByQuestionID(db, idint, user_id)

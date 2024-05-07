@@ -2761,3 +2761,13 @@ ERROR: 2024/05/06 16:24:15 Error reading the message from the client
 ERROR: 2024/05/06 16:24:33 Error reading the message from the client
 ERROR: 2024/05/06 16:27:05 Error reading the message from the client
 ERROR: 2024/05/06 16:27:14 Error reading the message from the client
+ERROR: 2024/05/07 16:09:26 Error reading the message from the client
+ERROR: 2024/05/07 16:09:34 Error reading the message from the client
+DEBUG: 2024/05/07 16:09:40 Login successful: mm at /login
+ERROR: 2024/05/07 16:09:40 Error reading the message from the client
+ERROR: 2024/05/07 16:10:01 Error reading the message from the client
+ERROR: 2024/05/07 16:10:41 Error reading the message from the client
+ERROR: 2024/05/07 16:13:59 Error reading the message from the client
+ERROR: 2024/05/07 16:15:09 Error reading the message from the client
+ERROR: 2024/05/07 16:15:18 Error reading the message from the client
+ERROR: 2024/05/07 16:16:03 Error reading the message from the client
