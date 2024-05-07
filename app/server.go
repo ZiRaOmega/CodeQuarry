@@ -67,7 +67,7 @@ func init() {
 	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
 	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
 	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
-	templates["panel"] = parseTemplates("panel")
+	templates["panel"] = parseTemplates("panel", "script", "head")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
@@ -181,6 +181,11 @@ func CQcssHandler(w http.ResponseWriter, r *http.Request) {
 func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.css")
+}
+
+/*Panel*/
+func PanelJSHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/components/panel/panel.js")
 }
 
 /* --------------- PROFILE ---------------- */

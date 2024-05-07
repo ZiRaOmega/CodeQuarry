@@ -101,42 +101,48 @@ func FetchSubjects(db *sql.DB) []Subject {
 func FetchQuestions(db *sql.DB) []Question {
 	/*Question(
 	id_question SERIAL NOT NULL,
-	id_subject INT NOT NULL,
-	id_user INT NOT NULL,
 	title VARCHAR(50) NOT NULL,
-	description VARCHAR(500) NOT NULL,
+	description VARCHAR(1000) NOT NULL,
+	content VARCHAR(10000) NOT NULL,
+	upvotes INT,
+	downvotes INT,
 	creation_date DATE NOT NULL,
 	update_date DATE NOT NULL,
+	id_student INT NOT NULL,
+	id_subject INT NOT NULL,
 	PRIMARY KEY(id_question),
-	FOREIGN KEY(id_subject) REFERENCES Subject(id_subject),
-	FOREIGN KEY(id_user) REFERENCES users(id_student)*/
+	UNIQUE(title),
+	FOREIGN KEY(id_student) REFERENCES users(id_student),
+	FOREIGN KEY(id_subject) REFERENCES Subject(id_subject)*/
 	var questions []Question
-	rows, err := db.Query("SELECT id_question, id_subject, id_student, title, description, creation_date, update_date FROM Question")
+	rows, err := db.Query("SELECT id_question, title, description, content, upvotes, downvotes, creation_date, update_date, id_student, id_subject FROM Question")
 	if err != nil {
-		fmt.Println(err.Error())
+		return nil
 	}
 	defer rows.Close()
 	for rows.Next() {
-		var id, id_subject, id_user int
-		var title, description string
+		var id, upvotes, downvotes, student_id, subject_id int
+		var title, description, content string
 		var creation_date, update_date time.Time
-		if err := rows.Scan(&id, &id_subject, &id_user, &title, &description, &creation_date, &update_date); err != nil {
-			fmt.Println(err.Error())
-
+		if err := rows.Scan(&id, &title, &description, &content, &upvotes, &downvotes, &creation_date, &update_date, &student_id, &subject_id); err != nil {
+			continue
 		}
-
 		resp, err := FetchResponseByQuestion(db, id, 0)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
+		fmt.Println(resp, "resp")
 		questions = append(questions, Question{
 			Id:           id,
-			SubjectID:    id_subject,
-			User_Id:      id_user,
 			Title:        title,
 			Description:  description,
+			Content:      content,
+			Upvotes:      upvotes,
+			Downvotes:    downvotes,
 			CreationDate: creation_date,
 			UpdateDate:   update_date,
+			User_Id:      student_id,
+			SubjectID:    subject_id,
 			Responses:    resp,
 		})
 	}
