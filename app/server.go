@@ -125,6 +125,9 @@ func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "public/components/auth/animation.js")
 }
+func PanelCssHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/components/panel/panel.css")
+}
 
 /* ======================= TEMPLATES ======================= */
 
