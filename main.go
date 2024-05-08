@@ -47,7 +47,7 @@ func main() {
 	outputPath := "public/components/auth/auth_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
 
-	RegisterRateLimiter := app.NewRateLimiter(1, time.Hour.Abs())
+	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour.Abs())
 
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
 
@@ -122,6 +122,7 @@ func main() {
 	http.HandleFunc("/panel", app.PanelAdminHandler(db))
 	http.HandleFunc("/scripts/panel.js", app.PanelJSHandler)
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
+	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {

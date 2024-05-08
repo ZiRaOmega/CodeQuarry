@@ -54,6 +54,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error hashing password"})
 			return
 		}
+
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
 		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp) VALUES($1, $2, $3, $4, $5, $6, 0)")
 		if err != nil {
@@ -81,6 +82,8 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error inserting the data into the database"})
 			return
 		}
+		token := GenerateTokenVerificationEmail()
+		SendVerificationEmail(db, email, token)
 		err = CreateSession(username, db, w)
 		if err != nil {
 			fmt.Println(err.Error())
@@ -93,7 +96,19 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		Log(DebugLevel, "Registration successful: "+username+" at "+r.URL.Path)
 	}
 }
-
+func GetEmailWithUsername(db *sql.DB, username string) string {
+	stmt, err := db.Prepare("SELECT email FROM users WHERE username = $1")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	defer stmt.Close()
+	var email string
+	err = stmt.QueryRow(username).Scan(&email)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return email
+}
 func LoginHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -115,6 +130,13 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			Log(ErrorLevel, "XSS detected")
 			// http.Error(w, "XSS detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
+			return
+		}
+		email := GetEmailWithUsername(db, username)
+		if !isEmailVerified(db, email) {
+			Log(ErrorLevel, "Email not verified"+email)
+			// http.Error(w, "XSS detected", http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Verify your email before trying to log in"})
 			return
 		}
 		// Fetch user from database

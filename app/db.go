@@ -23,6 +23,7 @@ func InitDB(dsn string) *sql.DB {
 func SetupDB(db *sql.DB) {
 	createTableUsers(db)
 	createTableSession(db)
+	createTableVerifyEmail(db)
 	createTableSubject(db)
 	createTableTag(db)
 	createTableQuestion(db)
@@ -63,6 +64,24 @@ func createTableUsers(db *sql.DB) {
 	if _, err := db.Exec(tableCreationQuery); err != nil {
 		log.Fatal(err)
 	}
+}
+func createTableVerifyEmail(db *sql.DB) {
+	// Create a VerifyEmail table
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS VerifyEmail(
+		id SERIAL NOT NULL,
+		email VARCHAR(50) NOT NULL,
+		token VARCHAR(50) NOT NULL,
+		validated BOOLEAN DEFAULT FALSE,
+		PRIMARY KEY(id),
+		UNIQUE(email),
+		UNIQUE(token),
+		FOREIGN KEY(email) REFERENCES users(email)
+	);`
+	// Execute the table creation query
+	if _, err := db.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+
 }
 func createTableSubject(db *sql.DB) {
 	// Create a Subject table
