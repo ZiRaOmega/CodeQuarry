@@ -274,3 +274,32 @@ func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/home/question_viewer/question_viewer.html")
 }
+
+func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "GET":
+			token := r.URL.Query().Get("token")
+			if token == "" {
+				http.Error(w, "Token not found", http.StatusBadRequest)
+				return
+			}
+			//Check if token is valid
+			if !isValidToken(db, token) {
+				http.Error(w, "Token not valid", http.StatusBadRequest)
+				return
+			} else {
+				//Update user status
+				/* err := UpdateUserStatus(db, token)
+				if err != nil {
+					http.Error(w, "Error updating user status", http.StatusInternalServerError)
+					return
+				} */
+				fmt.Println("email valid")
+				http.Redirect(w, r, "/home", http.StatusSeeOther)
+			}
+
+		}
+
+	}
+}
