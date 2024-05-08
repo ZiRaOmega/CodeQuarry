@@ -104,7 +104,7 @@
       </div>
       <br />
       {{end}}
-      <div id="add_subject">
+      <div class="subject" id="add_subject">
         <input class="input-field" type="text" placeholder="Title" /><br />
         <textarea class="textarea-field" placeholder="Description"></textarea
         ><br />
@@ -142,11 +142,11 @@
         <br />
         <button onclick="editQuestion({{.Id}})">Edit</button>
         <button onclick="deleteQuestion({{.Id}})">Delete</button>
-
-        <div class="all_responses">
+        <button onclick="showResponses({{.Id}})">Responses</button>
+        <div class="all_responses panel_all_div" data-response-id="{{.Id}}" style="display: none;">
           <h5>Responses:</h5>
           {{range .Responses}}
-          <div class="response" data-response-id="{{.ResponseID}}">
+          <div class="response question" data-response-id="{{.ResponseID}}">
             <textarea
               class="response-content textarea-field"
               data-response-id="{{.ResponseID}}"
