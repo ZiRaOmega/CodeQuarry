@@ -290,27 +290,36 @@ function removeOneDownVoteQuestion(questionId){
     }
 }
 
-document.getElementById("show_all_users").onclick = ()=>{
-    const all_users=document.getElementById("all_users")
-    if (all_users.style.display === "none"){
-        all_users.style.display = "block";
+document.getElementById("show_all_users").onclick = () => {
+    const all_users = document.getElementById("all_users");
+    toggleVisibility(all_users);
+};
+
+document.getElementById("show_all_subjects").onclick = () => {
+    const all_subjects = document.getElementById("all_subjects");
+    toggleVisibility(all_subjects);
+};
+
+document.getElementById("show_all_questions").onclick = () => {
+    const all_questions = document.getElementById("all_questions");
+    toggleVisibility(all_questions);
+};
+function toggleVisibility(element) {
+    // Check if the element is visible
+    if (element.classList.contains('visible')) {
+        element.classList.remove('visible');
+        setTimeout(() => {
+            element.style.height = '0'; // Collapse the element after the fade out
+            element.style.display = "hidden"
+        
+        }, 500); // This should match the transition time
     } else {
-        all_users.style.display = "none";
+        element.style.height = 'auto'; // Expand the element before fading in
+        
+        element.classList.add('visible');
     }
 }
-document.getElementById("show_all_subjects").onclick = ()=>{
-    const all_subjects=document.getElementById("all_subjects")
-    if (all_subjects.style.display === "none"){
-        all_subjects.style.display = "block";
-    } else {
-        all_subjects.style.display = "none";
-    }
-}
-document.getElementById("show_all_questions").onclick = ()=>{
-    const all_questions=document.getElementById("all_questions")
-    if (all_questions.style.display === "none"){
-        all_questions.style.display = "block";
-    } else {
-        all_questions.style.display = "none";
-    }
+function showResponses(id){
+    const responses = document.querySelector(`[data-question-id="${id}"]`).querySelector(".all_responses");
+    toggleVisibility(responses);
 }
