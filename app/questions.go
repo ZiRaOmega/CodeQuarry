@@ -27,6 +27,10 @@ type Question struct {
 	Responses    []Response `json:"responses"`
 	UserVote     string     `json:"user_vote"`
 }
+type QuestionViewer struct {
+	Question   Question
+	Rank_Panel sql.NullInt64
+}
 
 // FetchQuestionsBySubject retrieves a list of questions based on the subject ID.
 // If the subject ID is "all", it fetches all questions from the database.
@@ -205,7 +209,9 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error fetching responses", http.StatusInternalServerError)
 			return
 		}
-		err = ParseAndExecuteTemplate("question_viewer", questions, w)
+		rank := FetchRankByUserID(db, user_id)
+		question_viewer := QuestionViewer{Question: questions, Rank_Panel: sql.NullInt64{Int64: int64(rank), Valid: true}}
+		err = ParseAndExecuteTemplate("question_viewer", question_viewer, w)
 		if err != nil {
 			http.Error(w, "Error parsing template", http.StatusInternalServerError)
 			return

@@ -71,7 +71,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				conn.Close()
 				return
 			}
-			fmt.Println(wsmessage)
+			//fmt.Println(wsmessage)
 			switch wsmessage.Type {
 			case "session":
 				if wsmessage.Content == nil {
