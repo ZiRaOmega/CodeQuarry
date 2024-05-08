@@ -5,7 +5,10 @@ import (
 	"database/sql"
 	"encoding/base64"
 	"fmt"
+	"net/http"
 	"net/smtp"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const (
@@ -56,7 +59,10 @@ func ResetPassword(db *sql.DB, email string) string {
 	tempPasswordStr := base64.URLEncoding.EncodeToString(tempPassword)[:12] // Shorten to 12 characters
 
 	// Assuming you have a function to update the password in your user database
-	// UpdateUserPassword(email, tempPasswordStr)
+	err = UpdateUserPassword(db, email, tempPasswordStr)
+	if err != nil {
+		return "" // handle the error appropriately in production code
+	}
 
 	// Here, you should also send the new password to the user's email, which we will not demonstrate here
 	return tempPasswordStr
@@ -80,8 +86,12 @@ func SendResetPasswordEmail(email, password string) {
 	}
 }
 func UpdateUserPassword(db *sql.DB, email, password string) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
 	// Update the password in the database
-	_, err := db.Exec("UPDATE users SET password = $1 WHERE email = $2", password, email)
+	_, err = db.Exec("UPDATE users SET password = $1 WHERE email = $2", hashedPassword, email)
 	return err
 }
 
@@ -121,4 +131,25 @@ func isEmailVerified(db *sql.DB, email string) bool {
 		return true
 	}
 	return false
+}
+
+func ForgotPasswordHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != "POST" {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		email := r.FormValue("email")
+		if email == "" {
+			http.Error(w, "Email is required", http.StatusBadRequest)
+			return
+		}
+		if !isEmailVerified(db, email) {
+			http.Error(w, "Email is not verified", http.StatusBadRequest)
+			return
+		}
+		password := ResetPassword(db, email)
+		SendResetPasswordEmail(email, password)
+		http.Error(w, "Password reset successful. Check your email for the new password", http.StatusOK)
+	}
 }

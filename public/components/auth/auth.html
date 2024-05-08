@@ -56,9 +56,26 @@
       <div id="contentAlertLogin"></div>
       <button type="submit" id="login">Login</button>
     </form>
-
+    <p>Your forgot your password ?</p>
+    <button id="forgotPasswordRedirect">Forgot Password</button>
     <p>You don't have an account ?</p>
     <button id="registerRedirect">Register</button>
+  </div>
+  <div id="forgotPasswordBlock">
+    <div class="CQ-logo"></div>
+    <div class="Title">
+      <p class="code-quarry">Welcome to Code Quarry</p>
+      <p class="description">Let's recover your password !</p>
+    </div>
+    <form id="forgotPasswordForm" action="/forgot-password" method="post">
+      <p>Enter your email address and we will send you a temporary password.</p>
+      <input type="email" name="email" id="email" placeholder="E-mail" required="required"
+        autocomplete="off" />
+      <div id="contentAlertForgotPassword"></div>
+      <button type="submit" id="forgotPassword">Send</button>
+    </form>
+    <p>Remember your password ?</p>
+    <button id="loginRedirectForgotPassword">Login</button>
   </div>
   <script src="/components/auth/auth_obfuscate.js"></script>
   <script src="/components/auth/animation.js"></script>
