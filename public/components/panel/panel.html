@@ -4,94 +4,101 @@
   {{template "head" .}}
   <body>
     {{template "header" .}}
-    <div id="all_users">
-      {{range .Users}}
-      <div class="user">
-        <div class="user_avatar">
-          {{if .Avatar.Valid}}
-          <img
-            src="{{.Avatar.String}}"
-            alt="User avatar"
-            width="100"
-            height="100"
-          />
-          <button onclick="deleteAvatar({{.ID}})">X</button>
-          {{else}}
-          <img
-            src="default_avatar.png"
-            alt="Default avatar"
-            width="100"
-            height="100"
-          />
-          {{end}}
-        </div>
-        <div class="user_details" data-user-id="{{.ID}}">
-          <input
-            class="input-field"
-            type="text"
-            value="{{.FirstName}} "
-          /><br />
-          <input class="input-field" type="text" value="{{.LastName}}" /><br />
-          <input class="input-field" type="text" value="@{{.Username}}" /><br />
-          <input class="input-field" type="email" value="{{.Email}}" /><br />
-          <textarea class="textarea-field">
-{{if .Bio.Valid}}{{.Bio.String}}{{else}}Not provided{{end}}</textarea
-          ><br />
-          <input
-            class="input-field"
-            type="url"
-            value="{{if .Website.Valid}}{{.Website.String}}{{end}}"
-          /><br />
-          <input
-            class="input-field"
-            type="url"
-            value="{{if .GitHub.Valid}}{{.GitHub.String}}{{end}}"
-          /><br />
-          <input
-            class="input-field"
-            type="number"
-            value="{{if .XP.Valid}}{{.XP.Int64}}{{else}}0{{end}}"
-          /><br />
-          <!-- Replace rank input with a select dropdown -->
-          <select class="input-field" name="rank_panel">
-            <option value="0" {{if eq .Rank_Panel.Int64 0}}selected{{end}}>
-              User
-            </option>
-            <option value="1" {{if eq .Rank_Panel.Int64 1}}selected{{end}}>
-              Moderator
-            </option>
-            {{if eq $.Rank_Panel.Int64 2}}
-            <option value="2" {{if eq .Rank_Panel.Int64 2}}selected{{end}}>
-              Admin
-            </option>
+    <button class="show_button" id="show_all_users">Users</button>
+      <div class="panel_all_div" id="all_users" style="display: none;">
+        {{range .Users}}
+        <div class="user">
+          <div class="user_avatar">
+            {{if .Avatar.Valid}}
+            <img
+              src="{{.Avatar.String}}"
+              alt="User avatar"
+              width="100"
+              height="100"
+            />
+            <button onclick="deleteAvatar({{.ID}})">X</button>
+            {{else}}
+            <img
+              src="default_avatar.png"
+              alt="Default avatar"
+              width="100"
+              height="100"
+            />
             {{end}}
-          </select>
+          </div>
+          <div class="user_details" data-user-id="{{.ID}}">
+            <input
+              class="input-field"
+              type="text"
+              value="{{.FirstName}} "
+            /><br />
+            <input
+              class="input-field"
+              type="text"
+              value="{{.LastName}}"
+            /><br />
+            <input
+              class="input-field"
+              type="text"
+              value="@{{.Username}}"
+            /><br />
+            <input class="input-field" type="email" value="{{.Email}}" /><br />
+            <textarea class="textarea-field">
+{{if .Bio.Valid}}{{.Bio.String}}{{else}}Not provided{{end}}</textarea
+            ><br />
+            <input
+              class="input-field"
+              type="url"
+              value="{{if .Website.Valid}}{{.Website.String}}{{end}}"
+            /><br />
+            <input
+              class="input-field"
+              type="url"
+              value="{{if .GitHub.Valid}}{{.GitHub.String}}{{end}}"
+            /><br />
+            <input
+              class="input-field"
+              type="number"
+              value="{{if .XP.Valid}}{{.XP.Int64}}{{else}}0{{end}}"
+            /><br />
+            <!-- Replace rank input with a select dropdown -->
+            <select class="input-field" name="rank_panel">
+              <option value="0" {{if eq .Rank_Panel.Int64 0}}selected{{end}}>
+                User
+              </option>
+              <option value="1" {{if eq .Rank_Panel.Int64 1}}selected{{end}}>
+                Moderator
+              </option>
+              {{if eq $.Rank_Panel.Int64 2}}
+              <option value="2" {{if eq .Rank_Panel.Int64 2}}selected{{end}}>
+                Admin
+              </option>
+              {{end}}
+            </select>
+            <br />
+            <input class="input-field" type="date" value="{{if
+            .SchoolYear.Valid}}{{.SchoolYear.Time.Format "2006-01-02"}}{{end}}"
+            /><br />
+            <button onclick="editUser({{.ID}})">Edit</button>
+            {{if eq $.Rank_Panel.Int64 2}}
+            <button onclick="deleteUser({{.ID}})">Delete</button>
+            {{end}}
+          </div>
           <br />
-          <input
-            class="input-field"
-            type="date"
-            value="{{if .SchoolYear.Valid}}{{.SchoolYear.Time.Format "2006-01-02"}}{{end}}"
-          /><br />
-          <button onclick="editUser({{.ID}})">Edit</button>
-          {{if eq $.Rank_Panel.Int64 2}}
-          <button onclick="deleteUser({{.ID}})">Delete</button>
-          {{end}}
         </div>
-        <br />
-      </div>
-      {{end}}
+        {{end}}
+      
     </div>
-    <div id="all_subjects">
+    <button class="show_button" id="show_all_subjects">Subjects</button>
+    <div class="panel_all_div" id="all_subjects" style="display: none;">
       {{range .Subjects}}
       <div class="subject" data-subject-id="{{.Id}}">
         <input class="input-field" type="text" value="{{.Title}}" /><br />
         <textarea class="textarea-field">{{.Description}}</textarea><br />
-        <input
-          class="input-field"
-          type="date"
-          value="{{.CreationDate.Format "2006-01-02"}}"
-        /><br />
-        <input class="input-field" type="date" value="{{.UpdateDate.Format "2006-01-02"}}" /><br />
+        <input class="input-field" type="date" value="{{.CreationDate.Format
+        "2006-01-02"}}" /><br />
+        <input class="input-field" type="date" value="{{.UpdateDate.Format
+        "2006-01-02"}}" /><br />
         <button onclick="editSubject({{.Id}})">Edit</button>
         <button onclick="deleteSubject({{.Id}})">Delete</button>
       </div>
@@ -104,35 +111,34 @@
         <button onclick="addSubject()">Add</button>
       </div>
     </div>
-    <div id="all_questions">
+    <button class="show_button" id="show_all_questions">Questions</button>
+    <div class="panel_all_div" id="all_questions" style="display: none;">
       {{range .Questions}} {{$Id:=.Id}}
       <div class="question" data-question-id="{{.Id}}">
         <input class="title input-field" type="text" value="{{.Title}}" /><br />
         <textarea class="description textarea-field">{{.Description}}</textarea
         ><br />
         <textarea class="content textarea-field">{{.Content}}</textarea><br />
-        <input
-          class="input-field"
-          type="date"
-          value="{{.CreationDate.Format "2006-01-02"}}"
-        /><br />
-        <input class="input-field" type="date" value="{{.UpdateDate.Format "2006-01-02"}}" /><br />
+        <input class="input-field" type="date" value="{{.CreationDate.Format
+        "2006-01-02"}}" /><br />
+        <input class="input-field" type="date" value="{{.UpdateDate.Format
+        "2006-01-02"}}" /><br />
         <input
           class="input-field"
           type="number"
           value="{{.Upvotes}}"
           style="width: 50px"
         />
-        <button onclick=addOneUpVoteQuestion({{.Id}})>+</button>
-        <button onclick=removeOneUpVoteQuestion({{.Id}})>-</button>
+        <button onclick="addOneUpVoteQuestion({{.Id}})">+</button>
+        <button onclick="removeOneUpVoteQuestion({{.Id}})">-</button>
         <input
           class="input-field"
           type="number"
           value="{{.Downvotes}}"
           style="width: 50px"
         />
-        <button onclick=addOneDownVoteQuestion({{.Id}})>+</button>
-        <button onclick=removeOneDownVoteQuestion({{.Id}})>-</button>
+        <button onclick="addOneDownVoteQuestion({{.Id}})">+</button>
+        <button onclick="removeOneDownVoteQuestion({{.Id}})">-</button>
         <br />
         <button onclick="editQuestion({{.Id}})">Edit</button>
         <button onclick="deleteQuestion({{.Id}})">Delete</button>
@@ -152,32 +158,30 @@
               type="text"
               value="{{.Description}}"
             /><br />
-            <input
-              class="input-field"
-              type="date"
-              value="{{.CreationDate.Format "2006-01-02"}}"
-            /><br />
-            <input
-              class="input-field"
-              type="date"
-              value="{{.UpdateDate.Format "2006-01-02"}}"
-            /><br />
+            <input class="input-field" type="date" value="{{.CreationDate.Format
+            "2006-01-02"}}" /><br />
+            <input class="input-field" type="date" value="{{.UpdateDate.Format
+            "2006-01-02"}}" /><br />
             <input
               class="input-field"
               type="number"
               value="{{.UpVotes}}"
               style="width: 50px"
             />
-            <button onclick=addOneUpVoteResponse({{.ResponseID}})>+</button>
-            <button onclick=removeOneUpVoteResponse({{.ResponseID}})>-</button>
+            <button onclick="addOneUpVoteResponse({{.ResponseID}})">+</button>
+            <button onclick="removeOneUpVoteResponse({{.ResponseID}})">
+              -
+            </button>
             <input
               class="input-field"
               type="number"
               value="{{.DownVotes}}"
               style="width: 50px"
             />
-            <button onclick=addOneDownVoteResponse({{.ResponseID}})>+</button>
-            <button onclick=removeOneDownVoteResponse({{.ResponseID}})>-</button>
+            <button onclick="addOneDownVoteResponse({{.ResponseID}})">+</button>
+            <button onclick="removeOneDownVoteResponse({{.ResponseID}})">
+              -
+            </button>
             <br />
 
             <button onclick="editResponse({{.ResponseID}},{{$Id}})">

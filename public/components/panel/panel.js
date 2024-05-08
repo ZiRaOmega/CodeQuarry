@@ -289,3 +289,28 @@ function removeOneDownVoteQuestion(questionId){
         inputs.value = 0;
     }
 }
+
+document.getElementById("show_all_users").onclick = ()=>{
+    const all_users=document.getElementById("all_users")
+    if (all_users.style.display === "none"){
+        all_users.style.display = "block";
+    } else {
+        all_users.style.display = "none";
+    }
+}
+document.getElementById("show_all_subjects").onclick = ()=>{
+    const all_subjects=document.getElementById("all_subjects")
+    if (all_subjects.style.display === "none"){
+        all_subjects.style.display = "block";
+    } else {
+        all_subjects.style.display = "none";
+    }
+}
+document.getElementById("show_all_questions").onclick = ()=>{
+    const all_questions=document.getElementById("all_questions")
+    if (all_questions.style.display === "none"){
+        all_questions.style.display = "block";
+    } else {
+        all_questions.style.display = "none";
+    }
+}
