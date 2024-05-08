@@ -123,6 +123,7 @@ func main() {
 	http.HandleFunc("/scripts/panel.js", app.PanelJSHandler)
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
+	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {

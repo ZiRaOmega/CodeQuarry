@@ -2920,3 +2920,17 @@ ERROR: 2024/05/08 19:16:52 Email not verifiedmaxime.diet76@gmail.com
 ERROR: 2024/05/08 19:17:07 Email not verifiedmaxime.diet76@gmail.com
 DEBUG: 2024/05/08 19:17:30 Login successful: max at /login
 ERROR: 2024/05/08 19:17:30 Error reading the message from the client
+ERROR: 2024/05/08 20:23:21 Error reading the message from the client
+ERROR: 2024/05/08 20:33:22 Error reading the message from the client
+DEBUG: 2024/05/08 20:34:06 Invalid login credentialsmax at /login
+ERROR: 2024/05/08 20:36:45 Error reading the message from the client
+ERROR: 2024/05/08 20:37:03 Error reading the message from the client
+DEBUG: 2024/05/08 20:37:36 Login successful: max at /login
+ERROR: 2024/05/08 20:37:36 Error reading the message from the client
+ERROR: 2024/05/08 20:37:40 Error reading the message from the client
+ERROR: 2024/05/08 20:37:51 Error reading the message from the client
+ERROR: 2024/05/08 20:38:00 Error reading the message from the client
+DEBUG: 2024/05/08 20:38:08 Login successful: max at /login
+ERROR: 2024/05/08 20:38:08 Error reading the message from the client
+ERROR: 2024/05/08 20:38:18 Error reading the message from the client
+ERROR: 2024/05/08 20:38:26 Error reading the message from the client
