@@ -40,6 +40,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 			// Get user info from user_id
 			var user User
 			user, err = GetUser(session_id, db)
+			fmt.Println(user)
 			if component_name == "profile" || component_name == "classement" {
 				if err != nil {
 					fmt.Println(err.Error())
@@ -54,6 +55,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 			}
 			err = ParseAndExecuteTemplate(component_name, user, w)
 			if err != nil {
+				fmt.Println(err.Error())
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
