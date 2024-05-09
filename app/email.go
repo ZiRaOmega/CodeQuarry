@@ -12,7 +12,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func GetSMTPConf() (string, string, string, string) {
+func GetSMTPConf() (SmtpHost, SmtpPort, SmtpUser, SmtpPass string) {
 	return os.Getenv("SmtpHost"), os.Getenv("SmtpPort"), os.Getenv("SmtpUser"), os.Getenv("SmtpPass")
 }
 
