@@ -80,6 +80,7 @@ type User struct {
 	FirstName          string
 	Username           string
 	Email              string
+	EmailVerified      bool
 	Password           string
 	Avatar             sql.NullString
 	BirthDate          sql.NullTime // Adjusted for possible NULL values
@@ -146,6 +147,7 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 		log.Fatalf("%v", err)
 	}
 	user.Favori = Favori
+
 	return user, nil // Return the populated user object
 }
 

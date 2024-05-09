@@ -181,6 +181,7 @@ func FetchUsers(db *sql.DB) ([]User, error) {
 		); err != nil {
 			return nil, fmt.Errorf("scan error: %v", err)
 		}
+		user.EmailVerified = isEmailVerified(db, user.Email)
 		users = append(users, user)
 	}
 

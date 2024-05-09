@@ -7,20 +7,17 @@ import (
 	"fmt"
 	"net/http"
 	"net/smtp"
+	"os"
 
 	"golang.org/x/crypto/bcrypt"
 )
 
-const (
-	// SMTP server configuration
-	SmtpHost = "smtp.gmail.com"
-	SmtpPort = "587"
-	SmtpUser = "psvforum01@gmail.com"
-	SmtpPass = "ufzuqzwwerfsyscc"
-)
+func GetSMTPConf() (string, string, string, string) {
+	return os.Getenv("SmtpHost"), os.Getenv("SmtpPort"), os.Getenv("SmtpUser"), os.Getenv("SmtpPass")
+}
 
 func SendVerificationEmail(db *sql.DB, email, token string) {
-
+	SmtpHost, SmtpPort, SmtpUser, SmtpPass := GetSMTPConf()
 	auth := smtp.PlainAuth("", SmtpUser, SmtpPass, SmtpHost)
 
 	subject := "Subject: Verify Your Email\n"
@@ -33,11 +30,12 @@ func SendVerificationEmail(db *sql.DB, email, token string) {
 		subject + mime + body)
 	err := InsertVerifToken(db, email, token)
 	if err != nil {
-		panic(err)
+		Log(ErrorLevel, err.Error())
+		return
 	}
 	err = smtp.SendMail(SmtpHost+":"+SmtpPort, auth, SmtpUser, []string{email}, msg)
 	if err != nil {
-		panic(err) // handle the error appropriately in production code
+		Log(ErrorLevel, err.Error())
 	}
 }
 
@@ -45,6 +43,7 @@ func GenerateTokenVerificationEmail() string {
 	token := make([]byte, 32) // 256 bits are usually sufficient
 	_, err := rand.Read(token)
 	if err != nil {
+		Log(ErrorLevel, err.Error())
 		return "" // handle the error appropriately in production code
 	}
 	return base64.URLEncoding.EncodeToString(token)
@@ -54,6 +53,7 @@ func ResetPassword(db *sql.DB, email string) string {
 	tempPassword := make([]byte, 12) // Generate a temporary 12-byte password
 	_, err := rand.Read(tempPassword)
 	if err != nil {
+		Log(ErrorLevel, err.Error())
 		return "" // handle the error appropriately in production code
 	}
 	tempPasswordStr := base64.URLEncoding.EncodeToString(tempPassword)[:12] // Shorten to 12 characters
@@ -61,6 +61,7 @@ func ResetPassword(db *sql.DB, email string) string {
 	// Assuming you have a function to update the password in your user database
 	err = UpdateUserPassword(db, email, tempPasswordStr)
 	if err != nil {
+		Log(ErrorLevel, err.Error())
 		return "" // handle the error appropriately in production code
 	}
 
@@ -69,7 +70,7 @@ func ResetPassword(db *sql.DB, email string) string {
 }
 
 func SendResetPasswordEmail(email, password string) {
-
+	SmtpHost, SmtpPort, SmtpUser, SmtpPass := GetSMTPConf()
 	auth := smtp.PlainAuth("", SmtpUser, SmtpPass, SmtpHost)
 
 	subject := "Subject: Reset Password\n"
@@ -82,7 +83,7 @@ func SendResetPasswordEmail(email, password string) {
 
 	err := smtp.SendMail(SmtpHost+":"+SmtpPort, auth, SmtpUser, []string{email}, msg)
 	if err != nil {
-		panic(err) // handle the error appropriately in production code
+		Log(ErrorLevel, err.Error())
 	}
 }
 

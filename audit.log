@@ -2988,3 +2988,5 @@ ERROR: 2024/05/09 16:02:16 Error fetching session from databasesql: no rows in r
 DEBUG: 2024/05/09 16:02:21 Login successful: max at /login
 ERROR: 2024/05/09 16:02:21 Error reading the message from the client
 ERROR: 2024/05/09 16:03:33 Error reading the message from the client
+ERROR: 2024/05/09 16:13:46 Error reading the message from the client
+ERROR: 2024/05/09 17:03:31 Error reading the message from the client
