@@ -85,52 +85,90 @@ func SendResetPasswordEmail(email, password string) {
 		panic(err) // handle the error appropriately in production code
 	}
 }
+
+// UpdateUserPassword hashes a new password and updates it in the database using a prepared statement.
 func UpdateUserPassword(db *sql.DB, email, password string) error {
+	// Generate a hash of the password to store in the database.
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return err
 	}
-	// Update the password in the database
-	_, err = db.Exec("UPDATE users SET password = $1 WHERE email = $2", hashedPassword, email)
+
+	// Prepare the SQL statement for execution.
+	stmt, err := db.Prepare("UPDATE users SET password = $1 WHERE email = $2")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	// Execute the prepared statement with the hashed password and email as parameters.
+	_, err = stmt.Exec(hashedPassword, email)
 	return err
 }
 
+// InsertVerifToken inserts a verification token into the database using a prepared statement.
 func InsertVerifToken(db *sql.DB, email, token string) error {
-	_, err := db.Exec("INSERT INTO VerifyEMail(email,token) VALUES($1,$2)", email, token)
+	// Prepare the SQL statement for execution.
+	stmt, err := db.Prepare("INSERT INTO VerifyEMail(email, token) VALUES($1, $2)")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	// Execute the prepared statement with the email and token as parameters.
+	_, err = stmt.Exec(email, token)
 	return err
 }
 
+// isValidToken checks the validity of a token using a prepared statement.
 func isValidToken(db *sql.DB, token string) bool {
-	var count int
-	err := db.QueryRow("SELECT COUNT(*) FROM VerifyEmail WHERE token = $1 AND validated = FALSE", token).Scan(&count)
-
+	// Prepare the SQL query to check the token's validity.
+	stmt, err := db.Prepare("SELECT COUNT(*) FROM VerifyEmail WHERE token = $1 AND validated = FALSE")
 	if err != nil {
 		return false
 	}
+	defer stmt.Close()
+
+	var count int
+	// Execute the query with the token as a parameter and scan the result.
+	err = stmt.QueryRow(token).Scan(&count)
+	if err != nil {
+		return false
+	}
+
 	if count == 1 {
-		err := UpdateValidated(db, token)
-		if err != nil {
-			return false
-		}
-		return true
+		// Update the validation status if the token is valid.
+		return UpdateValidated(db, token) == nil
 	}
 	return false
 }
+
+// UpdateValidated updates the validated status of a token using a prepared statement.
 func UpdateValidated(db *sql.DB, token string) error {
-	_, err := db.Exec("UPDATE VerifyEmail SET validated=true WHERE token=$1", token)
+	stmt, err := db.Prepare("UPDATE VerifyEmail SET validated = TRUE WHERE token = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(token)
 	return err
 }
 
+// isEmailVerified checks if an email is verified using a prepared statement.
 func isEmailVerified(db *sql.DB, email string) bool {
-	var count int
-	err := db.QueryRow("SELECT COUNT(*) FROM VerifyEmail WHERE email = $1 AND validated = TRUE", email).Scan(&count)
+	stmt, err := db.Prepare("SELECT COUNT(*) FROM VerifyEmail WHERE email = $1 AND validated = TRUE")
 	if err != nil {
 		return false
 	}
-	if count == 1 {
-		return true
+	defer stmt.Close()
+
+	var count int
+	err = stmt.QueryRow(email).Scan(&count)
+	if err != nil {
+		return false
 	}
-	return false
+	return count == 1
 }
 
 func ForgotPasswordHandler(db *sql.DB) http.HandlerFunc {
