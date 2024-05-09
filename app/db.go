@@ -75,7 +75,7 @@ func createTableVerifyEmail(db *sql.DB) {
 		PRIMARY KEY(id),
 		UNIQUE(email),
 		UNIQUE(token),
-		FOREIGN KEY(email) REFERENCES users(email)
+		FOREIGN KEY(email) REFERENCES users(email) ON DELETE CASCADE
 	);`
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
@@ -121,7 +121,7 @@ func createTableFavorite(db *sql.DB) {
 		id_student INT,
 		id_question INT,
 		PRIMARY KEY(id_student, id_question),
-		FOREIGN KEY(id_student) REFERENCES users(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE,
 		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE
 	);`
 	// Execute the table creation query
@@ -246,7 +246,10 @@ func createTableSession(db *sql.DB) {
 		uuid VARCHAR(50) NOT NULL,
 		user_id INT NOT NULL,
 		expire_at TIMESTAMP NOT NULL,
-		created_at TIMESTAMP NOT NULL
+		created_at TIMESTAMP NOT NULL,
+		UNIQUE(uuid),
+		PRIMARY KEY(id),
+		FOREIGN KEY(user_id) REFERENCES users(id_student)
 	);
 	`
 	// Execute the table creation query
