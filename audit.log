@@ -2990,3 +2990,28 @@ ERROR: 2024/05/09 16:02:21 Error reading the message from the client
 ERROR: 2024/05/09 16:03:33 Error reading the message from the client
 ERROR: 2024/05/09 16:13:46 Error reading the message from the client
 ERROR: 2024/05/09 17:03:31 Error reading the message from the client
+DEBUG: 2024/05/10 14:36:56 Login successful: max at /login
+DEBUG: 2024/05/10 14:37:04 Login successful: max at /login
+ERROR: 2024/05/10 14:37:43 Error reading the message from the client
+DEBUG: 2024/05/10 14:37:48 Login successful: max at /login
+ERROR: 2024/05/10 14:37:49 Error reading the message from the client
+ERROR: 2024/05/10 14:38:11 Error reading the message from the client
+ERROR: 2024/05/10 14:38:23 Error reading the message from the client
+ERROR: 2024/05/10 14:38:26 Error reading the message from the client
+ERROR: 2024/05/10 14:38:56 Error reading the message from the client
+ERROR: 2024/05/10 14:38:58 Error reading the message from the client
+ERROR: 2024/05/10 14:39:10 Error reading the message from the client
+ERROR: 2024/05/10 14:39:11 Error reading the message from the client
+ERROR: 2024/05/10 14:43:26 Error reading the message from the client
+ERROR: 2024/05/10 14:43:31 Error reading the message from the client
+ERROR: 2024/05/10 14:43:34 Error reading the message from the client
+ERROR: 2024/05/10 14:43:36 Error reading the message from the client
+ERROR: 2024/05/10 14:45:14 Error reading the message from the client
+ERROR: 2024/05/10 14:45:24 Error reading the message from the client
+ERROR: 2024/05/10 14:47:49 Error reading the message from the client
+ERROR: 2024/05/10 14:59:15 Error reading the message from the client
+ERROR: 2024/05/10 14:59:25 Error reading the message from the client
+ERROR: 2024/05/10 15:01:30 Error reading the message from the client
+ERROR: 2024/05/10 15:01:33 Error reading the message from the client
+ERROR: 2024/05/10 15:01:36 Error reading the message from the client
+ERROR: 2024/05/10 15:04:14 Error reading the message from the client
