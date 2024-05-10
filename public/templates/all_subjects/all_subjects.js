@@ -1,6 +1,8 @@
 
 let SubjectsList = [];
 let ListElement;
+
+//let questionsList = document.getElementById("questions_list");
 function initializeLocalStorage() {
   localStorage.removeItem("subjectId");
   localStorage.removeItem("subjectTitle");
@@ -44,10 +46,13 @@ function initializeLocalStorage() {
   });
 
 
-/* let QuestionsElementsList = [];
-const questionsList = document.getElementById("questionsList");
-*/
-//const returnButton = document.createElement("div");
+let QuestionsElementsList = [];
+let questionsList = document.getElementById("questionsList");
+
+const returnButton = document.createElement("div");
+returnButton.onclick = () => {
+  window.location.href = "/home";
+};
 
 
 function createAllSubjectsItem() {
@@ -128,7 +133,6 @@ function addSubjectClickListener(listItem, subject, listElement) {
   });
 }
 
-/* 
 window.fetchQuestions = function (subjectId) {
     fetch(`/api/questions?subjectId=${subjectId}`)
         .then((response) => response.json())
@@ -145,6 +149,7 @@ function createFilter(questions) {
 
     const questionFilter = createQuestionFilter(questions);
     returnButton.textContent = "⬅";
+    returnButton.id = "return_button"
     filterContainer.appendChild(returnButton);
     filterContainer.appendChild(questionFilter);
     questionsList.appendChild(filterContainer);
@@ -450,4 +455,3 @@ function createQuestions(questions) {
     questionTrackerCount.textContent = "0 question(s)";
   }
 }
- */
