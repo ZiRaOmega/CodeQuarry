@@ -59,6 +59,7 @@ $(document).ready(function () {
         }
         break;
       case "response":
+        fetchQuestions("all")
         console.log("Response received from server:", msg.content);
         const answer_description = document.createElement("span");
         const creator = document.createElement("div");
@@ -105,8 +106,8 @@ $(document).ready(function () {
         const bestAnswer = document.createElement("div");
         bestAnswer.classList.add("best_answer");
         bestAnswer.textContent = "Best answer ✔";
-        bestAnswer.setAttribute("data-answer-id", msg.content.responseId);
-
+        bestAnswer.setAttribute("data-answer-id", msg.content.response_id);
+        console.log(bestAnswer)
         // Appending everything to the main container
         answerContainer.appendChild(answer_description);
         answerContainer.appendChild(answerContent);
@@ -134,13 +135,14 @@ $(document).ready(function () {
         };
 
         bestAnswerContainer.appendChild(bestAnswer);
+        bestAnswerContainer.style.display="flex"
         creator_and_date_container.appendChild(bestAnswerContainer);
         creator_and_date_container.appendChild(answerAuthor);
         const answers = document.querySelector(".question-viewer__answers");
         answers.appendChild(answerContainer);
         console.log("Response added to the DOM", msg.content);
         console.log("Response added to the DOM", msg.content.response_id);
-
+        const modify_button = document.createElement("button");
         const vote_responseContainer = document.createElement("div");
         vote_responseContainer.classList.add("vote_response_container");
         const upvote_responseContainer = document.createElement("div");
@@ -161,7 +163,7 @@ $(document).ready(function () {
           "data-answer-id",
           msg.content.response_id
         );
-
+        
         upvote_responseCount.textContent = "+ " + msg.content.upvotes;
         downvote_responseCount.textContent = "- " + msg.content.downvotes;
         upvote_responseContainer.appendChild(upvote_responseCount);
@@ -169,6 +171,61 @@ $(document).ready(function () {
         vote_responseContainer.appendChild(upvote_responseContainer);
         vote_responseContainer.appendChild(downvote_responseContainer);
         answerContainer.appendChild(vote_responseContainer);
+        var answer=msg.content
+            modify_button.innerText = "Modify";
+            vote_responseContainer.appendChild(modify_button);
+            modify_button.addEventListener("click", () => {
+              if (document.querySelector(".modify_response_container")) {
+                document.querySelector(".modify_response_container").remove();
+                return;
+              }
+              //console.log(modifyButton);
+              const response_description_input =
+                document.createElement("textarea");
+              response_description_input.innerText = answer.description;
+              response_description_input.setAttribute(
+                "id",
+                "response_description"
+              );
+              response_description_input.classList.add(
+                "response_description_input"
+              );
+              const response_content_input = document.createElement("textarea");
+              response_content_input.innerText = answer.content;
+              response_content_input.setAttribute("id", "response_content");
+              response_content_input.classList.add("response_content_input");
+              const modify_response = document.createElement("button");
+              modify_response.classList.add("modify_response");
+              modify_response.textContent = "Modify";
+              const modify_response_container = document.createElement("div");
+              modify_response_container.classList.add(
+                "modify_response_container"
+              );
+              modify_response.onclick = function () {
+                ModifyResponse(
+                  answer.response_id,
+                  response_content_input.value,
+                  response_description_input.value,
+                  answer.question_id
+                );
+                modify_response_container.remove();
+              };
+              const cancel_button = document.createElement("button");
+              cancel_button.innerText = "X";
+              cancel_button.onclick = () => {
+                modify_response_container.remove();
+              };
+              modify_response_container.appendChild(cancel_button);
+              modify_response_container.classList.add(
+                "modify_response_container"
+              );
+              modify_response_container.appendChild(response_description_input);
+              modify_response_container.appendChild(response_content_input);
+              modify_response_container.appendChild(modify_response);
+              document
+                .querySelector(".question-viewer__answers__answer")
+                .appendChild(modify_response_container);
+            });
         if (msg.content.user_vote == "upvoted") {
           upvote_responseContainer.style.backgroundColor = "rgb(104, 195, 163)";
           //upvote_responseCount.style.color = "white";

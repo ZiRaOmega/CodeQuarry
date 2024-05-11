@@ -1,4 +1,3 @@
-
 const questionContainer = document.getElementById("questions_container");
 questionsList = document.getElementById("questions_list");
 const return_btn = document.getElementById("return_button");
@@ -8,14 +7,21 @@ return_btn.onclick = () => {
 };
 
 document.addEventListener("DOMContentLoaded", function () {
-  subjectId = window.location.pathname.split("/")[2];
+  let subjectId = window.location.pathname.split("/")[2];
 
   (async () => {
     try {
-      const response = await fetch(`/api/questions?subjectId=${subjectId}`);
-      //.then((response) => response.json());
-      const questions = await response.json();
-      console.log(questions);
+      console.log(SubjectsList)
+      if (SubjectsList.length==0){
+        const response = await fetch("/api/subjects");
+        const subjects = await response.json();
+        SubjectsList = subjects;
+      }
+      //get question from SubjectsList by subjectId
+      const subject = SubjectsList.find((subject) => subject.id == subjectId);
+      console.log(subject)
+      const questions = subject.questions;
+
       createFilter(questions);
       createQuestions(questions);
     } catch (error) {
@@ -94,11 +100,10 @@ function createQuestions(questions) {
   checkHighlight();
 }
 
-
 function createQuestionElement(question) {
   const questionElement = document.createElement("div");
   questionElement.classList.add("question");
-  questionElement.setAttribute("data-question-id",question.id)
+  questionElement.setAttribute("data-question-id", question.id);
   const questionChecked = document.createElement("div");
   questionChecked.classList.add("question_checked");
   questionChecked.setAttribute("data-question-id", question.id);
@@ -112,7 +117,7 @@ function createQuestionElement(question) {
   if (question.responses == null) {
     question.responses = [];
   }
-  
+
   questionElement.innerHTML = htmlQuestionConstructor(question);
   questionElement.appendChild(questionChecked);
 
@@ -146,7 +151,7 @@ function manageFavorite(favori, questionId) {
     .then((response) => response.json())
     .then((favoris) => {
       if (Array.isArray(favoris)) {
-        console.log(favori)
+        console.log(favori);
         if (favoris.some((f) => f == questionId)) {
           favori.classList.add("favori_active");
           favori.textContent = "★";
@@ -177,7 +182,6 @@ function manageFavorite(favori, questionId) {
       favori.textContent = "★";
       favori.style.backgroundColor = "gold";
     }
-    
   };
 }
 

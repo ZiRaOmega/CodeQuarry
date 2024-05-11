@@ -1,6 +1,9 @@
 // {subject: "Math", marks:[
 let input = document.getElementById("search-bar-input");
 input.addEventListener("keyup", function () {
+  if (QuestionsElementsList.length==0){
+    fetchQuestions("all")
+  }
   console.log("searching...");
   //if there is no subjectId inside localstorage
   if (
