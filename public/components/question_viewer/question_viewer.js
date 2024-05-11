@@ -66,7 +66,7 @@ function sendResponse() {
       .then((response) => response.json())
       .then((data) => {
         if (data.status === "success") {
-          window.location.reload();
+          /* window.location.reload(); */
         }
       });
   }
@@ -119,22 +119,36 @@ const question_viewer = document.querySelector(".question-viewer__question");
 const preDiv = document.createElement("pre");
 const code = document.createElement("code");
 preDiv.appendChild(code);
+(async () => {
+  try {
+    await fetchQuestions("all");
 
-fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
-  .then((response) => response.json())
-  .then((data) => {
-    data.forEach((question) => {
+    //wait fetchQuestions is done to execute the rest of the code
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const URLQUestionID = getUrlArgument("question_id");
+      //find question by question id
+      console.log(SubjectsList);
+      let subject = SubjectsList.find((subject) =>
+        subject.questions.find((question) => question.id == URLQUestionID)
+      );
+      question = subject.questions;
+      question = question.find((question) => question.id == URLQUestionID);
+      console.log(question);
+
       //get the question where the id is the same as the one in the url
 
       question_viewer.setAttribute("data-question-id", question.id);
       //when all is loaded
       let counter = 0;
-      {
-        let intervalId = setInterval(function () {
-          if (counter >= 20) {
-            clearInterval(intervalId); // Stop the interval if the counter is 10 or more
-          } else {
+
+      let intervalId = setInterval(function () {
+        if (counter >= 20) {
+          clearInterval(intervalId); // Stop the interval if the counter is 10 or more
+        } else {
+          if (socket.readyState === WebSocket.OPEN) {
             counter++;
+            clearInterval(intervalId);
             socket.send(
               JSON.stringify({
                 type: "questionCompareUser",
@@ -143,8 +157,8 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               })
             );
           }
-        }, 150);
-      }
+        }
+      }, 150);
 
       question_viewer__question__title.innerText = question.title;
       question_viewer__question__description.innerText = question.description;
@@ -429,8 +443,8 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
             modify_button.innerText = "Modify";
             vote_responseContainer.appendChild(modify_button);
             modify_button.addEventListener("click", () => {
-              if (document.querySelector(".modify_response_container")) {
-                document.querySelector(".modify_response_container").remove();
+              if (document.querySelector(`.modify_response_container[data-answer-id="${answer.response_id}"]`)) {
+                document.querySelector(`.modify_response_container[data-answer-id="${answer.response_id}"]`).remove();
                 return;
               }
               console.log(modifyButton);
@@ -455,6 +469,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               modify_response_container.classList.add(
                 "modify_response_container"
               );
+              modify_response_container.setAttribute("data-answer-id",answer.response_id)
               modify_response.onclick = function () {
                 ModifyResponse(
                   answer.response_id,
@@ -477,7 +492,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               modify_response_container.appendChild(response_content_input);
               modify_response_container.appendChild(modify_response);
               document
-                .querySelector(".question-viewer__answers__answer")
+                .querySelector(`.question-viewer__answers__answer[data-answer-id="${answer.response_id}"]`)
                 .appendChild(modify_response_container);
             });
           }
@@ -617,8 +632,10 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         });
       }
     });
-  });
-
+  } catch (error) {
+    console.log(error);
+  }
+})();
 function ModifyQuestion() {
   const question_id = getUrlArgument("question_id");
   const question_title = document.getElementById("question_title").value;

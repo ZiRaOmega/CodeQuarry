@@ -87,7 +87,10 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 
 		questions = append(questions, q)
 	}
+	if len(questions) == 0 {
+		return []Question{}, nil
 
+	}
 	if err := rows.Err(); err != nil {
 		log.Printf("Error reading question rows: %v", err)
 		return nil, err
@@ -250,15 +253,6 @@ func InsertXP(db *sql.DB, user_id int, xp int) error {
 		return err
 	}
 	return nil
-}
-
-type Subject struct {
-	Id            int       `json:"id"`
-	Title         string    `json:"title"`
-	Description   string    `json:"description"`
-	CreationDate  time.Time `json:"creation_date"`
-	UpdateDate    time.Time `json:"update_date"`
-	QuestionCount int       `json:"questionCount"`
 }
 
 // FetchSubjectWithQuestionCount fetches a subject from the database along with the count of its associated questions.
