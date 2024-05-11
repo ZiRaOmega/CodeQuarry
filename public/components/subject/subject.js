@@ -1,5 +1,6 @@
+let QuestionsElementsList = [];
 const questionContainer = document.getElementById("questions_container");
-questionsList = document.getElementById("questions_list");
+const questionsList = document.getElementById("questions_list");
 const return_btn = document.getElementById("return_button");
 
 return_btn.onclick = () => {

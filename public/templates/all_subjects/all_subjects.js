@@ -1,7 +1,5 @@
 let SubjectsList = [];
 let ListElement;
-
-//let questionsList = document.getElementById("questions_list");
 function initializeLocalStorage() {
   localStorage.removeItem("subjectId");
   localStorage.removeItem("subjectTitle");
@@ -44,14 +42,10 @@ document.addEventListener("DOMContentLoaded", function () {
   })();
 });
 
-let QuestionsElementsList = [];
-let questionsList =
-  document.getElementById("questionsList") || document.createElement("div");
-
-const returnButton = document.createElement("div");
-returnButton.onclick = () => {
-  window.location.href = "/home";
-};
+/* let QuestionsElementsList = [];
+const questionsList = document.getElementById("questionsList");
+*/
+//const returnButton = document.createElement("div");
 
 function createAllSubjectsItem() {
   // Create the "All" subjects item with title and description
@@ -131,29 +125,14 @@ function addSubjectClickListener(listItem, subject, listElement) {
   });
 }
 
-const fetchQuestions = async function (subjectId) {
-  if (SubjectsList.length == 0) {
-    let response = await fetch("/api/subjects");
-    let subjects = await response.json();
-
-    console.log(subjects);
-    SubjectsList = subjects;
-    fetchQuestions("all");
-
-    return;
-  }
-  //get question from SubjectsList by subjectId
-  if (subjectId == "all") {
-    const questions = SubjectsList.map((subject) => subject.questions).flat();
-    createFilter(questions);
-    createQuestions(questions);
-    return;
-  }
-  const subject = SubjectsList.find((subject) => subject.id == subjectId);
-  const questions = subject.questions;
-
-  createFilter(questions);
-  createQuestions(questions);
+/* 
+window.fetchQuestions = function (subjectId) {
+    fetch(`/api/questions?subjectId=${subjectId}`)
+        .then((response) => response.json())
+        .then((questions) => {
+            createFilter(questions);
+            createQuestions(questions);
+        });
 };
 
 function createFilter(questions) {
@@ -161,12 +140,20 @@ function createFilter(questions) {
   const filterContainer = document.createElement("div");
   filterContainer.classList.add("filter_container");
 
+<<<<<<< HEAD
   const questionFilter = createQuestionFilter(questions);
   returnButton.textContent = "⬅";
   returnButton.id = "return_button";
   filterContainer.appendChild(returnButton);
   filterContainer.appendChild(questionFilter);
   questionsList.appendChild(filterContainer);
+=======
+    const questionFilter = createQuestionFilter(questions);
+    returnButton.textContent = "⬅";
+    filterContainer.appendChild(returnButton);
+    filterContainer.appendChild(questionFilter);
+    questionsList.appendChild(filterContainer);
+>>>>>>> parent of 01f81a0 (fix search baré)
 }
 
 function createQuestionFilter(questions) {
@@ -485,3 +472,4 @@ function createQuestions(questions) {
     questionTrackerCount.textContent = "0 question(s)";
   }
 }
+ */
