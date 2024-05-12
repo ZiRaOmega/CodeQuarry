@@ -2991,6 +2991,7 @@ ERROR: 2024/05/09 16:03:33 Error reading the message from the client
 ERROR: 2024/05/09 16:13:46 Error reading the message from the client
 ERROR: 2024/05/09 17:03:31 Error reading the message from the client
 <<<<<<< HEAD
+<<<<<<< HEAD
 DEBUG: 2024/05/10 14:36:56 Login successful: max at /login
 DEBUG: 2024/05/10 14:37:04 Login successful: max at /login
 ERROR: 2024/05/10 14:37:43 Error reading the message from the client
@@ -3081,5 +3082,7 @@ ERROR: 2024/05/11 03:54:21 Error reading the message from the client
 ERROR: 2024/05/11 03:54:23 Error reading the message from the client
 ERROR: 2024/05/11 03:54:23 Error reading the message from the client
 ERROR: 2024/05/11 03:54:25 Error reading the message from the client
+=======
+>>>>>>> parent of 01f81a0 (fix search baré)
 =======
 >>>>>>> parent of 01f81a0 (fix search baré)

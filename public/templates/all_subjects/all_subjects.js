@@ -14,20 +14,10 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("all_subjects_list") ||
     document.createElement("div");
 
-  // to make the fetch asynchronous
-  (async () => {
-    try {
-      const response = await fetch("/api/subjects");
-      const subjects = await response.json();
-      console.log(subjects);
-      /* =============== THE ALL CATEGORY =============== */
-
-      // Create the "All" subjects item with title and description
-      const allSubjectsItem = createAllSubjectsItem();
-      // Append the "All" item to the list
-      ListElement.appendChild(allSubjectsItem);
-      // Event listener for the "All" subject item
-      addAllSubjectsClickListener(allSubjectsItem, ListElement);
+/* let QuestionsElementsList = [];
+const questionsList = document.getElementById("questionsList");
+*/
+//const returnButton = document.createElement("div");
 
       /* =============== REST OF CATEGORIES =============== */
       // Create the rest of the subject items
