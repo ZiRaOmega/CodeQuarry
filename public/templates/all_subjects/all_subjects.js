@@ -1,41 +1,59 @@
+
 let SubjectsList = [];
 let ListElement;
+
+//let questionsList = document.getElementById("questions_list");
 function initializeLocalStorage() {
   localStorage.removeItem("subjectId");
   localStorage.removeItem("subjectTitle");
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  initializeLocalStorage();
-  //returnButton.id = "returnButton";
-  //const questionsList = document.getElementById("questionsList");
+  document.addEventListener("DOMContentLoaded", function () {
+  
+    initializeLocalStorage();
+    //returnButton.id = "returnButton";
+    //const questionsList = document.getElementById("questionsList");
+  
+    ListElement = document.getElementById("all_subjects_list") || document.createElement("div");
+  
+    // to make the fetch asynchronous
+    (async () => {
+      try {
+        const response = await fetch("/api/subjects");
+        const subjects = await response.json();
+  
+        /* =============== THE ALL CATEGORY =============== */
+  
+        // Create the "All" subjects item with title and description
+        const allSubjectsItem = createAllSubjectsItem();
+        // Append the "All" item to the list
+        ListElement.appendChild(allSubjectsItem);
+        // Event listener for the "All" subject item
+        addAllSubjectsClickListener(allSubjectsItem, ListElement);
+  
+        /* =============== REST OF CATEGORIES =============== */
+        // Create the rest of the subject items
+        createSubjectItems(allSubjectsItem, ListElement, subjects);
+  
+      } catch (error) {
+        const errorH1 = document.createElement("h1");
+        errorH1.textContent = "An error occured while fetching the subjects";
+        errorH1.style.color = "red";
+        ListElement.appendChild(errorH1);
+        console.error('There was a problem with your fetch operation:', error);
+      }
+    })();
+  });
 
-  ListElement =
-    document.getElementById("all_subjects_list") ||
-    document.createElement("div");
 
-/* let QuestionsElementsList = [];
-const questionsList = document.getElementById("questionsList");
-*/
-//const returnButton = document.createElement("div");
+let QuestionsElementsList = [];
+let questionsList = document.getElementById("questionsList");
 
-      /* =============== REST OF CATEGORIES =============== */
-      // Create the rest of the subject items
-      createSubjectItems(allSubjectsItem, ListElement, subjects);
-    } catch (error) {
-      const errorH1 = document.createElement("h1");
-      errorH1.textContent = "An error occured while fetching the subjects";
-      errorH1.style.color = "red";
-      ListElement.appendChild(errorH1);
-      console.error("There was a problem with your fetch operation:", error);
-    }
-  })();
-});
+const returnButton = document.createElement("div");
+returnButton.onclick = () => {
+  window.location.href = "/home";
+};
 
-/* let QuestionsElementsList = [];
-const questionsList = document.getElementById("questionsList");
-*/
-//const returnButton = document.createElement("div");
 
 function createAllSubjectsItem() {
   // Create the "All" subjects item with title and description
@@ -115,7 +133,6 @@ function addSubjectClickListener(listItem, subject, listElement) {
   });
 }
 
-/* 
 window.fetchQuestions = function (subjectId) {
     fetch(`/api/questions?subjectId=${subjectId}`)
         .then((response) => response.json())
@@ -126,141 +143,117 @@ window.fetchQuestions = function (subjectId) {
 };
 
 function createFilter(questions) {
-  questionsList.innerHTML = ""; // Clear previous questions
-  const filterContainer = document.createElement("div");
-  filterContainer.classList.add("filter_container");
+    questionsList.innerHTML = ""; // Clear previous questions
+    const filterContainer = document.createElement("div");
+    filterContainer.classList.add("filter_container");
 
-<<<<<<< HEAD
-  const questionFilter = createQuestionFilter(questions);
-  returnButton.textContent = "⬅";
-  returnButton.id = "return_button";
-  filterContainer.appendChild(returnButton);
-  filterContainer.appendChild(questionFilter);
-  questionsList.appendChild(filterContainer);
-=======
     const questionFilter = createQuestionFilter(questions);
     returnButton.textContent = "⬅";
+    returnButton.id = "return_button"
     filterContainer.appendChild(returnButton);
     filterContainer.appendChild(questionFilter);
     questionsList.appendChild(filterContainer);
->>>>>>> parent of 01f81a0 (fix search baré)
 }
 
 function createQuestionFilter(questions) {
-  const questionFilter = document.createElement("div");
-  questionFilter.classList.add("question_filter");
+    const questionFilter = document.createElement("div");
+    questionFilter.classList.add("question_filter");
 
-  const questionTrackerCount = document.createElement("div");
-  questionTrackerCount.classList.add("question_tracker_count");
+    const questionTrackerCount = document.createElement("div");
+    questionTrackerCount.classList.add("question_tracker_count");
 
-  const filterQuestions = document.createElement("div");
-  filterQuestions.classList.add("filter_questions");
+    const filterQuestions = document.createElement("div");
+    filterQuestions.classList.add("filter_questions");
 
-  const filters = createFilterElements();
-  filters.forEach((filter) => filterQuestions.appendChild(filter));
+    const filters = createFilterElements();
+    filters.forEach(filter => filterQuestions.appendChild(filter));
 
-  questionFilter.appendChild(questionTrackerCount);
-  questionFilter.appendChild(filterQuestions);
+    questionFilter.appendChild(questionTrackerCount);
+    questionFilter.appendChild(filterQuestions);
 
-  updateQuestionTrackerCount(questions, questionTrackerCount);
+    updateQuestionTrackerCount(questions, questionTrackerCount);
 
-  filters[0].onclick = () => sortByNumberOfComments(questions);
-  filters[1].onclick = () => sortOldestToNewest(questions);
-  filters[2].onclick = () => sortByBestAnswer(questions);
-  filters[3].onclick = () => sortNewestToOldest(questions);
-  filters[4].onclick = () => sortByUpvotes(questions);
-  filters[5].onclick = () => sortByDownvotes(questions);
-  console.log(filters);
-  return questionFilter;
+    filters[0].onclick = () => sortByNumberOfComments(questions);
+    filters[1].onclick = () => sortOldestToNewest(questions);
+    filters[2].onclick = () => sortByBestAnswer(questions);
+    filters[3].onclick = () => sortNewestToOldest(questions);
+    filters[4].onclick = () => sortByUpvotes(questions);
+    filters[5].onclick = () => sortByDownvotes(questions);
+  console.log(filters)
+    return questionFilter;
 }
 
 function createFilterElements() {
-  const filterPopular = document.createElement("div");
-  filterPopular.classList.add("filter_popular");
-  filterPopular.textContent = "Upvotes ↗";
+    const filterPopular = document.createElement("div");
+    filterPopular.classList.add("filter_popular");
+    filterPopular.textContent = "Upvotes ↗";
 
-  const filterUnpopular = document.createElement("div");
-  filterUnpopular.classList.add("filter_unpopular");
-  filterUnpopular.textContent = "Upvotes ↘";
+    const filterUnpopular = document.createElement("div");
+    filterUnpopular.classList.add("filter_unpopular");
+    filterUnpopular.textContent = "Upvotes ↘";
 
-  const filterNewest = document.createElement("div");
-  filterNewest.classList.add("filter_newest");
-  filterNewest.textContent = "Newest";
+    const filterNewest = document.createElement("div");
+    filterNewest.classList.add("filter_newest");
+    filterNewest.textContent = "Newest";
 
-  const filterOldest = document.createElement("div");
-  filterOldest.classList.add("filter_oldest");
-  filterOldest.textContent = "Oldest";
+    const filterOldest = document.createElement("div");
+    filterOldest.classList.add("filter_oldest");
+    filterOldest.textContent = "Oldest";
 
-  const filterBestAnswer = document.createElement("div");
-  filterBestAnswer.classList.add("filter_best_answer");
-  filterBestAnswer.textContent = "Answered ✔";
+    const filterBestAnswer = document.createElement("div");
+    filterBestAnswer.classList.add("filter_best_answer");
+    filterBestAnswer.textContent = "Answered ✔";
 
-  const filterNumberOfComments = document.createElement("div");
-  filterNumberOfComments.classList.add("filter_number_of_comments");
-  filterNumberOfComments.textContent = "↑ Comments";
+    const filterNumberOfComments = document.createElement("div");
+    filterNumberOfComments.classList.add("filter_number_of_comments");
+    filterNumberOfComments.textContent = "↑ Comments";
 
-  return [
-    filterNumberOfComments,
-    filterOldest,
-    filterBestAnswer,
-    filterNewest,
-    filterPopular,
-    filterUnpopular,
-  ];
+    return [filterNumberOfComments, filterOldest, filterBestAnswer, filterNewest, filterPopular, filterUnpopular];
 }
 
 function updateQuestionTrackerCount(questions, tracker) {
-  tracker.textContent = questions
-    ? `${questions.length} question(s)`
-    : "0 question(s)";
+    tracker.textContent = questions ? `${questions.length} question(s)` : "0 question(s)";
 }
 
 function sortByNumberOfComments(questions) {
-  questions.forEach((q) => (q.responses = q.responses || []));
-  questions.sort((a, b) => b.responses.length - a.responses.length);
-  refreshQuestionView(questions);
+    questions.forEach(q => q.responses = q.responses || []);
+    questions.sort((a, b) => b.responses.length - a.responses.length);
+    refreshQuestionView(questions);
 }
 
 function sortOldestToNewest(questions) {
-  questions.sort(
-    (a, b) => new Date(a.creation_date) - new Date(b.creation_date)
-  );
-  refreshQuestionView(questions);
+    questions.sort((a, b) => new Date(a.creation_date) - new Date(b.creation_date));
+    refreshQuestionView(questions);
 }
 
 function sortNewestToOldest(questions) {
-  questions.sort(
-    (a, b) => new Date(b.creation_date) - new Date(a.creation_date)
-  );
-  refreshQuestionView(questions);
+    questions.sort((a, b) => new Date(b.creation_date) - new Date(a.creation_date));
+    refreshQuestionView(questions);
 }
 
 function sortByBestAnswer(questions) {
   questions.sort((a, b) => {
-    a.responses = a.responses || [];
-    b.responses = b.responses || [];
-    return (
-      b.responses.filter((r) => r.best_answer == true).length -
-      a.responses.filter((r) => r.best_answer == true).length
-    );
+      a.responses = a.responses || [];
+      b.responses = b.responses || [];
+      return b.responses.filter(r => r.best_answer==true).length - a.responses.filter(r => r.best_answer==true).length;
   });
   refreshQuestionView(questions);
 }
 
 function sortByUpvotes(questions) {
-  questions.sort((a, b) => b.upvotes - a.upvotes);
-  refreshQuestionView(questions);
+    questions.sort((a, b) => b.upvotes - a.upvotes);
+    refreshQuestionView(questions);
 }
 
 function sortByDownvotes(questions) {
-  questions.sort((a, b) => a.upvotes - b.upvotes);
-  refreshQuestionView(questions);
+    questions.sort((a, b) => a.upvotes - b.upvotes);
+    refreshQuestionView(questions);
 }
 
 function refreshQuestionView(questions) {
-  questionsList.innerHTML = ""; // Clear previous questions
-  createFilter(questions);
-  createQuestions(questions);
+    questionsList.innerHTML = ""; // Clear previous questions
+    createFilter(questions);
+    createQuestions(questions);
 }
 
 function createQuestions(questions) {
@@ -387,7 +380,7 @@ function createQuestions(questions) {
       voteContainer.appendChild(upvoteContainer);
       const downvoteContainer = document.createElement("div");
       downvoteContainer.classList.add("downvote_container");
-      console.log(question);
+      console.log(question)
       if (question.user_vote == "upvoted") {
         upvoteContainer.style.backgroundColor = "green";
       } else if (question.user_vote == "downvoted") {
@@ -462,4 +455,3 @@ function createQuestions(questions) {
     questionTrackerCount.textContent = "0 question(s)";
   }
 }
- */
