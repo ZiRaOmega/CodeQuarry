@@ -47,7 +47,9 @@ function initializeLocalStorage() {
 
 
 let QuestionsElementsList = [];
-let questionsList = document.getElementById("questionsList");
+let questionsList = document.createElement("div");
+questionsList.id = "questions_list";
+document.body.appendChild(questionsList);
 
 const returnButton = document.createElement("div");
 returnButton.onclick = () => {
