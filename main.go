@@ -29,43 +29,14 @@ func main() {
 		// You may choose to handle the error differently based on your requirements
 		return
 	}
-	envCheck := false
+
 	// Update the DSN for PostgreSQL
 	dbHost := os.Getenv("DB_HOST")
-	if dbHost == "" {
-		app.Log(app.ErrorLevel, "No DB_HOST env variable found :/")
-		envCheck = true
-	}
 	dbPort := os.Getenv("DB_PORT")
-	if dbPort == "" {
-		app.Log(app.ErrorLevel, "No DB_PORT env variable found :/")
-		envCheck = true
-	}
 	dbUser := os.Getenv("DB_USER")
-	if dbUser == "" {
-		app.Log(app.ErrorLevel, "No DB_USER env variable found :/")
-		envCheck = true
-	}
 	dbPassword := os.Getenv("DB_PASSWORD")
-	if dbPassword == "" {
-		app.Log(app.ErrorLevel, "No DB_PASSWORD env variable found :/")
-		envCheck = true
-	}
 	dbName := os.Getenv("DB_NAME")
-	if dbName == "" {
-		app.Log(app.ErrorLevel, "No DB_NAME env variable found :/")
-		envCheck = true
-	}
 	dbType := os.Getenv("DB_TYPE")
-	if dbType == "" {
-		app.Log(app.ErrorLevel, "No DB_TYPE env variable found :/")
-		envCheck = true
-	}
-
-	if envCheck {
-		app.Log(app.DebugLevel, "Stopping execution: env no set up correctly")
-		return
-	}
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
 
 	db := app.InitDB(dsn)

@@ -13,32 +13,9 @@ import (
 )
 
 func GetSMTPConf() (SmtpHost, SmtpPort, SmtpUser, SmtpPass string) {
-	SmtpHost, SmtpPort, SmtpUser, SmtpPass = os.Getenv("SmtpHost"), os.Getenv("SmtpPort"), os.Getenv("SmtpUser"), os.Getenv("SmtpPass")
-	if !CheckSMTPConfVariable(SmtpHost, SmtpPort, SmtpUser, SmtpPass) {
-		panic("Env smtp configuration problem")
-	}
-	return SmtpHost, SmtpPort, SmtpUser, SmtpPass
+	return os.Getenv("SmtpHost"), os.Getenv("SmtpPort"), os.Getenv("SmtpUser"), os.Getenv("SmtpPass")
 }
-func CheckSMTPConfVariable(SmtpHost, SmtpPort, SmtpUser, SmtpPass string) (envCheck bool) {
 
-	if SmtpHost == "" {
-		Log(ErrorLevel, "No SmtpHost env variable found :/")
-		envCheck = true
-	}
-	if SmtpPort == "" {
-		Log(ErrorLevel, "No SmtpPort env variable found :/")
-		envCheck = true
-	}
-	if SmtpUser == "" {
-		Log(ErrorLevel, "No SmtpUser env variable found :/")
-		envCheck = true
-	}
-	if SmtpPass == "" {
-		Log(ErrorLevel, "No SmtpPass env variable found :/")
-		envCheck = true
-	}
-	return !envCheck
-}
 func SendVerificationEmail(db *sql.DB, email, token string) {
 	SmtpHost, SmtpPort, SmtpUser, SmtpPass := GetSMTPConf()
 	auth := smtp.PlainAuth("", SmtpUser, SmtpPass, SmtpHost)
