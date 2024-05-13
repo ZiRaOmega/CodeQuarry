@@ -77,7 +77,7 @@ $(document).ready(function () {
             registerBlock.style.display = "none";
             Swal.fire({
               title: "Thank You!",
-              text: data.message+ "don't forget to verify your email",
+              text: data.message + " don't forget to verify your email",
               icon: "success",
               confirmButtonText: "OK",
             }).then((result) => {
@@ -123,7 +123,9 @@ $(document).ready(function () {
           Swal.fire({
             icon: "error",
             title: "Oops...",
-            text: response.message || "Invalid login credentials! or email not verified",
+            text:
+              response.message ||
+              "Invalid login credentials! or email not verified",
             confirmButtonText: "OK",
           }).then((result) => {
             if (result.value) {
