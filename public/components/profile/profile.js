@@ -85,3 +85,12 @@ function setDateInInput(theDate, theInput) {
     let DOBInput = document.getElementById(theInput);
     DOBInput.value = formattedDate;
 }
+
+
+function fetchQuestionsProfile(subject) {
+  fetch(`/api/questions?subjectId=${subjectId}`)
+        .then((response) => response.json())
+        .then((questions) => {
+            
+        });
+}

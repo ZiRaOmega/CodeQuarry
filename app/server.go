@@ -18,7 +18,7 @@ type AuthInfo struct {
 func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(component_name)
-		//Get cookie session
+		// Get cookie session
 
 		if component_name == "auth" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
@@ -69,17 +69,16 @@ var templates = map[string]*template.Template{}
 
 func init() {
 	// Pre-parse all templates.
-	templates["home"] = parseTemplates("home", "head", "header", "all_subjects", "footer", "script")
+	templates["home"] = parseTemplates("home", "head", "header", "search_bar", "all_subjects", "footer", "script")
 	templates["auth"] = parseTemplates("auth", "head", "script")
-	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script", "all_subjects")
-	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
-	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
-	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
-	templates["panel"] = parseTemplates("panel", "script", "head", "header")
+	templates["subject"] = parseTemplates("subject", "head", "header", "search_bar", "footer", "script", "all_subjects")
+	templates["profile"] = parseTemplates("profile", "head", "header", "search_bar", "footer", "script")
+	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "search_bar", "footer", "script")
+	templates["classement"] = parseTemplates("classement", "head", "header", "search_bar", "footer", "script")
+	templates["panel"] = parseTemplates("panel", "script", "head", "header", "search_bar")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
-
 	// Construct the paths for common template parts.
 	templatePath := "public/templates/"
 	componentPath := "public/components/"
@@ -127,6 +126,7 @@ func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "public/components/auth/animation.js")
 }
+
 func PanelCssHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/panel/panel.css")
 }
@@ -229,7 +229,7 @@ func SubjectCSSHandler(w http.ResponseWriter, r *http.Request) {
 
 func SearchBarJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
+	http.ServeFile(w, r, "public/templates/search_bar/input.js")
 }
 
 func ProfileJs(w http.ResponseWriter, r *http.Request) {
@@ -286,7 +286,7 @@ func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 				http.Error(w, "Token not found", http.StatusBadRequest)
 				return
 			}
-			//Check if token is valid
+			// Check if token is valid
 			if !isValidToken(db, token) {
 				http.Error(w, "Token not valid", http.StatusBadRequest)
 				return
@@ -300,8 +300,6 @@ func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 				fmt.Println("email valid")
 				http.Redirect(w, r, "/home", http.StatusSeeOther)
 			}
-
 		}
-
 	}
 }

@@ -57,6 +57,7 @@ $(document).ready(function () {
         } else if (localStorage.getItem("subjectId") == "all") {
           fetchQuestions("all");
         }
+        checkHighlight();
         break;
       case "response":
         fetchQuestions("all")
@@ -135,7 +136,7 @@ $(document).ready(function () {
         };
 
         bestAnswerContainer.appendChild(bestAnswer);
-        bestAnswerContainer.style.display="flex"
+        bestAnswerContainer.style.display = "flex"
         creator_and_date_container.appendChild(bestAnswerContainer);
         creator_and_date_container.appendChild(answerAuthor);
         const answers = document.querySelector(".question-viewer__answers");
@@ -163,7 +164,7 @@ $(document).ready(function () {
           "data-answer-id",
           msg.content.response_id
         );
-        
+
         upvote_responseCount.textContent = "+ " + msg.content.upvotes;
         downvote_responseCount.textContent = "- " + msg.content.downvotes;
         upvote_responseContainer.appendChild(upvote_responseCount);
@@ -171,61 +172,61 @@ $(document).ready(function () {
         vote_responseContainer.appendChild(upvote_responseContainer);
         vote_responseContainer.appendChild(downvote_responseContainer);
         answerContainer.appendChild(vote_responseContainer);
-        var answer=msg.content
-            modify_button.innerText = "Modify";
-            vote_responseContainer.appendChild(modify_button);
-            modify_button.addEventListener("click", () => {
-              if (document.querySelector(".modify_response_container")) {
-                document.querySelector(".modify_response_container").remove();
-                return;
-              }
-              //console.log(modifyButton);
-              const response_description_input =
-                document.createElement("textarea");
-              response_description_input.innerText = answer.description;
-              response_description_input.setAttribute(
-                "id",
-                "response_description"
-              );
-              response_description_input.classList.add(
-                "response_description_input"
-              );
-              const response_content_input = document.createElement("textarea");
-              response_content_input.innerText = answer.content;
-              response_content_input.setAttribute("id", "response_content");
-              response_content_input.classList.add("response_content_input");
-              const modify_response = document.createElement("button");
-              modify_response.classList.add("modify_response");
-              modify_response.textContent = "Modify";
-              const modify_response_container = document.createElement("div");
-              modify_response_container.classList.add(
-                "modify_response_container"
-              );
-              modify_response.onclick = function () {
-                ModifyResponse(
-                  answer.response_id,
-                  response_content_input.value,
-                  response_description_input.value,
-                  answer.question_id
-                );
-                modify_response_container.remove();
-              };
-              const cancel_button = document.createElement("button");
-              cancel_button.innerText = "X";
-              cancel_button.onclick = () => {
-                modify_response_container.remove();
-              };
-              modify_response_container.appendChild(cancel_button);
-              modify_response_container.classList.add(
-                "modify_response_container"
-              );
-              modify_response_container.appendChild(response_description_input);
-              modify_response_container.appendChild(response_content_input);
-              modify_response_container.appendChild(modify_response);
-              document
-                .querySelector(".question-viewer__answers__answer")
-                .appendChild(modify_response_container);
-            });
+        var answer = msg.content
+        modify_button.innerText = "Modify";
+        vote_responseContainer.appendChild(modify_button);
+        modify_button.addEventListener("click", () => {
+          if (document.querySelector(".modify_response_container")) {
+            document.querySelector(".modify_response_container").remove();
+            return;
+          }
+          //console.log(modifyButton);
+          const response_description_input =
+            document.createElement("textarea");
+          response_description_input.innerText = answer.description;
+          response_description_input.setAttribute(
+            "id",
+            "response_description"
+          );
+          response_description_input.classList.add(
+            "response_description_input"
+          );
+          const response_content_input = document.createElement("textarea");
+          response_content_input.innerText = answer.content;
+          response_content_input.setAttribute("id", "response_content");
+          response_content_input.classList.add("response_content_input");
+          const modify_response = document.createElement("button");
+          modify_response.classList.add("modify_response");
+          modify_response.textContent = "Modify";
+          const modify_response_container = document.createElement("div");
+          modify_response_container.classList.add(
+            "modify_response_container"
+          );
+          modify_response.onclick = function () {
+            ModifyResponse(
+              answer.response_id,
+              response_content_input.value,
+              response_description_input.value,
+              answer.question_id
+            );
+            modify_response_container.remove();
+          };
+          const cancel_button = document.createElement("button");
+          cancel_button.innerText = "X";
+          cancel_button.onclick = () => {
+            modify_response_container.remove();
+          };
+          modify_response_container.appendChild(cancel_button);
+          modify_response_container.classList.add(
+            "modify_response_container"
+          );
+          modify_response_container.appendChild(response_description_input);
+          modify_response_container.appendChild(response_content_input);
+          modify_response_container.appendChild(modify_response);
+          document
+            .querySelector(".question-viewer__answers__answer")
+            .appendChild(modify_response_container);
+        });
         if (msg.content.user_vote == "upvoted") {
           upvote_responseContainer.style.backgroundColor = "rgb(104, 195, 163)";
           //upvote_responseCount.style.color = "white";
@@ -305,7 +306,10 @@ $(document).ready(function () {
         if (question) {
           question.remove();
           let subjectid = localStorage.getItem("subjectId");
-          fetchQuestions(subjectid);
+          if (document.location.pathname != "/profile") {
+            fetchQuestions(subjectid);
+          }
+          //fetchQuestionsProfile(subjectid);
         }
         break;
       case "questionCompareUser":
@@ -456,6 +460,7 @@ function handleQuestionUpdate(data) {
       ".question-viewer__question__content pre code"
     ).textContent = data.content;
   }
+  checkHighlight();
 }
 function handlFavoriUpdate(data) {
   const favori = document.querySelectorAll(".favori");
