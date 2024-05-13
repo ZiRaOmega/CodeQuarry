@@ -1,4 +1,3 @@
-
 const questionContainer = document.getElementById("questions_container");
 let questionsList = document.getElementById("questions_list");
 const return_btn = document.getElementById("return_button");
@@ -16,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const questions = await response.json();
       createFilter(questions);
       createQuestions(questions);
+      questionContainer.appendChild(questionsList);
     } catch (error) {
       const errorH1 = document.createElement("h1");
       errorH1.textContent = "An error occured while fetching the questions";
@@ -93,11 +93,10 @@ function createQuestions(questions) {
   checkHighlight();
 }
 
-
 function createQuestionElement(question) {
   const questionElement = document.createElement("div");
   questionElement.classList.add("question");
-  questionElement.setAttribute("data-question-id",question.id)
+  questionElement.setAttribute("data-question-id", question.id);
   const questionChecked = document.createElement("div");
   questionChecked.classList.add("question_checked");
   questionChecked.setAttribute("data-question-id", question.id);
@@ -111,7 +110,7 @@ function createQuestionElement(question) {
   if (question.responses == null) {
     question.responses = [];
   }
-  
+
   questionElement.innerHTML = htmlQuestionConstructor(question);
   //Line to force code to not being interpreted as html or js
   questionElement.querySelector("#code").textContent = question.content;
@@ -147,7 +146,7 @@ function manageFavorite(favori, questionId) {
     .then((response) => response.json())
     .then((favoris) => {
       if (Array.isArray(favoris)) {
-        console.log(favori)
+        console.log(favori);
         if (favoris.some((f) => f == questionId)) {
           favori.classList.add("favori_active");
           favori.textContent = "★";
@@ -178,7 +177,6 @@ function manageFavorite(favori, questionId) {
       favori.textContent = "★";
       favori.style.backgroundColor = "gold";
     }
-    
   };
 }
 
