@@ -45,12 +45,12 @@ function initializeLocalStorage() {
     })();
   });
 
-
+/* 
 let QuestionsElementsList = [];
 let questionsList = document.createElement("div");
 questionsList.id = "questions_list";
 document.body.appendChild(questionsList);
-
+ */
 const returnButton = document.createElement("div");
 returnButton.onclick = () => {
   window.location.href = "/home";
@@ -134,8 +134,11 @@ function addSubjectClickListener(listItem, subject, listElement) {
     window.location.href = `/subject/${subject.id}/${subject.title}`;
   });
 }
+/* window.onload = function () {
+  fetchQuestions(localStorage.getItem("subjectId") || "all" );
+};
 
-window.fetchQuestions = function (subjectId) {
+function fetchQuestions(subjectId) {
     fetch(`/api/questions?subjectId=${subjectId}`)
         .then((response) => response.json())
         .then((questions) => {
@@ -143,7 +146,6 @@ window.fetchQuestions = function (subjectId) {
             createQuestions(questions);
         });
 };
-
 function createFilter(questions) {
     questionsList.innerHTML = ""; // Clear previous questions
     const filterContainer = document.createElement("div");
@@ -212,11 +214,11 @@ function createFilterElements() {
 
     return [filterNumberOfComments, filterOldest, filterBestAnswer, filterNewest, filterPopular, filterUnpopular];
 }
-
+ */
 function updateQuestionTrackerCount(questions, tracker) {
     tracker.textContent = questions ? `${questions.length} question(s)` : "0 question(s)";
 }
-
+/* 
 function sortByNumberOfComments(questions) {
     questions.forEach(q => q.responses = q.responses || []);
     questions.sort((a, b) => b.responses.length - a.responses.length);
@@ -250,13 +252,13 @@ function sortByUpvotes(questions) {
 function sortByDownvotes(questions) {
     questions.sort((a, b) => a.upvotes - b.upvotes);
     refreshQuestionView(questions);
-}
-
+} */
+/* 
 function refreshQuestionView(questions) {
     questionsList.innerHTML = ""; // Clear previous questions
     createFilter(questions);
     createQuestions(questions);
-}
+} */
 
 function createQuestions(questions) {
   // Clear previous questions

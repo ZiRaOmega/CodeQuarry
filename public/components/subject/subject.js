@@ -1,6 +1,6 @@
 
 const questionContainer = document.getElementById("questions_container");
-questionsList = document.getElementById("questions_list");
+let questionsList = document.getElementById("questions_list");
 const return_btn = document.getElementById("return_button");
 
 return_btn.onclick = () => {
@@ -82,6 +82,7 @@ function sortByDownvotes(questions) {
 
 function refreshQuestionView(questions) {
   questionsList.innerHTML = ""; // Clear previous questions
+  
   createFilter(questions);
   createQuestions(questions);
 }

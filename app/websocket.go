@@ -71,7 +71,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				conn.Close()
 				return
 			}
-			//fmt.Println(wsmessage)
+			// fmt.Println(wsmessage)
 			switch wsmessage.Type {
 			case "session":
 				if wsmessage.Content == nil {
@@ -800,6 +800,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 		}
 	}
 }
+
 func DeleteAvatar(db *sql.DB, user_id int) error {
 	stmt, err := db.Prepare("UPDATE users SET avatar = NULL WHERE id_student = $1")
 	if err != nil {
@@ -811,6 +812,7 @@ func DeleteAvatar(db *sql.DB, user_id int) error {
 	}
 	return nil
 }
+
 func DeleteUserPanel(db *sql.DB, user_id int) error {
 	stmt, err := db.Prepare("DELETE FROM users WHERE id_student = $1")
 	if err != nil {
@@ -822,6 +824,7 @@ func DeleteUserPanel(db *sql.DB, user_id int) error {
 	}
 	return nil
 }
+
 func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string, username string, email string, bio string, website string, github string, xp int, rank int, schoolyear time.Time) error {
 	stmt, err := db.Prepare("UPDATE users SET firstname = $1, lastname = $2, username = $3, email = $4, bio = $5, website = $6, github = $7, xp = $8, rang_rank_ = $9, school_year = $10 WHERE id_student = $11")
 	if err != nil {
@@ -833,6 +836,7 @@ func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string,
 	}
 	return nil
 }
+
 func DeleteResponsePanel(db *sql.DB, response_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Response WHERE id_response = $1")
 	if err != nil {
@@ -844,6 +848,7 @@ func DeleteResponsePanel(db *sql.DB, response_id int) error {
 	}
 	return nil
 }
+
 func DeleteQuestionPanel(db *sql.DB, question_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Question WHERE id_question = $1")
 	if err != nil {
@@ -855,6 +860,7 @@ func DeleteQuestionPanel(db *sql.DB, question_id int) error {
 	}
 	return nil
 }
+
 func DeleteSubjectPanel(db *sql.DB, subject_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Subject WHERE id_subject = $1")
 	if err != nil {
@@ -863,6 +869,7 @@ func DeleteSubjectPanel(db *sql.DB, subject_id int) error {
 	_, err2 := stmt.Exec(subject_id)
 	return err2
 }
+
 func ModifySubjectPanel(db *sql.DB, subject_id int, title string, description string, creation_date time.Time, update_date time.Time) error {
 	stmt, err := db.Prepare("UPDATE Subject SET title = $1, description = $2, creation_date = $3, update_date = $4 WHERE id_subject = $5")
 	if err != nil {
@@ -874,6 +881,7 @@ func ModifySubjectPanel(db *sql.DB, subject_id int, title string, description st
 	}
 	return nil
 }
+
 func ModifyResponsePanel(db *sql.DB, response_id int, content string, description string, creationDate time.Time, updateDate time.Time, upVotes int, downVotes int) error {
 	stmt, err := db.Prepare("UPDATE Response SET content = $1, description = $2, creation_date = $3, update_date = $4, upvotes = $5, downvotes = $6 WHERE id_response = $7")
 	if err != nil {
@@ -885,6 +893,7 @@ func ModifyResponsePanel(db *sql.DB, response_id int, content string, descriptio
 	}
 	return nil
 }
+
 func ModifyQuestionPanel(db *sql.DB, question_id int, title string, description string, content string, creation_date time.Time, update_date time.Time, upvotes int, downvotes int) error {
 	stmt, err := db.Prepare("UPDATE Question SET title = $1, description = $2, content = $3, creation_date = $4, update_date = $5, upvotes = $6, downvotes = $7 WHERE id_question = $8")
 	if err != nil {
@@ -896,6 +905,7 @@ func ModifyQuestionPanel(db *sql.DB, question_id int, title string, description 
 	}
 	return nil
 }
+
 func ModifyResponse(db *sql.DB, response_id int, content string, description string, user_id int) error {
 	fmt.Println(content)
 	stmt, err := db.Prepare("UPDATE Response SET content = $1, description = $2 WHERE id_response = $3 AND id_student = $4")
