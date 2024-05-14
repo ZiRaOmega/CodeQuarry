@@ -23,6 +23,7 @@ func InitDB(dsn string) *sql.DB {
 func SetupDB(db *sql.DB) {
 	createTableUsers(db)
 	createTableSession(db)
+	createTableVerifyEmail(db)
 	createTableSubject(db)
 	createTableTag(db)
 	createTableQuestion(db)
@@ -64,6 +65,24 @@ func createTableUsers(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
+func createTableVerifyEmail(db *sql.DB) {
+	// Create a VerifyEmail table
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS VerifyEmail(
+		id SERIAL NOT NULL,
+		email VARCHAR(50) NOT NULL,
+		token VARCHAR(50) NOT NULL,
+		validated BOOLEAN DEFAULT FALSE,
+		PRIMARY KEY(id),
+		UNIQUE(email),
+		UNIQUE(token),
+		FOREIGN KEY(email) REFERENCES users(email) ON DELETE CASCADE
+	);`
+	// Execute the table creation query
+	if _, err := db.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+
+}
 func createTableSubject(db *sql.DB) {
 	// Create a Subject table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Subject(
@@ -102,7 +121,7 @@ func createTableFavorite(db *sql.DB) {
 		id_student INT,
 		id_question INT,
 		PRIMARY KEY(id_student, id_question),
-		FOREIGN KEY(id_student) REFERENCES users(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE,
 		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE
 	);`
 	// Execute the table creation query
@@ -227,7 +246,10 @@ func createTableSession(db *sql.DB) {
 		uuid VARCHAR(50) NOT NULL,
 		user_id INT NOT NULL,
 		expire_at TIMESTAMP NOT NULL,
-		created_at TIMESTAMP NOT NULL
+		created_at TIMESTAMP NOT NULL,
+		UNIQUE(uuid),
+		PRIMARY KEY(id),
+		FOREIGN KEY(user_id) REFERENCES users(id_student)
 	);
 	`
 	// Execute the table creation query

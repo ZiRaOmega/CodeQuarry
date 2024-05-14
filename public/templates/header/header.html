@@ -6,6 +6,15 @@
     </div>
     <div id="menu">
         <ul>
+            {{if or (eq .Rank_Panel.Int64 2) (eq .Rank_Panel.Int64 1)}}
+            <li><a href="/panel" id="panel"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" class="lucide lucide-settings header_icons">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a3.6 3.6 0 0 0-3.6-3.6H15M4.6 15a3.6 3.6 0 0 0 3.6-3.6H9" />
+                    </svg></a></li>
+            {{end}}
             <li><a href="/home" id="home"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round" class="lucide lucide-home header_icons">
@@ -13,16 +22,7 @@
                         <polyline points="9 22 9 12 15 12 15 22" />
                     </svg></a></li>
             <li>
-                <div class="search_bar">
-                    <input type="text" id="search-bar-input" placeholder="Search" />
-                    <button class="header_icons" id="search_button"><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                            height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search">
-                            <circle cx="11" cy="11" r="8" />
-                            <path d="m21 21-4.3-4.3" />
-                        </svg></button>
-                        <script src="/search_bar/input.js"></script>
-                </div>
+                {{template "search_bar" .}}
             </li>
             <li><a href="/profile"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"

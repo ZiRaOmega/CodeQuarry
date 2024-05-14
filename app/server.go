@@ -9,11 +9,17 @@ import (
 	"text/template"
 )
 
+type AuthInfo struct {
+	Rank int
+}
+
 /* ======================= GLOBAL ======================= */
 
 func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(component_name)
+		// Get cookie session
+
 		if component_name == "auth" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
 			err := ParseAndExecuteTemplate(component_name, nil, w)
@@ -33,8 +39,9 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 		if isValidSession(session_id, db) {
 			// Get user info from user_id
 			var user User
-			if component_name == "profile" {
-				user, err = GetUser(session_id, db)
+			user, err = GetUser(session_id, db)
+			fmt.Println(user)
+			if component_name == "profile" || component_name == "classement" {
 				if err != nil {
 					fmt.Println(err.Error())
 					http.Error(w, "Error getting user info", http.StatusInternalServerError)
@@ -48,6 +55,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 			}
 			err = ParseAndExecuteTemplate(component_name, user, w)
 			if err != nil {
+				fmt.Println(err.Error())
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -61,16 +69,16 @@ var templates = map[string]*template.Template{}
 
 func init() {
 	// Pre-parse all templates.
-	templates["home"] = parseTemplates("home", "head", "header", "all_subjects", "footer", "script")
+	templates["home"] = parseTemplates("home", "head", "header", "search_bar", "all_subjects", "footer", "script")
 	templates["auth"] = parseTemplates("auth", "head", "script")
-	templates["subject"] = parseTemplates("subject", "head", "header", "footer", "script", "all_subjects")
-	templates["profile"] = parseTemplates("profile", "head", "header", "footer", "script")
-	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "footer", "script")
-	templates["classement"] = parseTemplates("classement", "head", "header", "footer", "script")
+	templates["subject"] = parseTemplates("subject", "head", "header", "search_bar", "footer", "script", "all_subjects")
+	templates["profile"] = parseTemplates("profile", "head", "header", "search_bar", "footer", "script")
+	templates["question_viewer"] = parseTemplates("question_viewer", "head", "header", "search_bar", "footer", "script")
+	templates["classement"] = parseTemplates("classement", "head", "header", "search_bar", "footer", "script")
+	templates["panel"] = parseTemplates("panel", "script", "head", "header", "search_bar")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
-
 	// Construct the paths for common template parts.
 	templatePath := "public/templates/"
 	componentPath := "public/components/"
@@ -117,6 +125,10 @@ func CheckLogoHandler(w http.ResponseWriter, r *http.Request) {
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
 	http.ServeFile(w, r, "public/components/auth/animation.js")
+}
+
+func PanelCssHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/components/panel/panel.css")
 }
 
 /* ======================= TEMPLATES ======================= */
@@ -182,6 +194,11 @@ func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.css")
 }
 
+/*Panel*/
+func PanelJSHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/components/panel/panel.js")
+}
+
 /* --------------- PROFILE ---------------- */
 
 func ProfileCSSHandler(w http.ResponseWriter, r *http.Request) {
@@ -212,7 +229,7 @@ func SubjectCSSHandler(w http.ResponseWriter, r *http.Request) {
 
 func SearchBarJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/components/home/search_bar/input.js")
+	http.ServeFile(w, r, "public/templates/search_bar/input.js")
 }
 
 func ProfileJs(w http.ResponseWriter, r *http.Request) {
@@ -258,4 +275,31 @@ func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {
 func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/components/home/question_viewer/question_viewer.html")
+}
+
+func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "GET":
+			token := r.URL.Query().Get("token")
+			if token == "" {
+				http.Error(w, "Token not found", http.StatusBadRequest)
+				return
+			}
+			// Check if token is valid
+			if !isValidToken(db, token) {
+				http.Error(w, "Token not valid", http.StatusBadRequest)
+				return
+			} else {
+				//Update user status
+				/* err := UpdateUserStatus(db, token)
+				if err != nil {
+					http.Error(w, "Error updating user status", http.StatusInternalServerError)
+					return
+				} */
+				fmt.Println("email valid")
+				http.Redirect(w, r, "/home", http.StatusSeeOther)
+			}
+		}
+	}
 }

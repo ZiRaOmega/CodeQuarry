@@ -134,6 +134,16 @@
     border-radius: 20px;
     border: none;
 }
+#forgotPasswordBlock{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: white;
+    opacity: 1;
+}
 #usernameOrEmailLogin:focus, #loginPassword:focus{
     outline: none
 }
