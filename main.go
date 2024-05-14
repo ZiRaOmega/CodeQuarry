@@ -124,10 +124,26 @@ func main() {
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
+	//go startHTTPServer()
 	fmt.Println("Server is running on https://localhost:443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
 	}
+}
+
+// Redirects HTTP requests to HTTPS
+func redirectHTTPToHTTPS(w http.ResponseWriter, r *http.Request) {
+	// Note: Use http.StatusMovedPermanently for permanent redirects
+	http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusTemporaryRedirect)
+}
+
+func startHTTPServer() {
+	// Create a new ServeMux
+	mux := http.NewServeMux()
+	// Register the redirect function specifically
+	mux.HandleFunc("/", redirectHTTPToHTTPS)
+	// Listen on HTTP port 80 with the new ServeMux
+	log.Fatal(http.ListenAndServe(":80", mux))
 }
