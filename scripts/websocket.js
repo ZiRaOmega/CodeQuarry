@@ -8,6 +8,7 @@ const getCookie = (name) => {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(";").shift();
 };
+
 // Use jQuery's document ready function to ensure the DOM is fully loaded
 $(document).ready(function () {
   // Create a WebSocket connection to the current hostname with the '/ws' endpoint
@@ -35,15 +36,7 @@ $(document).ready(function () {
     let msg = JSON.parse(event.data);
     switch (msg.type) {
       case "session":
-        if (msg.content == "expired" || msg.content == "empty") {
-          console.log(`Session ${msg.content}, redirecting to login page`);
-          if (window.location.pathname != "/") window.location.href = "/";
-        } else if (msg.content == "valid") {
-          // !!! TODO show the website if the session is still valid
-          if (window.location.pathname == "/")
-            window.location.pathname = "/home";
-          console.log("Session still valid");
-        }
+        handleSession(msg);
       case "voteUpdate":
         handleVoteUpdate(msg.content);
         break;
@@ -51,329 +44,26 @@ $(document).ready(function () {
         handleResponseVoteUpdate(msg.content);
         break;
       case "postCreated":
-        updateQuestionCount(msg.content); // Implement this function to update the UI
-        if (localStorage.getItem("subjectId") == msg.content.id) {
-          fetchQuestions(msg.content.id); // Implement this function to fetch and display questions
-        } else if (localStorage.getItem("subjectId") == "all") {
-          fetchQuestions("all");
-        }
-        checkHighlight();
+        console.log(msg)
+        handlePostCreation(msg);
         break;
       case "response":
-        fetchQuestions("all")
-        console.log("Response received from server:", msg.content);
-        const answer_description = document.createElement("span");
-        const creator = document.createElement("div");
-        creator.classList.add("creator_name");
-        answer_description.classList.add(
-          "question-viewer__answers__answer__description"
-        );
-        answer_description.textContent = msg.content.description;
-        const answerContainer = document.createElement("div");
-        const creator_and_date_container = document.createElement("div");
-        creator_and_date_container.classList.add(
-          "creator_and_date_container_answers"
-        );
-        answerContainer.classList.add("question-viewer__answers__answer");
-
-        // Content wrapper
-        const answerContent = document.createElement("div");
-        answerContent.classList.add(
-          "question-viewer__answers__answer__content"
-        );
-        const pre = document.createElement("pre");
-        const code = document.createElement("code");
-        code.textContent = msg.content.content;
-        pre.appendChild(code);
-        answerContent.appendChild(pre);
-
-        // Author info
-        const answerAuthor = document.createElement("div");
-        answerAuthor.classList.add("question-viewer__answers__answer__author");
-        answerAuthor.textContent = "Response from";
-        creator.textContent = msg.content.student_name;
-        answerAuthor.appendChild(creator);
-
-        // Date of the response
-        const answerDate = document.createElement("div");
-        answerDate.classList.add("question-viewer__answers__answer__date");
-        answerDate.textContent = `Posted the: ${new Date(
-          msg.content.creation_date
-        ).toLocaleDateString()}`;
-
-        // Best answer toggle
-        const bestAnswerContainer = document.createElement("div");
-        bestAnswerContainer.classList.add("best_answer_container");
-        const bestAnswer = document.createElement("div");
-        bestAnswer.classList.add("best_answer");
-        bestAnswer.textContent = "Best answer ✔";
-        bestAnswer.setAttribute("data-answer-id", msg.content.response_id);
-        console.log(bestAnswer)
-        // Appending everything to the main container
-        answerContainer.appendChild(answer_description);
-        answerContainer.appendChild(answerContent);
-        creator_and_date_container.appendChild(answerDate);
-
-        answerContainer.appendChild(creator_and_date_container);
-
-        // Check if best answer
-        if (msg.content.isBestAnswer) {
-          bestAnswer.style.backgroundColor = "rgb(104, 195, 163)";
-        }
-
-        bestAnswer.onclick = function () {
-          // Send WebSocket message to toggle best answer status
-          socket.send(
-            JSON.stringify({
-              type: "bestAnswer",
-              content: {
-                answer_id: bestAnswer.getAttribute("data-answer-id"),
-                question_id: msg.content.questionId,
-              },
-              session_id: getCookie("session"),
-            })
-          );
-        };
-
-        bestAnswerContainer.appendChild(bestAnswer);
-        bestAnswerContainer.style.display = "flex"
-        creator_and_date_container.appendChild(bestAnswerContainer);
-        creator_and_date_container.appendChild(answerAuthor);
-        const answers = document.querySelector(".question-viewer__answers");
-        answers.appendChild(answerContainer);
-        console.log("Response added to the DOM", msg.content);
-        console.log("Response added to the DOM", msg.content.response_id);
-        const modify_button = document.createElement("button");
-        const vote_responseContainer = document.createElement("div");
-        vote_responseContainer.classList.add("vote_response_container");
-        const upvote_responseContainer = document.createElement("div");
-        const downvote_responseContainer = document.createElement("div");
-        const upvote_responseCount = document.createElement("div");
-        const downvote_responseCount = document.createElement("div");
-        upvote_responseContainer.classList.add("upvote_response_container");
-        upvote_responseContainer.classList.add("upvote_container");
-        downvote_responseContainer.classList.add("downvote_response_container");
-        downvote_responseContainer.classList.add("downvote_container");
-        upvote_responseCount.classList.add("upvote_response_count");
-        downvote_responseCount.classList.add("downvote_response_count");
-        upvote_responseCount.setAttribute(
-          "data-answer-id",
-          msg.content.response_id
-        );
-        downvote_responseCount.setAttribute(
-          "data-answer-id",
-          msg.content.response_id
-        );
-
-        upvote_responseCount.textContent = "+ " + msg.content.upvotes;
-        downvote_responseCount.textContent = "- " + msg.content.downvotes;
-        upvote_responseContainer.appendChild(upvote_responseCount);
-        downvote_responseContainer.appendChild(downvote_responseCount);
-        vote_responseContainer.appendChild(upvote_responseContainer);
-        vote_responseContainer.appendChild(downvote_responseContainer);
-        answerContainer.appendChild(vote_responseContainer);
-        var answer = msg.content
-        modify_button.innerText = "Modify";
-        vote_responseContainer.appendChild(modify_button);
-        modify_button.addEventListener("click", () => {
-          if (document.querySelector(".modify_response_container")) {
-            document.querySelector(".modify_response_container").remove();
-            return;
-          }
-          //console.log(modifyButton);
-          const response_description_input =
-            document.createElement("textarea");
-          response_description_input.innerText = answer.description;
-          response_description_input.setAttribute(
-            "id",
-            "response_description"
-          );
-          response_description_input.classList.add(
-            "response_description_input"
-          );
-          const response_content_input = document.createElement("textarea");
-          response_content_input.innerText = answer.content;
-          response_content_input.setAttribute("id", "response_content");
-          response_content_input.classList.add("response_content_input");
-          const modify_response = document.createElement("button");
-          modify_response.classList.add("modify_response");
-          modify_response.textContent = "Modify";
-          const modify_response_container = document.createElement("div");
-          modify_response_container.classList.add(
-            "modify_response_container"
-          );
-          modify_response.onclick = function () {
-            ModifyResponse(
-              answer.response_id,
-              response_content_input.value,
-              response_description_input.value,
-              answer.question_id
-            );
-            modify_response_container.remove();
-          };
-          const cancel_button = document.createElement("button");
-          cancel_button.innerText = "X";
-          cancel_button.onclick = () => {
-            modify_response_container.remove();
-          };
-          modify_response_container.appendChild(cancel_button);
-          modify_response_container.classList.add(
-            "modify_response_container"
-          );
-          modify_response_container.appendChild(response_description_input);
-          modify_response_container.appendChild(response_content_input);
-          modify_response_container.appendChild(modify_response);
-          document
-            .querySelector(".question-viewer__answers__answer")
-            .appendChild(modify_response_container);
-        });
-        if (msg.content.user_vote == "upvoted") {
-          upvote_responseContainer.style.backgroundColor = "rgb(104, 195, 163)";
-          //upvote_responseCount.style.color = "white";
-        } else if (msg.content.user_vote == "downvoted") {
-          downvote_responseContainer.style.backgroundColor = "rgb(196, 77, 86)";
-          //downvote_responseCount.style.color = "white";
-        }
-
-        upvote_responseContainer.onclick = function () {
-          //if upvoteContainer backgroundColor is green then remove the color
-          if (
-            upvote_responseContainer.style.backgroundColor ==
-            "rgb(104, 195, 163)"
-          ) {
-            upvote_responseContainer.style.backgroundColor = "";
-            upvote_responseCount.textContent =
-              parseInt(msg.content.upvotes) - 1;
-          } else {
-            upvote_responseCount.textContent =
-              parseInt(msg.content.upvotes) + 1;
-            upvote_responseContainer.style.backgroundColor =
-              "rgb(104, 195, 163)";
-            if (
-              downvote_responseContainer.style.backgroundColor ==
-              "rgb(196, 77, 86)"
-            ) {
-              downvote_responseContainer.style.backgroundColor = "";
-              downvote_responseCount.textContent = parseInt(
-                msg.content.downvotes
-              );
-            }
-          }
-          socket.send(
-            JSON.stringify({
-              type: "upvote_response",
-              content: msg.content.response_id,
-              session_id: getCookie("session"),
-            })
-          );
-        };
-        downvote_responseContainer.onclick = function () {
-          //if downvote_responseContainer backgroundColor is red then remove the color
-          if (
-            downvote_responseContainer.style.backgroundColor ==
-            "rgb(196, 77, 86)"
-          ) {
-            downvote_responseContainer.style.backgroundColor = "";
-            downvoteCount.textContent = parseInt(msg.content.downvotes) - 1;
-          } else {
-            downvoteCount.textContent = parseInt(msg.content.downvotes) + 1;
-            downvote_responseContainer.style.backgroundColor =
-              "rgb(196, 77, 86)";
-            if (
-              upvote_responseContainer.style.backgroundColor ==
-              "rgb(104, 195, 163)"
-            ) {
-              upvote_responseContainer.style.backgroundColor = "";
-              upvote_responseCount.textContent = parseInt(msg.content.upvotes);
-            }
-          }
-          socket.send(
-            JSON.stringify({
-              type: "downvote_response",
-              content: msg.content.response_id,
-              session_id: getCookie("session"),
-            })
-          );
-        };
-
-        checkHighlight();
+        handleResponse(msg);
         break;
-
       case "postDeleted":
-        const question = document.querySelector(
-          `.question[data-question-id="${msg.content}"]`
-        );
-        if (question) {
-          question.remove();
-          let subjectid = localStorage.getItem("subjectId");
-          if (document.location.pathname != "/profile") {
-            fetchQuestions(subjectid);
-          }
-          //fetchQuestionsProfile(subjectid);
-        }
+        handlePostDeletion(msg);
         break;
       case "questionCompareUser":
         ItsMyQuestion(msg.content);
         break;
       case "bestAnswer":
-        const questionID = msg.content.question_id;
-        console.log("Best answer received from server:", msg.content);
-
-        let answersBtn = document.querySelectorAll(".best_answer");
-        let best_answer_check = document.querySelectorAll(".best_answer_check");
-        let question_checked = document.querySelectorAll(".question_checked");
-        question_checked.forEach((check) => {
-          console.log(check.getAttribute("data-question-id"));
-          console.log(questionID);
-          if (check.getAttribute("data-question-id") == questionID.toString()) {
-            if (check.style.display == "block") {
-              check.style.display = "none";
-            } else {
-              check.style.display = "block";
-            }
-          }
-        });
-
-        let reponse_input = document.getElementsByClassName(
-          "question-viewer__response-input"
-        );
-
-        best_answer_check.forEach((check) => {
-          if (msg.content.question_best_answer == -1) {
-            check.style.display = "none";
-            reponse_input[0].style.display = "block";
-            document.getElementById("question_closed").style.display = "none";
-          } else if (
-            check.getAttribute("data-answer-id") ==
-            msg.content.question_best_answer.toString()
-          ) {
-            check.style.display = "flex";
-            reponse_input[0].style.display = "none";
-            document.getElementById("question_closed").style.display = "block";
-          }
-        });
-        answersBtn.forEach((element) => {
-          if (msg.content.question_best_answer == -1) {
-            element.style.display = "flex";
-            element.style.backgroundColor = "";
-          } else if (
-            element.dataset.answerId ==
-            msg.content.question_best_answer.toString()
-          ) {
-            element.style.display = "flex";
-            element.style.backgroundColor = "rgb(104, 195, 163)";
-            element.classList.add("best_answer_container");
-          } else {
-            element.style.display = "none";
-          }
-        });
+        handleBestAnswer(msg);
         break;
       case "XP":
-        let xp = document.querySelector(".xp");
-        xp.textContent = msg.content + " XP";
+        handleXP(msg);
         break;
       case "addFavori":
-        handlFavoriUpdate(msg.content)
+        handlFavoriUpdate(msg.content);
         break;
       case "questionModified":
         handleQuestionUpdate(msg.content);
@@ -408,9 +98,90 @@ $(document).ready(function () {
     console.error(`[error] ${error.message}`);
   };
 });
+
+function handlePostCreation(msg) {
+  updateQuestionCount(msg.content); // Implement this function to update the UI
+  fetchQuestions(typeof(msg.content.id)=="number"?msg.content.id:"all");
+  checkHighlight();
+}
+function handleXP(msg) {
+  let xp = document.querySelector(".xp");
+  xp.textContent = msg.content + " XP";
+}
+function handleBestAnswer(msg) {
+  const questionID = msg.content.question_id;
+  console.log("Best answer received from server:", msg.content);
+
+  let answersBtn = document.querySelectorAll(".best_answer");
+  let best_answer_check = document.querySelectorAll(".best_answer_check");
+  let question_checked = document.querySelectorAll(".question_checked");
+  question_checked.forEach((check) => {
+    console.log(check.getAttribute("data-question-id"));
+    console.log(questionID);
+    if (check.getAttribute("data-question-id") == questionID.toString()) {
+      if (check.style.display == "block") {
+        check.style.display = "none";
+      } else {
+        check.style.display = "block";
+      }
+    }
+  });
+
+  let reponse_input = document.getElementsByClassName(
+    "question-viewer__response-input"
+  );
+
+  best_answer_check.forEach((check) => {
+    if (msg.content.question_best_answer == -1) {
+      check.style.display = "none";
+      reponse_input[0].style.display = "block";
+      document.getElementById("question_closed").style.display = "none";
+    } else if (
+      check.getAttribute("data-answer-id") ==
+      msg.content.question_best_answer.toString()
+    ) {
+      check.style.display = "flex";
+      reponse_input[0].style.display = "none";
+      document.getElementById("question_closed").style.display = "block";
+    }
+  });
+  answersBtn.forEach((element) => {
+    if (msg.content.question_best_answer == -1) {
+      element.style.display = "flex";
+      element.style.backgroundColor = "";
+    } else if (
+      element.dataset.answerId == msg.content.question_best_answer.toString()
+    ) {
+      element.style.display = "flex";
+      element.style.backgroundColor = "rgb(104, 195, 163)";
+      element.classList.add("best_answer_container");
+    } else {
+      element.style.display = "none";
+    }
+  });
+}
+function handlePostDeletion(msg) {
+  const question = document.querySelector(
+    `.question[data-question-id="${msg.content}"]`
+  );
+  if (question) {
+    question.remove();
+    let subjectid = localStorage.getItem("subjectId");
+    if (document.location.pathname != "/profile") {
+      fetchQuestions(subjectid);
+    }
+  }
+}
+function handleSession(msg) {
+  if (msg.content == "expired" || msg.content == "empty") {
+    console.log(`Session ${msg.content}, redirecting to login page`);
+    if (window.location.pathname != "/") window.location.href = "/";
+  } else if (msg.content == "valid") {
+    if (window.location.pathname == "/") window.location.pathname = "/home";
+    console.log("Session still valid");
+  }
+}
 function ModifyResponse(response_id, content, description, question_id) {
-  console.log("modifyResponse");
-  console.log(response_id, content, description, question_id);
   socket.send(
     JSON.stringify({
       type: "modify_response",
@@ -532,6 +303,7 @@ function ItsMyQuestion(bool) {
     element.style.display = bool ? "flex" : "none";
   });
 }
+
 function AddFavori(question_id) {
   socket.send(
     JSON.stringify({
@@ -540,4 +312,218 @@ function AddFavori(question_id) {
       session_id: getCookie("session"),
     })
   );
+}
+function handleResponse(msg) {
+  fetchQuestions("all");
+  console.log("Response received from server:", msg.content);
+  const answer_description = document.createElement("span");
+  const creator = document.createElement("div");
+  creator.classList.add("creator_name");
+  answer_description.classList.add(
+    "question-viewer__answers__answer__description"
+  );
+  answer_description.textContent = msg.content.description;
+  const answerContainer = document.createElement("div");
+  const creator_and_date_container = document.createElement("div");
+  creator_and_date_container.classList.add(
+    "creator_and_date_container_answers"
+  );
+  answerContainer.classList.add("question-viewer__answers__answer");
+
+  // Content wrapper
+  const answerContent = document.createElement("div");
+  answerContent.classList.add("question-viewer__answers__answer__content");
+  const pre = document.createElement("pre");
+  const code = document.createElement("code");
+  code.textContent = msg.content.content;
+  pre.appendChild(code);
+  answerContent.appendChild(pre);
+
+  // Author info
+  const answerAuthor = document.createElement("div");
+  answerAuthor.classList.add("question-viewer__answers__answer__author");
+  answerAuthor.textContent = "Response from";
+  creator.textContent = msg.content.student_name;
+  answerAuthor.appendChild(creator);
+
+  // Date of the response
+  const answerDate = document.createElement("div");
+  answerDate.classList.add("question-viewer__answers__answer__date");
+  answerDate.textContent = `Posted the: ${new Date(
+    msg.content.creation_date
+  ).toLocaleDateString()}`;
+
+  // Best answer toggle
+  const bestAnswerContainer = document.createElement("div");
+  bestAnswerContainer.classList.add("best_answer_container");
+  const bestAnswer = document.createElement("div");
+  bestAnswer.classList.add("best_answer");
+  bestAnswer.textContent = "Best answer ✔";
+  bestAnswer.setAttribute("data-answer-id", msg.content.response_id);
+  console.log(bestAnswer);
+  // Appending everything to the main container
+  answerContainer.appendChild(answer_description);
+  answerContainer.appendChild(answerContent);
+  creator_and_date_container.appendChild(answerDate);
+
+  answerContainer.appendChild(creator_and_date_container);
+
+  // Check if best answer
+  if (msg.content.isBestAnswer) {
+    bestAnswer.style.backgroundColor = "rgb(104, 195, 163)";
+  }
+
+  bestAnswer.onclick = function () {
+    // Send WebSocket message to toggle best answer status
+    socket.send(
+      JSON.stringify({
+        type: "bestAnswer",
+        content: {
+          answer_id: bestAnswer.getAttribute("data-answer-id"),
+          question_id: msg.content.questionId,
+        },
+        session_id: getCookie("session"),
+      })
+    );
+  };
+
+  bestAnswerContainer.appendChild(bestAnswer);
+  bestAnswerContainer.style.display = "flex";
+  creator_and_date_container.appendChild(bestAnswerContainer);
+  creator_and_date_container.appendChild(answerAuthor);
+  const answers = document.querySelector(".question-viewer__answers");
+  answers.appendChild(answerContainer);
+  console.log("Response added to the DOM", msg.content);
+  console.log("Response added to the DOM", msg.content.response_id);
+  const modify_button = document.createElement("button");
+  const vote_responseContainer = document.createElement("div");
+  vote_responseContainer.classList.add("vote_response_container");
+  const upvote_responseContainer = document.createElement("div");
+  const downvote_responseContainer = document.createElement("div");
+  const upvote_responseCount = document.createElement("div");
+  const downvote_responseCount = document.createElement("div");
+  upvote_responseContainer.classList.add("upvote_response_container");
+  upvote_responseContainer.classList.add("upvote_container");
+  downvote_responseContainer.classList.add("downvote_response_container");
+  downvote_responseContainer.classList.add("downvote_container");
+  upvote_responseCount.classList.add("upvote_response_count");
+  downvote_responseCount.classList.add("downvote_response_count");
+  upvote_responseCount.setAttribute("data-answer-id", msg.content.response_id);
+  downvote_responseCount.setAttribute(
+    "data-answer-id",
+    msg.content.response_id
+  );
+
+  upvote_responseCount.textContent = "+ " + msg.content.upvotes;
+  downvote_responseCount.textContent = "- " + msg.content.downvotes;
+  upvote_responseContainer.appendChild(upvote_responseCount);
+  downvote_responseContainer.appendChild(downvote_responseCount);
+  vote_responseContainer.appendChild(upvote_responseContainer);
+  vote_responseContainer.appendChild(downvote_responseContainer);
+  answerContainer.appendChild(vote_responseContainer);
+  var answer = msg.content;
+  modify_button.innerText = "Modify";
+  vote_responseContainer.appendChild(modify_button);
+  modify_button.addEventListener("click", () => {
+    if (document.querySelector(".modify_response_container")) {
+      document.querySelector(".modify_response_container").remove();
+      return;
+    }
+    //console.log(modifyButton);
+    const response_description_input = document.createElement("textarea");
+    response_description_input.innerText = answer.description;
+    response_description_input.setAttribute("id", "response_description");
+    response_description_input.classList.add("response_description_input");
+    const response_content_input = document.createElement("textarea");
+    response_content_input.innerText = answer.content;
+    response_content_input.setAttribute("id", "response_content");
+    response_content_input.classList.add("response_content_input");
+    const modify_response = document.createElement("button");
+    modify_response.classList.add("modify_response");
+    modify_response.textContent = "Modify";
+    const modify_response_container = document.createElement("div");
+    modify_response_container.classList.add("modify_response_container");
+    modify_response.onclick = function () {
+      ModifyResponse(
+        answer.response_id,
+        response_content_input.value,
+        response_description_input.value,
+        answer.question_id
+      );
+      modify_response_container.remove();
+    };
+    const cancel_button = document.createElement("button");
+    cancel_button.innerText = "X";
+    cancel_button.onclick = () => {
+      modify_response_container.remove();
+    };
+    modify_response_container.appendChild(cancel_button);
+    modify_response_container.classList.add("modify_response_container");
+    modify_response_container.appendChild(response_description_input);
+    modify_response_container.appendChild(response_content_input);
+    modify_response_container.appendChild(modify_response);
+    document
+      .querySelector(".question-viewer__answers__answer")
+      .appendChild(modify_response_container);
+  });
+  if (msg.content.user_vote == "upvoted") {
+    upvote_responseContainer.style.backgroundColor = "rgb(104, 195, 163)";
+    //upvote_responseCount.style.color = "white";
+  } else if (msg.content.user_vote == "downvoted") {
+    downvote_responseContainer.style.backgroundColor = "rgb(196, 77, 86)";
+    //downvote_responseCount.style.color = "white";
+  }
+
+  upvote_responseContainer.onclick = function () {
+    //if upvoteContainer backgroundColor is green then remove the color
+    if (
+      upvote_responseContainer.style.backgroundColor == "rgb(104, 195, 163)"
+    ) {
+      upvote_responseContainer.style.backgroundColor = "";
+      upvote_responseCount.textContent = parseInt(msg.content.upvotes) - 1;
+    } else {
+      upvote_responseCount.textContent = parseInt(msg.content.upvotes) + 1;
+      upvote_responseContainer.style.backgroundColor = "rgb(104, 195, 163)";
+      if (
+        downvote_responseContainer.style.backgroundColor == "rgb(196, 77, 86)"
+      ) {
+        downvote_responseContainer.style.backgroundColor = "";
+        downvote_responseCount.textContent = parseInt(msg.content.downvotes);
+      }
+    }
+    socket.send(
+      JSON.stringify({
+        type: "upvote_response",
+        content: msg.content.response_id,
+        session_id: getCookie("session"),
+      })
+    );
+  };
+  downvote_responseContainer.onclick = function () {
+    //if downvote_responseContainer backgroundColor is red then remove the color
+    if (
+      downvote_responseContainer.style.backgroundColor == "rgb(196, 77, 86)"
+    ) {
+      downvote_responseContainer.style.backgroundColor = "";
+      downvoteCount.textContent = parseInt(msg.content.downvotes) - 1;
+    } else {
+      downvoteCount.textContent = parseInt(msg.content.downvotes) + 1;
+      downvote_responseContainer.style.backgroundColor = "rgb(196, 77, 86)";
+      if (
+        upvote_responseContainer.style.backgroundColor == "rgb(104, 195, 163)"
+      ) {
+        upvote_responseContainer.style.backgroundColor = "";
+        upvote_responseCount.textContent = parseInt(msg.content.upvotes);
+      }
+    }
+    socket.send(
+      JSON.stringify({
+        type: "downvote_response",
+        content: msg.content.response_id,
+        session_id: getCookie("session"),
+      })
+    );
+  };
+
+  checkHighlight();
 }

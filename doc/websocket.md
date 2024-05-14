@@ -305,3 +305,102 @@ socket.onerror = function (error) {
 2. **Error Handling**: Robust error handling in WebSocket applications is crucial for reliability. Ensure that all potential events (open, message, error, close) have corresponding handlers.
 3. **Reconnection Strategy**: Implement automatic reconnection in case of unexpected server disconnects or network issues.
 4. **Data Handling**: Validate and sanitize all data sent to and received from the server to prevent security vulnerabilities, such as XSS (Cross-Site Scripting).
+Here's detailed documentation for the JavaScript functions handling various types of WebSocket messages and other interactions in a web application. Each function is designed to perform specific tasks based on the type of message or action required:
+
+### 1. **handlePostCreation(msg)**
+This function is invoked when a new post is successfully created. It updates the UI to reflect the new post count, retrieves questions for a specific subject if applicable, and checks for highlighted elements on the page.
+
+- **Parameters:**
+  - `msg` (Object): The message object received from the server containing details about the post creation.
+- **Operations:**
+  - Updates the UI to reflect the new question count.
+  - Fetches and displays questions for the specified subject from local storage or all subjects if specified.
+  - Checks for UI elements that need highlighting or special attention.
+
+### 2. **handleXP(msg)**
+Updates the user's experience points (XP) displayed on the UI.
+
+- **Parameters:**
+  - `msg` (Object): Contains the new XP value to be displayed.
+- **Operations:**
+  - Finds the element that displays XP and updates its content to reflect the new XP value provided in `msg`.
+
+### 3. **handleBestAnswer(msg)**
+Handles the UI updates required when a best answer is selected or updated.
+
+- **Parameters:**
+  - `msg` (Object): Contains the information about the best answer including the question ID and the ID of the best answer.
+- **Operations:**
+  - Updates various elements on the page to reflect the new best answer status, including hiding or showing elements based on whether an answer is marked as the best.
+
+### 4. **handlePostDeletion(msg)**
+Handles the deletion of a post from the UI when a deletion message is received.
+
+- **Parameters:**
+  - `msg` (Object): Contains the ID of the post to be deleted.
+- **Operations:**
+  - Removes the post element from the DOM.
+  - Optionally fetches and updates the list of questions if the current view depends on the deleted post.
+
+### 5. **handleSession(msg)**
+Manages session-related actions such as redirects based on the session status communicated by the server.
+
+- **Parameters:**
+  - `msg` (Object): Contains session status information like 'expired', 'empty', or 'valid'.
+- **Operations:**
+  - Redirects to the login page if the session is expired or not set.
+  - Redirects to the home page if the session is valid and the user is on the login page.
+
+### 6. **ModifyResponse(response_id, content, description, question_id)**
+Sends a message to the server requesting a modification to an existing response.
+
+- **Parameters:**
+  - `response_id` (Number): The ID of the response to modify.
+  - `content` (String): New content for the response.
+  - `description` (String): New description for the response.
+  - `question_id` (Number): ID of the question associated with the response.
+- **Operations:**
+  - Constructs a message object with the new response details and sends it to the server via WebSocket.
+
+### 7. **handleAnswerUpdate(data)**
+Updates the UI to reflect changes to an answer's content or description.
+
+- **Parameters:**
+  - `data` (Object): Contains the updated information for the answer including its ID and new content or description.
+- **Operations:**
+  - Finds the corresponding answer element in the DOM and updates its content and description.
+
+### 8. **handleQuestionUpdate(data)**
+Updates the UI to reflect changes to a question's content, title, or description.
+
+- **Parameters:**
+  - `data` (Object): Contains the updated information for the question including its ID, new title, content, and description.
+- **Operations:**
+  - Finds the corresponding question element in the DOM and updates its title, content, and description.
+
+### 9. **handlFavoriUpdate(data)**
+Updates the UI to reflect changes in the user's favorites.
+
+- **Parameters:**
+  - `data` (Object): Contains a list of question IDs that are now marked as favorites.
+- **Operations:**
+  - Updates the favorite icon for each question listed in the message, marking them as active.
+
+### 10. **handleVoteUpdate(data) and handleResponseVoteUpdate(data)**
+Updates the UI to reflect new vote counts for questions and responses.
+
+- **Parameters:**
+  - `data` (Object): Contains the new vote counts and the ID of the item (question or response) that was voted on.
+- **Operations:**
+  - Updates the displayed vote count for the specified question or response based on the new data received.
+
+### 11. **updateQuestionCount(subject)**
+Updates the total question count displayed in a specific subject area of the UI.
+
+- **Parameters:**
+  - `subject` (Object): Contains the ID of the subject and
+
+ the new question count.
+- **Operations:**
+  - Updates the question count display for the specified subject and the total question count if necessary.
+
