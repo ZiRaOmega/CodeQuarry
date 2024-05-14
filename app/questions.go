@@ -13,17 +13,23 @@ import (
 // Question represents the data structure for a question
 type Question struct {
 	Id           int        `json:"id"`
+	User_Id      int        `json:"user_id"`
 	SubjectTitle string     `json:"subject_title"`
 	SubjectID    int        `json:"subject_id"`
 	Title        string     `json:"title"`
 	Description  string     `json:"description"`
 	Content      string     `json:"content"`
 	CreationDate time.Time  `json:"creation_date"`
+	UpdateDate   time.Time  `json:"update_date"`
 	Creator      string     `json:"creator"`
 	Upvotes      int        `json:"upvotes"`
 	Downvotes    int        `json:"downvotes"`
 	Responses    []Response `json:"responses"`
 	UserVote     string     `json:"user_vote"`
+}
+type QuestionViewer struct {
+	Question   Question
+	Rank_Panel sql.NullInt64
 }
 
 // FetchQuestionsBySubject retrieves a list of questions based on the subject ID.
@@ -81,7 +87,10 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 
 		questions = append(questions, q)
 	}
+	if len(questions) == 0 {
+		return []Question{}, nil
 
+	}
 	if err := rows.Err(); err != nil {
 		log.Printf("Error reading question rows: %v", err)
 		return nil, err
@@ -126,6 +135,7 @@ func GetUsernameWithUserID(db *sql.DB, userID int) string {
 func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		subjectID := r.URL.Query().Get("subjectId")
+		question_id := r.URL.Query().Get("question_id")
 		session_id, err := r.Cookie("session")
 		if err != nil {
 			http.Error(w, "Session not found", http.StatusUnauthorized)
@@ -135,16 +145,35 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
 			http.Error(w, "Session not found", http.StatusUnauthorized)
-			return
-		}
-		questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
-		if err != nil {
-			http.Error(w, "Server error", http.StatusInternalServerError)
+			//Redirect to auth
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(questions)
+		if question_id == "" && subjectID != "" {
+
+			questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
+			if err != nil {
+				fmt.Println(err.Error())
+				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(questions)
+		} else if question_id != "" && subjectID == "" {
+			question_id_int, err := strconv.Atoi(question_id)
+			if err != nil {
+				fmt.Println(err.Error())
+				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+			}
+			questions, err := FetchQuestionByQuestionID(db, question_id_int, user_id)
+			if err != nil {
+				fmt.Println(err.Error())
+				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode([]Question{questions})
+		}
+
 	}
 }
 
@@ -166,13 +195,16 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 		}
 		//get cookie session
 		session_id, err := r.Cookie("session")
+
 		if err != nil {
-			http.Error(w, "Session not found", http.StatusUnauthorized)
+			//http.Error(w, "Session not found", http.StatusUnauthorized)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
-			http.Error(w, "Session not found", http.StatusUnauthorized)
+			//http.Error(w, "Session not found", http.StatusUnauthorized)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 		questions, err := FetchQuestionByQuestionID(db, idint, user_id)
@@ -180,7 +212,9 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error fetching responses", http.StatusInternalServerError)
 			return
 		}
-		err = ParseAndExecuteTemplate("question_viewer", questions, w)
+		rank := FetchRankByUserID(db, user_id)
+		question_viewer := QuestionViewer{Question: questions, Rank_Panel: sql.NullInt64{Int64: int64(rank), Valid: true}}
+		err = ParseAndExecuteTemplate("question_viewer", question_viewer, w)
 		if err != nil {
 			http.Error(w, "Error parsing template", http.StatusInternalServerError)
 			return
@@ -219,12 +253,6 @@ func InsertXP(db *sql.DB, user_id int, xp int) error {
 		return err
 	}
 	return nil
-}
-
-type Subject struct {
-	Id            int    `json:"id"`
-	Title         string `json:"title"`
-	QuestionCount int    `json:"questionCount"`
 }
 
 // FetchSubjectWithQuestionCount fetches a subject from the database along with the count of its associated questions.

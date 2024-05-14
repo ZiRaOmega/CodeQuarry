@@ -37,17 +37,17 @@
     </div>
     <div class="creator_and_date_container">
       <div class="question-viewer__question__date">
-        Posted the: {{.CreationDate.Format "2006-01-02"}}
+        Posted the: {{.Question.CreationDate.Format "2006-01-02"}}
       </div>
-      <div class="responses_counter">{{len .Responses}} Response(s)</div>
-    <div class="question-viewer__question__author">Created by<span class="creator_name">{{.Creator}}</span></div>
+      <div class="responses_counter">{{len .Question.Responses}} Response(s)</div>
+    <div class="question-viewer__question__author">Created by<span class="creator_name">{{.Question.Creator}}</span></div>
   </div>
   </div>
   <div class="question-viewer__answers">
   </div>
   <div id="response_input" class="question-viewer__response-input">
     <p id="votre_reponse">Your answer:</p>
-    <input id="question_id" question_id="{{.Id}}" style="display: none;"></input>
+    <input id="question_id" question_id="{{.Question.Id}}" style="display: none;"></input>
     <textarea
       id="response_description"
       placeholder="Your description.."
@@ -66,9 +66,9 @@
   </div>
   <p id="question_closed">This Question has been closed by the author.</p>
 </div>
-
-{{template "script" .}}
+<script src="/scripts/all_subjects.js"></script>
 <script src="/scripts/question_viewer.js"></script>
+{{template "script" .}}
 </body>
 </html>
 {{end}}

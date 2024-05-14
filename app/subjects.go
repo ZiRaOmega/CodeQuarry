@@ -6,33 +6,46 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"time"
 )
 
+type Subject struct {
+	Id            int        `json:"id"`
+	Title         string     `json:"title"`
+	Description   string     `json:"description"`
+	CreationDate  time.Time  `json:"creation_date"`
+	UpdateDate    time.Time  `json:"update_date"`
+	QuestionCount int        `json:"questionCount"`
+	Questions     []Question `json:"questions"`
+}
+
 // insertInSubject inserts a new subject into the database with additional fields
-func InsertInSubject(db *sql.DB, title, description string) {
+func InsertInSubject(db *sql.DB, title, description string) error {
 	currentTime := time.Now().Format("2006-01-02")
 
 	// Check if the subject already exists
 	var exists bool
 	err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM Subject WHERE title = $1)", title).Scan(&exists)
 	if err != nil {
-		log.Fatal("Error checking if subject exists: ", err)
+		return err
 	}
 
 	if exists {
-		return // Exit the function if the subject already exists
+		//return new error
+		return fmt.Errorf("Subject with title %s already exists", title)
 	}
 
 	stmt, err := db.Prepare("INSERT INTO Subject(title, description, creation_date, update_date) VALUES($1, $2, $3, $4)")
 	if err != nil {
-		log.Fatal("Error preparing statement: ", err)
+		return err
 	}
 	defer stmt.Close()
 
 	if _, err := stmt.Exec(title, description, currentTime, currentTime); err != nil {
-		log.Fatal("Error executing statement: ", err)
+		return err
 	}
+	return err
 }
 
 // Function to insert multiple subjects
@@ -53,12 +66,15 @@ func InsertMultipleSubjects(db *sql.DB) {
 	}
 	// fmt.Println("Inserting subjects...")
 	for _, subject := range subjects {
-		InsertInSubject(db, subject.Title, subject.Description)
+		err := InsertInSubject(db, subject.Title, subject.Description)
+		if err != nil {
+			log.Printf("Error inserting subject %s: %v", subject.Title, err)
+		}
 	}
 }
 
-func FetchAllSubjects(db *sql.DB) ([]map[string]interface{}, error) {
-	var subjects []map[string]interface{}
+func FetchAllSubjects(db *sql.DB, user_id int) ([]Subject, error) {
+	var subjects []Subject
 	query := `
     SELECT s.id_subject, s.title, s.description, COUNT(q.id_question) as question_count
     FROM subject s
@@ -73,27 +89,38 @@ func FetchAllSubjects(db *sql.DB) ([]map[string]interface{}, error) {
 	// 5. Order the results by the subject title in ascending order
 
 	// this query can be optimized by using a subquery to get the count of questions
-	
-	rows, err := db.Query(query)
+
+	rows, err := db.Prepare(query)
 	if err != nil {
 		log.Printf("Error querying subjects: %v", err)
 		return nil, err
 	}
-	defer rows.Close()
-
-	for rows.Next() {
+	// defer rows.Close()
+	stmt, err := rows.Query()
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+	for stmt.Next() {
 		var id, title, description string
 		var questionCount int
-		if err := rows.Scan(&id, &title, &description, &questionCount); err != nil {
+		if err := stmt.Scan(&id, &title, &description, &questionCount); err != nil {
 			log.Printf("Error scanning subject: %v", err)
 			continue
 		}
-		subjects = append(subjects, map[string]interface{}{
-			"id": id, "title": title, "description": description, "questionCount": questionCount,
-		})
+		idint, err := strconv.Atoi(id)
+		if err != nil {
+			log.Printf("Error converting id to int: %v", err)
+			continue
+		}
+		questions, err := FetchQuestionsBySubject(db, id, user_id)
+		if err != nil {
+			log.Printf("Error fetching questions for subject %s: %v", title, err)
+			continue
+		}
+		subjects = append(subjects, Subject{Id: idint, Title: title, Description: description, QuestionCount: questionCount, Questions: questions})
 	}
-
-	if err := rows.Err(); err != nil {
+	if err := stmt.Err(); err != nil {
 		log.Printf("Error reading subject rows: %v", err)
 		return nil, err
 	}
@@ -102,7 +129,27 @@ func FetchAllSubjects(db *sql.DB) ([]map[string]interface{}, error) {
 
 func SubjectsHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		subjects, err := FetchAllSubjects(db)
+		//Get cookie
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			log.Printf("Error getting session cookie: %v", err)
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		session_id := cookie.Value
+		if !isValidSession(session_id, db) {
+			log.Println("Invalid session")
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+		//Get user_id
+		user_id, err := getUserIDUsingSessionID(session_id, db)
+		if err != nil {
+			log.Printf("Error getting user id: %v", err)
+			http.Error(w, "Server error", http.StatusInternalServerError)
+			return
+		}
+		subjects, err := FetchAllSubjects(db, user_id)
 		if err != nil {
 			http.Error(w, "Server error", http.StatusInternalServerError)
 			return

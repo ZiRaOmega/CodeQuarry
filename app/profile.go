@@ -19,33 +19,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-/*
-	 func ProfileHandler(template_name string, db *sql.DB) http.HandlerFunc {
-		return func(w http.ResponseWriter, r *http.Request) {
-			// Get cookie
-			cookie, err := r.Cookie("session")
-			if err != nil {
-				http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
-				http.Redirect(w, r, "/auth", http.StatusSeeOther)
-				return
-			}
-			session_id := cookie.Value
-			// Get user info from user_id
-			user, err := GetUser(session_id, db)
-			if err != nil {
-				fmt.Println(err.Error())
-				http.Error(w, "Error getting user info", http.StatusInternalServerError)
-				return
-			}
-			user.Rank.String, err = SetRankByXp(user)
-			if err != nil {
-				fmt.Println(err.Error())
-			}
-			fmt.Println(user.Rank.String)
-			ParseAndExecuteTemplate("profile", user, w)
-		}
-	}
-*/
 func SetRankByXp(u User) (string, error) {
 	// Adjust these thresholds for each level, with max XP at 10 million
 	thresholds := []int64{
@@ -107,6 +80,7 @@ type User struct {
 	FirstName          string
 	Username           string
 	Email              string
+	EmailVerified      bool
 	Password           string
 	Avatar             sql.NullString
 	BirthDate          sql.NullTime // Adjusted for possible NULL values
@@ -116,6 +90,7 @@ type User struct {
 	GitHub             sql.NullString
 	XP                 sql.NullInt64
 	Rank               sql.NullString
+	Rank_Panel         sql.NullInt64
 	SchoolYear         sql.NullTime // Adjusted for possible NULL values
 	School_Year_Format string
 	CreationDate       sql.NullTime // Adjusted for possible NULL values
@@ -153,7 +128,7 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	defer stmt.Close() // Ensure statement is always closed after use
 
 	// Execute the statement and scan the result into the User struct
-	if err = stmt.QueryRow(user_id).Scan(&user.ID, &user.LastName, &user.FirstName, &user.Username, &user.Email, &user.Password, &user.Avatar, &user.BirthDate, &user.Bio, &user.Website, &user.GitHub, &user.XP, &user.Rank, &user.SchoolYear, &user.CreationDate, &user.UpdateDate, &user.DeletingDate); err != nil {
+	if err = stmt.QueryRow(user_id).Scan(&user.ID, &user.LastName, &user.FirstName, &user.Username, &user.Email, &user.Password, &user.Avatar, &user.BirthDate, &user.Bio, &user.Website, &user.GitHub, &user.XP, &user.Rank_Panel, &user.SchoolYear, &user.CreationDate, &user.UpdateDate, &user.DeletingDate); err != nil {
 		return user, err
 	}
 	// FormatDates formats CreationDate and
@@ -172,6 +147,7 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 		log.Fatalf("%v", err)
 	}
 	user.Favori = Favori
+
 	return user, nil // Return the populated user object
 }
 
@@ -232,9 +208,12 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		fmt.Println(filename)
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
-		birthDate, err := time.Parse("2006-02-01", birthDateStr)
+		birthDate, err := time.Parse("2006-01-02", birthDateStr)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
 		schoolYearStr := r.PostFormValue("school_year")
-		schoolYear, err := time.Parse("2006-02-01", schoolYearStr)
+		schoolYear, err := time.Parse("2006-01-02", schoolYearStr)
 		if err != nil {
 			fmt.Println(err.Error())
 		}
@@ -413,10 +392,10 @@ func FavoriHandler(db *sql.DB) http.HandlerFunc {
 
 		questionIDs := GetQuestionIdOfFavorite(db, userID)
 
-		if err != nil {
+		/* if err != nil {
 			http.Error(w, "Error fetching questions", http.StatusInternalServerError)
 			return
-		}
+		} */
 
 		//send json
 		w.Header().Set("Content-Type", "application/json")

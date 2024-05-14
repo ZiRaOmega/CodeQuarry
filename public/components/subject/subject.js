@@ -1,6 +1,6 @@
-let QuestionsElementsList = [];
+
 const questionContainer = document.getElementById("questions_container");
-const questionsList = document.getElementById("questions_list");
+let questionsList = document.getElementById("questions_list");
 const return_btn = document.getElementById("return_button");
 
 return_btn.onclick = () => {
@@ -82,6 +82,7 @@ function sortByDownvotes(questions) {
 
 function refreshQuestionView(questions) {
   questionsList.innerHTML = ""; // Clear previous questions
+  
   createFilter(questions);
   createQuestions(questions);
 }
@@ -146,6 +147,7 @@ function manageFavorite(favori, questionId) {
     .then((response) => response.json())
     .then((favoris) => {
       if (Array.isArray(favoris)) {
+        console.log(favori)
         if (favoris.some((f) => f == questionId)) {
           favori.classList.add("favori_active");
           favori.textContent = "★";
@@ -166,7 +168,7 @@ function manageFavorite(favori, questionId) {
     });
 
   favori.onclick = function () {
-    //AddFavori(questionId);
+    AddFavori(questionId);
     if (favori.classList.contains("favori_active")) {
       favori.classList.remove("favori_active");
       favori.textContent = "☆";
@@ -176,6 +178,7 @@ function manageFavorite(favori, questionId) {
       favori.textContent = "★";
       favori.style.backgroundColor = "gold";
     }
+    
   };
 }
 
