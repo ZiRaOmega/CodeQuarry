@@ -8,41 +8,45 @@
     <div class="profile">
         <form action="/update-profile" method="POST" enctype="multipart/form-data" class="editProfileForm" id="editProfileForm" style="display: none;">
         <img src="{{.Avatar.String}}" alt="avatar" width="100" height="100" class="avatarViewer">
-            <input type="hidden" name="id_student" value="{{.ID}}">
-            <label for="lastname">Last Name:</label>
-            <input type="text" name="lastname" value="{{.LastName}}">
-            <br>
-            <label for="firstname">First Name:</label>
-            <input type="text" name="firstname" value="{{.FirstName}}">
-            <br>
-            <label for="username">Username:</label>
-            <input type="text" name="username" value="{{.Username}}">
-            <br>
-            <label for="email">Email:</label>
-            <input type="email" name="email" value="{{.Email}}">
-            <br>
-            <label for="password">Password:</label>
-            <input type="password" name="password">
-            <br>
-            <label for="avatar">Avatar:</label>
-            <input type="file" name="avatar">
-            <br>
-            <label for="birth_date">Birth Date:</label>
-            <input type="date" name="birth_date" id="birth_date" value="">
-            <br>
-            <label for="bio">Bio:</label>
-            <textarea name="bio">{{.Bio.String}}</textarea>
-            <br>
-            <label for="website">Website:</label>
-            <input type="text" name="website" value="{{.Website.String}}">
-            <br>
-            <label for="github">GitHub:</label>
-            <input type="text" name="github" value="{{.GitHub.String}}">
-            <br>
-            <label for="school_year">School Year:</label>
-            <input type="date" name="school_year" id="school_year" value="">
-            <br>
-            <input type="submit" value="Save">
+        <label for="avatar">Avatar:</label>
+        <input type="file" id="photo_changer" name="avatar" style="display: none;">
+        <input type="button" class="edit_profile_input" value="Browse..." onclick="document.getElementById('photo_changer').click();" />
+        <div class="all_edit_fields">
+                <div class="left_edit_profile">
+                    <input type="hidden" name="id_student" value="{{.ID}}">
+                    <label for="lastname">Last Name:</label>
+                    <input class="edit_profile_input" type="text" name="lastname" value="{{.LastName}}">
+                    <br>
+                    <label for="firstname">First Name:</label>
+                    <input class="edit_profile_input" type="text" name="firstname" value="{{.FirstName}}">
+                    <br>
+                    <label for="username">Username:</label>
+                    <input class="edit_profile_input" type="text" name="username" value="{{.Username}}">
+                    <br>
+                    <label for="email">Email:</label>
+                    <input class="edit_profile_input" type="email" name="email" value="{{.Email}}">
+                    <br>
+                    <label for="password">Password:</label>
+                    <input class="edit_profile_input" type="password" name="password">
+                </div>
+                <div class="right_edit_profile">
+                    <label for="birth_date">Birth Date:</label>
+                    <input class="edit_profile_input" type="date" name="birth_date" id="birth_date" value="">
+                    <br>
+                    <label for="bio">Bio:</label>
+                    <input type="text" class="edit_profile_input" name="bio" value="{{.Bio.String}}">
+                    <br>
+                    <label for="website">Website:</label>
+                    <input class="edit_profile_input" type="text" name="website" value="{{.Website.String}}">
+                    <br>
+                    <label for="github">GitHub:</label>
+                    <input class="edit_profile_input" type="text" name="github" value="{{.GitHub.String}}">
+                    <br>
+                    <label for="school_year">School Year:</label>
+                    <input class="edit_profile_input" type="date" name="school_year" id="school_year" value="">
+                </div>
+            </div>
+            <input class="edit_profile_input" type="submit" value="Save">
         </form>
         <div id="profileInformations" class="profileInformations">
             <img src="{{.Avatar.String}}" alt="avatar" width="100" height="100" class="avatarViewer">
@@ -58,7 +62,7 @@
             <p class="informations" id="schoolYear"><svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-school"><path d="M14 22v-4a2 2 0 1 0-4 0v4"/><path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"/><path d="M18 5v17"/><path d="m4 6 8-4 8 4"/><path d="M6 5v17"/><circle cx="12" cy="9" r="2"/></svg> {{.School_Year_Format}}</p>
             <button id="editButton" class="button"> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pen-line"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg> Edit Profile</div>
         </div>
-    <div class="all-posts">
+    <div class="all-posts" id="all_posts">
     <div id="my_post">
         <h2 class="titles">My Posts</h2>
             {{range .My_Post}}
