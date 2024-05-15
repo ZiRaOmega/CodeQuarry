@@ -32,6 +32,9 @@ header {
 }
 
 #menu{
+    position: relative;
+    top: 10px;
+    display: flex;
     justify-content: flex-end;
     align-items: center;
     flex-basis: 50%;
@@ -46,7 +49,8 @@ header {
 }
 
 li {
-    list-style-type: none
+    list-style-type: none;
+    min-height: 41px;
 }
 
 a {
@@ -75,7 +79,7 @@ a {
     margin-left: 50px;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 850px) {
     #menu {
         display: none;
     }

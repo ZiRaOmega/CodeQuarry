@@ -17,12 +17,16 @@
     outline: none;
     height: 24px;
     position: relative;
+    top: -10px;
+    margin-right: 20px;
 }
 
 #search_button {
     background: none;
     border: none;
     outline: none;
+    position: relative;
+    top: -5px;
 }
 
 #search_button:hover {
