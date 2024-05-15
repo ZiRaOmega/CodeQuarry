@@ -4,6 +4,8 @@ const button = document.getElementById("editButton");
 const lines = document.getElementsByClassName("informations")
 const links = document.getElementsByClassName("links")
 
+const allposts = document.getElementById("all_posts")
+
 const birthDate = document.getElementById("birthDate");
 
 if (birthDate.textContent == " 01/01/0001") {
@@ -71,6 +73,7 @@ for (let i of lines){
 button.addEventListener("click", function () {
 	profileInfos.style.display = "none";
 	profileForm.style.display = "flex";
+  allposts.style.display = "none"
 });
 
 // Define a function to set the birth date
