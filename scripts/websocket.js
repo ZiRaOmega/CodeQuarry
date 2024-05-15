@@ -432,11 +432,11 @@ function handleResponse(msg) {
     }
     //console.log(modifyButton);
     const response_description_input = document.createElement("textarea");
-    response_description_input.innerText = answer.description;
+    response_description_input.textContent = answer.description;
     response_description_input.setAttribute("id", "response_description");
     response_description_input.classList.add("response_description_input");
     const response_content_input = document.createElement("textarea");
-    response_content_input.innerText = answer.content;
+    response_content_input.textContent = answer.content;
     response_content_input.setAttribute("id", "response_content");
     response_content_input.classList.add("response_content_input");
     const modify_response = document.createElement("button");
