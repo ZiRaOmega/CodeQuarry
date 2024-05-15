@@ -71,7 +71,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				conn.Close()
 				return
 			}
-			// fmt.Println(wsmessage)
+
 			switch wsmessage.Type {
 			case "session":
 				if wsmessage.Content == nil {
@@ -116,7 +116,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "createPost":
 				// Assuming the content has all necessary information
 				content := wsmessage.Content.(map[string]interface{})
-				fmt.Println(content)
+
 				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
 				if !isValidSession(wsmessage.SessionID, db) {
 					http.Redirect(w, r, "/", http.StatusSeeOther)
@@ -202,7 +202,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					http.Redirect(w, r, "/", http.StatusSeeOther)
 					return
 				}
-				fmt.Println(contentMap)
+
 				if !ok {
 					fmt.Println("Invalid content type for bestAnswer")
 					// Optionally send an error response back to the client
@@ -907,7 +907,7 @@ func ModifyQuestionPanel(db *sql.DB, question_id int, title string, description 
 }
 
 func ModifyResponse(db *sql.DB, response_id int, content string, description string, user_id int) error {
-	fmt.Println(content)
+
 	stmt, err := db.Prepare("UPDATE Response SET content = $1, description = $2 WHERE id_response = $3 AND id_student = $4")
 	if err != nil {
 		return err
