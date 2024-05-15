@@ -12,6 +12,8 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 # Install Node.js and npm
 RUN apk add --update nodejs npm
+# Install javascript-obfuscator globally
+RUN npm install -g javascript-obfuscator
 WORKDIR /root/
 COPY --from=builder /app/main .
 # Ensure the entire public directory is copied into the Docker image
