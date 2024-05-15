@@ -8,7 +8,7 @@ a{
 }
 
 .profile{
-    flex-basis: 25%;
+    flex-basis: 40%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -79,12 +79,27 @@ a{
 }
 
 .editProfileForm{
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-bottom: 100px;
     position: sticky;
-    top: 160px;
+    top: 130px;
+}
+
+.all_edit_fields{
+    display: flex;
+    gap: 20px;
+    padding-top: 50px;
+}
+
+.left_edit_profile, .right_edit_profile{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 
 .editProfileForm input[type=text], .editProfileForm input[type=email], .editProfileForm input[type=password], .editProfileForm input[type=date],.editProfileForm input[type=file],  .editProfileForm textarea{
@@ -122,7 +137,7 @@ a{
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    flex-basis: 75%;
+    flex-basis: 60%;
 }
 
  #favori{
@@ -153,6 +168,17 @@ a{
 .post-title{
     font-weight: bolder;
     font-size: 1.4em;
+}
+
+.edit_profile_input{
+    height: 40px;
+    width: 230px;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    border: none;
+    resize: none;
 }
 
 @media (max-width: 900px) {
