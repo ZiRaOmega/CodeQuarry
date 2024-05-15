@@ -159,6 +159,19 @@ func AllSubjectsHandlerCSS(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects.css")
 }
 
+/* --------------- SEARCH_BAR ---------------- */
+// JS
+func SearchBarJS(w http.ResponseWriter, r *http.Request) {
+	// Serve the codeQuarry.html file as the default page
+	http.ServeFile(w, r, "public/templates/search_bar/input.js")
+}
+//CSS
+func SearchBarCSS(w http.ResponseWriter, r *http.Request) {
+	// Serve the styles.css file when the /styles.css route is accessed
+	http.ServeFile(w, r, "public/templates/search_bar/search_bar.css")
+}
+
+
 /* ======================= COMPONENTS ======================= */
 
 /* --------------- AUTH ---------------- */
@@ -225,11 +238,6 @@ func SubjectHandlerJS(w http.ResponseWriter, r *http.Request) {
 func SubjectCSSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/components/subject/subject.css")
-}
-
-func SearchBarJS(w http.ResponseWriter, r *http.Request) {
-	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/templates/search_bar/input.js")
 }
 
 func ProfileJs(w http.ResponseWriter, r *http.Request) {
