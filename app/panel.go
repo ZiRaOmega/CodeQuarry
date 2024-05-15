@@ -26,7 +26,7 @@ func PanelAdminHandler(db *sql.DB) http.HandlerFunc {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
-		fmt.Println(user_id)
+
 		data := Panel{}
 		rank := FetchRankByUserID(db, user_id)
 		data.Rank_Panel = sql.NullInt64{Int64: int64(rank), Valid: true}
@@ -36,8 +36,7 @@ func PanelAdminHandler(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		fmt.Println(rank, "RANK")
-		fmt.Println(data.Questions)
+
 		if rank == 2 || rank == 1 {
 			err := ParseAndExecuteTemplate("panel", data, w)
 			if err != nil {
@@ -131,7 +130,7 @@ func FetchQuestions(db *sql.DB) []Question {
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		fmt.Println(resp, "resp")
+
 		questions = append(questions, Question{
 			Id:           id,
 			Title:        title,

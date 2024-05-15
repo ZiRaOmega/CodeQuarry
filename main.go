@@ -38,7 +38,7 @@ func main() {
 	dbName := os.Getenv("DB_NAME")
 	dbType := os.Getenv("DB_TYPE")
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
-
+	URL := os.Getenv("URL")
 	db := app.InitDB(dsn)
 	defer db.Close()
 
@@ -113,6 +113,7 @@ func main() {
 	http.HandleFunc("/profile", app.SendComponent("profile", db))
 	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
 	http.HandleFunc("/search_bar/input.js", app.SearchBarJS)
+	http.HandleFunc("/templates/search_bar/search_bar.css", app.SearchBarCSS)
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 	http.HandleFunc("/posts.css", app.PostCSSHandler)
 	//http.HandleFunc("/classement", app.ClassementHandler(db))
@@ -124,10 +125,28 @@ func main() {
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
-	fmt.Println("Server is running on https://localhost:443/")
-	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
+	//go startHTTPServer()
+	fmt.Println("Server is running on https://" + URL + ":443/")
+	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
+
+	//err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
 	}
+}
+
+// Redirects HTTP requests to HTTPS
+func redirectHTTPToHTTPS(w http.ResponseWriter, r *http.Request) {
+	// Note: Use http.StatusMovedPermanently for permanent redirects
+	http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusTemporaryRedirect)
+}
+
+func startHTTPServer() {
+	// Create a new ServeMux
+	mux := http.NewServeMux()
+	// Register the redirect function specifically
+	mux.HandleFunc("/", redirectHTTPToHTTPS)
+	// Listen on HTTP port 80 with the new ServeMux
+	log.Fatal(http.ListenAndServe(":80", mux))
 }
