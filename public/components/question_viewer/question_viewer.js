@@ -262,7 +262,8 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         question_description_input.setAttribute("id", "question_description");
         question_description_input.classList.add("question_description_input");
         const question_content_input = document.createElement("textarea");
-        question_content_input.innerText = question.content;
+        console.log(question)
+        question_content_input.textContent = question.content;
         question_content_input.setAttribute("id", "question_content");
         question_content_input.classList.add("question_content_input");
         const modify_question = document.createElement("button");
