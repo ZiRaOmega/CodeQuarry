@@ -126,7 +126,9 @@ func main() {
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
-	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
+	err = http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/codequarry.ovh/fullchain.pem", "/etc/letsencrypt/live/codequarry.ovh/privkey.pem", nil)
+
+	//err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
