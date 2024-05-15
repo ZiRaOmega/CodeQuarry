@@ -20,32 +20,10 @@
 .ranking{
     font-size: 22px;
     font-weight: bolder;
+    width: 5px;
 }
 
-.classement-name{
+.classement-name, .classement-firstname, .classement-lastname, .classement-username,.classement-XP, .classement-rank, .post-length{
     font-size: 18px;
-}
-
-.classement-firstname{
-    font-size: 18px;
-}
-
-.classement-lastname{
-    font-size: 18px;
-}
-
-.classement-username{
-    font-size: 18px;
-}
-
-.classement-XP{
-    font-size: 18px;
-}
-
-.classement-rank{
-    font-size: 18px;
-}
-
-.post-length{
-    font-size: 18px;
+    flex-basis: 8%;
 }
