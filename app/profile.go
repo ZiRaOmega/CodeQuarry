@@ -66,11 +66,11 @@ func SetRankByXp(u User) (string, error) {
 }
 
 func (U *User) FormatBirthDate() string {
-	return U.BirthDate.Time.Format("01/02/2006")
+	return U.BirthDate.Time.Format("02/01/2006")
 }
 
 func (U *User) FormatSchoolYear() string {
-	return U.SchoolYear.Time.Format("01/02/2006")
+	return U.SchoolYear.Time.Format("02/01/2006")
 }
 
 // Define User structure based on your database schema
