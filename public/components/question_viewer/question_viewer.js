@@ -187,7 +187,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
           })
         );
       };
-
+      
       downvoteContainer[0].onclick = function () {
         //if downvoteContainer backgroundColor is red then remove the color
         if (downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)") {
