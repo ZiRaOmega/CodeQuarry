@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    ports:
+       - "80:80"   # Map port 80 on the host to port 80 in the container for HTTP
+       - "443:443" # Map port 443 on the host to port 443 in the container for HTTPS
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: codequarry
+      DB_PASSWORD: CQ1234
+      DB_NAME: codequarrydb
+      DB_TYPE: postgres
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: codequarrydb
+      POSTGRES_USER: codequarry
+      POSTGRES_PASSWORD: CQ1234
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
