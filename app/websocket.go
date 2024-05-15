@@ -724,6 +724,10 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					github := contentMap["github"].(string)
 					xp, err := strconv.Atoi(contentMap["xp"].(string))
 					rank, err := strconv.Atoi(contentMap["rank"].(string))
+					current_user_rank := FetchRankByUserID(db, user_id)
+					if editor_rank == 1 && current_user_rank == 2 {
+						rank = 2
+					}
 					if editor_rank < rank {
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 						break
