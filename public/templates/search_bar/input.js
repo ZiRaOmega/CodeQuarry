@@ -54,7 +54,7 @@ document
             <p class="question_description">${item.description}</p>
             <pre><code>${item.content}</code></pre>
         `;
-
+        console.log(item)
 
         var result_text = document.createElement("span");
         result_text.className = "result_text";
@@ -69,7 +69,7 @@ document
 
         rslt_element.onclick = function () {
           // Click on item to redirect to question_viewer page
-          window.location.href = `/question_viewer?question_id=7`;
+          window.location.href = `/question_viewer?question_id=${item.id}`;
         };
         results.appendChild(rslt_element);
         checkHighlight();
