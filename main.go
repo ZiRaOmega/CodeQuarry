@@ -38,7 +38,7 @@ func main() {
 	dbName := os.Getenv("DB_NAME")
 	dbType := os.Getenv("DB_TYPE")
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
-
+	URL := os.Getenv("URL")
 	db := app.InitDB(dsn)
 	defer db.Close()
 
@@ -125,7 +125,7 @@ func main() {
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 	//go startHTTPServer()
-	fmt.Println("Server is running on https://localhost:443/")
+	fmt.Println("Server is running on https://" + URL + ":443/")
 	err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
