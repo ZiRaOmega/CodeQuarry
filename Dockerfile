@@ -20,7 +20,7 @@ COPY --from=builder /app/main .
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/.env .env
-COPY --from=builder /app/codequarry.ovh ./codequarry.ovh
+COPY --from=builder /app/cert ./cert
 
 EXPOSE 80 443 587
 
