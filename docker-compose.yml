@@ -5,6 +5,7 @@ services:
     ports:
        - "80:80"   # Map port 80 on the host to port 80 in the container for HTTP
        - "443:443" # Map port 443 on the host to port 443 in the container for HTTPS
+       - "587:587"
     depends_on:
       - db
     environment:

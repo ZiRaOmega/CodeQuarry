@@ -22,6 +22,6 @@ COPY --from=builder /app/server.crt server.crt
 COPY --from=builder /app/server.key server.key
 
 
-EXPOSE 80 443
+EXPOSE 80 443 587
 
 CMD ["./main"]
