@@ -111,6 +111,18 @@ func FetchQuestionByQuestionID(db *sql.DB, questionID int, user_id int) (Questio
 	if err != nil {
 		return q, err
 	}
+	voted_question, err := FetchVotedQuestions(db, user_id)
+	if err != nil {
+		log.Printf("Error fetching voted questions: %v", err)
+		return Question{}, err
+	}
+	for _, voted := range voted_question {
+		if voted.Q == questionID && voted.Upvote {
+			q.UserVote = "upvoted"
+		} else if voted.Q == questionID && voted.Downvote {
+			q.UserVote = "downvoted"
+		}
+	}
 	q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
 	if err != nil {
 		return q, err

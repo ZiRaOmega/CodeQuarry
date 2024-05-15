@@ -159,6 +159,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
       downvoteCount[0].setAttribute("data-question-id", question.id);
       upvoteCount[0].textContent = question.upvotes;
       downvoteCount[0].textContent = question.downvotes;
+      console.log(question,upvoteContainer)
       if (question.user_vote == "upvoted") {
         upvoteContainer[0].style.backgroundColor = "rgb(104, 195, 163)";
       } else if (question.user_vote == "downvoted") {
