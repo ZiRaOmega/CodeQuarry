@@ -75,7 +75,7 @@ func createTableVerifyEmail(db *sql.DB) {
 		PRIMARY KEY(id),
 		UNIQUE(email),
 		UNIQUE(token),
-		FOREIGN KEY(email) REFERENCES users(email) ON DELETE CASCADE
+		FOREIGN KEY(email) REFERENCES users(email) ON DELETE CASCADE ON UPDATE CASCADE
 	);`
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
