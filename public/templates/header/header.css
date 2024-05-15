@@ -54,31 +54,7 @@ a {
     color: black;
 }
 
-.search_bar{
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: self-end;
-    gap: 10px;
-}
 
-#search-bar-input{
-    border: none;
-    border-bottom: 1px solid black;
-    outline: none;
-    height: 24px;
-    position: relative;
-    top: -5px;
-}
-
-#search_button{
-    background: none;
-    border: none;
-    outline: none;
-}
-
-#search_button:hover{
-    cursor: pointer;
-}
 
 .header_icons{
     transition: 0.3s all ease-out;
