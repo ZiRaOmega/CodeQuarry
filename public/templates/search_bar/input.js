@@ -44,7 +44,6 @@ document
         var rslt_element = document.createElement("div");
         rslt_element.className = "result_element";
 
-
         var preview = document.createElement("div");
         preview.className = "result_element_preview";
 
