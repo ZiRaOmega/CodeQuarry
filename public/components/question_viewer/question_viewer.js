@@ -254,26 +254,40 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         //create input with default value
         const question_title_input = document.createElement("input");
         question_title_input.setAttribute("type", "text");
-        question_title_input.setAttribute("value", question.title);
+        
+        //question_title_input.setAttribute("value", question.title);
+        // replaced by
+        question_title_input.value = question_viewer__question__title.textContent;
+
         question_title_input.setAttribute("id", "question_title");
         question_title_input.classList.add("question_title_input");
         const question_description_input = document.createElement("textarea");
-        question_description_input.textContent = question.description;
+        
+        //question_description_input.textContent = question.description;
+        // replaced by
+        question_description_input.value = question_viewer__question__description.textContent;
+
         question_description_input.setAttribute("id", "question_description");
         question_description_input.classList.add("question_description_input");
         const question_content_input = document.createElement("textarea");
         console.log(question)
-        question_content_input.textContent = question.content;
+        
+        //question_content_input.textContent = question.content;
+        // replaced by
+        question_content_input.value = code.textContent;
+
         question_content_input.setAttribute("id", "question_content");
         question_content_input.classList.add("question_content_input");
         const modify_question = document.createElement("button");
         modify_question.classList.add("modify_question");
+        // to confirm the modification
         modify_question.textContent = "Modify";
         const modifyContainer = document.createElement("div");
         modify_question.onclick = function () {
           ModifyQuestion();
           modifyContainer.remove();
         };
+
         const cancel_button = document.createElement("button");
         cancel_button.innerText = "X";
         cancel_button.onclick = () => {
