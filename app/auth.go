@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -58,7 +57,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
 		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp,rang_rank_) VALUES($1, $2, $3, $4, $5, $6, 0,0)")
 		if err != nil {
-			fmt.Println(err)
+
 			Log(ErrorLevel, "Error preparing the SQL statement")
 			// http.Error(w, "Error preparing the SQL statement", http.StatusInternalServerError)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error preparing the SQL statement"})
@@ -86,7 +85,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		SendVerificationEmail(db, email, token)
 		err = CreateSession(username, db, w)
 		if err != nil {
-			fmt.Println(err.Error())
+
 			Log(ErrorLevel, "Error creating session")
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error creating session"})
 			return
@@ -99,13 +98,13 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 func GetEmailWithUsername(db *sql.DB, username string) string {
 	stmt, err := db.Prepare("SELECT email FROM users WHERE username = $1")
 	if err != nil {
-		fmt.Println(err.Error())
+
 	}
 	defer stmt.Close()
 	var email string
 	err = stmt.QueryRow(username).Scan(&email)
 	if err != nil {
-		fmt.Println(err.Error())
+
 	}
 	return email
 }
@@ -145,12 +144,12 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			if err == sql.ErrNoRows {
 				Log(ErrorLevel, "No user found with the provided credentials"+username+" at "+r.URL.Path)
-				fmt.Println("No user found with the provided credentials")
+
 				json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "No user found with the provided credentials"})
 				return
 			} else {
 				Log(ErrorLevel, "Error fetching user from database"+username+" at "+r.URL.Path)
-				fmt.Println("Error fetching user from database")
+
 				json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error fetching user from database"})
 				return
 			}
@@ -159,7 +158,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		err = bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(password))
 		if err != nil {
 			Log(DebugLevel, "Invalid login credentials"+username+" at "+r.URL.Path)
-			fmt.Println("Invalid login credentials")
+
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Invalid login credentials"})
 			return
 		}
@@ -173,7 +172,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"status": "success", "message": "Login successful"})
 		Log(DebugLevel, "Login successful: "+username+" at "+r.URL.Path)
-		fmt.Println("Login successful")
+
 	}
 }
 

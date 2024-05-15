@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -166,7 +165,7 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 
 			questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
 			if err != nil {
-				fmt.Println(err.Error())
+
 				http.Error(w, "Error while fetching", http.StatusInternalServerError)
 			}
 			w.Header().Set("Content-Type", "application/json")
@@ -174,12 +173,12 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 		} else if question_id != "" && subjectID == "" {
 			question_id_int, err := strconv.Atoi(question_id)
 			if err != nil {
-				fmt.Println(err.Error())
+
 				http.Error(w, "Error while fetching", http.StatusInternalServerError)
 			}
 			questions, err := FetchQuestionByQuestionID(db, question_id_int, user_id)
 			if err != nil {
-				fmt.Println(err.Error())
+
 				http.Error(w, "Error while fetching", http.StatusInternalServerError)
 			}
 			w.Header().Set("Content-Type", "application/json")
@@ -364,7 +363,7 @@ func UserDeleteQuestion(db *sql.DB, questionID int, userID int) error {
 		return err
 	}
 	if studentID != userID {
-		fmt.Println("User is not the creator of the question")
+
 		return nil
 	}
 	//RemoveXP for question author and for all users who answer the question

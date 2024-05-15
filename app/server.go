@@ -2,7 +2,6 @@ package app
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"path"
@@ -17,7 +16,7 @@ type AuthInfo struct {
 
 func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(component_name)
+
 		// Get cookie session
 
 		if component_name == "auth" {
@@ -40,10 +39,10 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 			// Get user info from user_id
 			var user User
 			user, err = GetUser(session_id, db)
-			fmt.Println(user)
+
 			if component_name == "profile" || component_name == "classement" {
 				if err != nil {
-					fmt.Println(err.Error())
+
 					http.Error(w, "Error getting user info", http.StatusInternalServerError)
 					return
 				}
@@ -55,7 +54,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 			}
 			err = ParseAndExecuteTemplate(component_name, user, w)
 			if err != nil {
-				fmt.Println(err.Error())
+
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
@@ -165,12 +164,12 @@ func SearchBarJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
 	http.ServeFile(w, r, "public/templates/search_bar/input.js")
 }
-//CSS
+
+// CSS
 func SearchBarCSS(w http.ResponseWriter, r *http.Request) {
 	// Serve the styles.css file when the /styles.css route is accessed
 	http.ServeFile(w, r, "public/templates/search_bar/search_bar.css")
 }
-
 
 /* ======================= COMPONENTS ======================= */
 
@@ -305,7 +304,7 @@ func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 					http.Error(w, "Error updating user status", http.StatusInternalServerError)
 					return
 				} */
-				fmt.Println("email valid")
+
 				http.Redirect(w, r, "/home", http.StatusSeeOther)
 			}
 		}

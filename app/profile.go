@@ -137,7 +137,7 @@ func GetUser(session_id string, db *sql.DB) (User, error) {
 	user.School_Year_Format = user.FormatSchoolYear()
 	Posts, err := FetchQuestionsByUserID(db, user.ID)
 	if err != nil {
-		fmt.Println(err.Error())
+
 	}
 
 	user.My_Post = Posts
@@ -181,7 +181,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 
 		user.ID, err = getUserIDUsingSessionID(session_id, db)
 		if err != nil {
-			fmt.Println(err.Error())
+
 		}
 		if strconv.Itoa(user.ID) != r.PostFormValue("id_student") {
 			http.Error(w, "Invalid user", http.StatusForbidden)
@@ -197,25 +197,25 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 
 		filename, err = FileUpload(r)
 		if err != nil {
-			fmt.Println(err.Error())
+
 		}
 		if filename == "" {
 			filename, err = getAvatar(db, user.ID)
 			if err != nil {
-				fmt.Println(err.Error())
+
 			}
 		}
-		fmt.Println(filename)
+
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
 		birthDate, err := time.Parse("2006-01-02", birthDateStr)
 		if err != nil {
-			fmt.Println(err.Error())
+
 		}
 		schoolYearStr := r.PostFormValue("school_year")
 		schoolYear, err := time.Parse("2006-01-02", schoolYearStr)
 		if err != nil {
-			fmt.Println(err.Error())
+
 		}
 		user.BirthDate = sql.NullTime{Time: birthDate, Valid: true}
 		user.Bio = sql.NullString{String: r.PostFormValue("bio"), Valid: true}
@@ -234,30 +234,30 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 			// Prepare
 			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, birth_date = $5, avatar = $11, bio = $6, website = $7, github = $8, school_year = $9 WHERE id_student = $10")
 			if err != nil {
-				fmt.Println(err.Error())
+
 			}
 			defer stmt.Close()
 			// Execute
 			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID, user.Avatar.String)
 			if err != nil {
-				fmt.Println(err.Error())
+
 			}
 		} else {
 			// Hash password
 			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 			if err != nil {
-				fmt.Println(err.Error())
+
 			}
 			// Prepare
 			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, password = $5, birth_date = $6, avatar = $12, bio = $7, website = $8, github = $9, school_year = $10 WHERE id_student = $11")
 			if err != nil {
-				fmt.Println(err.Error())
+
 			}
 			defer stmt.Close()
 			// Execute
 			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, hashedPassword, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID, user.Avatar.String)
 			if err != nil {
-				fmt.Println(err.Error())
+
 			}
 		}
 		http.Redirect(w, r, "/profile", http.StatusSeeOther)
@@ -273,7 +273,7 @@ func FileUpload(r *http.Request) (string, error) {
 	r.ParseMultipartForm(32 << 20)
 	file, handler, err := r.FormFile("avatar")
 	if err != nil {
-		fmt.Println(err)
+
 		return "", err
 	}
 	//if size is null

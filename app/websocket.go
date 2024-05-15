@@ -134,7 +134,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				subject_id, _ := strconv.Atoi(content["subject_id"].(string)) // handle error properly in production
 				err = CreateQuestion(db, quest, user_id, subject_id)
 				if err != nil {
-					fmt.Println(err.Error())
+
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to create post"})
 				} else {
 					// On successful question creation, send an update message
@@ -164,7 +164,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 				err = UserDeleteQuestion(db, question_id, user_id)
 				if err != nil {
-					fmt.Println(err.Error())
+
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete post"})
 				} else {
 					// On successful question deletion, send an update message
@@ -204,7 +204,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 
 				if !ok {
-					fmt.Println("Invalid content type for bestAnswer")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -213,14 +213,14 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 
 				answerID, err := strconv.Atoi(contentMap["answer_id"].(string)) // JSON numbers are decoded as floats
 				if err != nil {
-					fmt.Println("Invalid or missing answer_id")
+
 					// Optionally send an error response back to the client
 					continue
 				}
 
 				questionID, err := strconv.Atoi(contentMap["question_id"].(string)) // JSON numbers are decoded as floats
 				if err != nil {
-					fmt.Println("Invalid or missing question_id")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -233,7 +233,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					fmt.Printf("Error inserting best answer: %v\n", err)
 					// Optionally send an error response back to the client
 				} else {
-					fmt.Println("Successfully set best answer")
+
 					question_best_answer := GetBestAnswerFromQuestion(db, questionID)
 					question_id_from_answer_id := getQuestionIDFromResponseID(db, answerID)
 
@@ -326,7 +326,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "modify_question":
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for modify_question")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -337,7 +337,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 				question_id, err := strconv.Atoi(contentMap["question_id"].(string))
 				if err != nil {
-					fmt.Println("Invalid or missing question_id")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -357,7 +357,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "modify_response":
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for modify_response")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -373,19 +373,19 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 				response_id := int(contentMap["response_id"].(float64))
 				if err != nil {
-					fmt.Println("Invalid or missing response_id")
+
 					// Optionally send an error response back to the client
 					continue
 				}
 				question_id := int(contentMap["question_id"].(float64))
 				if err != nil {
-					fmt.Println("Invalid or missing response_id")
+
 					// Optionally send an error response back to the client
 					continue
 				}
 				err = ModifyResponse(db, response_id, contentMap["content"].(string), contentMap["description"].(string), user_id)
 				if err != nil {
-					fmt.Println(err)
+
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify response"})
 				} else {
 					updatedResponse, err := FetchResponseByQuestion(db, question_id, user_id)
@@ -413,7 +413,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for editQuestionPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -463,7 +463,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for editResponsePanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -510,7 +510,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for editSubjectPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -550,7 +550,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok || len(contentMap) == 0 {
-					fmt.Println("Invalid content type for addSubjectPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -585,7 +585,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for deleteSubjectPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -619,7 +619,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for deleteQuestionPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -656,7 +656,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for deleteResponsePanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -703,7 +703,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for editUserPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -735,7 +735,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					schoolyear, err := time.Parse("2024-04-30", contentMap["schoolyear"].(string))
 					err = ModifyUserPanel(db, user_id, firstname, lastname, username, email, bio, website, github, xp, rank, schoolyear)
 					if err != nil {
-						fmt.Println(err.Error())
+
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to modify user"})
 						break
 					}
@@ -752,7 +752,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for deleteUserPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -781,7 +781,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
-					fmt.Println("Invalid content type for deleteAvatarPanel")
+
 					// Optionally send an error response back to the client
 					continue
 				}

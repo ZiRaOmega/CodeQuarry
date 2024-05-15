@@ -64,7 +64,7 @@ func InsertMultipleSubjects(db *sql.DB) {
 		{"C#", "A general-purpose, multi-paradigm programming language"},
 		{"Swift", "A powerful and intuitive programming language for macOS, iOS, watchOS, and tvOS"},
 	}
-	// fmt.Println("Inserting subjects...")
+	//
 	for _, subject := range subjects {
 		err := InsertInSubject(db, subject.Title, subject.Description)
 		if err != nil {
@@ -154,7 +154,7 @@ func SubjectsHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Server error", http.StatusInternalServerError)
 			return
 		}
-		fmt.Println("Subjects fetched successfully")
+
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(subjects)
 	}
