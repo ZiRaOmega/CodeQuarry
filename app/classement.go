@@ -3,10 +3,10 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 )
-/* 
+
+/*
 func ClassementHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("session")
@@ -19,7 +19,7 @@ func ClassementHandler(db *sql.DB) http.HandlerFunc {
 		// Get user info from user_id
 		user, err := GetUser(session_id, db)
 		if err != nil {
-			fmt.Println(err.Error())
+
 			http.Error(w, "Error getting user info", http.StatusInternalServerError)
 			return
 		}
@@ -48,7 +48,7 @@ func GetUsersInfo(db *sql.DB) ([]User, error) {
 		}
 		Posts, err := FetchQuestionsByUserID(db, user.ID)
 		if err != nil {
-			fmt.Println(err.Error())
+
 		}
 
 		user.My_Post = Posts
@@ -62,7 +62,7 @@ func SendUsersInfoJson(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		users, err := GetUsersInfo(db)
 		if err != nil {
-			fmt.Println(err.Error())
+
 			http.Error(w, "Error getting users info", http.StatusInternalServerError)
 			return
 		}

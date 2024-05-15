@@ -34,7 +34,7 @@ func PanelAdminHandler(db *sql.DB) http.HandlerFunc {
 		data.Questions = FetchQuestions(db)
 		data.Users, err = FetchUsers(db)
 		if err != nil {
-			fmt.Println(err.Error())
+
 		}
 
 		if rank == 2 || rank == 1 {
@@ -128,7 +128,7 @@ func FetchQuestions(db *sql.DB) []Question {
 		}
 		resp, err := FetchResponseByQuestion(db, id, 0)
 		if err != nil {
-			fmt.Println(err.Error())
+
 		}
 
 		questions = append(questions, Question{

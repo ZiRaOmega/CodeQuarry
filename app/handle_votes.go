@@ -2,7 +2,6 @@ package app
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 // HandleUpvote updates the upvote count for a question
@@ -12,12 +11,12 @@ func HandleUpvote(db *sql.DB, questionID float64, sessionID string) error {
 		return err
 	}
 	if !CheckIfUserAlreadyVotedForThisQuestion(db, questionID, float64(user_Id)) {
-		fmt.Println("Inserting user in vote_question")
+
 		InsertUserInVoteQuestionDb(db, questionID, float64(user_Id), false, false)
 	}
 	// Increment upvote and potentially decrement downvote if already voted
 	if !CheckIfUserUpvoted(db, questionID, float64(user_Id)) && !CheckIfUserDownvoted(db, questionID, float64(user_Id)) {
-		fmt.Println("User upvoted")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), true, false)
 		query := `UPDATE question SET upvotes = upvotes + 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -26,7 +25,7 @@ func HandleUpvote(db *sql.DB, questionID float64, sessionID string) error {
 		}
 		return nil
 	} else if CheckIfUserUpvoted(db, questionID, float64(user_Id)) && !CheckIfUserDownvoted(db, questionID, float64(user_Id)) {
-		fmt.Println("User did not upvote")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), false, false)
 		query := `UPDATE question SET upvotes = upvotes - 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -35,7 +34,7 @@ func HandleUpvote(db *sql.DB, questionID float64, sessionID string) error {
 		}
 		return nil
 	} else if !CheckIfUserUpvoted(db, questionID, float64(user_Id)) && CheckIfUserDownvoted(db, questionID, float64(user_Id)) {
-		fmt.Println("User upvoted")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), true, false)
 		query := `UPDATE question SET upvotes = upvotes + 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -49,7 +48,7 @@ func HandleUpvote(db *sql.DB, questionID float64, sessionID string) error {
 		}
 		return nil
 	} else {
-		fmt.Println("User did not upvote")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), false, false)
 		query := `UPDATE question SET upvotes = upvotes - 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -79,12 +78,12 @@ func HandleDownvote(db *sql.DB, questionID float64, sessionID string) error {
 		return err
 	}
 	if !CheckIfUserAlreadyVotedForThisQuestion(db, questionID, float64(user_Id)) {
-		fmt.Println("Inserting user in vote_question")
+
 		InsertUserInVoteQuestionDb(db, questionID, float64(user_Id), false, false)
 	}
 	// Increment downvote and potentially decrement upvote if already voted
 	if !CheckIfUserDownvoted(db, questionID, float64(user_Id)) && !CheckIfUserUpvoted(db, questionID, float64(user_Id)) {
-		fmt.Println("User downvoted")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), false, true)
 		query := `UPDATE question SET downvotes = downvotes + 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -93,7 +92,7 @@ func HandleDownvote(db *sql.DB, questionID float64, sessionID string) error {
 		}
 		return nil
 	} else if CheckIfUserDownvoted(db, questionID, float64(user_Id)) && !CheckIfUserUpvoted(db, questionID, float64(user_Id)) {
-		fmt.Println("User did not downvote")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), false, false)
 		query := `UPDATE question SET downvotes = downvotes - 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -102,7 +101,7 @@ func HandleDownvote(db *sql.DB, questionID float64, sessionID string) error {
 		}
 		return nil
 	} else if !CheckIfUserDownvoted(db, questionID, float64(user_Id)) && CheckIfUserUpvoted(db, questionID, float64(user_Id)) {
-		fmt.Println("User downvoted")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), false, true)
 		query := `UPDATE question SET downvotes = downvotes + 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -116,7 +115,7 @@ func HandleDownvote(db *sql.DB, questionID float64, sessionID string) error {
 		}
 		return nil
 	} else {
-		fmt.Println("User did not downvote")
+
 		UpdateUserInVoteQuestionDb(db, questionID, float64(user_Id), false, false)
 		query := `UPDATE question SET downvotes = downvotes - 1 WHERE id_question = $1`
 		_, err = db.Exec(query, questionID)
@@ -187,12 +186,12 @@ func HandleUpvoteResponse(db *sql.DB, responseID float64, sessionID string) erro
 		return err
 	}
 	if !CheckIfUserAlreadyVotedForThisResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("Inserting user in vote_response")
+
 		InsertUserInVoteResponseDb(db, responseID, float64(user_Id), false, false)
 	}
 	// Increment upvote and potentially decrement downvote if already voted
 	if !CheckIfUserUpvotedResponse(db, responseID, float64(user_Id)) && !CheckIfUserDownvotedResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("User upvoted")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), true, false)
 		query := `UPDATE response SET upvotes = upvotes + 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
@@ -201,7 +200,7 @@ func HandleUpvoteResponse(db *sql.DB, responseID float64, sessionID string) erro
 		}
 		return nil
 	} else if CheckIfUserUpvotedResponse(db, responseID, float64(user_Id)) && !CheckIfUserDownvotedResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("User did not upvote")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), false, false)
 		query := `UPDATE response SET upvotes = upvotes - 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
@@ -210,7 +209,7 @@ func HandleUpvoteResponse(db *sql.DB, responseID float64, sessionID string) erro
 		}
 		return nil
 	} else if !CheckIfUserUpvotedResponse(db, responseID, float64(user_Id)) && CheckIfUserDownvotedResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("User upvoted")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), true, false)
 		query := `UPDATE response SET upvotes = upvotes + 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
@@ -224,7 +223,7 @@ func HandleUpvoteResponse(db *sql.DB, responseID float64, sessionID string) erro
 		}
 		return nil
 	} else {
-		fmt.Println("User did not upvote")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), false, false)
 		query := `UPDATE response SET upvotes = upvotes - 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
@@ -293,12 +292,12 @@ func HandleDownvoteResponse(db *sql.DB, responseID float64, sessionID string) er
 		return err
 	}
 	if !CheckIfUserAlreadyVotedForThisResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("Inserting user in vote_response")
+
 		InsertUserInVoteResponseDb(db, responseID, float64(user_Id), false, false)
 	}
 	// Increment downvote and potentially decrement upvote if already voted
 	if !CheckIfUserDownvotedResponse(db, responseID, float64(user_Id)) && !CheckIfUserUpvotedResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("User downvoted")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), false, true)
 		query := `UPDATE response SET downvotes = downvotes + 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
@@ -307,7 +306,7 @@ func HandleDownvoteResponse(db *sql.DB, responseID float64, sessionID string) er
 		}
 		return nil
 	} else if CheckIfUserDownvotedResponse(db, responseID, float64(user_Id)) && !CheckIfUserUpvotedResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("User did not downvote")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), false, false)
 		query := `UPDATE response SET downvotes = downvotes - 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
@@ -316,7 +315,7 @@ func HandleDownvoteResponse(db *sql.DB, responseID float64, sessionID string) er
 		}
 		return nil
 	} else if !CheckIfUserDownvotedResponse(db, responseID, float64(user_Id)) && CheckIfUserUpvotedResponse(db, responseID, float64(user_Id)) {
-		fmt.Println("User downvoted")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), false, true)
 		query := `UPDATE response SET downvotes = downvotes + 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
@@ -330,7 +329,7 @@ func HandleDownvoteResponse(db *sql.DB, responseID float64, sessionID string) er
 		}
 		return nil
 	} else {
-		fmt.Println("User did not downvote")
+
 		UpdateUserInVoteResponseDb(db, responseID, float64(user_Id), false, false)
 		query := `UPDATE response SET downvotes = downvotes - 1 WHERE id_response = $1`
 		_, err = db.Exec(query, responseID)
