@@ -137,8 +137,9 @@ function addSubjectClickListener(listItem, subject, listElement) {
 /* window.onload = function () {
   fetchQuestions(localStorage.getItem("subjectId") || "all" );
 };
-
+*/
 function fetchQuestions(subjectId) {
+  console.log("fetchQuestions")
     fetch(`/api/questions?subjectId=${subjectId}`)
         .then((response) => response.json())
         .then((questions) => {
@@ -146,6 +147,7 @@ function fetchQuestions(subjectId) {
             createQuestions(questions);
         });
 };
+
 function createFilter(questions) {
     questionsList.innerHTML = ""; // Clear previous questions
     const filterContainer = document.createElement("div");
@@ -214,7 +216,7 @@ function createFilterElements() {
 
     return [filterNumberOfComments, filterOldest, filterBestAnswer, filterNewest, filterPopular, filterUnpopular];
 }
- */
+ 
 function updateQuestionTrackerCount(questions, tracker) {
     tracker.textContent = questions ? `${questions.length} question(s)` : "0 question(s)";
 }

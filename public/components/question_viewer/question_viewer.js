@@ -146,8 +146,8 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         }, 150);
       }
 
-      question_viewer__question__title.innerText = question.title;
-      question_viewer__question__description.innerText = question.description;
+      question_viewer__question__title.textContent = question.title;
+      question_viewer__question__description.textContent = question.description;
       code.textContent = question.content;
       question_viewer__question__content.appendChild(preDiv);
 
@@ -187,7 +187,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
           })
         );
       };
-
+      
       downvoteContainer[0].onclick = function () {
         //if downvoteContainer backgroundColor is red then remove the color
         if (downvoteContainer[0].style.backgroundColor == "rgb(196, 77, 86)") {
@@ -254,25 +254,40 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         //create input with default value
         const question_title_input = document.createElement("input");
         question_title_input.setAttribute("type", "text");
-        question_title_input.setAttribute("value", question.title);
+        
+        //question_title_input.setAttribute("value", question.title);
+        // replaced by
+        question_title_input.value = question_viewer__question__title.textContent;
+
         question_title_input.setAttribute("id", "question_title");
         question_title_input.classList.add("question_title_input");
         const question_description_input = document.createElement("textarea");
-        question_description_input.innerText = question.description;
+        
+        //question_description_input.textContent = question.description;
+        // replaced by
+        question_description_input.value = question_viewer__question__description.textContent;
+
         question_description_input.setAttribute("id", "question_description");
         question_description_input.classList.add("question_description_input");
         const question_content_input = document.createElement("textarea");
-        question_content_input.innerText = question.content;
+        console.log(question)
+        
+        //question_content_input.textContent = question.content;
+        // replaced by
+        question_content_input.value = code.textContent;
+
         question_content_input.setAttribute("id", "question_content");
         question_content_input.classList.add("question_content_input");
         const modify_question = document.createElement("button");
         modify_question.classList.add("modify_question");
+        // to confirm the modification
         modify_question.textContent = "Modify";
         const modifyContainer = document.createElement("div");
         modify_question.onclick = function () {
           ModifyQuestion();
           modifyContainer.remove();
         };
+
         const cancel_button = document.createElement("button");
         cancel_button.innerText = "X";
         cancel_button.onclick = () => {
@@ -360,7 +375,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
             question.creation_date
           ).toLocaleDateString()}`;
 
-          question_viewer__answers__answer__description.innerText =
+          question_viewer__answers__answer__description.textContent =
             answer.description;
 
           code.textContent = answer.content;
@@ -436,7 +451,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               console.log(modifyButton);
               const response_description_input =
                 document.createElement("textarea");
-              response_description_input.innerText = answer.description;
+              response_description_input.textContent = answer.description;
               response_description_input.setAttribute(
                 "id",
                 "response_description"
@@ -445,7 +460,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
                 "response_description_input"
               );
               const response_content_input = document.createElement("textarea");
-              response_content_input.innerText = answer.content;
+              response_content_input.textContent = answer.content;
               response_content_input.setAttribute("id", "response_content");
               response_content_input.classList.add("response_content_input");
               const modify_response = document.createElement("button");

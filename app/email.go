@@ -18,12 +18,13 @@ func GetSMTPConf() (SmtpHost, SmtpPort, SmtpUser, SmtpPass string) {
 
 func SendVerificationEmail(db *sql.DB, email, token string) {
 	SmtpHost, SmtpPort, SmtpUser, SmtpPass := GetSMTPConf()
+	URL := os.Getenv(("URL"))
 	auth := smtp.PlainAuth("", SmtpUser, SmtpPass, SmtpHost)
 
 	subject := "Subject: Verify Your Email\n"
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 	body := "<html><body><p>Please verify your email by clicking on the link below:</p>" +
-		"<a href=\"https://localhost/verify?token=" + token + "\">Verify Email</a></body></html>"
+		"<a href=\"https://" + URL + "/verify?token=" + token + "\">Verify Email</a></body></html>"
 
 	msg := []byte("From: " + SmtpUser + "\n" +
 		"To: " + email + "\n" +
