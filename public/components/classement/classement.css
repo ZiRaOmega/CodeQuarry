@@ -26,4 +26,7 @@
 .classement-name, .classement-firstname, .classement-lastname, .classement-username,.classement-XP, .classement-rank, .post-length{
     font-size: 18px;
     flex-basis: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
