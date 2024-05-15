@@ -79,7 +79,7 @@ function setDateInInput(theDate, theInput) {
     const [, year, month, day] = theDate.match(/\{(\d{4})-(\d{2})-(\d{2})/);
 
     // Format the theDate components into YYYY-MM-DD format
-    const formattedDate = `${year}-${day}-${month}`;
+    const formattedDate = `${year}-${month}-${day}`;
 
     // Set the value of the input element
     let DOBInput = document.getElementById(theInput);
