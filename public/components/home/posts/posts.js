@@ -15,7 +15,8 @@ function createPostInput() {
   });
 
   title.setAttribute("type", "text");
-  title.setAttribute("placeholder", "Title");
+  title.setAttribute("placeholder", "Title (max 50 char.)");
+  title.setAttribute("maxlength", "50");
   description.setAttribute("placeholder", "Description");
   content.setAttribute("placeholder", "Content");
   let create_post_description = document.createElement("p");
