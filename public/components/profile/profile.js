@@ -69,7 +69,7 @@ if (schoolDate.textContent == " 01/01/0001") {
 
 for (let j of links) {
 	console.log(j.href)
-	if (j.href == "https://localhost/profile") {
+	if (j.href == "https://codequarry.dev/profile") {
 		j.style.display = "none";
 	}
 }
