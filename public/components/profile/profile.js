@@ -31,6 +31,17 @@ deleteButtons.forEach((button) => {
   });
 });
 
+function getFile() {
+  document.getElementById("photo_changer").click();
+}
+
+function sub(obj) {
+  var file = obj.value;
+  var fileName = file.split("\\");
+  document.getElementById("yourBtn").textContent = fileName[fileName.length - 1] + " ✔";
+  event.preventDefault();
+}
+
 let deleteButtonsfavori = document.querySelectorAll(".delete_button_favori");
 deleteButtonsfavori.forEach((button) => {
   button.addEventListener("click", function () {
