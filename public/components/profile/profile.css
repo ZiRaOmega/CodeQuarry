@@ -150,7 +150,7 @@ a{
 
 .question-profile {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     border-radius: 20px;
     width: 500px;
@@ -160,6 +160,17 @@ a{
     color: white;
     margin-bottom: 20px;
 
+}
+
+.title_and_date {
+    flex-basis: 90%;
+}
+
+.delete_button, .delete_button_favori{
+    flex-basis: 10%;
+    background: none;
+    outline: none;
+    border: none;
 }
 
 .history_link{

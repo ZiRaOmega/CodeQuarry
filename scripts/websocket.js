@@ -106,7 +106,7 @@ function handlePostCreation(msg) {
 }
 function handleXP(msg) {
   let xp = document.querySelector(".xp");
-  xp.textContent = msg.content + " XP";
+  xp.textContent = "(" + msg.content + " XP)";
 }
 function handleBestAnswer(msg) {
   const questionID = msg.content.question_id;
@@ -162,7 +162,7 @@ function handleBestAnswer(msg) {
 }
 function handlePostDeletion(msg) {
   const question = document.querySelector(
-    `.question[data-question-id="${msg.content}"]`
+    `.question-profile[data-question-id="${msg.content}"]`
   );
   if (question) {
     question.remove();
