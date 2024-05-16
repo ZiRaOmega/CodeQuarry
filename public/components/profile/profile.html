@@ -9,8 +9,14 @@
         <form action="/update-profile" method="POST" enctype="multipart/form-data" class="editProfileForm" id="editProfileForm" style="display: none;">
         <img src="{{.Avatar.String}}" alt="avatar" width="100" height="100" class="avatarViewer">
         <label for="avatar">Avatar:</label>
-        <input type="file" id="photo_changer" name="avatar" style="display: none;">
-        <input type="button" class="edit_profile_input" value="Browse..." onclick="document.getElementById('photo_changer').click();" />
+        <!--<input type="file" id="photo_changer" style="display: none;">
+        <input type="button" class="edit_profile_input" value="Browse..." onclick="document.getElementById('photo_changer').click(); var fileInput = document.getElementById('photo_changer');var filename = fileInput.files[0].name; console.log(filename);" />-->
+        <div id="yourBtn" class="edit_profile_input_text" onclick="getFile()">Browse...</div>
+  <!-- this is your file input tag, so i hide it!-->
+  <!-- i used the onchange event to fire the form submission-->
+  <div style='height: 0px;width: 0px; overflow:hidden;'><input id="photo_changer" name="avatar" class="edit_profile_input_text" type="file" value="upload" onchange="sub(this)" /></div>
+  <!-- here you can have file submit button or you can write a simple script to upload the file automatically-->
+  <!-- <input type="submit" value='submit' > -->
         <div class="all_edit_fields">
                 <div class="left_edit_profile">
                     <input type="hidden" name="id_student" value="{{.ID}}">
@@ -46,7 +52,7 @@
                     <input class="edit_profile_input" type="date" name="school_year" id="school_year" value="">
                 </div>
             </div>
-            <input class="edit_profile_input" type="submit" value="Save">
+            <input class="submitButton" type="submit" value="Save">
         </form>
         <div id="profileInformations" class="profileInformations">
             <img src="{{.Avatar.String}}" alt="avatar" width="100" height="100" class="avatarViewer">
@@ -66,19 +72,23 @@
     <div id="my_post">
         <h2 class="titles">My Posts</h2>
             {{range .My_Post}}
-                <li class="history_element question-profile question" data-question-id="{{.Id}}">
-                <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`"><span class="post-title">{{.Title}}</span></a>
-                <p>{{.CreationDate.Format "2006-01-02"}}</p>
-                <button class="delete_button" question-id="{{.Id}}">X</button>  </li>
+                <li class="history_element question-profile" data-question-id="{{.Id}}">
+                <div class="title_and_date">
+                    <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`"><span class="post-title">{{.Title}}</span></a>
+                    <p>Posted by {{.Creator}} • {{.CreationDate.Format "02/01/2006"}}</p>
+                </div>
+                <button class="delete_button" question-id="{{.Id}}"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></li>
             {{end}}
     </div>
     <div id="favori">
         <h2 class="titles">My Favorites</h2>
             {{range .Favori}}
             <li class="history_element question-profile" data-question-id="{{.Id}}">
-                <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`"><span class="post-title">{{.Title}}</span></a>
-                <p>{{.CreationDate.Format "2006-01-02"}}</p>
-                <button class="delete_button" question-id="{{.Id}}">X</button>  </li>
+                <div class="title_and_date">
+                    <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`"><span class="post-title">{{.Title}}</span></a>
+                    <p>Posted by {{.Creator}} • {{.CreationDate.Format "02/01/2006"}}</p>
+                </div>
+                <button class="delete_button_favori" question-id="{{.Id}}"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></li>
             {{end}}
     </div>
     </div>
