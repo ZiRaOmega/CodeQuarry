@@ -830,6 +830,16 @@ func DeleteUserPanel(db *sql.DB, user_id int) error {
 }
 
 func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string, username string, email string, bio string, website string, github string, xp int, rank int, schoolyear time.Time) error {
+	current_email := getEmailByUserID(db, user_id)
+	if current_email != email {
+		err := removeEmailVerifyEmail(db, email)
+		if err != nil {
+			Log(ErrorLevel, err.Error())
+			return err
+		}
+		token := GenerateTokenVerificationEmail()
+		SendVerificationEmail(db, email, token)
+	}
 	stmt, err := db.Prepare("UPDATE users SET firstname = $1, lastname = $2, username = $3, email = $4, bio = $5, website = $6, github = $7, xp = $8, rang_rank_ = $9, school_year = $10 WHERE id_student = $11")
 	if err != nil {
 		return err
@@ -840,7 +850,27 @@ func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string,
 	}
 	return nil
 }
+func removeEmailVerifyEmail(db *sql.DB, email string) error {
+	stmt, err := db.Prepare("DELETE FROM VerifyEmail WHERE email = $1")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	if _, err := stmt.Exec(email); err != nil {
+		return err
+	}
+	return nil
+}
+func getEmailByUserID(db *sql.DB, user_id int) string {
+	var email string
+	err := db.QueryRow("SELECT email FROM users WHERE id_student = $1", user_id).Scan(&email)
+	if err != nil {
+		Log(ErrorLevel, "Error fetching email from database"+err.Error())
+		return ""
+	}
+	return email
 
+}
 func DeleteResponsePanel(db *sql.DB, response_id int) error {
 	stmt, err := db.Prepare("DELETE FROM Response WHERE id_response = $1")
 	if err != nil {
