@@ -115,6 +115,8 @@ function createQuestionElement(question) {
   }
   
   questionElement.innerHTML = htmlQuestionConstructor(question);
+  //Line to force code to not being interpreted as html or js
+  questionElement.querySelector("#code").textContent = question.content;
   questionElement.appendChild(questionChecked);
 
   // Highlight the code block
@@ -188,7 +190,7 @@ function htmlQuestionConstructor(question) {
 <div class="clickable_container">
     <h3 class="question_title">${question.title}</h3>
     <p class="question_description">${question.description}</p>
-    <pre><code>${question.content}</code></pre>
+    <pre><code id="code">${question.content}</code></pre>
     <div class="creator_and_date_container">
         <p class="question_creation_date">Publié le: ${new Date(
           question.creation_date
