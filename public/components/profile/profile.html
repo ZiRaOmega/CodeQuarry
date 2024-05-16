@@ -76,6 +76,7 @@
                 <div class="title_and_date">
                     <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`"><span class="post-title">{{.Title}}</span></a>
                     <p>{{.CreationDate.Format "2006-01-02"}}</p>
+                    <p>{{.Creator}}</p>
                 </div>
                 <button class="delete_button" question-id="{{.Id}}"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></li>
             {{end}}
@@ -87,6 +88,7 @@
                 <div class="title_and_date">
                     <a class="history_link" onclick="document.location.href=`https:\/\/${document.location.hostname}/question_viewer?question_id={{.Id}}`"><span class="post-title">{{.Title}}</span></a>
                     <p>{{.CreationDate.Format "2006-01-02"}}</p>
+                    <p>{{.Creator}}</p>
                 </div>
                 <button class="delete_button_favori" question-id="{{.Id}}"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button></li>
             {{end}}

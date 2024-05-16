@@ -319,9 +319,10 @@ func getAvatar(db *sql.DB, user_id int) (string, error) {
 
 func getFavori(db *sql.DB, userID int) ([]Question, error) {
 	query := `
-        SELECT q.id_question, q.title, q.description, q.content, q.upvotes, q.downvotes, q.creation_date, q.id_subject
+        SELECT q.id_question, q.title, q.description, q.content, q.upvotes, q.downvotes, q.creation_date, q.id_subject, u.username
         FROM Favori f
         JOIN Question q ON f.id_question = q.id_question
+        JOIN users u ON q.id_student = u.id_student
         WHERE f.id_student = $1
     `
 
@@ -334,7 +335,7 @@ func getFavori(db *sql.DB, userID int) ([]Question, error) {
 	var questions []Question
 	for rows.Next() {
 		var q Question
-		if err := rows.Scan(&q.Id, &q.Title, &q.Description, &q.Content, &q.Upvotes, &q.Downvotes, &q.CreationDate, &q.SubjectID); err != nil {
+		if err := rows.Scan(&q.Id, &q.Title, &q.Description, &q.Content,&q.Upvotes, &q.Downvotes, &q.CreationDate, &q.SubjectID, &q.Creator); err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 		questions = append(questions, q)
