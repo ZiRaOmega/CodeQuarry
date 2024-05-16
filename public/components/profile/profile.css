@@ -31,7 +31,7 @@ a{
     top: 160px;
 }
 
-.button{
+.button, .submitButton{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -48,7 +48,8 @@ a{
     padding: 0 10px;
     margin-top: 50px;
 }
-.button{
+
+.button:hover, .submitButton:hover{
     cursor: pointer;
     transform: scale(1.05);
 }
@@ -196,6 +197,11 @@ a{
     text-align: center;
     font-size: 0.8em;
 }
+
+.edit_profile_input_text:hover{
+    cursor: pointer;
+}
+
 @media (max-width: 900px) {
     .question-profile{
         width: 80vw;
