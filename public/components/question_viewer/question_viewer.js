@@ -224,13 +224,16 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
             if (favoris.some((f) => f == question.id)) {
               addFavoriElement.classList.add("favori_active");
               addFavoriElement.textContent = "★";
+              addFavoriElement.style.backgroundColor = "gold";
             } else {
               addFavoriElement.classList.remove("favori_active");
               addFavoriElement.textContent = "☆";
+              addFavoriElement.style.backgroundColor = "";
             }
           } else {
             addFavoriElement.classList.remove("favori_active");
             addFavoriElement.textContent = "☆";
+            addFavoriElement.style.backgroundColor = "";
           }
         });
       addFavoriElement.onclick = function () {
@@ -238,9 +241,11 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         if (addFavoriElement.classList.contains("favori_active")) {
           addFavoriElement.classList.remove("favori_active");
           addFavoriElement.textContent = "☆";
+          addFavoriElement.style.backgroundColor = "";
         } else {
           addFavoriElement.classList.add("favori_active");
           addFavoriElement.textContent = "★";
+          addFavoriElement.style.backgroundColor = "gold";
         }
       };
       const modifyButton = document.createElement("button");

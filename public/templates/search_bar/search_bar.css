@@ -1,6 +1,6 @@
 /* container */
 .search_bar {
-    width: 300px;
+    width: 800px;
 }
 
 /* include input and lens */
@@ -36,7 +36,7 @@
 /* rslt list */
 .dropdown {
     position: absolute;
-    width: 300px;
+    width: 800px;
     border: 1px solid #ccc;
     border-top: none;
     z-index: 1;
@@ -52,6 +52,7 @@
 
 .result_element{
     border : 1px solid #707070;
+    
 }
 
 .result_prefix {
@@ -69,4 +70,8 @@
 
 .result_element:hover .result_element_preview {
     display: none;
+}
+
+.highlight {
+    background-color: yellow;
 }
