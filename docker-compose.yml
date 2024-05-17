@@ -16,6 +16,8 @@ services:
       DB_NAME: codequarrydb
       DB_TYPE: postgres
       URL: codequarry.ovh
+    volumes:
+      - img_data:/root/public/img
   db:
     image: postgres:13
     ports:
@@ -29,3 +31,4 @@ services:
 
 volumes:
   postgres_data:
+  img_data:
