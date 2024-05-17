@@ -119,16 +119,16 @@ body {
 
 .question_checked {
     position: absolute;
-  display: none;
-  background: url("/checked");
+    display: none;
+    background: url("/checked");
     background-size: auto;
-  background-size: auto;
-  background-size: auto;
-  background-size: cover;
-  width: 55px;
-  height: 45px;
-  left: 100px;
-  top: 10px;
+    background-size: auto;
+    background-size: auto;
+    background-size: cover;
+    width: 55px;
+    height: 45px;
+    left: 100px;
+    top: 10px;
 }
 
 .question_count, .question_count_all{
@@ -207,5 +207,65 @@ body {
     }
     100% {
         transform: rotate(360deg);
+    }
+}
+
+/* Media Queries for Phones */
+@media (max-width: 600px) {
+    #menu {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #create_post_button {
+        bottom: 20px;
+        right: 20px;
+        height: 70px;
+        width: 70px;
+    }
+
+    #all_subjects_container {
+        margin-top: 20px;
+    }
+
+    #all_subjects_list, .all_subjects_item, .category_cards {
+        margin: 20px;
+        padding: 5px;
+        width: 100%;
+        height: auto;
+    }
+
+    .category_title {
+        font-size: 20px;
+    }
+
+    .category_description {
+        font-size: 14px;
+        margin: 10px;
+    }
+
+    #questionsList {
+        margin: 5px;
+    }
+
+    .question_count, .question_count_all {
+        margin-left: 150px;
+        margin-top: -15px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    #create_post_container {
+        width: 100%;
+        height: auto;
+        padding: 5px;
+    }
+
+    #cross {
+        top: 10px;
+        right: 10px;
+        width: 80px;
+        height: 40px;
     }
 }

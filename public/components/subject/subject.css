@@ -1,27 +1,22 @@
 /* ========== FILTER ========== */
 
-#questions_container{
+#questions_container {
     display: flex;
     align-items: center;
     justify-content: center;
     flex-direction: column;
 }
 
-#return_filter_container{
+#return_filter_container {
     display: flex;
     flex-direction: row;
     width: 800px;
-
 }
 
 #filter_container {
     margin-top: 35px;
     width: 650px;
     height: auto;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -52,7 +47,7 @@
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
- #return_button {
+#return_button {
     display: flex;
     justify-content: center;
     margin-top: 35px;
@@ -74,7 +69,7 @@
     padding-right: 24px;
     background-color: var(--darkblue);
     color: var(--white);
-} 
+}
 
 #filter_questions {
     display: flex;
@@ -110,7 +105,7 @@
 
 /* ========== QUESTION ========== */
 
-#questions_list{
+#questions_list {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -119,7 +114,7 @@
     padding: 0px;
 }
 
-.question{
+.question {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -135,24 +130,24 @@
     transition: all 0.3s ease;
 }
 
-.question:hover{
+.question:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     background-color: rgb(242, 242, 242);
 }
 
 /* question "header" */
 .subject_tag {
-    background-color:rgb(79, 79, 192); 
+    background-color: rgb(79, 79, 192);
     width: fit-content;
-    color: #ffffff; 
+    color: #ffffff;
     padding: 5px 15px;
     margin-bottom: 10px;
     border-radius: 5px;
     font-weight: bold;
-    display: inline-block; 
+    display: inline-block;
 }
 
-.vote_container{
+.vote_container {
     position: absolute;
     top: 10px;
     right: 15px;
@@ -160,7 +155,8 @@
     flex-direction: row;
 }
 
-.upvote_container, .downvote_container{
+.upvote_container,
+.downvote_container {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -176,24 +172,25 @@
     transition: all 0.3s ease;
 }
 
-.upvote_container:hover{
+.upvote_container:hover {
     background-color: rgb(104, 195, 163);
     color: var(--white);
 }
 
-.downvote_container:hover{
-    background-color:rgb(196, 77, 86);
+.downvote_container:hover {
+    background-color: rgb(196, 77, 86);
     color: var(--white);
 }
 
-.upvote_text, .downvote_text{
+.upvote_text,
+.downvote_text {
     width: 30px;
     height: 30px;
     font-size: 25px;
     font-weight: bold;
 }
 
-.favori{
+.favori {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -210,31 +207,32 @@
     font-size: 25px;
     font-weight: bold;
 }
-.favori:hover{
-    background-color:gold;
+
+.favori:hover {
+    background-color: gold;
 }
 
 /* question "clickable" */
-.clickable_container{
+.clickable_container {
     cursor: pointer;
 }
 
-.question_title{
+.question_title {
     font-size: 25px;
 }
 
-.question_description{
+.question_description {
     font-size: 15.5px;
     color: rgb(61, 61, 61);
     margin-bottom: 25px;
 }
 
-.question_content{
+.question_content {
     font-size: 18px;
     margin-left: 5px;
 }
 
-pre{
+pre {
     border-radius: 10px;
     page-break-inside: avoid;
     font-family: monospace;
@@ -248,26 +246,26 @@ pre{
     background: #0d1117;
 }
 
-.question_creation_date{
+.question_creation_date {
     color: var(--gray);
     font-size: 13px;
     margin-left: 5px;
 }
 
-.question_creator{
+.question_creator {
     color: var(--gray);
     font-size: 13px;
     margin-left: 5px;
 }
 
-.responses_counter{
+.responses_counter {
     display: flex;
     flex-direction: row;
     color: var(--gray);
     font-size: 13px;
 }
 
-.creator_and_date_container{
+.creator_and_date_container {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -275,10 +273,249 @@ pre{
     font-size: 13px;
 }
 
-.creator_name{
+.creator_name {
     color: red;
     font-size: 15px;
     font-weight: bold;
     margin-left: 5px;
 }
 
+/* Media Queries for Tablets */
+@media (max-width: 850px) {
+    #return_filter_container {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+    }
+
+    #filter_container {
+        flex-direction: column;
+        width: 100%;
+        margin-left: 0;
+        padding: 10px;
+        margin-top: 20px;
+    }
+
+    #question_tracker_count {
+        font-size: 18px;
+    }
+
+    #question_filter {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+    }
+
+    #return_button {
+        width: 40px;
+        height: 40px;
+        font-size: 25px;
+        padding: 10px;
+        margin-top: 20px;
+    }
+
+    #filter_questions {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+        height: auto;
+    }
+
+    #filter_popular,
+    #filter_unpopular,
+    #filter_new,
+    #filter_old,
+    #filter_nbr_of_comments {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+    #questions_list {
+        padding: 5px;
+    }
+
+    .question {
+        width: 100%;
+        margin: 20px 0;
+        padding: 10px;
+    }
+
+    .subject_tag {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    .vote_container {
+        top: 5px;
+        right: 10px;
+    }
+
+    .upvote_container,
+    .downvote_container {
+        width: 40px;
+        height: 15px;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .upvote_text,
+    .downvote_text {
+        width: 20px;
+        height: 20px;
+        font-size: 18px;
+    }
+
+    .favori {
+        width: 40px;
+        height: 15px;
+        padding: 5px;
+        font-size: 18px;
+    }
+
+    .question_title {
+        font-size: 20px;
+    }
+
+    .question_description {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .question_content {
+        font-size: 16px;
+        margin-left: 0;
+    }
+
+    .question_creation_date,
+    .question_creator,
+    .responses_counter,
+    .creator_and_date_container,
+    .creator_name {
+        font-size: 12px;
+    }
+
+    pre {
+        font-size: 14px;
+        padding: 5px;
+    }
+}
+
+/* Media Queries for Phones */
+@media (max-width: 600px) {
+    #return_filter_container {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+    }
+
+    #filter_container {
+        flex-direction: column;
+        width: 100%;
+        margin-left: 0;
+        padding: 10px;
+        margin-top: 20px;
+    }
+
+    #question_tracker_count {
+        font-size: 16px;
+    }
+
+    #question_filter {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+    }
+
+    #return_button {
+        width: 40px;
+        height: 40px;
+        font-size: 25px;
+        padding: 10px;
+        margin-top: 20px;
+    }
+
+    #filter_questions {
+        flex-direction: column;
+        width: 100%;
+        padding: 10px;
+        height: auto;
+    }
+
+    #filter_popular,
+    #filter_unpopular,
+    #filter_new,
+    #filter_old,
+    #filter_nbr_of_comments {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+    #questions_list {
+        padding: 5px;
+    }
+
+    .question {
+        width: 100%;
+        margin: 20px 0;
+        padding: 10px;
+    }
+
+    .subject_tag {
+        padding: 5px 10px;
+        font-size: 14px;
+    }
+
+    .vote_container {
+        top: 5px;
+        right: 10px;
+    }
+
+    .upvote_container,
+    .downvote_container {
+        width: 40px;
+        height: 15px;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .upvote_text,
+    .downvote_text {
+        width: 20px;
+        height: 20px;
+        font-size: 18px;
+    }
+
+    .favori {
+        width: 40px;
+        height: 15px;
+        padding: 5px;
+        font-size: 18px;
+    }
+
+    .question_title {
+        font-size: 20px;
+    }
+
+    .question_description {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .question_content {
+        font-size: 16px;
+        margin-left: 0;
+    }
+
+    .question_creation_date,
+    .question_creator,
+    .responses_counter,
+    .creator_and_date_container,
+    .creator_name {
+        font-size: 12px;
+    }
+
+    pre {
+        font-size: 14px;
+        padding: 5px;
+    }
+}

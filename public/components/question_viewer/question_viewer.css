@@ -115,6 +115,7 @@
   background-color: rgb(245, 245, 245);
   border: 2px solid #e0e0e0;
 }
+
 #response_content {
   width: 90%;
   height: 100px;
@@ -148,6 +149,7 @@
   background-color: rgb(245, 245, 245);
   color: black;
 }
+
 #error_message_response {
   margin-top: 20px;
   display: none;
@@ -283,10 +285,10 @@
 
 #No:hover {
   background-color: rgb(245, 245, 245);
-  color: var(--darkblue);
+  color: var (--darkblue);
 }
 
-#question_closed{
+#question_closed {
   display: none;
   width: 90%;
   font-size: 20px;
@@ -311,5 +313,80 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Media Queries for Phones */
+@media (max-width: 600px) {
+  .question-viewer__answers {
+    width: 100%;
+    padding: 5px;
+  }
+
+  .question-viewer__answers__answer {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .question-viewer__answers__answer__description {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .question-viewer__question {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .question-viewer__question__title {
+    font-size: 25px;
+    margin-bottom: 15px;
+  }
+
+  .question-viewer__question__description {
+    font-size: 15px;
+    margin-bottom: 15px;
+  }
+
+  .question-viewer__response-input {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  #response_description,
+  #response_content {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  #response_submit {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .YesOrNo {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .areYouSureText {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .YesNoContainer {
+    width: 100%;
+  }
+
+  #Yes,
+  #No {
+    width: 100px;
+    height: 40px;
+    font-size: 14px;
   }
 }
