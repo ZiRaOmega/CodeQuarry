@@ -199,7 +199,7 @@ a{
     resize: none;
 }
 
-.edit_profile_input_text{
+.edit_profile_input_text, .send_email_input_text{
     height: 40px;
     width: fit-content;
     margin-bottom: 10px;
@@ -215,7 +215,7 @@ a{
     font-size: 0.8em;
 }
 
-.edit_profile_input_text:hover{
+.edit_profile_input_text:hover, .send_email_input_text:hover{
     cursor: pointer;
 }
 
@@ -223,6 +223,7 @@ a{
     .question-profile{
         width: 80vw;
     }
+
 
     .main-part{
         flex-direction: column;

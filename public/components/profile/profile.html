@@ -29,28 +29,27 @@
                     <label for="username">Username:</label>
                     <input class="edit_profile_input" type="text" name="username" value="{{.Username}}">
                     <br>
-                    <label for="email">Email:</label>
-                    <input class="edit_profile_input" id="email" type="email" name="email" value="{{.Email}}">
-                    <button id="resend_email">Resend Email</button>
+                    <label for="bio">Bio:</label>
+                    <input type="text" class="edit_profile_input" name="bio" value="{{.Bio.String}}">
                     <br>
-                    <label for="password">Password:</label>
-                    <input class="edit_profile_input" type="password" name="password">
+                    <label for="school_year">School Year:</label>
+                    <input class="edit_profile_input" type="date" name="school_year" id="school_year" value="">
                 </div>
                 <div class="right_edit_profile">
                     <label for="birth_date">Birth Date:</label>
                     <input class="edit_profile_input" type="date" name="birth_date" id="birth_date" value="">
-                    <br>
-                    <label for="bio">Bio:</label>
-                    <input type="text" class="edit_profile_input" name="bio" value="{{.Bio.String}}">
-                    <br>
                     <label for="website">Website:</label>
                     <input class="edit_profile_input" type="text" name="website" value="{{.Website.String}}">
                     <br>
                     <label for="github">GitHub:</label>
                     <input class="edit_profile_input" type="text" name="github" value="{{.GitHub.String}}">
                     <br>
-                    <label for="school_year">School Year:</label>
-                    <input class="edit_profile_input" type="date" name="school_year" id="school_year" value="">
+                    <label for="password">Password:</label>
+                    <input class="edit_profile_input" type="password" name="password">
+                    <br>
+                    <label for="email">Email:</label>
+                    <input class="edit_profile_input" id="email" type="email" name="email" value="{{.Email}}">
+                    <button class="send_email_input_text" id="resend_email">Resend Email</button>
                 </div>
             </div>
             <input class="submitButton" type="submit" value="Save">
