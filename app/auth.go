@@ -33,6 +33,11 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		username := r.FormValue("username")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
+		if len(lastname) < 1 || len(firstname) < 1 || len(username) < 2 || len(email) < 4 || len(password) < 5 {
+			Log(ErrorLevel, "Invalid registration data")
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Invalid registration data"})
+			return
+		}
 		if utils.ContainsSQLi(lastname) || utils.ContainsSQLi(firstname) || utils.ContainsSQLi(username) || utils.ContainsSQLi(email) || utils.ContainsSQLi(password) {
 			Log(ErrorLevel, "SQL injection detected")
 			// http.Error(w, "SQL injection detected", http.StatusBadRequest)

@@ -253,9 +253,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 				} else {
 					question_id := int(contentMap)
-					/* if err != nil {
-						conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
-					} */
+					
 					if isItInFavori(db, user_id, question_id) {
 						err = DeleteFavori(db, user_id, question_id)
 						if err == nil {
