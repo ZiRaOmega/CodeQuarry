@@ -1,6 +1,6 @@
 FROM golang:1.22 as builder
 
-WORKDIR /app
+WORKDIR /
 
 COPY go.mod go.sum ./
 RUN go mod download
@@ -26,7 +26,7 @@ COPY --from=builder /app/cert ./cert
 # Make sure the img directory exists in the image
 RUN mkdir -p /root/public/img
 # Copy the images into the img directory
-COPY --from=builder ../public/img ./public/img
+COPY --from=builder /public/img ./public/img
 
 EXPOSE 80 443 587
 
