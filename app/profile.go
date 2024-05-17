@@ -208,7 +208,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		user_email := getEmailByUserID(db, user.ID)
 		if user_email != user.Email {
 			if isEmailVerified(db, user.Email) {
-				Log(ErrorLevel, err.Error())
+				Log(ErrorLevel, "Email already exist")
 				http.Error(w, "Email already exists", http.StatusForbidden)
 				return
 			}
