@@ -75,3 +75,10 @@
 .highlight {
     background-color: yellow;
 }
+
+
+@media (max-width: 900px) {
+    .search_bar{
+        display: none;
+    }
+}

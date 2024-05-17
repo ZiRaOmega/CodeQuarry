@@ -124,7 +124,7 @@ a {
 
     .leftpart {
         justify-content: center;
-        padding-left: 0;
+        padding-left: 20px;
     }
 
     .CQ-logo {
@@ -133,6 +133,7 @@ a {
     }
     .burger-menu {
         display: flex;
+        padding-right: 20px;
     }
     #menu ul {
         flex-direction: column;
@@ -156,7 +157,7 @@ a {
         display: none;
         flex-direction: column;
         position: absolute;
-        top: 80px; /* adjust based on header height */
+        top: 60px; /* adjust based on header height */
         right: 0;
         background-color: white;
         width: 100%;
