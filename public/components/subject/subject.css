@@ -285,7 +285,6 @@ pre {
     #return_filter_container {
         flex-direction: column;
         width: 100%;
-        padding: 10px;
     }
 
     #filter_container {
@@ -301,7 +300,8 @@ pre {
     }
 
     #question_filter {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         width: 100%;
         padding: 10px;
     }
@@ -404,13 +404,12 @@ pre {
 @media (max-width: 600px) {
     #return_filter_container {
         flex-direction: column;
-        width: 100%;
-        padding: 10px;
+        margin-left: 10px;
     }
 
     #filter_container {
         flex-direction: column;
-        width: 100%;
+        width : 90vw;
         margin-left: 0;
         padding: 10px;
         margin-top: 20px;
@@ -422,7 +421,7 @@ pre {
 
     #question_filter {
         flex-direction: column;
-        width: 100%;
+        width : 90vw;
         padding: 10px;
     }
 
@@ -435,8 +434,9 @@ pre {
     }
 
     #filter_questions {
-        flex-direction: column;
-        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width : 90vw;
         padding: 10px;
         height: auto;
     }
@@ -455,7 +455,7 @@ pre {
     }
 
     .question {
-        width: 100%;
+        width: 90vw;
         margin: 20px 0;
         padding: 10px;
     }
