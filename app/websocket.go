@@ -765,6 +765,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					user_id := int(contentMap["id"].(float64))
 					err := DeleteUserPanel(db, user_id)
 					if err != nil {
+						Log(ErrorLevel, err.Error())
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete user"})
 						break
 					}
@@ -800,6 +801,37 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				} else {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
+			case "resendEmail":
+				/*const data = {
+				    type: "resendEmail",
+				    content: {
+				        email: email,
+				    },
+				    session_id: getCookie("session")
+				};*/
+				contentMap, ok := wsmessage.Content.(map[string]interface{})
+				if !ok {
+
+					// Optionally send an error response back to the client
+					continue
+				}
+				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+					email := contentMap["email"].(string)
+					token := GenerateTokenVerificationEmail()
+					SendVerificationEmail(db, email, token)
+					err = updateTokenVerifyEmail(db, email, token)
+					if err != nil {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to update token"})
+						break
+					}
+
+				}
+
 			}
 		}
 	}
@@ -831,15 +863,6 @@ func DeleteUserPanel(db *sql.DB, user_id int) error {
 
 func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string, username string, email string, bio string, website string, github string, xp int, rank int, schoolyear time.Time) error {
 	current_email := getEmailByUserID(db, user_id)
-	if current_email != email {
-		err := removeEmailVerifyEmail(db, email)
-		if err != nil {
-			Log(ErrorLevel, err.Error())
-			return err
-		}
-		token := GenerateTokenVerificationEmail()
-		SendVerificationEmail(db, email, token)
-	}
 	stmt, err := db.Prepare("UPDATE users SET firstname = $1, lastname = $2, username = $3, email = $4, bio = $5, website = $6, github = $7, xp = $8, rang_rank_ = $9, school_year = $10 WHERE id_student = $11")
 	if err != nil {
 		return err
@@ -848,10 +871,32 @@ func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string,
 	if _, err := stmt.Exec(firstname, lastname, username, email, bio, website, github, xp, rank, schoolyear, user_id); err != nil {
 		return err
 	}
+	if current_email != email {
+		token := GenerateTokenVerificationEmail()
+		err := updateTokenVerifyEmail(db, email, token)
+		if err != nil {
+			Log(ErrorLevel, err.Error())
+		}
+		SendVerificationEmail(db, email, token)
+
+	}
 	return nil
 }
+func updateTokenVerifyEmail(db *sql.DB, email string, token string) error {
+	stmt, err := db.Prepare("UPDATE verifyemail SET token = $1, validated = false WHERE email = $2")
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	if _, err := stmt.Exec(token, email); err != nil {
+		return err
+	}
+	return nil
+
+}
 func removeEmailVerifyEmail(db *sql.DB, email string) error {
-	stmt, err := db.Prepare("DELETE FROM VerifyEmail WHERE email = $1")
+	stmt, err := db.Prepare("DELETE FROM verifyemail WHERE email = $1")
 	if err != nil {
 		return err
 	}

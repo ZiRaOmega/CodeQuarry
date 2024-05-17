@@ -29,12 +29,8 @@ func SendVerificationEmail(db *sql.DB, email, token string) {
 	msg := []byte("From: " + SmtpUser + "\n" +
 		"To: " + email + "\n" +
 		subject + mime + body)
-	err := InsertVerifToken(db, email, token)
-	if err != nil {
-		Log(ErrorLevel, err.Error())
-		return
-	}
-	err = smtp.SendMail(SmtpHost+":"+SmtpPort, auth, SmtpUser, []string{email}, msg)
+
+	err := smtp.SendMail(SmtpHost+":"+SmtpPort, auth, SmtpUser, []string{email}, msg)
 	if err != nil {
 		Log(ErrorLevel, err.Error())
 	}

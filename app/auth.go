@@ -83,6 +83,11 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		}
 		token := GenerateTokenVerificationEmail()
 		SendVerificationEmail(db, email, token)
+		err = InsertVerifToken(db, email, token)
+		if err != nil {
+			Log(ErrorLevel, err.Error())
+			return
+		}
 		err = CreateSession(username, db, w)
 		if err != nil {
 
