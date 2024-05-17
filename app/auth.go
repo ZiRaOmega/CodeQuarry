@@ -132,19 +132,16 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		password := r.FormValue("passwordLogin")
 		if utils.ContainsSQLi(username) || utils.ContainsSQLi(password) {
 			Log(ErrorLevel, "SQL injection detected")
-			// http.Error(w, "SQL injection detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "SQL injection detected"})
 			return
 		} else if utils.ContainsXSS(username) || utils.ContainsXSS(password) {
 			Log(ErrorLevel, "XSS detected")
-			// http.Error(w, "XSS detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
 			return
 		}
 		email := GetEmailWithUsername(db, username)
 		if !isEmailVerified(db, email) {
 			Log(ErrorLevel, "Email not verified"+email)
-			// http.Error(w, "XSS detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Verify your email before trying to log in"})
 			return
 		}
