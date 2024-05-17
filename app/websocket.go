@@ -890,15 +890,25 @@ func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string,
 func updateTokenVerifyEmail(db *sql.DB, email string, token string) error {
 	stmt, err := db.Prepare("UPDATE verifyemail SET token = $1, validated = false WHERE email = $2")
 	if err != nil {
-		return err
+		// If the statement preparation fails, try creating a new entry instead
+		stmt, err = db.Prepare("INSERT INTO verifyemail (email, token, validated) VALUES ($1, $2, false)")
+		if err != nil {
+			return err
+		}
+		defer stmt.Close()
+
+		if _, err := stmt.Exec(email, token); err != nil {
+			return err
+		}
+		return nil
 	}
+
 	defer stmt.Close()
 
 	if _, err := stmt.Exec(token, email); err != nil {
 		return err
 	}
 	return nil
-
 }
 func removeEmailVerifyEmail(db *sql.DB, email string) error {
 	stmt, err := db.Prepare("DELETE FROM verifyemail WHERE email = $1")
