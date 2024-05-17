@@ -285,7 +285,7 @@
 
 #No:hover {
   background-color: rgb(245, 245, 245);
-  color: var (--darkblue);
+  color: var(--darkblue);
 }
 
 #question_closed {
@@ -294,6 +294,30 @@
   font-size: 20px;
   font-weight: bolder;
 }
+
+#question_title{
+  height: 40px;
+    width: 85vw;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    border: none;
+    resize: none;
+    outline: none;
+}
+
+ #question_description, #question_content{
+  height: 200px;
+    width: 85vw;
+    outline: none;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    border : none;
+    resize: none;
+ }
 
 .vote_response_container {
   position: absolute;
@@ -305,6 +329,17 @@
   height: 130px;
   justify-content: center;
   align-items: center;
+}
+
+.modify_container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modify_question, .cancel_button{
+  padding: 10px;
+  background-color: var(--light-gray);
 }
 
 @keyframes FadeIn {

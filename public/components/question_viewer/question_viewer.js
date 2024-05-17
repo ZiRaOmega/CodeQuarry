@@ -260,6 +260,22 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         //create input with default value
         const question_title_input = document.createElement("input");
         question_title_input.setAttribute("type", "text");
+
+        const question_title_label = document.createElement("p");
+        question_title_label.textContent = "Title:"
+        question_title_label.classList.add("question_title_label")
+
+          const question_description_label = document.createElement("p");
+          question_description_label.textContent = "Description:"
+          question_description_label.classList.add("question_description_label")
+
+
+          const question_content_label = document.createElement("p");
+          question_content_label.textContent = "Content:"
+          question_content_label.classList.add("question_content_label")
+
+        const buttons_container = document.createElement("div");
+        buttons_container.classList.add("buttons_container")
         
         //question_title_input.setAttribute("value", question.title);
         // replaced by
@@ -296,15 +312,26 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
 
         const cancel_button = document.createElement("button");
         cancel_button.innerText = "X";
+        cancel_button.classList.add("cancel_button")
         cancel_button.onclick = () => {
           modifyContainer.remove();
         };
-        modifyContainer.appendChild(cancel_button);
         modifyContainer.classList.add("modify_container");
+        modifyContainer.appendChild(question_title_label);
+
         modifyContainer.appendChild(question_title_input);
+        
+        modifyContainer.appendChild(question_description_label);
+
         modifyContainer.appendChild(question_description_input);
+
+        modifyContainer.appendChild(question_content_label);
+
         modifyContainer.appendChild(question_content_input);
-        modifyContainer.appendChild(modify_question);
+
+        modifyContainer.appendChild(buttons_container)
+        buttons_container.appendChild(cancel_button);
+        buttons_container.appendChild(modify_question);
         document
           .querySelector(".question-viewer__question")
           .appendChild(modifyContainer);
