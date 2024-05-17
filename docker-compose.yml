@@ -15,7 +15,7 @@ services:
       DB_PASSWORD: CQ1234
       DB_NAME: codequarrydb
       DB_TYPE: postgres
-      URL: codequarry.ovh
+      URL: codequarry.dev
     volumes:
       - img_data:/root/public/img
   db:
