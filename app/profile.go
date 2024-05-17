@@ -213,10 +213,9 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 				return
 			}
 			token := GenerateTokenVerificationEmail()
-			fmt.Println(token)
-			err = updateTokenVerifyEmail(db, user.Email, token)
+			err = updateTokenVerifyEmail(db, user_email, token)
 			if err != nil {
-				fmt.Println(err.Error())
+
 				Log(ErrorLevel, err.Error())
 				http.Error(w, "Error updating token", http.StatusInternalServerError)
 				return
