@@ -284,6 +284,9 @@ func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/home/question_viewer/question_viewer.html")
 }
 
+func HandleHeaderJS(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/templates/header/header.js")
+}
 func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
