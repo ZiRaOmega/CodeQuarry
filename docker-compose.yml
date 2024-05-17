@@ -11,6 +11,7 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
+      DB_TYPE: postgres
     volumes:
       - img_data:/root/public/img
   db:
