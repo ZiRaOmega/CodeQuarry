@@ -1,30 +1,32 @@
-version: '3.8'
+version: '3.8'  # Docker Compose file version
+
 services:
   app:
-    build: .
+    build: .  # Build the Docker image from the current directory
     ports:
        - "80:80"   # Map port 80 on the host to port 80 in the container for HTTP
        - "443:443" # Map port 443 on the host to port 443 in the container for HTTPS
-       - "587:587"
+       - "587:587" # Map port 587 on the host to port 587 in the container
     depends_on:
-      - db
+      - db  # Depend on the 'db' service
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_TYPE: postgres
+      DB_HOST: db  # Set the DB_HOST environment variable to 'db'
+      DB_PORT: 5432  # Set the DB_PORT environment variable to 5432
+      DB_TYPE: postgres  # Set the DB_TYPE environment variable to 'postgres'
     volumes:
-      - img_data:/root/public/img
+      - img_data:/root/public/img  # Mount the 'img_data' volume to the '/root/public/img' directory in the container
+
   db:
-    image: postgres:13
+    image: postgres:13  # Use the 'postgres:13' Docker image
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Map port 5432 on the host to port 5432 in the container
     environment:
-      POSTGRES_DB: codequarrydb
-      POSTGRES_USER: codequarry
-      POSTGRES_PASSWORD: CQ1234
+      POSTGRES_DB: codequarrydb  # Set the POSTGRES_DB environment variable to 'codequarrydb'
+      POSTGRES_USER: codequarry  # Set the POSTGRES_USER environment variable to 'codequarry'
+      POSTGRES_PASSWORD: CQ1234  # Set the POSTGRES_PASSWORD environment variable to 'CQ1234'
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  # Mount the 'postgres_data' volume to the '/var/lib/postgresql/data' directory in the container
 
 volumes:
-  postgres_data:
-  img_data:
+  postgres_data:  # Create a volume named 'postgres_data'
+  img_data:  # Create a volume named 'img_data'
