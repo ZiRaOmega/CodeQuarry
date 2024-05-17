@@ -205,7 +205,24 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 
 			}
 		}
-
+		user_email := getEmailByUserID(db, user.ID)
+		if user_email != user.Email {
+			if isEmailVerified(db, user.Email) {
+				Log(ErrorLevel, err.Error())
+				http.Error(w, "Email already exists", http.StatusForbidden)
+				return
+			}
+			token := GenerateTokenVerificationEmail()
+			fmt.Println(token)
+			err = updateTokenVerifyEmail(db, user.Email, token)
+			if err != nil {
+				fmt.Println(err.Error())
+				Log(ErrorLevel, err.Error())
+				http.Error(w, "Error updating token", http.StatusInternalServerError)
+				return
+			}
+			SendVerificationEmail(db, user.Email, token)
+		}
 		user.Avatar = sql.NullString{String: filename, Valid: true}
 		birthDateStr := r.PostFormValue("birth_date")
 		birthDate, err := time.Parse("2006-01-02", birthDateStr)
@@ -335,7 +352,7 @@ func getFavori(db *sql.DB, userID int) ([]Question, error) {
 	var questions []Question
 	for rows.Next() {
 		var q Question
-		if err := rows.Scan(&q.Id, &q.Title, &q.Description, &q.Content,&q.Upvotes, &q.Downvotes, &q.CreationDate, &q.SubjectID, &q.Creator); err != nil {
+		if err := rows.Scan(&q.Id, &q.Title, &q.Description, &q.Content, &q.Upvotes, &q.Downvotes, &q.CreationDate, &q.SubjectID, &q.Creator); err != nil {
 			return nil, fmt.Errorf("failed to scan row: %w", err)
 		}
 		questions = append(questions, q)

@@ -820,8 +820,13 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
 				}
-				if FetchRankByUserID(db, user_id) > 0 && isValidSession(wsmessage.SessionID, db) {
+				user_email := getEmailByUserID(db, user_id)
+				if (FetchRankByUserID(db, user_id) > 0 || user_email == contentMap["email"].(string)) && isValidSession(wsmessage.SessionID, db) {
 					email := contentMap["email"].(string)
+					if isEmailVerified(db, email) {
+						conn.WriteJSON(WSMessage{Type: "error", Content: "Email already verified"})
+						break
+					}
 					token := GenerateTokenVerificationEmail()
 					SendVerificationEmail(db, email, token)
 					err = updateTokenVerifyEmail(db, email, token)

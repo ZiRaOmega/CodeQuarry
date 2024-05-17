@@ -108,3 +108,15 @@ function fetchQuestionsProfile(subject) {
             
         });
 }
+
+document.getElementById("resend_email").onclick = ()=>{
+  socket.send(
+    JSON.stringify({
+      type: "resendEmail",
+      content: {
+        email: document.getElementById("email").value,
+      },
+      session_id: getCookie("session")
+    })
+  );
+}
