@@ -205,6 +205,11 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 
 			}
 		}
+		if !isValidEmail(user.Email) {
+			http.Error(w, "Invalid email", http.StatusForbidden)
+			Log(WarnLevel, "Email is  not valid"+user.Email)
+			return
+		}
 		user_email := getEmailByUserID(db, user.ID)
 		if user_email != user.Email {
 			if isEmailVerified(db, user.Email) {
