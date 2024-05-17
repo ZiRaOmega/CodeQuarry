@@ -13,9 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
   (async () => {
     try {
       const response = await fetch(`/api/questions?subjectId=${subjectId}`);
-      //.then((response) => response.json());
       const questions = await response.json();
-      console.log(questions);
       createFilter(questions);
       createQuestions(questions);
     } catch (error) {

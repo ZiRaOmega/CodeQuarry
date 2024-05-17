@@ -144,8 +144,8 @@ func createTableQuestion(db *sql.DB) {
 		id_subject INT NOT NULL,
 		PRIMARY KEY(id_question),
 		UNIQUE(title),
-		FOREIGN KEY(id_student) REFERENCES users(id_student),
-		FOREIGN KEY(id_subject) REFERENCES Subject(id_subject)
+		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE,
+		FOREIGN KEY(id_subject) REFERENCES Subject(id_subject) ON DELETE CASCADE
 	);`
 	// Execute the table creation query
 	if _, err := db.Exec(tableCreationQuery); err != nil {
@@ -167,7 +167,7 @@ func createTableResponse(db *sql.DB) {
 		id_student INT NOT NULL,
 		PRIMARY KEY(id_response),
 		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE,
-		FOREIGN KEY(id_student) REFERENCES users(id_student)
+		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE
 	);
 	`
 	// Execute the table creation query
@@ -213,7 +213,7 @@ func createTableVote_response(db *sql.DB) {
 		upvote_r BOOLEAN NOT NULL,
 		downvote_r BOOLEAN NOT NULL,
 		PRIMARY KEY(id_student, id_response),
-		FOREIGN KEY(id_student) REFERENCES users(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE,
 		FOREIGN KEY(id_response) REFERENCES Response(id_response) ON DELETE CASCADE
 	);
 	`
@@ -230,7 +230,7 @@ func createTableVote_question(db *sql.DB) {
 		upvote_q BOOLEAN NOT NULL,
 		downvote_q BOOLEAN NOT NULL,
 		PRIMARY KEY(id_student, id_question),
-		FOREIGN KEY(id_student) REFERENCES users(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE,
 		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE
 	);
 	`
@@ -249,7 +249,7 @@ func createTableSession(db *sql.DB) {
 		created_at TIMESTAMP NOT NULL,
 		UNIQUE(uuid),
 		PRIMARY KEY(id),
-		FOREIGN KEY(user_id) REFERENCES users(id_student)
+		FOREIGN KEY(user_id) REFERENCES users(id_student) ON DELETE CASCADE
 	);
 	`
 	// Execute the table creation query
