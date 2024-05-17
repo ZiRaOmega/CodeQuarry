@@ -11,11 +11,6 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 5432
-      DB_USER: codequarry
-      DB_PASSWORD: CQ1234
-      DB_NAME: codequarrydb
-      DB_TYPE: postgres
-      URL: codequarry.dev
     volumes:
       - img_data:/root/public/img
   db:
