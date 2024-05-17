@@ -222,6 +222,8 @@ body {
         right: 20px;
         height: 70px;
         width: 70px;
+        background-size: 110px 110px;
+
     }
 
     #all_subjects_container {
@@ -249,7 +251,7 @@ body {
     }
 
     .question_count, .question_count_all {
-        margin-left: 150px;
+        margin-left: 85vw;
         margin-top: -15px;
         width: 40px;
         height: 40px;
