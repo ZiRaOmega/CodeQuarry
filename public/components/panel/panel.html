@@ -48,7 +48,7 @@
             <textarea class="textarea-field">
 {{if .Bio.Valid}}{{.Bio.String}}{{else}}Not provided{{end}}</textarea
             ><br />
-            <p>Email {{if .EmailVerified}}is verified{{else}}not verified <a onclick="ResendEmail('{{.Email}}')">Resend Email</a>{{end}}</p>
+            <p>Email {{if .EmailVerified}}is verified{{else}}not verified <button onclick="ResendEmail('{{.Email}}')">Resend Email</button>{{end}}</p>
             <input
               class="input-field"
               type="url"
