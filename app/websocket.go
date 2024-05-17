@@ -888,28 +888,22 @@ func ModifyUserPanel(db *sql.DB, user_id int, firstname string, lastname string,
 	return nil
 }
 func updateTokenVerifyEmail(db *sql.DB, email string, token string) error {
-	stmt, err := db.Prepare("UPDATE verifyemail SET token = $1, validated = false WHERE email = $2")
-	if err != nil {
-		// If the statement preparation fails, try creating a new entry instead
-		stmt, err = db.Prepare("INSERT INTO verifyemail (email, token, validated) VALUES ($1, $2, false)")
-		if err != nil {
-			return err
-		}
-		defer stmt.Close()
+	// Define the query to insert a new row or update the existing one
+	query := `
+		INSERT INTO verifyemail (email, token, validated)
+		VALUES ($1, $2, false)
+		ON CONFLICT (email) 
+		DO UPDATE SET token = EXCLUDED.token, validated = false;
+	`
 
-		if _, err := stmt.Exec(email, token); err != nil {
-			return err
-		}
-		return nil
-	}
-
-	defer stmt.Close()
-
-	if _, err := stmt.Exec(token, email); err != nil {
+	// Execute the query with the provided email and token
+	if _, err := db.Exec(query, email, token); err != nil {
 		return err
 	}
+
 	return nil
 }
+
 func removeEmailVerifyEmail(db *sql.DB, email string) error {
 	stmt, err := db.Prepare("DELETE FROM verifyemail WHERE email = $1")
 	if err != nil {
