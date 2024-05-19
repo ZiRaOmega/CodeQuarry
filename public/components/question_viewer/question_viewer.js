@@ -688,3 +688,40 @@ function ModifyQuestion() {
     })
   );
 }
+document.addEventListener('DOMContentLoaded', function() {
+  const voteBurgerMenus = document.querySelectorAll('.vote-burger-menu');
+
+  voteBurgerMenus.forEach(burgerMenu => {
+      burgerMenu.addEventListener('click', function() {
+          const voteOptions = this.nextElementSibling;
+          if (voteOptions.style.display === 'flex') {
+              voteOptions.style.display = 'none';
+          } else {
+              voteOptions.style.display = 'flex';
+          }
+      });
+  });
+
+  document.addEventListener('click', function(event) {
+      voteBurgerMenus.forEach(burgerMenu => {
+          const voteOptions = burgerMenu.nextElementSibling;
+          if (voteOptions.style.display === 'flex' && !burgerMenu.contains(event.target) && !voteOptions.contains(event.target)) {
+              voteOptions.style.display = 'none';
+          }
+      });
+  });
+  //if windows size is more than 650px display flex eventlistener
+  window.addEventListener('resize', function() {
+      if (window.innerWidth > 650) {
+          voteBurgerMenus.forEach(burgerMenu => {
+              const voteOptions = burgerMenu.nextElementSibling;
+              voteOptions.style.display = 'flex';
+          });
+      } else {
+          voteBurgerMenus.forEach(burgerMenu => {
+              const voteOptions = burgerMenu.nextElementSibling;
+              voteOptions.style.display = 'none';
+          });
+      }
+  });
+});

@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"net/mail"
 	"time"
 
 	UUID "github.com/satori/go.uuid"
@@ -33,6 +34,12 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		username := r.FormValue("username")
 		email := r.FormValue("email")
 		password := r.FormValue("password")
+		if !isValidEmail(email) {
+			Log(ErrorLevel, "Invalid email")
+			// http.Error(w, "Invalid email", http.StatusBadRequest)
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Invalid email"})
+			return
+		}
 		if len(lastname) < 1 || len(firstname) < 1 || len(username) < 2 || len(email) < 4 || len(password) < 5 {
 			Log(ErrorLevel, "Invalid registration data")
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Invalid registration data"})
@@ -118,6 +125,10 @@ func GetEmailWithUsername(db *sql.DB, username string) string {
 	}
 	return email
 }
+func isValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
+}
 func LoginHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
@@ -132,19 +143,16 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		password := r.FormValue("passwordLogin")
 		if utils.ContainsSQLi(username) || utils.ContainsSQLi(password) {
 			Log(ErrorLevel, "SQL injection detected")
-			// http.Error(w, "SQL injection detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "SQL injection detected"})
 			return
 		} else if utils.ContainsXSS(username) || utils.ContainsXSS(password) {
 			Log(ErrorLevel, "XSS detected")
-			// http.Error(w, "XSS detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "XSS detected"})
 			return
 		}
 		email := GetEmailWithUsername(db, username)
 		if !isEmailVerified(db, email) {
 			Log(ErrorLevel, "Email not verified"+email)
-			// http.Error(w, "XSS detected", http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Verify your email before trying to log in"})
 			return
 		}
