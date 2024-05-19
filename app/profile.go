@@ -202,8 +202,13 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		if filename == "" {
 			filename, err = getAvatar(db, user.ID)
 			if err != nil {
-
+				Log(ErrorLevel, err.Error())
 			}
+		}
+		if !isValidEmail(user.Email) {
+			http.Error(w, "Invalid email", http.StatusForbidden)
+			Log(WarnLevel, "Email is  not valid"+user.Email)
+			return
 		}
 		user_email := getEmailByUserID(db, user.ID)
 		if user_email != user.Email {
@@ -250,30 +255,30 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 			// Prepare
 			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, birth_date = $5, avatar = $11, bio = $6, website = $7, github = $8, school_year = $9 WHERE id_student = $10")
 			if err != nil {
-
+				Log(ErrorLevel, err.Error())
 			}
 			defer stmt.Close()
 			// Execute
 			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID, user.Avatar.String)
 			if err != nil {
-
+				Log(ErrorLevel, err.Error())
 			}
 		} else {
 			// Hash password
 			hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 			if err != nil {
-
+				Log(ErrorLevel, err.Error())
 			}
 			// Prepare
 			stmt, err := db.Prepare("UPDATE users SET lastname = $1, firstname = $2, username = $3, email = $4, password = $5, birth_date = $6, avatar = $12, bio = $7, website = $8, github = $9, school_year = $10 WHERE id_student = $11")
 			if err != nil {
-
+				Log(ErrorLevel, err.Error())
 			}
 			defer stmt.Close()
 			// Execute
 			_, err = stmt.Exec(user.LastName, user.FirstName, user.Username, user.Email, hashedPassword, user.BirthDate, user.Bio, user.Website, user.GitHub, user.SchoolYear, user.ID, user.Avatar.String)
 			if err != nil {
-
+				Log(ErrorLevel, err.Error())
 			}
 		}
 		http.Redirect(w, r, "/profile", http.StatusSeeOther)

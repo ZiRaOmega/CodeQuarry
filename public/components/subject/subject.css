@@ -11,6 +11,7 @@
     display: flex;
     flex-direction: row;
     width: 800px;
+    flex-wrap: wrap;
 }
 
 #filter_container {
@@ -22,7 +23,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    height: 50px;
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -138,13 +138,13 @@
 /* question "header" */
 .subject_tag {
     background-color: rgb(79, 79, 192);
-    width: fit-content;
     color: #ffffff;
     padding: 5px 15px;
     margin-bottom: 10px;
     border-radius: 5px;
     font-weight: bold;
     display: inline-block;
+    width: fit-content;
 }
 
 .vote_container {
@@ -335,7 +335,7 @@ pre {
     }
 
     .question {
-        width: 100%;
+        width: 50%;
         margin: 20px 0;
         padding: 10px;
     }
@@ -455,7 +455,7 @@ pre {
     }
 
     .question {
-        width: 90vw;
+        width: 50%;
         margin: 20px 0;
         padding: 10px;
     }

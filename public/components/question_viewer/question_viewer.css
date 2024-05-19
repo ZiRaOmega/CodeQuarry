@@ -115,6 +115,48 @@
   background-color: rgb(245, 245, 245);
   border: 2px solid #e0e0e0;
 }
+.vote-burger-menu {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(234, 234, 234);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.vote-burger-menu .bar {
+  width: 20px;
+  height: 2px;
+  background-color: black;
+  margin: 3px 0;
+  transition: all 0.3s ease;
+}
+
+.vote-options {
+ /*  display: none; */
+  position: absolute;
+  top: 40px;
+  right: 10px;
+  background-color: white;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  z-index: 1000;
+}
+
+.vote-options .option {
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.vote-options .option:hover {
+  background-color: rgb(245, 245, 245);
+}
 
 #response_content {
   width: 90%;
@@ -423,5 +465,203 @@
     width: 100px;
     height: 40px;
     font-size: 14px;
+  }
+}
+/* Media Queries for Tablets */
+@media (max-width: 850px) {
+  #menu {
+    display: none;
+  }
+  
+  .leftpart {
+    flex-basis: 100%;
+    justify-content: center;
+    padding-left: 0;
+  }
+
+  .medal {
+    display: none;
+  }
+
+  .burger-menu {
+    display: flex;
+  }
+
+  .question-viewer__question__title {
+    font-size: 30px;
+    margin-bottom: 20px;
+  }
+
+  .question-viewer__question__description {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .question-viewer__response-input {
+    width: 100%;
+    height: auto;
+    padding: 15px;
+    margin-bottom: 25px;
+  }
+
+  #response_description,
+  #response_content {
+    width: 100%;
+    padding: 15px;
+    margin-top: 15px;
+  }
+
+  #response_submit {
+    width: 100%;
+    padding: 15px;
+    font-size: 15px;
+  }
+
+  .YesOrNo {
+    width: 80%;
+    height: auto;
+    padding: 25px;
+  }
+
+  .areYouSureText {
+    font-size: 15px;
+    width: 100%;
+  }
+
+  .YesNoContainer {
+    width: 100%;
+  }
+
+  #Yes,
+  #No {
+    width: 120px;
+    height: 45px;
+    font-size: 15px;
+  }
+  .question-viewer__answers {
+    width: 80%;
+    padding: 5px;
+  }
+}
+
+/* Media Queries for Phones */
+@media (max-width: 600px) {
+  .question-viewer__answers {
+    width: 80%;
+    padding: 5px;
+  }
+
+  .question-viewer__answers__answer {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .question-viewer__answers__answer__description {
+    width: 100%;
+    font-size: 15px;
+  }
+
+  .question-viewer__question {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .question-viewer__question__title {
+    font-size: 25px;
+    margin-bottom: 15px;
+  }
+
+  .question-viewer__question__description {
+    font-size: 15px;
+    margin-bottom: 15px;
+  }
+
+  .question-viewer__response-input {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+    margin-bottom: 20px;
+  }
+
+  #response_description,
+  #response_content {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+  }
+
+  #response_submit {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .YesOrNo {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .areYouSureText {
+    font-size: 14px;
+    width: 100%;
+  }
+
+  .YesNoContainer {
+    width: 100%;
+  }
+
+  #Yes,
+  #No {
+    width: 100px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .vote_container {
+    display: none;
+  }
+
+  .vote-burger-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    background-color: rgb(234, 234, 234);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .vote-burger-menu .bar {
+    width: 20px;
+    height: 2px;
+    background-color: black;
+    margin: 3px 0;
+    transition: all 0.3s ease;
+  }
+
+  .vote-options {
+    /* display: none; */
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 1000;
+  }
+
+  .vote-options .option {
+    padding: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .vote-options .option:hover {
+    background-color: rgb(245, 245, 245);
   }
 }
