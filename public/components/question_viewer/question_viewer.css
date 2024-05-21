@@ -92,6 +92,7 @@
   border-radius: 5px;
   background-color: rgb(255, 255, 255);
   animation: FadeIn 2s;
+  align-items: center;
 }
 
 .creator_and_date_container_answers {
@@ -143,7 +144,6 @@
   top: 40px;
   right: 10px;
   background-color: white;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   border-radius: 5px;
   z-index: 1000;
 }
@@ -373,6 +373,22 @@
   align-items: center;
 }
 
+.modify_button{
+  border: none;
+  width: fit-content;
+  max-height: 40px;
+  padding: 0 20px;
+  border-radius: 50px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: 10px;
+}
+
+.vote_options{
+  display: flex;
+  justify-content: center;
+}
+
 .modify_container{
   display: flex;
   flex-direction: column;
@@ -502,17 +518,20 @@
     height: auto;
     padding: 15px;
     margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   #response_description,
   #response_content {
-    width: 100%;
+    width: 90vw;
     padding: 15px;
     margin-top: 15px;
   }
 
   #response_submit {
-    width: 100%;
+    width: 90vw;
     padding: 15px;
     font-size: 15px;
   }
