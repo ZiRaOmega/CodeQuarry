@@ -1,32 +1,47 @@
-version: '3.8'  # Docker Compose file version
+version: '3.8'
 
 services:
   app:
-    build: .  # Build the Docker image from the current directory
+    build: .
     ports:
-       - "80:80"   # Map port 80 on the host to port 80 in the container for HTTP
-       - "443:443" # Map port 443 on the host to port 443 in the container for HTTPS
-       - "587:587" # Map port 587 on the host to port 587 in the container
+      - "80:80"
+      - "443:443"
+      - "587:587"
     depends_on:
-      - db  # Depend on the 'db' service
+      - db
+      - certbot
     environment:
-      DB_HOST: db  # Set the DB_HOST environment variable to 'db'
-      DB_PORT: 5432  # Set the DB_PORT environment variable to 5432
-      DB_TYPE: postgres  # Set the DB_TYPE environment variable to 'postgres'
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_TYPE: postgres
+      DB_USER: codequarry
+      DB_PASSWORD: CQ1234
+      DB_NAME: codequarrydb
+      URL: codequarry.dev
     volumes:
-      - img_data:/root/public/img  # Mount the 'img_data' volume to the '/root/public/img' directory in the container
+      - img_data:/root/public/img
+      - certs:/etc/letsencrypt
 
   db:
-    image: postgres:13  # Use the 'postgres:13' Docker image
+    image: postgres:13
     ports:
-      - "5432:5432"  # Map port 5432 on the host to port 5432 in the container
+      - "5432:5432"
     environment:
-      POSTGRES_DB: codequarrydb  # Set the POSTGRES_DB environment variable to 'codequarrydb'
-      POSTGRES_USER: codequarry  # Set the POSTGRES_USER environment variable to 'codequarry'
-      POSTGRES_PASSWORD: CQ1234  # Set the POSTGRES_PASSWORD environment variable to 'CQ1234'
+      POSTGRES_DB: codequarrydb
+      POSTGRES_USER: codequarry
+      POSTGRES_PASSWORD: CQ1234
     volumes:
-      - postgres_data:/var/lib/postgresql/data  # Mount the 'postgres_data' volume to the '/var/lib/postgresql/data' directory in the container
+      - postgres_data:/var/lib/postgresql/data
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certs:/etc/letsencrypt
+      - certbot_data:/var/lib/letsencrypt
+    entrypoint: ["sh", "-c", "trap 'exit 0' TERM; while :; do certbot certonly --standalone -d codequarry.dev --email maxime.diet76@gmail.com --agree-tos --non-interactive --keep; cp -r /etc/letsencrypt/live/codequarry.dev /etc/letsencrypt/live/cert; sleep 12h & wait $${!}; done"]
 
 volumes:
-  postgres_data:  # Create a volume named 'postgres_data'
-  img_data:  # Create a volume named 'img_data'
+  postgres_data:
+  img_data:
+  certs:
+  certbot_data:
