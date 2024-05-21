@@ -39,7 +39,7 @@
     width: 800px;
     border: 1px solid #ccc;
     border-top: none;
-    z-index: 1;
+    z-index: 20000000000000000000000000000000000000;
     background: white;
     display: none; /* Hide dropdown by default */
 }
