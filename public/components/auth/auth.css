@@ -39,9 +39,10 @@
     display: flex;
     gap: 30px;
 }
-#login-button, #login, #loginRedirect{
+#login-button, #login, #loginRedirect, #forgotPasswordRedirect{
     height: 40px;
-    width: 140px;
+    width: fit-content;
+    padding: 0 20px;
     border-radius: 20px 20px 20px 0;
     background-color: var(--white);
     border: solid 3px var(--darkblue);
@@ -49,10 +50,17 @@
     font-weight: 600;
     transition: 0.2s all ease-out;
 }
-#login-button:hover, #login:hover, #loginRedirect:hover {
+#login-button:hover, #login:hover, #loginRedirect:hover, #forgotPasswordRedirect:hover {
     cursor: pointer;
     transform: scale(1.05);
 }
+
+#forgotPasswordForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #register-button, #registerRedirect, #registerSubmit{
     height: 40px;
     width: 140px;
