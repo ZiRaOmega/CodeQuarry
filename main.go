@@ -124,8 +124,6 @@ func main() {
 	fmt.Println("Server is running on https://" + URL + ":443/")
 	err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
 
-	fmt.Println("Server is running on https://" + URL + ":443/")
-	err = http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/"+URL+"/fullchain.pem", "/etc/letsencrypt/live/"+URL+"/privkey.pem", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServeTLS: ", err)
