@@ -1,0 +1,6 @@
+ id_student | lastname | firstname | username  |          email           |                           password                           |        avatar        | birth_date | bio | website | github |  xp  | rang_rank_ | school_year | creation_date | update_date | deleting_date 
+------------+----------+-----------+-----------+--------------------------+--------------------------------------------------------------+----------------------+------------+-----+---------+--------+------+------------+-------------+---------------+-------------+---------------
+          1 | max      | max       | max       | maxime.diet76@gmail.com  | $2a$10$/ZRmNkKuFsbN4vrmo8rZvurpDQ74kquewC8hTiB42wjDW591oE8B6 | /img/defaultUser.png |            |     |         |        | 1100 |          0 |             |               |             | 
+          2 | Dixon    | Ersen     | erseeeeen | evan.duvivier@icloud.com | $2a$10$/ZUxD908NMHYLJfKwGX0quDZcZuf4c5DpHKWx2Ahesy0l5zHHLVZW | /img/fb6a1.jpg       | 2003-10-05 |     |         |        |  100 |          0 | 0001-01-01  |               |             | 
+(2 rows)
+
