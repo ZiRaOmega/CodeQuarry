@@ -42,7 +42,8 @@ document
 
         let rslt_object = {
           Prefix: "",
-          Suffix: ""
+          Suffix: "",
+          question: item
         };
 
         var prefix = "";
@@ -67,6 +68,9 @@ document
         } else {
           return;
         }
+
+
+
         rslt_object.Prefix = prefix;
         rslt_object.Suffix = suffix;
         rslt_array.push(rslt_object);
@@ -102,7 +106,10 @@ document
         //TODO : resolve the issue of the highlight
         //checkHighlight();
       });
-      console.log(rslt_array);
+
+      
+
+      //console.log(rslt_array);
 
       //results = sort_results(results, input);
       // sort the map based on the suffix selon les fonctions sort_results et levenshtein
@@ -111,8 +118,8 @@ document
       //results_html.innerHTML = sorted_rslt_map;
 
       var sorted_array = sort_results(rslt_array, input);
-      console.log(sorted_array);
-      create_results(sorted_array);
+      //console.log(sorted_array);
+      create_results(sorted_array , input);
     } else {
       results_html.style.display = "none"; // Hide dropdown if input is empty
     }
@@ -273,7 +280,10 @@ function levenshtein(a, b) {
   return dp[a.length][b.length];
 }
 
-function create_results(array) {
+function create_results(array, input) {
+  // use the slice function to display the results
+
+
   var results_html = document.getElementById("search_results");
   array.forEach(function (item) {
     var rslt_element = document.createElement("div");
@@ -281,28 +291,33 @@ function create_results(array) {
     
     var preview = document.createElement("div");
     preview.className = "result_element_preview";
+
+    var det_title = slice_rslt(item[0].question.title, input);
+    var det_desc = slice_rslt(item[0].question.description, input);
     
     var details = document.createElement("div");
     details.className = "result_element_details";
-    details.innerHTML = `<div class="subject_tag">${item[0].Suffix}</div>
-    <h3 class="question_title">${item[0].Suffix}</h3>
-    <p class="question_description">${item[0].Suffix}</p>
+    details.innerHTML = `<div class="subject_tag">${item[0].question.subject_title}</div>
+    <h3 class="question_title">${det_title}</h3>
+    <p class="question_description">${det_desc}</p>
     <pre><code>${""}</code></pre>
     `;
-    details.querySelector("code").textContent=item[0].Suffix
+    details.querySelector("code").textContent=item[0].question.content
+
+    var prev_suffix = slice_rslt(item[0].Suffix, input);
     
-    preview.innerHTML = `<span class="result_prefix">${item[0].Prefix}</span><span class="result_text">${item[0].Suffix}</span>`;
+    preview.innerHTML = `<span class="result_prefix">${item[0].Prefix}</span><span class="result_text">${prev_suffix}</span>`;
     
     rslt_element.appendChild(preview);
     rslt_element.appendChild(details);
     
-    
     rslt_element.onclick = function () {
       // Click on item to redirect to question_viewer page
-      window.location.href = `/question_viewer?question_id=${item[0].id}`;
+      window.location.href = `/question_viewer?question_id=${item[0].question.id}`;
     };
     results_html.appendChild(rslt_element);
   });
+  checkHighlight();
 }
 
 
