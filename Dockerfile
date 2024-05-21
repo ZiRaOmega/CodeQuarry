@@ -22,7 +22,8 @@ COPY --from=builder /app/public ./public
 COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/.env .env
 COPY --from=builder /app/cert ./cert
-
+COPY --from=builder /app/renew_certs.sh renew_certs.sh
+RUN chmod +x renew_certs.sh
 
 
 EXPOSE 80 443 587
