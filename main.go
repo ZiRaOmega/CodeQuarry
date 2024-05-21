@@ -47,8 +47,6 @@ func main() {
 	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour)
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
 
-	http.Handle("/.well-known/acme-challenge/", http.StripPrefix("/.well-known/acme-challenge/", http.FileServer(http.Dir("/var/www/letsencrypt/.well-known/acme-challenge/"))))
-
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 	http.HandleFunc("/", app.AddSecurityHeaders(app.SendComponent("auth", db)))
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
