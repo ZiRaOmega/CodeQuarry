@@ -9,7 +9,6 @@ services:
       - "587:587" # Map port 587 on the host to port 587 in the container
     depends_on:
       - db  # Depend on the 'db' service
-      - certbot  # Depend on the 'certbot' service
     environment:
       DB_HOST: db  # Set the DB_HOST environment variable to 'db'
       DB_PORT: 5432  # Set the DB_PORT environment variable to 5432
@@ -17,12 +16,10 @@ services:
       DB_USER: codequarry  # Set the DB_USER environment variable to 'codequarry'
       DB_PASSWORD: CQ1234  # Set the DB_PASSWORD environment variable to 'CQ1234'
       DB_NAME: codequarrydb  # Set the DB_NAME environment variable to 'codequarrydb'
-      URL: yourdomain.com  # Set the URL environment variable to your domain
+      URL: codequarry.dev  # Set the URL environment variable to your domain
     volumes:
       - img_data:/root/public/img  # Mount the 'img_data' volume to the '/root/public/img' directory in the container
       - certs:/etc/letsencrypt  # Mount the 'certs' volume for shared certificates
-      - ./letsencrypt-site:/var/www/letsencrypt  # Mount the 'letsencrypt-site' directory for challenges
-      - ./cert_scripts:/cert_scripts  # Mount the 'scripts' directory for custom scripts
 
   db:
     image: postgres:13  # Use the 'postgres:13' Docker image
@@ -40,9 +37,7 @@ services:
     volumes:
       - certs:/etc/letsencrypt
       - certbot_data:/var/lib/letsencrypt
-      - ./letsencrypt-site:/var/www/letsencrypt
-      - ./cert_scripts:/cert_scripts
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/letsencrypt --post-hook \"./cert_scripts/restart_app.sh\"; sleep 12h; done'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do sleep 6h & wait ${!}; done'"
 
 volumes:
   postgres_data:  # Create a volume named 'postgres_data'
