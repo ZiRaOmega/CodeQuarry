@@ -47,6 +47,8 @@ func main() {
 	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour)
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
 
+	http.Handle("/.well-known/acme-challenge/", http.StripPrefix("/.well-known/acme-challenge/", http.FileServer(http.Dir("/var/www/letsencrypt/.well-known/acme-challenge/"))))
+
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 	http.HandleFunc("/", app.AddSecurityHeaders(app.SendComponent("auth", db)))
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
@@ -111,21 +113,27 @@ func main() {
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 
-	fmt.Println("Server is running on http://app:8080/")
-	err = http.ListenAndServe(":8080", nil)
+	// Start HTTP server for redirection and Let's Encrypt challenge
+	go startHTTPServer()
 
+	fmt.Println("Server is running on https://" + URL + ":443/")
+	err = http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/"+URL+"/fullchain.pem", "/etc/letsencrypt/live/"+URL+"/privkey.pem", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
-		log.Fatal("[DEBUG] ListenAndServe: ", err)
+		log.Fatal("[DEBUG] ListenAndServeTLS: ", err)
 	}
 }
 
 func redirectHTTPToHTTPS(w http.ResponseWriter, r *http.Request) {
+	// Note: Use http.StatusMovedPermanently for permanent redirects
 	http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusTemporaryRedirect)
 }
 
 func startHTTPServer() {
+	// Create a new ServeMux
 	mux := http.NewServeMux()
+	// Register the redirect function specifically
 	mux.HandleFunc("/", redirectHTTPToHTTPS)
+	// Listen on HTTP port 80 with the new ServeMux
 	log.Fatal(http.ListenAndServe(":80", mux))
 }
