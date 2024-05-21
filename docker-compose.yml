@@ -9,7 +9,8 @@ services:
       - "587:587"
     depends_on:
       - db
-    environment:
+      - certbot
+   environment:
       DB_HOST: db
       DB_PORT: 5432
       DB_TYPE: postgres
@@ -37,8 +38,7 @@ services:
     volumes:
       - certs:/etc/letsencrypt
       - certbot_data:/var/lib/letsencrypt
-    entrypoint: ["/bin/sh", "-c", "trap 'exit 0' TERM; while :; do sleep 6h & wait $$!; done"]
-
+    entrypoint: ["sh", "-c", "trap 'exit 0' TERM; while :; do certbot certonly --standalone -d codequarry.dev --email maxime.diet76@gmail.com --agree-tos --non-interactive --keep; cp -r /etc/letsencrypt/live/codequarry.dev /etc/letsencrypt/live/cert; sleep 12h & wait $${!}; done"]
 volumes:
   postgres_data:
   img_data:
