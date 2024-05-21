@@ -33,11 +33,13 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   certbot:
-    image: certbot/certbot
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - certs:/etc/letsencrypt
       - certbot_data:/var/lib/letsencrypt
-    entrypoint: ["/bin/sh", "-c", "./entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c", "/entrypoint.sh"]
 
 volumes:
   postgres_data:
