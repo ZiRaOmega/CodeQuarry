@@ -20,14 +20,21 @@ func obfuscateJavaScript(inputPath, outputPath string) {
 		log.Fatalf("Obfuscation failed: %s", err)
 	}
 }
-
+func renewCertificates() {
+	//Exec the bash file renew_certs.sh
+	cmd := exec.Command("bash", "renew_certs.sh")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("Renewal failed: %s", err)
+	}
+}
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
 		return
 	}
-
+	defer renewCertificates()
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
@@ -113,6 +120,9 @@ func main() {
 
 	// Start HTTP server for redirection and Let's Encrypt challenge
 	go startHTTPServer()
+
+	fmt.Println("Server is running on https://" + URL + ":443/")
+	err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
 
 	fmt.Println("Server is running on https://" + URL + ":443/")
 	err = http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/"+URL+"/fullchain.pem", "/etc/letsencrypt/live/"+URL+"/privkey.pem", nil)
