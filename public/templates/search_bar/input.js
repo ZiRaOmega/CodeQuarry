@@ -1,261 +1,164 @@
-let potential_results = [];
+let fetch_results = [];
 
 document.addEventListener("DOMContentLoaded", function () {
   // Fetch all questions
-
   (async () => {
     try {
       const response = await fetch(`/api/questions?subjectId=all`);
       const questions = await response.json();
-      //console.log(questions);
-      potential_results = questions;
+      fetch_results = questions;
     } catch (error) {
-      console.error(
-        "There was a problem with your fetch operation:",
-        error
-      );
+      console.error("There was a problem with your fetch operation:", error);
     }
   })();
 });
 
-document
-  .getElementById("search_bar_input")
-  .addEventListener("input", function () {
-    var input = this.value.toLowerCase();
-    var results_html = document.getElementById("search_results");
-    results_html.innerHTML = "";
+document.getElementById("search_bar_input").addEventListener("input", function () {
+  var input = this.value.toLowerCase();
+  var results_html = document.getElementById("search_results");
+  results_html.innerHTML = "";
 
-    // map with the results prefix and suffix
-    var rslt_array = [];
+  if (input) {
+    results_html.style.display = "block"; // Show dropdown
 
-    
+    let rslt_array = [];
+    let rslt_array_word = [];
 
-    if (input) {
-      results_html.style.display = "block"; // Show dropdown
-      potential_results.forEach(function (item) {
+    let potential_results = [...fetch_results];
 
-        /* var prefix = document.createElement("span");
-        prefix.className = "result_prefix"; */
+    // Process full input matches first
+    potential_results.forEach(function (item) {
+      let match = false;
+      let rslt_object = {
+        Prefix: "",
+        Suffix: "",
+        question: item
+      };
 
-        /* var result_text = document.createElement("span");
-        result_text.className = "result_text"; */
+      if (item.title.toLowerCase().includes(input)) {
+        rslt_object.Prefix = "Title: ";
+        rslt_object.Suffix = item.title;
+        match = true;
+      } else if (item.description.toLowerCase().includes(input)) {
+        rslt_object.Prefix = "Description: ";
+        rslt_object.Suffix = item.description;
+        match = true;
+      } else if (item.content.toLowerCase().includes(input)) {
+        rslt_object.Prefix = "Content: ";
+        rslt_object.Suffix = item.content;
+        match = true;
+      } else if (item.subject_title.toLowerCase().includes(input)) {
+        rslt_object.Prefix = "Subject: ";
+        rslt_object.Suffix = item.subject_title;
+        match = true;
+      }
 
+      if (match) {
+        rslt_array.push(rslt_object);
+      }
+    });
+
+    rslt_array = removeDuplicates(rslt_array);
+    let sorted_array = sort_results(rslt_array, input);
+    /* create_results(sorted_array, input);
+ */
+    // Process individual word matches next
+    let cut_input = input.split(" ");
+    cut_input.forEach(function (word) {
+      fetch_results.forEach(function (item) {
+        let match = false;
         let rslt_object = {
           Prefix: "",
           Suffix: "",
           question: item
         };
 
-        var prefix = "";
-        var suffix = "";
-
-        if (item.title.toLowerCase().indexOf(input) > -1) {
-          prefix = "Title: ";
-          suffix = item.title;
-          //result_text.innerHTML = slice_rslt(item.title, input);
-        } else if (item.description.toLowerCase().indexOf(input) > -1) {
-          prefix = "Description: ";
-          suffix = item.description;
-          //result_text.innerHTML = slice_rslt(item.description, input);
-        } else if (item.content.toLowerCase().indexOf(input) > -1) {
-          prefix = "Content: ";
-          suffix = item.content;
-          //result_text.innerHTML = slice_rslt(item.content, input);
-        } else if (item.subject_title.toLowerCase().indexOf(input) > -1) {
-          prefix = "Subject: ";
-          suffix = item.subject_title;
-          //result_text.innerHTML = slice_rslt(item.subject_title, input);
-        } else {
-          return;
+        if (item.title.toLowerCase().includes(word)) {
+          rslt_object.Prefix = "Title: ";
+          rslt_object.Suffix = item.title;
+          match = true;
+        } else if (item.description.toLowerCase().includes(word)) {
+          rslt_object.Prefix = "Description: ";
+          rslt_object.Suffix = item.description;
+          match = true;
+        } else if (item.content.toLowerCase().includes(word)) {
+          rslt_object.Prefix = "Content: ";
+          rslt_object.Suffix = item.content;
+          match = true;
+        } else if (item.subject_title.toLowerCase().includes(word)) {
+          rslt_object.Prefix = "Subject: ";
+          rslt_object.Suffix = item.subject_title;
+          match = true;
         }
 
-
-
-        rslt_object.Prefix = prefix;
-        rslt_object.Suffix = suffix;
-        rslt_array.push(rslt_object);
-
-        /* var rslt_element = document.createElement("div");
-        rslt_element.className = "result_element";
-        
-        var preview = document.createElement("div");
-        preview.className = "result_element_preview";
-        
-        var details = document.createElement("div");
-        details.className = "result_element_details";
-        details.innerHTML = `<div class="subject_tag">${item.subject_title}</div>
-        <h3 class="question_title">${item.title}</h3>
-        <p class="question_description">${item.description}</p>
-        <pre><code>${""}</code></pre>
-        `;
-        details.querySelector("code").textContent=item.content
-        
-        preview.appendChild(prefix);
-        preview.appendChild(result_text);
-        
-        rslt_element.appendChild(preview);
-        rslt_element.appendChild(details);
-        
-        
-        rslt_element.onclick = function () {
-          // Click on item to redirect to question_viewer page
-          window.location.href = `/question_viewer?question_id=${item.id}`;
-        }; */
-
-        //results_html.appendChild(rslt_element);
-        //TODO : resolve the issue of the highlight
-        //checkHighlight();
+        if (match) {
+          rslt_array_word.push(rslt_object);
+        }
       });
+    });
 
-      
+    rslt_array_word = removeDuplicates(rslt_array_word);
+    let sorted_array_word = sort_results(rslt_array_word, input);
 
-      //console.log(rslt_array);
+    // Combine arrays, ensuring no duplicates
+    let combined_results = [...sorted_array];
 
-      //results = sort_results(results, input);
-      // sort the map based on the suffix selon les fonctions sort_results et levenshtein
-      //var sorted_rslt_map = sort_results(rslt_map, input);
-      //console.log(sorted_rslt_map);
-      //results_html.innerHTML = sorted_rslt_map;
+    sorted_array_word.forEach(function (item) {
+      if (!combined_results.some(result => result.question.id === item.question.id)) {
+        combined_results.push(item);
+      }
+    });
 
-      var sorted_array = sort_results(rslt_array, input);
-      //console.log(sorted_array);
-      create_results(sorted_array , input);
-    } else {
-      results_html.style.display = "none"; // Hide dropdown if input is empty
+    create_results(combined_results, input);
+  } else {
+    results_html.style.display = "none"; // Hide dropdown if input is empty
+  }
+});
+
+function removeDuplicates(results) {
+  const uniqueResults = [];
+  const ids = new Set();
+
+  results.forEach(result => {
+    if (!ids.has(result.question.id)) {
+      ids.add(result.question.id);
+      uniqueResults.push(result);
     }
   });
 
+  return uniqueResults;
+}
 
 function slice_rslt(text, input) {
   var index = text.toLowerCase().indexOf(input);
-  // modify here if we want to change the length of the output
   var rslt_len = 80;
   var range = rslt_len - input.length;
   var start = index - (range / 2);
   var end = index + input.length + (range / 2);
 
-  // make sure that the start and end are within the text
-  // if the result is too short, we display all of it
-  // if the result is too long, the slice will always be 80 characters
   if (start < 0) {
     start = 0;
-    // move the end to the right if the start is less than 0 to keep the length of the output = 80
     end = rslt_len;
   }
   if (end > text.length) {
     end = text.length;
-    // move the start to the left if the end is more than the length of the text to keep the length of the output = 80
     start = end - rslt_len;
   }
   var sliced = text.slice(start, end);
-
-  // replace the input with highlighted input and make sure that the input is text only and will not be treated as html
-  var highlighted = sliced.replace(
-    new RegExp(input, "gi"),
-    (match) => `<span class="highlight">${match}</span>`
-  );
-
+  var highlighted = sliced.replace(new RegExp(input, "gi"), (match) => `<span class="highlight">${match}</span>`);
   return highlighted;
-
-}           
+}
 
 function sort_results(array, input) {
-  // sort the results () based on how close the match is to the input
-  // for example, if the input is "abc", the result "abcde" should be higher than "abde"
-  // So, we will sort the results based on the pourcentage of the match
-  // the higher the pourcentage, the higher the result
-  // we will use the levenstein distance to calculate the pourcentage
-  // let's begin : 
-
-  // first, we will calculate the distance between the input and the result
-  /* var distances = [];
-  results.forEach(function (result) {
-    var distance = levenshtein(input, result);
-    distances.push(distance);
+  array.sort((a, b) => {
+    let a_dist = levenshtein(input, a.Suffix.toLowerCase());
+    let b_dist = levenshtein(input, b.Suffix.toLowerCase());
+    return a_dist - b_dist;
   });
-
-  // second, we will calculate the pourcentage of the match
-  var pourcentage = [];
-  distances.forEach(function (distance) {
-    var p = 1 - distance / input.length;
-    pourcentage.push(p);
-  });
-
-  // third, we will sort the results based on the pourcentage
-  var sorted_results = [];
-  pourcentage.forEach(function (p, i) {
-    sorted_results.push([results[i], p]);
-  });
-  sorted_results.sort(function (a, b) {
-    return b[1] - a[1];
-  }); */
-
-  // same as above but with the suffix of each result
-  // so the output will be the array of the results sorted based on the pourcentage of the match
-
-  var distances = [];
-  array.forEach(function (result) {
-    var distance = levenshtein(input, result.Suffix);
-    distances.push(distance);
-  });
-
-  var pourcentage = [];
-  distances.forEach(function (distance) {
-    var p = 1 - distance / input.length;
-    pourcentage.push(p);
-  });
-
-  var sorted_results = [];
-  pourcentage.forEach(function (p, i) {
-    sorted_results.push([array[i], p]);
-  });
-  sorted_results.sort(function (a, b) {
-    return b[1] - a[1];
-  });
-
-  return sorted_results;
+  return array;
 }
-/* 
-function levenshtein(a, b) {
-  var tmp;
-  if (a.length === 0) {
-    return b.length;
-  }
-  if (b.length === 0) {
-    return a.length;
-  }
-  if (a.length > b.length) {
-    tmp = a;
-    a = b;
-    b = tmp;
-  }
-
-  var i, j, res, alen = a.length, blen = b.length, row = Array(alen);
-  for (i = 0; i <= alen; i++) {
-    row[i] = i;
-  }
-
-  for (i = 1; i <= blen; i++) {
-    res = i;
-    for (j = 1; j <= alen; j++) {
-      tmp = row[j - 1];
-      row[j - 1] = res;
-      res = b[i - 1] === a[j - 1] ? tmp : Math.min(tmp + 1, Math.min(res + 1, row[j] + 1));
-    }
-  }
-  return res;
-} */
 
 function levenshtein(a, b) {
-  // calculate the distance between two strings
-  // the distance is the number of changes needed to transform a to b
-  // the changes can be insertion, deletion, or substitution
-  // we will use the dynamic programming to calculate the distance
-  // we will use a 2D array to store the distances between the substrings of a and b
-  // the distance between a and b will be stored in the last cell of the array
-  // let's begin :
-
-  // first, we will create the 2D array and fill the first row and the first column
   var dp = [];
   for (var i = 0; i <= a.length; i++) {
     dp[i] = [];
@@ -265,7 +168,6 @@ function levenshtein(a, b) {
     dp[0][j] = j;
   }
 
-  // second, we will fill the array based on the distance between the substrings
   for (var i = 1; i <= a.length; i++) {
     for (var j = 1; j <= b.length; j++) {
       if (a[i - 1] === b[j - 1]) {
@@ -276,68 +178,41 @@ function levenshtein(a, b) {
     }
   }
 
-  // finally, we will return the distance between a and b
   return dp[a.length][b.length];
 }
 
 function create_results(array, input) {
-  // use the slice function to display the results
-
-
   var results_html = document.getElementById("search_results");
   array.forEach(function (item) {
     var rslt_element = document.createElement("div");
     rslt_element.className = "result_element";
-    
+
     var preview = document.createElement("div");
     preview.className = "result_element_preview";
 
-    var det_title = slice_rslt(item[0].question.title, input);
-    var det_desc = slice_rslt(item[0].question.description, input);
-    
+    var det_title = slice_rslt(item.question.title, input);
+    var det_desc = slice_rslt(item.question.description, input);
+
     var details = document.createElement("div");
     details.className = "result_element_details";
-    details.innerHTML = `<div class="subject_tag">${item[0].question.subject_title}</div>
-    <h3 class="question_title">${det_title}</h3>
-    <p class="question_description">${det_desc}</p>
-    <pre><code>${""}</code></pre>
+    details.innerHTML = `
+      <div class="subject_tag">${item.question.subject_title}</div>
+      <h3 class="question_title">${det_title}</h3>
+      <p class="question_description">${det_desc}</p>
+      <pre><code>${""}</code></pre>
     `;
-    details.querySelector("code").textContent=item[0].question.content
+    console.log(item.question.content)
+    details.querySelector("code").textContent = item.question.content
+    console.log(details.querySelector("code"))
+    var prev_suffix = slice_rslt(item.Suffix, input);
+    preview.innerHTML = `<span class="result_prefix">${item.Prefix}</span><span class="result_text">${prev_suffix}</span>`;
 
-    var prev_suffix = slice_rslt(item[0].Suffix, input);
-    
-    preview.innerHTML = `<span class="result_prefix">${item[0].Prefix}</span><span class="result_text">${prev_suffix}</span>`;
-    
     rslt_element.appendChild(preview);
     rslt_element.appendChild(details);
-    
+
     rslt_element.onclick = function () {
-      // Click on item to redirect to question_viewer page
-      window.location.href = `/question_viewer?question_id=${item[0].question.id}`;
+      window.location.href = `/question_viewer?question_id=${item.question.id}`;
     };
     results_html.appendChild(rslt_element);
   });
-  checkHighlight();
 }
-
-
-/* 
-// some of example to test the sort_result
-console.log("for the input abc");
-console.log(sort_results(["abcde", "abde", "abce", "abde"], "abc"));
-console.log("for the input abde");
-console.log(sort_results(["abcde", "abde", "abce", "abde"], "abde"));
-console.log("for the input ab");
-console.log(sort_results(["abcde", "abde", "abce", "abde"], "ab"));
-console.log("for the input lorem ipsum");
-console.log(sort_results(["lorem ipsum", "lorem", "ipsum", "lorem ipsum dolor"], "lorem ipsum"));
- */
-
-
-// !!! TODO : maybe replace include with some()
-// to make this example work : 
-//console.log("for the input lorem ipsum");
-//console.log(sort_results(["lorem ipsum", "lorem", "ipsum", "lorem ipsum dolor"], "lorem ipsum"));
-//output eventualy expected: [["lorem ipsum", 1], ["lorem ipsum dolor", 0.6666666666666666], ["lorem", 0.5], ["ipsum", 0.5]]
-// for now, we have:
-// output : [["lorem ipsum", 0.9090909090909091], ["lorem ipsum dolor", 0.36363636363636365],
