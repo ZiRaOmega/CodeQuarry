@@ -7,4 +7,4 @@ sudo docker-compose stop app
 sudo certbot certonly --standalone -d codequarry.dev --email maxime.diet76@gmail.com --agree-tos --non-interactive --keep; cp -r /etc/letsencrypt/archive/codequarry.dev /cert
 
 # Start the application again
-screen -dmS codequarry sh -c 'sudo docker-compose start app'
+screen -dmS codequarry sh -c 'sudo docker-compose build && sudo docker-compose up'
