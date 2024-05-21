@@ -37,7 +37,7 @@ services:
     volumes:
       - certs:/etc/letsencrypt
       - certbot_data:/var/lib/letsencrypt
-    entrypoint: ["/bin/sh", "-c", "trap 'exit 0' TERM; while :; do sleep 6h & wait $!; done"]
+    entrypoint: ["/bin/sh", "-c", "./entrypoint.sh"]
 
 volumes:
   postgres_data:
