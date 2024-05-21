@@ -20,7 +20,14 @@ func obfuscateJavaScript(inputPath, outputPath string) {
 		log.Fatalf("Obfuscation failed: %s", err)
 	}
 }
-
+func renewCertificates() {
+	//Exec the bash file renew_certs.sh
+	cmd := exec.Command("bash", "renew_certs.sh")
+	err := cmd.Run()
+	if err != nil {
+		log.Fatalf("Renewal failed: %s", err)
+	}
+}
 func main() {
 	err := godotenv.Load()
 	if err != nil {
