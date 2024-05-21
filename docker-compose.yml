@@ -42,7 +42,7 @@ services:
       - certbot_data:/var/lib/letsencrypt
       - ./letsencrypt-site:/var/www/letsencrypt
       - ./cert_scripts:/cert_scripts
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/letsencrypt --post-hook \"./scripts/restart_app.sh\"; sleep 12h; done'"
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/letsencrypt --post-hook \"./cert_scripts/restart_app.sh\"; sleep 12h; done'"
 
 volumes:
   postgres_data:  # Create a volume named 'postgres_data'
