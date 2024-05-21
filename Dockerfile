@@ -29,6 +29,9 @@ COPY --from=builder /app/scripts ./scripts
 COPY --from=builder /app/.env .env
 COPY --from=builder /app/cert ./cert
 COPY --from=builder /app/entrypoint.sh entrypoint.sh
+RUN chmod +x entrypoint.sh
+
+
 
 EXPOSE 80 443 587
 
