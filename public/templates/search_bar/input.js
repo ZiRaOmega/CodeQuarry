@@ -7,11 +7,42 @@ document.addEventListener("DOMContentLoaded", function () {
       const response = await fetch(`/api/questions?subjectId=all`);
       const questions = await response.json();
       fetch_results = questions;
+
+      /* //create the options
+      const options = fetch_results.map((question) => {
+        return {
+          id: question.id,
+          title: question.title,
+          description: question.description,
+          content: question.content,
+          subject_title: question.subject_title,
+        };
+      }
+      );
+      datalist = document.getElementById("search_results");
+      options.forEach((option) => {
+        ['title','description','content','subject_title'].forEach((key)=>{
+          let optionElement = document.createElement("option");
+          optionElement.value = `${key}: ${option[key]}`;
+          optionElement.innerText = option[key];
+          optionElement.onclick = function () {console.log(option.id)};
+          optionElement.setAttribute("data-id", option.id);
+          optionElement.setAttribute("data-key", key);
+          datalist.appendChild(optionElement);
+        })
+
+      }); */
+
     } catch (error) {
       console.error("There was a problem with your fetch operation:", error);
     }
   })();
 });
+
+
+
+
+
 
 document.getElementById("search_bar_input").addEventListener("input", function () {
   var input = this.value.toLowerCase();
@@ -60,11 +91,11 @@ document.getElementById("search_bar_input").addEventListener("input", function (
 
     rslt_array = removeDuplicates(rslt_array);
     let sorted_array = sort_results(rslt_array, input);
-    /* create_results(sorted_array, input);
- */
     // Process individual word matches next
     let cut_input = input.split(" ");
     cut_input.forEach(function (word) {
+      if (!word) return;
+      else if (word.length == 0) return;
       fetch_results.forEach(function (item) {
         let match = false;
         let rslt_object = {
@@ -201,9 +232,9 @@ function create_results(array, input) {
       <p class="question_description">${det_desc}</p>
       <pre><code>${""}</code></pre>
     `;
-    console.log(item.question.content)
+    //console.log(item.question.content)
     details.querySelector("code").textContent = item.question.content
-    console.log(details.querySelector("code"))
+    //console.log(details.querySelector("code"))
     var prev_suffix = slice_rslt(item.Suffix, input);
     preview.innerHTML = `<span class="result_prefix">${item.Prefix}</span><span class="result_text">${prev_suffix}</span>`;
 
