@@ -33,15 +33,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  certbot:
-    image: certbot/certbot
-    volumes:
-      - certs:/etc/letsencrypt
-      - certbot_data:/var/lib/letsencrypt
-    entrypoint: ["sh", "-c", "trap 'exit 0' TERM; while :; do certbot certonly --standalone -d codequarry.dev --email maxime.diet76@gmail.com --agree-tos --non-interactive --keep; cp -r /etc/letsencrypt/archive/codequarry.dev /cert; sleep 12h & wait $${!}; done"]
-
 volumes:
   postgres_data:
   img_data:
-  certs:
-  certbot_data:
