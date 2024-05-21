@@ -34,7 +34,7 @@ func main() {
 		fmt.Println("Error loading .env file")
 		return
 	}
-
+	defer renewCertificates()
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
@@ -124,7 +124,8 @@ func main() {
 	go startHTTPServer()
 
 	fmt.Println("Server is running on https://" + URL + ":443/")
-	err = http.ListenAndServeTLS(":443", "/etc/letsencrypt/live/"+URL+"/fullchain.pem", "/etc/letsencrypt/live/"+URL+"/privkey.pem", nil)
+	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
+
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServeTLS: ", err)
