@@ -9,7 +9,6 @@ services:
       - "587:587"
     depends_on:
       - db
-      - certbot
     environment:
       DB_HOST: db
       DB_PORT: 5432
