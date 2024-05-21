@@ -41,7 +41,7 @@
     border-top: none;
     z-index: 20000000000000000000000000000000000000;
     background: white;
-    display: none; /* Hide dropdown by default */
+    display: none;
 }
 
 .dropdown div {
