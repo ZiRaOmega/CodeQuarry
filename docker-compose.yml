@@ -19,7 +19,6 @@ services:
       URL: codequarry.dev
     volumes:
       - img_data:/root/public/img
-      - certs:/etc/letsencrypt
 
   db:
     image: postgres:13
