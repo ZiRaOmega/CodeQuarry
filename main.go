@@ -20,21 +20,14 @@ func obfuscateJavaScript(inputPath, outputPath string) {
 		log.Fatalf("Obfuscation failed: %s", err)
 	}
 }
-func renewCertificates() {
-	//Exec the bash file renew_certs.sh
-	cmd := exec.Command("bash", "renew_certs.sh")
-	err := cmd.Run()
-	if err != nil {
-		log.Fatalf("Renewal failed: %s", err)
-	}
-}
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
 		return
 	}
-	defer renewCertificates()
+
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
@@ -118,28 +111,21 @@ func main() {
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 
-	// Start HTTP server for redirection and Let's Encrypt challenge
-	go startHTTPServer()
-
-	fmt.Println("Server is running on https://" + URL + ":443/")
-	err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
+	fmt.Println("Server is running on http://app:8080/")
+	err = http.ListenAndServe(":8080", nil)
 
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
-		log.Fatal("[DEBUG] ListenAndServeTLS: ", err)
+		log.Fatal("[DEBUG] ListenAndServe: ", err)
 	}
 }
 
 func redirectHTTPToHTTPS(w http.ResponseWriter, r *http.Request) {
-	// Note: Use http.StatusMovedPermanently for permanent redirects
 	http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusTemporaryRedirect)
 }
 
 func startHTTPServer() {
-	// Create a new ServeMux
 	mux := http.NewServeMux()
-	// Register the redirect function specifically
 	mux.HandleFunc("/", redirectHTTPToHTTPS)
-	// Listen on HTTP port 80 with the new ServeMux
 	log.Fatal(http.ListenAndServe(":80", mux))
 }

@@ -3,12 +3,11 @@ version: '3.8'
 services:
   app:
     build: .
-    ports:
-      - "80:80"
-      - "443:443"
-      - "587:587"
+    expose:
+      - "8080"
     depends_on:
       - db
+      - nginx
     environment:
       DB_HOST: db
       DB_PORT: 5432
@@ -30,6 +29,25 @@ services:
       POSTGRES_PASSWORD: CQ1234
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  nginx:
+    image: nginx:alpine
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/nginx:/etc/nginx/conf.d
+      - ./data/certbot/www:/var/www/certbot
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - app
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h; done'"
 
 volumes:
   postgres_data:
