@@ -484,7 +484,7 @@
   }
 }
 /* Media Queries for Tablets */
-@media (max-width: 850px) {
+@media (max-width: 900px) {
   #menu {
     display: none;
   }
