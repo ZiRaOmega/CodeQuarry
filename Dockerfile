@@ -8,12 +8,6 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -v -o main .
 
-# Example Dockerfile for your app service
-FROM certbot/certbot
-
-COPY --from=builder /app/entrypoint.sh entrypoint.sh
-RUN chmod +x entrypoint.sh
-
 FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 # Install Node.js and npm

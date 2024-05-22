@@ -19,6 +19,7 @@ services:
       URL: codequarry.dev
     volumes:
       - img_data:/root/public/img
+      - cert_data:/root/cert
 
   db:
     image: postgres:13
@@ -34,3 +35,4 @@ services:
 volumes:
   postgres_data:
   img_data:
+  cert_data:
