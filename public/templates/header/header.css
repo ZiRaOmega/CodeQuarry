@@ -8,7 +8,7 @@ header {
     color: black;
     padding: 1em;
     background: white;
-    z-index: 2;
+    z-index: 2000;
     text-align: center;
     display: flex;
     border-bottom: solid 1px #ECEFF1;
