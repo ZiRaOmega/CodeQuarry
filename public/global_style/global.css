@@ -40,3 +40,15 @@ body{
 *{
     font-family: 'Rubik';
 }
+
+@media (max-width: 900px) {
+    html{
+        overflow-x: hidden;
+    }
+}
+
+@media (max-width: 600px) {
+    html{
+        overflow-x: hidden;
+    }
+}
