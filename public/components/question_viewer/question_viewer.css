@@ -105,7 +105,7 @@
   width: 95%;
 }
 
-#response_description {
+#response_description, #question_title {
   display: flex;
   padding: 12px;
   width: 90%;
@@ -128,6 +128,12 @@
   background-color: rgb(234, 234, 234);
   border-radius: 50%;
   cursor: pointer;
+}
+
+.buttons_container{
+  display: flex;
+  margin-top: 20px;
+  gap: 20px;
 }
 
 .vote-burger-menu .bar {
@@ -158,7 +164,7 @@
   background-color: rgb(245, 245, 245);
 }
 
-#response_content {
+#response_content, #question_description, #question_content {
   width: 90%;
   height: 100px;
   padding: 12px;
@@ -337,30 +343,6 @@
   font-weight: bolder;
 }
 
-#question_title{
-  height: 40px;
-    width: 85vw;
-    margin-bottom: 10px;
-    padding: 0 10px;
-    background-color: var(--light-gray);
-    border-radius: 20px;
-    border: none;
-    resize: none;
-    outline: none;
-}
-
- #question_description, #question_content{
-  height: 200px;
-    width: 85vw;
-    outline: none;
-    margin-bottom: 10px;
-    padding: 0 10px;
-    background-color: var(--light-gray);
-    border-radius: 20px;
-    border : none;
-    resize: none;
- }
-
 .vote_response_container {
   position: absolute;
   right: -60px;
@@ -376,12 +358,25 @@
 .modify_button{
   border: none;
   width: fit-content;
-  max-height: 40px;
+  max-height: 35px;
   padding: 0 20px;
   border-radius: 50px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
   top: 10px;
+  margin: 0 10px;
+}
+
+.modify_button_response{
+  border: none;
+  width: fit-content;
+  height: 35px;
+  padding: 0 20px;
+  border-radius: 50px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: 10px;
+  margin: 0 10px;
 }
 
 .vote_options{
@@ -395,9 +390,29 @@
   align-items: center;
 }
 
-.modify_question, .cancel_button{
-  padding: 10px;
-  background-color: var(--light-gray);
+.cancel_button_response, .cancel_button{
+  height: 40px;
+    width: fit-content;
+    padding: 0 20px;
+    border-radius: 20px 20px 20px 0;
+    background-color: var(--white);
+    border: solid 3px var(--darkblue);
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: 0.2s all ease-out;
+}
+
+.modify_response, .modify_question{
+  height: 40px;
+    width: 140px;
+    border-radius: 20px 20px 0 20px;
+    border : none;
+    background-color: var(--darkblue);
+    border: solid 3px var(--darkblue);
+    color: var(--white);
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: 0.2s all ease-out;
 }
 
 @keyframes FadeIn {
@@ -449,7 +464,10 @@
   }
 
   #response_description,
-  #response_content {
+  #response_content,
+  #question_title,
+  #question_description,
+  #question_content {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
@@ -525,8 +543,7 @@
 
   #response_description,
   #response_content {
-    width: 90vw;
-    padding: 15px;
+    width: 90%;
     margin-top: 15px;
   }
 
@@ -561,12 +578,27 @@
     width: 80%;
     padding: 5px;
   }
+
+  .modify_response_container{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
 }
 
 /* Media Queries for Phones */
 @media (max-width: 600px) {
+
+  .question-viewer{
+    width: 90vw;
+  }
+
+
   .question-viewer__answers {
-    width: 80%;
+    width: 100%;
     padding: 5px;
   }
 
@@ -596,7 +628,7 @@
   }
 
   .question-viewer__response-input {
-    width: 100%;
+    width: 80%;
     height: auto;
     padding: 10px;
     margin-bottom: 20px;
@@ -604,7 +636,7 @@
 
   #response_description,
   #response_content {
-    width: 100%;
+    width: 90%;
     padding: 10px;
     margin-top: 10px;
   }
@@ -671,7 +703,7 @@
     background-color: white;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    z-index: 1000;
+    z-index: 500;
   }
 
   .vote-options .option {
@@ -682,5 +714,32 @@
 
   .vote-options .option:hover {
     background-color: rgb(245, 245, 245);
+  }
+
+  .creator_and_date_container_answers{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .vote_response_container{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    right: 0;
+  }
+
+  .modify_button_response{
+    margin-bottom: 20px;
+  }
+
+  .upvote_response_container, .downvote_response_container{
+    width: 50px;
+    height: 25px;
+  } 
+
+  .modify_response_container{
+    width: 95%;
   }
 }

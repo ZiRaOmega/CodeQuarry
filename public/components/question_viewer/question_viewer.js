@@ -214,6 +214,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
       };
       const addFavoriElement = document.createElement("div");
       addFavoriElement.classList.add("favori");
+      addFavoriElement.classList.add("option");
       addFavoriElement.setAttribute("data-question-id", question.id);
       addFavoriElement.textContent = "☆";
       fetch("/api/favoris")
@@ -475,6 +476,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
             console.log("ghjklmù");
             const modify_button = document.createElement("button");
             modify_button.innerText = "Modify";
+            modify_button.classList.add("modify_button_response");
             vote_responseContainer.appendChild(modify_button);
             modify_button.addEventListener("click", () => {
               if (document.querySelector(".modify_response_container")) {
@@ -514,16 +516,34 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               };
               const cancel_button = document.createElement("button");
               cancel_button.innerText = "X";
+              cancel_button.classList.add("cancel_button_response")
               cancel_button.onclick = () => {
                 modify_response_container.remove();
               };
-              modify_response_container.appendChild(cancel_button);
               modify_response_container.classList.add(
                 "modify_response_container"
               );
+
+              button_response_div = document.createElement("div");
+              button_response_div.style.display = 'flex';
+              button_response_div.style.marginTop = "20px"
+              button_response_div.style.gap = "20px"
+
+              response_description_comment = document.createElement("p");
+              response_description_comment.textContent = 'Description:';
+              response_description_comment.classList.add("question_description_label")
+
+              response_content_commment = document.createElement("p");
+              response_content_commment.textContent = 'Content:';
+              response_content_commment.classList.add("question_description_label")
+
+              modify_response_container.appendChild(response_description_comment);
               modify_response_container.appendChild(response_description_input);
+              modify_response_container.appendChild(response_content_commment);
               modify_response_container.appendChild(response_content_input);
-              modify_response_container.appendChild(modify_response);
+              modify_response_container.appendChild(button_response_div);
+              button_response_div.appendChild(cancel_button);
+              button_response_div.appendChild(modify_response);
               document
                 .querySelector(".question-viewer__answers__answer")
                 .appendChild(modify_response_container);
