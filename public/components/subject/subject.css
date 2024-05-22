@@ -5,21 +5,22 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    width: 90vw;
 }
 
 #return_filter_container {
     display: flex;
     flex-direction: row;
-    width: 800px;
-    flex-wrap: wrap;
+    width: 100%;
+    gap: 20px;
 }
 
 #filter_container {
     margin-top: 35px;
-    width: 650px;
+    flex-basis: 90%;
     height: auto;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
@@ -55,8 +56,8 @@
     font-size: 35px;
     font-weight: bolder;
     padding: 20px;
-    width: 50px;
-    height: 50px;
+    flex-basis: 10%;
+    height: 135px;
     background-color: var(--white);
     border-radius: 20px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -74,11 +75,9 @@
 #filter_questions {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
     padding: 20px;
-    width: 370px;
     height: 70px;
 }
 
@@ -108,7 +107,7 @@
 #questions_list {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 90vw;
     align-items: center;
     justify-content: center;
     padding: 0px;
@@ -122,7 +121,7 @@
     margin-top: 30px;
     margin-bottom: 30px;
     padding: 20px;
-    width: 760px;
+    width: 97.5%;
     height: auto;
     background-color: var(--white);
     border-radius: 20px;
@@ -281,15 +280,14 @@ pre {
 }
 
 /* Media Queries for Tablets */
-@media (max-width: 850px) {
+@media (max-width: 900px) {
     #return_filter_container {
-        flex-direction: column;
-        width: 100%;
+        flex-direction: row;
     }
 
     #filter_container {
         flex-direction: column;
-        width: 100%;
+        flex-basis: 90%;
         margin-left: 0;
         padding: 10px;
         margin-top: 20px;
@@ -307,15 +305,15 @@ pre {
     }
 
     #return_button {
-        width: 40px;
-        height: 40px;
+        flex-basis: 10%;
+        height: 85px;
         font-size: 25px;
         padding: 10px;
         margin-top: 20px;
     }
 
     #filter_questions {
-        flex-direction: column;
+        flex-direction: row;
         width: 100%;
         padding: 10px;
         height: auto;
@@ -335,9 +333,9 @@ pre {
     }
 
     .question {
-        width: 50%;
+        width: 95%;
         margin: 20px 0;
-        padding: 10px;
+        padding: 20px;
     }
 
     .subject_tag {
@@ -403,13 +401,12 @@ pre {
 /* Media Queries for Phones */
 @media (max-width: 600px) {
     #return_filter_container {
-        flex-direction: column;
-        margin-left: 10px;
+        flex-direction: row;
     }
 
     #filter_container {
         flex-direction: column;
-        width : 90vw;
+        flex-basis: 90%;
         margin-left: 0;
         padding: 10px;
         margin-top: 20px;
@@ -426,8 +423,8 @@ pre {
     }
 
     #return_button {
-        width: 40px;
-        height: 40px;
+        flex-basis: 10%;
+        height: 115px;
         font-size: 25px;
         padding: 10px;
         margin-top: 20px;
@@ -436,7 +433,7 @@ pre {
     #filter_questions {
         flex-direction: row;
         flex-wrap: wrap;
-        width : 90vw;
+        gap: 10px;
         padding: 10px;
         height: auto;
     }
@@ -455,9 +452,9 @@ pre {
     }
 
     .question {
-        width: 50%;
+        width: 90%;
         margin: 20px 0;
-        padding: 10px;
+        padding: 20px;
     }
 
     .subject_tag {
