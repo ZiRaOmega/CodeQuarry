@@ -1,5 +1,4 @@
 package main
-
 import (
 	"fmt"
 	"log"
@@ -7,90 +6,79 @@ import (
 	"os"
 	"os/exec"
 	"time"
-
 	"codequarry/app"
-
 	"github.com/joho/godotenv"
 )
-
 func obfuscateJavaScript(inputPath, outputPath string) {
+	// Ensure the path to the Python executable and the script is correct
 	cmd := exec.Command("npx", "javascript-obfuscator", inputPath, "-o", outputPath)
 	err := cmd.Run()
 	if err != nil {
 		log.Fatalf("Obfuscation failed: %s", err)
 	}
 }
-func renewCertificates() {
-	//Exec the bash file renew_certs.sh
-	cmd := exec.Command("bash", "renew_certs.sh")
-	err := cmd.Run()
-	if err != nil {
-		log.Fatalf("Renewal failed: %s", err)
-	}
-}
 func main() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println("Error loading .env file")
+		// You may choose to handle the error differently based on your requirements
 		return
 	}
-	defer renewCertificates()
+	// Update the DSN for PostgreSQL
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	dbType := os.Getenv("DB_TYPE")
-	dsn := fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable", dbType, dbUser, dbPassword, dbHost, dbPort, dbName)
+	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
 	URL := os.Getenv("URL")
 	db := app.InitDB(dsn)
 	defer db.Close()
-
 	app.SetupDB(db)
 	inputPath := "public/components/auth/auth.js"
 	outputPath := "public/components/auth/auth_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
-
-	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour)
+	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour.Abs())
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
-
+	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 	http.HandleFunc("/", app.AddSecurityHeaders(app.SendComponent("auth", db)))
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
+	// http.HandleFunc("/scriphttps://pkg.go.dev/golang.org/x/tools/internal/typesinternal?utm_source%3Dgopls#IncompatibleAssignts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/components/auth/animation.js", app.AnimationsHandler)
+	// Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
+	//http.HandleFunc("/register", app.RegisterHandler(db))
 	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
 		RegisterRateLimiter.Handle(app.RegisterHandler(db)).ServeHTTP(w, r)
 	})
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		GlobalrateLimiter.Handle(app.LoginHandler(db)).ServeHTTP(w, r)
 	})
-
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/checked", app.CheckLogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
-
 	http.HandleFunc("/create_post", app.AddSecurityHeaders(app.CreatePostHandler))
 	http.HandleFunc("/scripts/posts.js", app.PostsHandler)
-
+	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
 	http.HandleFunc("/home", app.SendComponent("home", db))
+	// http.HandleFunc("/styles/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
+	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
 	http.HandleFunc("/templates/header/header.css", app.HeaderHandlerCss)
 	http.HandleFunc("/templates/footer/footer.css", app.FooterHandlerCss)
 	http.HandleFunc("/templates/header/header.js", app.HandleHeaderJS)
 	http.HandleFunc("/components/profile/profile.css", app.ProfileCSSHandler)
 	http.HandleFunc("/logout", app.LogoutHandler(db))
-
 	http.HandleFunc("/ws", app.WebsocketHandler(db))
 	http.HandleFunc("/scripts/websocket.js", app.WebsocketFileHandler)
-
 	http.HandleFunc("/votes", app.VoteHandler)
-
+	// ONE SUBJECT
 	http.HandleFunc("/subject/", app.SendComponent("subject", db))
 	http.HandleFunc("/components/subject/subject.css", app.SubjectCSSHandler)
 	http.HandleFunc("/scripts/subject.js", app.SubjectHandlerJS)
-
 	http.HandleFunc("/scripts/all_subjects.js", app.AllSubjectsHandlerJS)
 	http.HandleFunc("/templates/all_subjects/all_subjects.css", app.AllSubjectsHandlerCSS)
 	app.InsertMultipleSubjects(db)
@@ -109,6 +97,7 @@ func main() {
 	http.HandleFunc("/templates/search_bar/search_bar.css", app.SearchBarCSS)
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 	http.HandleFunc("/posts.css", app.PostCSSHandler)
+	//http.HandleFunc("/classement", app.ClassementHandler(db))
 	http.HandleFunc("/classement", app.SendComponent("classement", db))
 	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
 	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
@@ -117,24 +106,20 @@ func main() {
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
-
-	// Start HTTP server for redirection and Let's Encrypt challenge
-	go startHTTPServer()
-
+	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
-	err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
-
+	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
+	//err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
-		log.Fatal("[DEBUG] ListenAndServeTLS: ", err)
+		log.Fatal("[DEBUG] ListenAndServe: ", err)
 	}
 }
-
+// Redirects HTTP requests to HTTPS
 func redirectHTTPToHTTPS(w http.ResponseWriter, r *http.Request) {
 	// Note: Use http.StatusMovedPermanently for permanent redirects
 	http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusTemporaryRedirect)
 }
-
 func startHTTPServer() {
 	// Create a new ServeMux
 	mux := http.NewServeMux()
