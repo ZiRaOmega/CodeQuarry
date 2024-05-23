@@ -32,125 +32,125 @@ document.addEventListener("DOMContentLoaded", function () {
         })
 
       }); */
-
     } catch (error) {
       console.error("There was a problem with your fetch operation:", error);
     }
   })();
 });
 
+document
+  .getElementById("search_bar_input")
+  .addEventListener("input", function () {
+    var input = this.value.toLowerCase();
+    var results_html = document.getElementById("search_results");
+    results_html.innerHTML = "";
 
+    if (input) {
+      results_html.style.display = "block"; // Show dropdown
 
+      let rslt_array = [];
+      let rslt_array_word = [];
 
+      let potential_results = [...fetch_results];
 
-
-document.getElementById("search_bar_input").addEventListener("input", function () {
-  var input = this.value.toLowerCase();
-  var results_html = document.getElementById("search_results");
-  results_html.innerHTML = "";
-
-  if (input) {
-    results_html.style.display = "block"; // Show dropdown
-
-    let rslt_array = [];
-    let rslt_array_word = [];
-
-    let potential_results = [...fetch_results];
-
-    // Process full input matches first
-    potential_results.forEach(function (item) {
-      let match = false;
-      let rslt_object = {
-        Prefix: "",
-        Suffix: "",
-        question: item
-      };
-
-      if (item.title.toLowerCase().includes(input)) {
-        rslt_object.Prefix = "Title: ";
-        rslt_object.Suffix = item.title;
-        match = true;
-      } else if (item.description.toLowerCase().includes(input)) {
-        rslt_object.Prefix = "Description: ";
-        rslt_object.Suffix = item.description;
-        match = true;
-      } else if (item.content.toLowerCase().includes(input)) {
-        rslt_object.Prefix = "Content: ";
-        rslt_object.Suffix = item.content;
-        match = true;
-      } else if (item.subject_title.toLowerCase().includes(input)) {
-        rslt_object.Prefix = "Subject: ";
-        rslt_object.Suffix = item.subject_title;
-        match = true;
-      }
-
-      if (match) {
-        rslt_array.push(rslt_object);
-      }
-    });
-
-    rslt_array = removeDuplicates(rslt_array);
-    let sorted_array = sort_results(rslt_array, input);
-    // Process individual word matches next
-    let cut_input = input.split(" ");
-    cut_input.forEach(function (word) {
-      if (!word) return;
-      else if (word.length == 0) return;
-      fetch_results.forEach(function (item) {
+      // Process full input matches first
+      potential_results.forEach(function (item) {
         let match = false;
         let rslt_object = {
           Prefix: "",
           Suffix: "",
-          question: item
+          question: item,
         };
 
-        if (item.title.toLowerCase().includes(word)) {
+        if (item.title.toLowerCase().includes(input)) {
           rslt_object.Prefix = "Title: ";
           rslt_object.Suffix = item.title;
           match = true;
-        } else if (item.description.toLowerCase().includes(word)) {
+        } else if (item.description.toLowerCase().includes(input)) {
           rslt_object.Prefix = "Description: ";
           rslt_object.Suffix = item.description;
           match = true;
-        } else if (item.content.toLowerCase().includes(word)) {
+        } else if (item.content.toLowerCase().includes(input)) {
           rslt_object.Prefix = "Content: ";
           rslt_object.Suffix = item.content;
           match = true;
-        } else if (item.subject_title.toLowerCase().includes(word)) {
+        } else if (item.subject_title.toLowerCase().includes(input)) {
           rslt_object.Prefix = "Subject: ";
           rslt_object.Suffix = item.subject_title;
           match = true;
         }
 
         if (match) {
-          rslt_array_word.push(rslt_object);
+          rslt_array.push(rslt_object);
         }
       });
-    });
 
-    rslt_array_word = removeDuplicates(rslt_array_word);
-    let sorted_array_word = sort_results(rslt_array_word, input);
+      rslt_array = removeDuplicates(rslt_array);
+      let sorted_array = sort_results(rslt_array, input);
+      // Process individual word matches next
+      let cut_input = input.split(" ");
+      cut_input.forEach(function (word) {
+        if (!word) return;
+        else if (word.length == 0) return;
+        fetch_results.forEach(function (item) {
+          let match = false;
+          let rslt_object = {
+            Prefix: "",
+            Suffix: "",
+            question: item,
+          };
 
-    // Combine arrays, ensuring no duplicates
-    let combined_results = [...sorted_array];
+          if (item.title.toLowerCase().includes(word)) {
+            rslt_object.Prefix = "Title: ";
+            rslt_object.Suffix = item.title;
+            match = true;
+          } else if (item.description.toLowerCase().includes(word)) {
+            rslt_object.Prefix = "Description: ";
+            rslt_object.Suffix = item.description;
+            match = true;
+          } else if (item.content.toLowerCase().includes(word)) {
+            rslt_object.Prefix = "Content: ";
+            rslt_object.Suffix = item.content;
+            match = true;
+          } else if (item.subject_title.toLowerCase().includes(word)) {
+            rslt_object.Prefix = "Subject: ";
+            rslt_object.Suffix = item.subject_title;
+            match = true;
+          }
 
-    sorted_array_word.forEach(function (item) {
-      if (!combined_results.some(result => result.question.id === item.question.id)) {
-        combined_results.push(item);
-      }
-    });
+          if (match) {
+            rslt_array_word.push(rslt_object);
+          }
+        });
+      });
 
-    create_results(combined_results, input);
-  } else {
-    results_html.style.display = "none"; // Hide dropdown if input is empty
-  }
-});
+      rslt_array_word = removeDuplicates(rslt_array_word);
+      let sorted_array_word = sort_results(rslt_array_word, input);
+
+      // Combine arrays, ensuring no duplicates
+      let combined_results = [...sorted_array];
+
+      sorted_array_word.forEach(function (item) {
+        if (
+          !combined_results.some(
+            (result) => result.question.id === item.question.id
+          )
+        ) {
+          combined_results.push(item);
+        }
+      });
+
+      create_results(combined_results, input);
+    } else {
+      results_html.style.display = "none"; // Hide dropdown if input is empty
+    }
+  });
 
 function removeDuplicates(results) {
   const uniqueResults = [];
   const ids = new Set();
 
-  results.forEach(result => {
+  results.forEach((result) => {
     if (!ids.has(result.question.id)) {
       ids.add(result.question.id);
       uniqueResults.push(result);
@@ -164,8 +164,8 @@ function slice_rslt(text, input) {
   var index = text.toLowerCase().indexOf(input);
   var rslt_len = 80;
   var range = rslt_len - input.length;
-  var start = index - (range / 2);
-  var end = index + input.length + (range / 2);
+  var start = index - range / 2;
+  var end = index + input.length + range / 2;
 
   if (start < 0) {
     start = 0;
@@ -176,7 +176,10 @@ function slice_rslt(text, input) {
     start = end - rslt_len;
   }
   var sliced = text.slice(start, end);
-  var highlighted = sliced.replace(new RegExp(input, "gi"), (match) => `<span class="highlight">${match}</span>`);
+  var highlighted = sliced.replace(
+    new RegExp(input, "gi"),
+    (match) => `<span class="highlight">${match}</span>`
+  );
   return highlighted;
 }
 
@@ -233,7 +236,7 @@ function create_results(array, input) {
       <pre><code>${""}</code></pre>
     `;
     //console.log(item.question.content)
-    details.querySelector("code").textContent = item.question.content
+    details.querySelector("code").textContent = item.question.content;
     //console.log(details.querySelector("code"))
     var prev_suffix = slice_rslt(item.Suffix, input);
     preview.innerHTML = `<span class="result_prefix">${item.Prefix}</span><span class="result_text">${prev_suffix}</span>`;
@@ -245,5 +248,19 @@ function create_results(array, input) {
       window.location.href = `/question_viewer?question_id=${item.question.id}`;
     };
     results_html.appendChild(rslt_element);
+  });
+  checkHighlight();
+}
+
+function checkHighlight() {
+  // Ensure both hljs and Prism are defined
+  if (typeof hljs === "undefined") {
+    console.error("Highlight.js not found!");
+    return;
+  }
+
+  document.querySelectorAll("pre code").forEach((block) => {
+    // Apply Highlight.js
+    hljs.highlightElement(block);
   });
 }

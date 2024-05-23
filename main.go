@@ -1,14 +1,17 @@
 package main
+
 import (
+	"codequarry/app"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"time"
-	"codequarry/app"
+
 	"github.com/joho/godotenv"
 )
+
 func obfuscateJavaScript(inputPath, outputPath string) {
 	// Ensure the path to the Python executable and the script is correct
 	cmd := exec.Command("npx", "javascript-obfuscator", inputPath, "-o", outputPath)
@@ -36,9 +39,55 @@ func main() {
 	db := app.InitDB(dsn)
 	defer db.Close()
 	app.SetupDB(db)
+	// Obfuscate the auth file
 	inputPath := "public/components/auth/auth.js"
 	outputPath := "public/components/auth/auth_obfuscate.js"
 	obfuscateJavaScript(inputPath, outputPath)
+	// Obfuscate animation file
+	inputPath2 := "public/components/auth/animation.js"
+	outputPath2 := "public/components/auth/animation_obfuscate.js"
+	obfuscateJavaScript(inputPath2, outputPath2)
+	//obfuscate classement file
+	inputPath3 := "public/components/classement/classement.js"
+	outputPath3 := "public/components/classement/classement_obfuscate.js"
+	obfuscateJavaScript(inputPath3, outputPath3)
+	//obfuscate posts file
+	inputPath4 := "public/components/home/posts/posts.js"
+	outputPath4 := "public/components/home/posts/posts_obfuscate.js"
+	obfuscateJavaScript(inputPath4, outputPath4)
+	//obfuscate panel file
+	inputPath5 := "public/components/panel/panel.js"
+	outputPath5 := "public/components/panel/panel_obfuscate.js"
+	obfuscateJavaScript(inputPath5, outputPath5)
+	//obfuscate profile file
+	inputPath6 := "public/components/profile/profile.js"
+	outputPath6 := "public/components/profile/profile_obfuscate.js"
+	obfuscateJavaScript(inputPath6, outputPath6)
+	//obfuscate question_viewer file
+	inputPath7 := "public/components/question_viewer/question_viewer.js"
+	outputPath7 := "public/components/question_viewer/question_viewer_obfuscate.js"
+	obfuscateJavaScript(inputPath7, outputPath7)
+	//obfuscate subject file
+	inputPath8 := "public/components/subject/subject.js"
+	outputPath8 := "public/components/subject/subject_obfuscate.js"
+	obfuscateJavaScript(inputPath8, outputPath8)
+	//obfuscate all_subjects file
+	inputPath9 := "public/templates/all_subjects/all_subjects.js"
+	outputPath9 := "public/templates/all_subjects/all_subjects_obfuscate.js"
+	obfuscateJavaScript(inputPath9, outputPath9)
+	//obfuscate header file
+	inputPath10 := "public/templates/header/header.js"
+	outputPath10 := "public/templates/header/header_obfuscate.js"
+	obfuscateJavaScript(inputPath10, outputPath10)
+	//obfuscate input.js file
+	inputPath11 := "public/templates/search_bar/input.js"
+	outputPath11 := "public/templates/search_bar/input_obfuscate.js"
+	obfuscateJavaScript(inputPath11, outputPath11)
+	//obfuscate websocket file
+	inputPath12 := "scripts/websocket.js"
+	outputPath12 := "scripts/websocket_obfuscate.js"
+	obfuscateJavaScript(inputPath12, outputPath12)
+
 	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour.Abs())
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
@@ -115,6 +164,7 @@ func main() {
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
 	}
 }
+
 // Redirects HTTP requests to HTTPS
 func redirectHTTPToHTTPS(w http.ResponseWriter, r *http.Request) {
 	// Note: Use http.StatusMovedPermanently for permanent redirects
