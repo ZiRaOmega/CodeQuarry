@@ -123,7 +123,7 @@ func CheckLogoHandler(w http.ResponseWriter, r *http.Request) {
 
 func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
-	http.ServeFile(w, r, "public/components/auth/animation.js")
+	http.ServeFile(w, r, "public/components/auth/animation_obfuscate.js")
 }
 
 func PanelCssHandler(w http.ResponseWriter, r *http.Request) {
@@ -149,7 +149,7 @@ func FooterHandlerCss(w http.ResponseWriter, r *http.Request) {
 // JS
 func AllSubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
-	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects.js")
+	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects_obfuscate.js")
 }
 
 // CSS
@@ -162,7 +162,7 @@ func AllSubjectsHandlerCSS(w http.ResponseWriter, r *http.Request) {
 // JS
 func SearchBarJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/templates/search_bar/input.js")
+	http.ServeFile(w, r, "public/templates/search_bar/input_obfuscate.js")
 }
 
 // CSS
@@ -208,7 +208,7 @@ func QuestionViewerCSSHandler(w http.ResponseWriter, r *http.Request) {
 
 /*Panel*/
 func PanelJSHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "public/components/panel/panel.js")
+	http.ServeFile(w, r, "public/components/panel/panel_obfuscate.js")
 }
 
 /* --------------- PROFILE ---------------- */
@@ -230,7 +230,7 @@ func ClassementCSSHandler(w http.ResponseWriter, r *http.Request) {
 // JS
 func SubjectHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
-	http.ServeFile(w, r, "public/components/subject/subject.js")
+	http.ServeFile(w, r, "public/components/subject/subject_obfuscate.js")
 }
 
 // CSS
@@ -241,7 +241,7 @@ func SubjectCSSHandler(w http.ResponseWriter, r *http.Request) {
 
 func ProfileJs(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/components/profile/profile.js")
+	http.ServeFile(w, r, "public/components/profile/profile_obfuscate.js")
 }
 
 func VoteHandler(w http.ResponseWriter, r *http.Request) {
@@ -255,7 +255,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 func PostsHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/components/home/posts/posts.js")
+	http.ServeFile(w, r, "public/components/home/posts/posts_obfuscate.js")
 }
 
 func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
@@ -265,18 +265,18 @@ func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
 
 func QuestionViewerJSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/components/question_viewer/question_viewer.js")
+	http.ServeFile(w, r, "public/components/question_viewer/question_viewer_obfuscate.js")
 }
 
 func ClassementJSHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "public/components/classement/classement.js")
+	http.ServeFile(w, r, "public/components/classement/classement_obfuscate.js")
 }
 
 /* ======================= WEB_SOCKETS ======================= */
 
 func WebsocketFileHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "scripts/websocket.js")
+	http.ServeFile(w, r, "scripts/websocket_obfuscate.js")
 }
 
 func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
@@ -285,7 +285,7 @@ func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHeaderJS(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "public/templates/header/header.js")
+	http.ServeFile(w, r, "public/templates/header/header_obfuscate.js")
 }
 func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
