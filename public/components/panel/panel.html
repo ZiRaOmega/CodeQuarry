@@ -94,6 +94,8 @@
     </div>
     <button class="show_button" id="show_all_subjects">Subjects</button>
     <div class="panel_all_div" id="all_subjects" style="display: none;">
+      <input id="search_bar_subjects"></input>
+        <button onclick="searchSubjects()">Search</button>
       {{range .Subjects}}
       <div class="subject" data-subject-id="{{.Id}}">
         <input class="input-field" type="text" value="{{.Title}}" /><br />
@@ -116,6 +118,8 @@
     </div>
     <button class="show_button" id="show_all_questions">Questions</button>
     <div class="panel_all_div" id="all_questions" style="display: none;">
+      <input id="search_bar_questions"></input>
+        <button onclick="searchQuestions()">Search</button>
       {{range .Questions}} {{$Id:=.Id}}
       <div class="question" data-question-id="{{.Id}}">
         <input class="title input-field" type="text" value="{{.Title}}" /><br />
