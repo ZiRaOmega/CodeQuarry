@@ -2,6 +2,7 @@ package app
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
@@ -33,6 +34,15 @@ func SetupDB(db *sql.DB) {
 	createTableVote_response(db)
 	createTableVote_question(db)
 	createTableFavorite(db)
+	crateTableDeletedUsers(db)
+	ticker := time.NewTicker(1 * time.Hour)
+	go func() {
+		for range ticker.C {
+			fmt.Println("CopyUsersToDeletedUsers")
+			CopyUsersToDeletedUsers(db)
+		}
+	}()
+
 }
 
 /* --------- Create Funcs ----------- */
@@ -250,6 +260,36 @@ func createTableSession(db *sql.DB) {
 		UNIQUE(uuid),
 		PRIMARY KEY(id),
 		FOREIGN KEY(user_id) REFERENCES users(id_student) ON DELETE CASCADE
+	);
+	`
+	// Execute the table creation query
+	if _, err := db.Exec(tableCreationQuery); err != nil {
+		log.Fatal(err)
+	}
+}
+
+func crateTableDeletedUsers(db *sql.DB) {
+	// Create a	Vote_question table
+	tableCreationQuery := `CREATE TABLE IF NOT EXISTS DeletedUsers(
+		id_student INT,
+		deleted BOOLEAN NOT NULL,
+		delete_date DATE,
+		lastname VARCHAR(50) NOT NULL,
+		firstname VARCHAR(50) NOT NULL,
+		username VARCHAR(50) NOT NULL,
+		email VARCHAR(50) NOT NULL,
+		avatar VARCHAR(50),
+		birth_date DATE,
+		bio VARCHAR(100),
+		website VARCHAR(50),
+		github VARCHAR(50),
+		xp INT,
+		rang_rank_ INT,
+		school_year DATE,
+		creation_date DATE,
+		update_date DATE,
+		PRIMARY KEY(id_student),
+		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE
 	);
 	`
 	// Execute the table creation query

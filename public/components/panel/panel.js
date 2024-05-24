@@ -368,6 +368,36 @@ function searchUsers() {
   });
 }
 
+function searchSubjects() {
+  const search = document.getElementById("search_bar_subjects").value;
+  document.querySelectorAll(".subject").forEach((s) => {
+    for (let p = 0; p < s.querySelectorAll("input").length; p++) {
+      let i = s.querySelectorAll("input")[p];
+      if (i.value.toLowerCase().includes(search.toLowerCase())) {
+        s.style.display = "block";
+        break;
+      } else {
+        s.style.display = "none";
+      }
+    }
+  });
+}
+
+function searchQuestions() {
+  const search = document.getElementById("search_bar_questions").value;
+  document.querySelectorAll(".question").forEach((q) => {
+    for (let p = 0; p < q.querySelectorAll("input").length; p++) {
+      let i = q.querySelectorAll("input")[p];
+      if (i.value.toLowerCase().includes(search.toLowerCase())) {
+        q.style.display = "block";
+        break;
+      } else {
+        q.style.display = "none";
+      }
+    }
+  });
+}
+
 document.getElementById("search_bar_users").addEventListener("keyup", (k) => {
   k.preventDefault();
   if (document.getElementById("search_bar_users").value == "") {

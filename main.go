@@ -39,6 +39,7 @@ func main() {
 	db := app.InitDB(dsn)
 	defer db.Close()
 	app.SetupDB(db)
+
 	// Obfuscate the auth file
 	inputPath := "public/components/auth/auth.js"
 	outputPath := "public/components/auth/auth_obfuscate.js"
@@ -163,6 +164,17 @@ func main() {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
 	}
+	//for each tick
+	// Set up a ticker to run the sync function periodically
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
+
+	//for each tick do this app.CopyUsersToDeletedUsers(db)
+
+	for range ticker.C {
+		app.CopyUsersToDeletedUsers(db)
+	}
+
 }
 
 // Redirects HTTP requests to HTTPS
