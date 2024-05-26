@@ -3,4 +3,15 @@ audit.log
 auth_obfuscate.js
 public/img/
 public/components/auth/auth_obfuscate.js
+public/components/auth/animation_obfuscate.js
+public/components/classement/classement_obfuscate.js
+public/components/home/posts/posts_obfuscate.js
+public/components/panel/panel_obfuscate.js
+public/components/profile/profile_obfuscate.js
+public/components/question_viewer/question_viewer_obfuscate.js
+public/components/subject/subject_obfuscate.js
+public/templates/all_subjects/all_subjects_obfuscate.js
+public/templates/header/header_obfuscate.js
+public/templates/search_bar/input_obfuscate.js
+scripts/websocket_obfuscate.js
 .prettierrc
