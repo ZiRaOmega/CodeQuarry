@@ -19,7 +19,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 
 		// Get cookie session
 
-		if component_name == "auth" {
+		if component_name == "auth" || component_name == "cgu" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
 			err := ParseAndExecuteTemplate(component_name, nil, w)
 			if err != nil {
