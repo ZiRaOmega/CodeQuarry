@@ -39,10 +39,6 @@ func main() {
 	db := app.InitDB(dsn)
 	defer db.Close()
 	app.SetupDB(db)
-<<<<<<< HEAD
-
-=======
->>>>>>> a77007584a87f18382796cfbd92cea9e574c8d18
 	// Obfuscate the auth file
 	inputPath := "public/components/auth/auth.js"
 	outputPath := "public/components/auth/auth_obfuscate.js"
@@ -164,7 +160,6 @@ func main() {
 	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
 	//For the server
 	//err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
-
 
 	//err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
