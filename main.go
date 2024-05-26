@@ -155,6 +155,7 @@ func main() {
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
+	http.HandleFunc("/cgu", app.SendComponent("cgu",db))
 	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
 	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
