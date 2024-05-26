@@ -155,3 +155,6 @@ $(document).ready(function () {
     });
   });
 });
+document.getElementById('acceptTerms').addEventListener('change', function() {
+  document.getElementById('registerSubmit').disabled = !this.checked;
+});
