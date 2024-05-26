@@ -37,7 +37,11 @@
         placeholder="Confirm Password" required="required" autocomplete="off" />
       <div id="contentAlert"></div>
       <a href="/cgu">Terms and Conditions</a>
-      <button type="submit" id="registerSubmit">Register</button>
+      <div>
+        <input type="checkbox" id="acceptTerms" />
+        <label for="acceptTerms">I accept the Terms and Conditions</label>
+      </div>
+      <button type="submit" id="registerSubmit" disabled>Register</button>
     </form>
     <p>Already have an account ?</p>
     <button id="loginRedirect">Login</button>
@@ -81,6 +85,11 @@
   <script src="/components/auth/auth_obfuscate.js"></script>
   <script src="/components/auth/animation.js"></script>
   {{template "script" .}}
+  <script>
+    document.getElementById('acceptTerms').addEventListener('change', function() {
+      document.getElementById('registerSubmit').disabled = !this.checked;
+    });
+  </script>
 </body>
 
 </html>
