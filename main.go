@@ -39,7 +39,10 @@ func main() {
 	db := app.InitDB(dsn)
 	defer db.Close()
 	app.SetupDB(db)
+<<<<<<< HEAD
 
+=======
+>>>>>>> a77007584a87f18382796cfbd92cea9e574c8d18
 	// Obfuscate the auth file
 	inputPath := "public/components/auth/auth.js"
 	outputPath := "public/components/auth/auth_obfuscate.js"
