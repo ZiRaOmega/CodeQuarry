@@ -19,9 +19,31 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 
 		// Get cookie session
 
+		csrfToken, err := generateCSRFToken()
+		if err != nil {
+			http.Error(w, "Error generating CSRF token", http.StatusInternalServerError)
+			return
+		}
+		session, err := store.Get(r, "csrfToken")
+		if err != nil {
+			http.Error(w, "Error getting session", http.StatusInternalServerError)
+			return
+		}
+		session.Values[csrfSessionKey] = csrfToken
+		session.Save(r, w)
 		if component_name == "auth" || component_name == "cgu" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-			err := ParseAndExecuteTemplate(component_name, nil, w)
+			if err != nil {
+				http.Error(w, "Error generating CSRF token", http.StatusInternalServerError)
+				return
+			}
+			tmplData := struct {
+				CSRFToken string
+			}{
+				CSRFToken: csrfToken,
+			}
+
+			err = ParseAndExecuteTemplate(component_name, tmplData, w)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
@@ -39,7 +61,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 			// Get user info from user_id
 			var user User
 			user, err = GetUser(session_id, db)
-
+			user.CSRFToken = csrfToken
 			if component_name == "profile" || component_name == "classement" {
 				if err != nil {
 
@@ -132,6 +154,10 @@ func AnimationsHandler(w http.ResponseWriter, r *http.Request) {
 
 func PanelCssHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/panel/panel.css")
+}
+
+func FaviconHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/images/CODEQUARRY.ico")
 }
 
 /* ======================= TEMPLATES ======================= */
@@ -305,12 +331,7 @@ func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 				http.Error(w, "Token not valid", http.StatusBadRequest)
 				return
 			} else {
-				//Update user status
-				/* err := UpdateUserStatus(db, token)
-				if err != nil {
-					http.Error(w, "Error updating user status", http.StatusInternalServerError)
-					return
-				} */
+				//Verify Email succes page
 
 				http.Redirect(w, r, "/home", http.StatusSeeOther)
 			}

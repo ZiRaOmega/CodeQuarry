@@ -37,6 +37,7 @@ func main() {
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
 	URL := os.Getenv("URL")
 	db := app.InitDB(dsn)
+	app.InitStoreCSRFToken()
 	defer db.Close()
 	app.SetupDB(db)
 	// Obfuscate the auth file
@@ -92,7 +93,9 @@ func main() {
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
-	http.HandleFunc("/", app.AddSecurityHeaders(app.SendComponent("auth", db)))
+	http.HandleFunc("/favicon.ico", app.FaviconHandler)
+	http.Handle("/", app.AddSecurityHeaders((http.HandlerFunc(app.SendComponent("auth", db))).ServeHTTP))
+
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
 	// http.HandleFunc("/scriphttps://pkg.go.dev/golang.org/x/tools/internal/typesinternal?utm_source%3Dgopls#IncompatibleAssignts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
@@ -100,12 +103,30 @@ func main() {
 	// Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	//http.HandleFunc("/register", app.RegisterHandler(db))
-	http.HandleFunc("/register", func(w http.ResponseWriter, r *http.Request) {
+	http.Handle("/register", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Error parsing form", http.StatusBadRequest)
+			return
+		}
+
+		if !app.VerifyCSRFToken(w, r) {
+			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
+			return
+		}
 		RegisterRateLimiter.Handle(app.RegisterHandler(db)).ServeHTTP(w, r)
-	})
-	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+	}))
+	http.Handle("/login", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Error parsing form", http.StatusBadRequest)
+			return
+		}
+
+		if !app.VerifyCSRFToken(w, r) {
+			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
+			return
+		}
 		GlobalrateLimiter.Handle(app.LoginHandler(db)).ServeHTTP(w, r)
-	})
+	}))
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/checked", app.CheckLogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
@@ -155,7 +176,7 @@ func main() {
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
-	http.HandleFunc("/cgu", app.SendComponent("cgu",db))
+	http.HandleFunc("/cgu", app.SendComponent("cgu", db))
 	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
 	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)

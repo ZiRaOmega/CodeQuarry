@@ -98,6 +98,7 @@ type User struct {
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
 	My_Post            []Question
 	Favori             []Question
+	CSRFToken          string
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -185,6 +186,10 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 		}
 		if strconv.Itoa(user.ID) != r.PostFormValue("id_student") {
 			http.Error(w, "Invalid user", http.StatusForbidden)
+			return
+		}
+		if !VerifyCSRFToken(w,r) {
+			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
 			return
 		}
 		user.LastName = r.PostFormValue("lastname")

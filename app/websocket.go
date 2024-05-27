@@ -6,14 +6,36 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gorilla/websocket"
 )
 
+var allowedOrigins = []string{
+	//"https://codequarry.dev",
+	"https://localhost", // for local development
+}
+
+// CheckOrigin verifies the request origin against the allowed origins
+func CheckOrigin(r *http.Request) bool {
+	origin := r.Header.Get("Origin")
+	if origin == "" {
+		return false
+	}
+
+	for _, allowedOrigin := range allowedOrigins {
+		if strings.EqualFold(origin, allowedOrigin) {
+			return true
+		}
+	}
+	return false
+}
+
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin:     func(r *http.Request) bool { return CheckOrigin(r) },
 }
 var ConnectionList = []*websocket.Conn{} // List of all connections to the server
 
@@ -204,7 +226,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 
 				if !ok {
-
+					
 					// Optionally send an error response back to the client
 					continue
 				}
@@ -253,7 +275,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 				} else {
 					question_id := int(contentMap)
-					
+
 					if isItInFavori(db, user_id, question_id) {
 						err = DeleteFavori(db, user_id, question_id)
 						if err == nil {

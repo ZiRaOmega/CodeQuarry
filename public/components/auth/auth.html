@@ -23,6 +23,8 @@
       <p class="description">Let's register !</p>
     </div>
     <form id="registerForm" action="/register" method="post">
+      <input type="hidden" name="csrfToken" id="csrfToken" value="{{.CSRFToken}}" />
+            
       <input type="text" name="lastname" id="registerLastName" placeholder="Lastname" required="required"
         autocomplete="off" />
       <input type="text" name="firstname" id="registerFirstName" placeholder="Firstname" required="required"
@@ -54,6 +56,8 @@
       <p class="description">Let's dig again !</p>
     </div>
     <form id="loginForm" action="/login" method="post">
+      <input type="hidden" name="csrfToken" id="csrfToken" value="{{.CSRFToken}}" />
+            
       <input type="text" name="usernameOrEmailLogin" id="usernameOrEmailLogin" placeholder="Username or Email"
         required="required" autocomplete="off" />
       <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password" required="required"

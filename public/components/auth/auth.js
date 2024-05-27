@@ -63,12 +63,16 @@ $(document).ready(function () {
     }
     event.preventDefault();
     if (!errorMessage) {
+      let form=new FormData(registerForm)
+      //add csrfToken
+      form.append("csrfToken", document.getElementById("csrfToken").value);
       fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams(new FormData(registerForm)),
+        body: new URLSearchParams(),
+
       })
         .then((response) => response.json())
         .then((data) => {
@@ -108,6 +112,7 @@ $(document).ready(function () {
     var formData = {
       usernameOrEmailLogin: $("#usernameOrEmailLogin").val(),
       passwordLogin: $("#loginPassword").val(),
+      csrfToken: $("#csrfToken").val(),
     };
     $.ajax({
       type: "POST",
