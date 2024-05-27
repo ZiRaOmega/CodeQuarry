@@ -1,8 +1,12 @@
 version: '3.8'
+networks:
+  codequarry:
 
 services:
   app:
     build: .
+    networks:
+      - codequarry
     ports:
       - "80:80"
       - "443:443"
@@ -24,8 +28,8 @@ services:
 
   db:
     image: postgres:13
-    ports:
-      - "5432:5432"
+    #ports:
+    #  - "5432:5432"
     environment:
       POSTGRES_DB: codequarrydb
       POSTGRES_USER: codequarry
@@ -33,7 +37,8 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgresql_config/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
-
+    networks:
+      - codequarry
 volumes:
   postgres_data:
   img_data:
