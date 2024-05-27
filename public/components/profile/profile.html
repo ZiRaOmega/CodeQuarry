@@ -57,7 +57,7 @@
             </div>
             <input class="submitButton" type="submit" value="Save">
         </form>
-        <form action="/delete-profile" method="post" enctype="application/x-www-form-urlencoded" class="editProfileForm" id="editProfileForm">
+        <form action="/delete-profile" method="post" enctype="application/x-www-form-urlencoded" class="editProfileForm" style="display: none;">
             <input type="hidden" name="id_student" value="{{.ID}}">
             <input type="hidden" name="csrfToken" value="{{.CSRFToken}}"/>
             <input class="edit_profile_input" type="checkbox" name="confirm_delete" id="confirm_delete">
