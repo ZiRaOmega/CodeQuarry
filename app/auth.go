@@ -169,7 +169,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 
 		if deletingDate.Valid {
 			Log(ErrorLevel, "Account is in deleting state")
-			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "User accout is in deleting state contact admin to retrieve this account"})
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "User account is in deleting state contact admin to retrieve this account"})
 			return
 		}
 		if err != nil {
