@@ -180,20 +180,33 @@ function manageFavorite(favori, questionId) {
   };
 }
 
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, function (match) {
+    const escape = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    };
+    return escape[match];
+  });
+}
+
 function htmlQuestionConstructor(question) {
   return `
-<div class="subject_tag">${question.subject_title}</div>
+<div class="subject_tag">${escapeHTML(question.subject_title)}</div>
 <div class="clickable_container">
-    <h3 class="question_title">${question.title}</h3>
-    <p class="question_description">${question.description}</p>
-    <pre><code id="code">${question.content}</code></pre>
+    <h3 class="question_title">${escapeHTML(question.title)}</h3>
+    <p class="question_description">${escapeHTML(question.description)}</p>
+    <pre><code id="code">${escapeHTML(question.content)}</code></pre>
     <div class="creator_and_date_container">
         <p class="question_creation_date">Publié le: ${new Date(
           question.creation_date
         ).toLocaleDateString()}</p>
         <p class="responses_counter">${question.responses.length} reponse(s)</p>
         <p class="question_creator">Publié par <span class="creator_name">${
-          question.creator
+          escapeHTML(question.creator)
         }</span></p>
     </div>
 </div>
@@ -214,6 +227,7 @@ function htmlQuestionConstructor(question) {
 </div>
 `;
 }
+
 
 function switchVoteColor(question, upvoteContainer, downvoteContainer) {
   if (question.user_vote == "upvoted") {
