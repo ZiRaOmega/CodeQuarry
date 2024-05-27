@@ -26,20 +26,16 @@ func SetupDB(db *sql.DB) {
 	createTableSession(db)
 	createTableVerifyEmail(db)
 	createTableSubject(db)
-	createTableTag(db)
 	createTableQuestion(db)
 	createTableResponse(db)
-	createTableTagged(db)
-	createTablePrecise(db)
 	createTableVote_response(db)
 	createTableVote_question(db)
 	createTableFavorite(db)
-	crateTableDeletedUsers(db)
 	ticker := time.NewTicker(1 * time.Hour)
 	go func() {
 		for range ticker.C {
-			fmt.Println("CopyUsersToDeletedUsers")
-			CopyUsersToDeletedUsers(db)
+			fmt.Println("Delete user when deleting_date is more than 6 months")
+			DeleteUserFromDBAfter6Months(db)
 		}
 	}()
 
@@ -109,22 +105,7 @@ func createTableSubject(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
-func createTableTag(db *sql.DB) {
-	// Create a Tag table
-	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Tag(
-		id_tag SERIAL NOT NULL,
-		title VARCHAR(50) NOT NULL,
-		description VARCHAR(500) NOT NULL,
-		creation_date DATE NOT NULL,
-		update_date DATE NOT NULL,
-		PRIMARY KEY(id_tag),
-		UNIQUE(title)
-	);`
-	// Execute the table creation query
-	if _, err := db.Exec(tableCreationQuery); err != nil {
-		log.Fatal(err)
-	}
-}
+
 func createTableFavorite(db *sql.DB) {
 	// Create a Favorite table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Favori(
@@ -185,36 +166,7 @@ func createTableResponse(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
-func createTableTagged(db *sql.DB) {
-	// Create a Tagged table
-	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Tagged(
-		id_question INT,
-		id_tag INT,
-		PRIMARY KEY(id_question, id_tag),
-		FOREIGN KEY(id_question) REFERENCES Question(id_question) ON DELETE CASCADE,
-		FOREIGN KEY(id_tag) REFERENCES Tag(id_tag)
-	);
-	`
-	// Execute the table creation query
-	if _, err := db.Exec(tableCreationQuery); err != nil {
-		log.Fatal(err)
-	}
-}
-func createTablePrecise(db *sql.DB) {
-	// Create a Precise table
-	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Precise(
-		id_subject INT,
-		id_tag INT,
-		PRIMARY KEY(id_subject, id_tag),
-		FOREIGN KEY(id_subject) REFERENCES Subject(id_subject),
-		FOREIGN KEY(id_tag) REFERENCES Tag(id_tag)
-	);
-	`
-	// Execute the table creation query
-	if _, err := db.Exec(tableCreationQuery); err != nil {
-		log.Fatal(err)
-	}
-}
+
 func createTableVote_response(db *sql.DB) {
 	// Create a	Vote_response table
 	tableCreationQuery := `CREATE TABLE IF NOT EXISTS Vote_response(
@@ -260,36 +212,6 @@ func createTableSession(db *sql.DB) {
 		UNIQUE(uuid),
 		PRIMARY KEY(id),
 		FOREIGN KEY(user_id) REFERENCES users(id_student) ON DELETE CASCADE
-	);
-	`
-	// Execute the table creation query
-	if _, err := db.Exec(tableCreationQuery); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func crateTableDeletedUsers(db *sql.DB) {
-	// Create a	Vote_question table
-	tableCreationQuery := `CREATE TABLE IF NOT EXISTS DeletedUsers(
-		id_student INT,
-		deleted BOOLEAN NOT NULL,
-		delete_date DATE,
-		lastname VARCHAR(50) NOT NULL,
-		firstname VARCHAR(50) NOT NULL,
-		username VARCHAR(50) NOT NULL,
-		email VARCHAR(50) NOT NULL,
-		avatar VARCHAR(50),
-		birth_date DATE,
-		bio VARCHAR(100),
-		website VARCHAR(50),
-		github VARCHAR(50),
-		xp INT,
-		rang_rank_ INT,
-		school_year DATE,
-		creation_date DATE,
-		update_date DATE,
-		PRIMARY KEY(id_student),
-		FOREIGN KEY(id_student) REFERENCES users(id_student) ON DELETE CASCADE
 	);
 	`
 	// Execute the table creation query
