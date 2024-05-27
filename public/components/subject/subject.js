@@ -113,7 +113,6 @@ function createQuestionElement(question) {
 
   questionElement.innerHTML = htmlQuestionConstructor(question);
   //Line to force code to not being interpreted as html or js
-  questionElement.querySelector("#code").textContent = question.content;
   questionElement.appendChild(questionChecked);
 
   // Highlight the code block
