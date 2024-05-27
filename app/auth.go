@@ -158,7 +158,20 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		}
 		// Fetch user from database
 		var storedPassword string
-		err := db.QueryRow("SELECT password FROM users WHERE username = $1 OR email = $2", username, username).Scan(&storedPassword)
+		var deletingDate sql.NullTime
+		query := "SELECT password, deleting_date FROM users WHERE username = $1 OR email = $2"
+		err := db.QueryRow(query, username, username).Scan(&storedPassword, &deletingDate)
+		if err != nil {
+			Log(ErrorLevel, err.Error())
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error while fetching in db"})
+			return
+		}
+
+		if deletingDate.Valid {
+			Log(ErrorLevel, "Account is in deleting state")
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "User accout is in deleting state contact admin to retrieve this account"})
+			return
+		}
 		if err != nil {
 			if err == sql.ErrNoRows {
 				Log(ErrorLevel, "No user found with the provided credentials"+username+" at "+r.URL.Path)

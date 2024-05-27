@@ -62,6 +62,12 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 			var user User
 			user, err = GetUser(session_id, db)
 			user.CSRFToken = csrfToken
+
+			if err != nil {
+				http.Error(w, "Error getting user info", http.StatusInternalServerError)
+				return
+			}
+
 			if component_name == "profile" || component_name == "classement" {
 				if err != nil {
 
