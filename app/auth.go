@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/mail"
 	"time"
@@ -151,6 +152,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		email := GetEmailWithUsername(db, username)
+		fmt.Println(email)
 		if !isEmailVerified(db, email) {
 			Log(ErrorLevel, "Email not verified"+email)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Verify your email before trying to log in"})
