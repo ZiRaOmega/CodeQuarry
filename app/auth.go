@@ -114,15 +114,16 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 func GetEmailWithUsername(db *sql.DB, username string) string {
+	fmt.Println(username)
 	stmt, err := db.Prepare("SELECT email FROM users WHERE username = $1")
 	if err != nil {
-
+		fmt.Println(err.Error())
 	}
 	defer stmt.Close()
 	var email string
 	err = stmt.QueryRow(username).Scan(&email)
 	if err != nil {
-
+		fmt.Println(err.Error())
 	}
 	return email
 }
@@ -152,7 +153,6 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		email := GetEmailWithUsername(db, username)
-		fmt.Println(email)
 		if !isEmailVerified(db, email) {
 			Log(ErrorLevel, "Email not verified"+email)
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Verify your email before trying to log in"})
