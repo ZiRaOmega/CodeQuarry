@@ -155,7 +155,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 		email := GetEmailWithUsername(db, username)
 		if !isEmailVerified(db, email) {
 			Log(ErrorLevel, "Email not verified"+email)
-			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Verify your email before trying to log in"})
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "User Not registered or has not Verify email"})
 			return
 		}
 		// Fetch user from database
