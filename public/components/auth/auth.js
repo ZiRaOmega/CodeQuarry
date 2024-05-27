@@ -135,7 +135,7 @@ $(document).ready(function () {
           }).then((result) => {
             if (result.value) {
               setTimeout(() => {
-                loginBlock.style.display = "flex";
+                document.location.reload()
               }, 500);
             }
           });
