@@ -188,7 +188,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Invalid user", http.StatusForbidden)
 			return
 		}
-		if !VerifyCSRFToken(w,r) {
+		if !VerifyCSRFToken(w, r) {
 			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
 			return
 		}
@@ -429,4 +429,69 @@ func FavoriHandler(db *sql.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(questionIDs)
 
 	}
+}
+
+func DeleteProfileHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		// Check if the session is valid
+		cookie, err := r.Cookie("session")
+		if err != nil {
+			http.Error(w, "Error getting session cookie", http.StatusInternalServerError)
+			return
+		}
+		session_id := cookie.Value
+		if !isValidSession(session_id, db) {
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
+			return
+		}
+
+		user := User{}
+
+		user.ID, err = getUserIDUsingSessionID(session_id, db)
+		if err != nil {
+
+		}
+		if strconv.Itoa(user.ID) != r.PostFormValue("id_student") {
+			http.Error(w, "Invalid user", http.StatusForbidden)
+			return
+		}
+
+		if !VerifyCSRFToken(w, r) {
+			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
+			return
+		}
+		//Check if the ceckbox is selected
+		if r.PostFormValue("confirm_delete") != "on" {
+			http.Error(w, "You must confirm the deletion", http.StatusForbidden)
+			return
+		}
+		// Prepare
+		stmt, err := db.Prepare("UPDATE users SET deleting_date = $1 WHERE id_student = $2")
+		if err != nil {
+			Log(ErrorLevel, err.Error())
+		}
+		defer stmt.Close()
+		// Execute
+		_, err = stmt.Exec(time.Now(), user.ID)
+		if err != nil {
+			Log(ErrorLevel, err.Error())
+		}
+		http.Redirect(w, r, "/auth", http.StatusSeeOther)
+	}
+}
+
+func DeleteUserFromDBAfter6Months(db *sql.DB) {
+	query := `DELETE FROM users
+	WHERE deleting_date IS NOT NULL
+	AND deleting_date < NOW() - INTERVAL '6 months';
+	`
+	_, err := db.Exec(query)
+	if err != nil {
+		Log(ErrorLevel, err.Error())
+	}
+
 }

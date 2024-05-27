@@ -151,6 +151,7 @@ func main() {
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 	http.HandleFunc("/cgu", app.SendComponent("cgu", db))
+	http.HandleFunc("/delete-profile", app.DeleteProfileHandler(db))
 	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
 	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
