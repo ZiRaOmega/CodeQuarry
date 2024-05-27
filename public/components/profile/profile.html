@@ -20,6 +20,8 @@
         <div class="all_edit_fields">
                 <div class="left_edit_profile">
                     <input type="hidden" name="id_student" value="{{.ID}}">
+                    <input type="hidden" name="csrfToken" value="{{.CSRFToken}}">
+                    
                     <label for="lastname">Last Name:</label>
                     <input class="edit_profile_input" type="text" name="lastname" value="{{.LastName}}">
                     <br>
