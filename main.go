@@ -40,54 +40,28 @@ func main() {
 	app.InitStoreCSRFToken()
 	defer db.Close()
 	app.SetupDB(db)
-	// Obfuscate the auth file
-	inputPath := "public/components/auth/auth.js"
-	outputPath := "public/components/auth/auth_obfuscate.js"
-	obfuscateJavaScript(inputPath, outputPath)
-	// Obfuscate animation file
-	inputPath2 := "public/components/auth/animation.js"
-	outputPath2 := "public/components/auth/animation_obfuscate.js"
-	obfuscateJavaScript(inputPath2, outputPath2)
-	//obfuscate classement file
-	inputPath3 := "public/components/classement/classement.js"
-	outputPath3 := "public/components/classement/classement_obfuscate.js"
-	obfuscateJavaScript(inputPath3, outputPath3)
-	//obfuscate posts file
-	inputPath4 := "public/components/home/posts/posts.js"
-	outputPath4 := "public/components/home/posts/posts_obfuscate.js"
-	obfuscateJavaScript(inputPath4, outputPath4)
-	//obfuscate panel file
-	inputPath5 := "public/components/panel/panel.js"
-	outputPath5 := "public/components/panel/panel_obfuscate.js"
-	obfuscateJavaScript(inputPath5, outputPath5)
-	//obfuscate profile file
-	inputPath6 := "public/components/profile/profile.js"
-	outputPath6 := "public/components/profile/profile_obfuscate.js"
-	obfuscateJavaScript(inputPath6, outputPath6)
-	//obfuscate question_viewer file
-	inputPath7 := "public/components/question_viewer/question_viewer.js"
-	outputPath7 := "public/components/question_viewer/question_viewer_obfuscate.js"
-	obfuscateJavaScript(inputPath7, outputPath7)
-	//obfuscate subject file
-	inputPath8 := "public/components/subject/subject.js"
-	outputPath8 := "public/components/subject/subject_obfuscate.js"
-	obfuscateJavaScript(inputPath8, outputPath8)
-	//obfuscate all_subjects file
-	inputPath9 := "public/templates/all_subjects/all_subjects.js"
-	outputPath9 := "public/templates/all_subjects/all_subjects_obfuscate.js"
-	obfuscateJavaScript(inputPath9, outputPath9)
-	//obfuscate header file
-	inputPath10 := "public/templates/header/header.js"
-	outputPath10 := "public/templates/header/header_obfuscate.js"
-	obfuscateJavaScript(inputPath10, outputPath10)
-	//obfuscate input.js file
-	inputPath11 := "public/templates/search_bar/input.js"
-	outputPath11 := "public/templates/search_bar/input_obfuscate.js"
-	obfuscateJavaScript(inputPath11, outputPath11)
-	//obfuscate websocket file
-	inputPath12 := "scripts/websocket.js"
-	outputPath12 := "scripts/websocket_obfuscate.js"
-	obfuscateJavaScript(inputPath12, outputPath12)
+	// Obfuscate JavaScript files
+	jsFiles := []struct {
+		input  string
+		output string
+	}{
+		{"public/components/auth/auth.js", "public/components/auth/auth_obfuscate.js"},
+		{"public/components/auth/animation.js", "public/components/auth/animation_obfuscate.js"},
+		{"public/components/classement/classement.js", "public/components/classement/classement_obfuscate.js"},
+		{"public/components/home/posts/posts.js", "public/components/home/posts/posts_obfuscate.js"},
+		{"public/components/panel/panel.js", "public/components/panel/panel_obfuscate.js"},
+		{"public/components/profile/profile.js", "public/components/profile/profile_obfuscate.js"},
+		{"public/components/question_viewer/question_viewer.js", "public/components/question_viewer/question_viewer_obfuscate.js"},
+		{"public/components/subject/subject.js", "public/components/subject/subject_obfuscate.js"},
+		{"public/templates/all_subjects/all_subjects.js", "public/templates/all_subjects/all_subjects_obfuscate.js"},
+		{"public/templates/header/header.js", "public/templates/header/header_obfuscate.js"},
+		{"public/templates/search_bar/input.js", "public/templates/search_bar/input_obfuscate.js"},
+		{"scripts/websocket.js", "scripts/websocket_obfuscate.js"},
+	}
+
+	for _, file := range jsFiles {
+		obfuscateJavaScript(file.input, file.output)
+	}
 
 	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour.Abs())
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
