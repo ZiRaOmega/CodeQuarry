@@ -155,6 +155,9 @@ func UpdateValidated(db *sql.DB, token string) error {
 
 // isEmailVerified checks if an email is verified using a prepared statement.
 func isEmailVerified(db *sql.DB, email string) bool {
+	// pq username et pas email ? 
+	// email := GetEmailWithUsername(db, username)
+	// normal que ça marche pas email != username
 	stmt, err := db.Prepare("SELECT COUNT(*) FROM VerifyEmail WHERE email = $1 AND validated = TRUE")
 	if err != nil {
 		return false
