@@ -315,7 +315,7 @@ function AddFavori(question_id) {
 }
 function handleResponse(msg) {
   //fetchQuestions("all");
-  console.log("test")
+ 
   console.log("Response received from server:", msg.content);
   const answer_description = document.createElement("span");
   const creator = document.createElement("div");

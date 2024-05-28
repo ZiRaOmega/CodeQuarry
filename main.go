@@ -113,11 +113,13 @@ func main() {
 	app.InsertMultipleSubjects(db)
 	http.HandleFunc("/api/subjects", app.SubjectsHandler(db))
 	http.HandleFunc("/api/questions", app.QuestionsHandler(db))
-	http.HandleFunc("/api/responses", app.ResponsesHandler(db))
+	http.Handle("/api/responses", CSRF(app.ResponsesHandler(db)))
 	http.HandleFunc("/api/favoris", app.FavoriHandler(db))
 	http.HandleFunc("/api/classement", app.SendUsersInfoJson(db))
 	http.HandleFunc("/detect_lang", app.DetectLanguageHandler)
-	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
+	http.HandleFunc("/question_viewer", func(w http.ResponseWriter, r *http.Request) {
+		CSRF(app.QuestionViewerHandler(db)).ServeHTTP(w, r)
+	})
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
 	http.HandleFunc("/components/question_viewer/question_viewer.css", app.QuestionViewerCSSHandler)
 	http.HandleFunc("/profile", func(w http.ResponseWriter, r *http.Request) {
