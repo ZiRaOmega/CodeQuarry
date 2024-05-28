@@ -52,11 +52,13 @@ function sendResponse() {
       description: response_description,
       content: response_content,
     };
+    const csrfToken = document.querySelector('input[name="gorilla.csrf.Token"]').value;
 
     fetch("/api/responses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken, // Add the CSRF token to the headers
       },
       body: JSON.stringify({
         response: response,

@@ -3,10 +3,13 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
+	"html/template"
 	"log"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/gorilla/csrf"
 )
 
 // Question represents the data structure for a question
@@ -29,6 +32,7 @@ type Question struct {
 type QuestionViewer struct {
 	Question   Question
 	Rank_Panel sql.NullInt64
+	CSRFToken  template.HTML
 }
 
 // FetchQuestionsBySubject retrieves a list of questions based on the subject ID.
@@ -225,6 +229,8 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 		}
 		rank := FetchRankByUserID(db, user_id)
 		question_viewer := QuestionViewer{Question: questions, Rank_Panel: sql.NullInt64{Int64: int64(rank), Valid: true}}
+		csrfToken := csrf.TemplateField(r)
+		question_viewer.CSRFToken = csrfToken
 		err = ParseAndExecuteTemplate("question_viewer", question_viewer, w)
 		if err != nil {
 			http.Error(w, "Error parsing template", http.StatusInternalServerError)
