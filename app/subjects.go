@@ -143,7 +143,7 @@ func SubjectsHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		//Get user_id
-		user_id, err := getUserIDUsingSessionID(session_id, db)
+		user_id, err := GetUserIDUsingSessionID(session_id, db)
 		if err != nil {
 			log.Printf("Error getting user id: %v", err)
 			http.Error(w, "Server error", http.StatusInternalServerError)

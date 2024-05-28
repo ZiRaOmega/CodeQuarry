@@ -157,7 +157,7 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
+		user_id, err := GetUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
 			http.Error(w, "Session not found", http.StatusUnauthorized)
 			//Redirect to auth
@@ -216,7 +216,7 @@ func QuestionViewerHandler(db *sql.DB) http.HandlerFunc {
 			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
-		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
+		user_id, err := GetUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
 			//http.Error(w, "Session not found", http.StatusUnauthorized)
 			http.Redirect(w, r, "/auth", http.StatusSeeOther)

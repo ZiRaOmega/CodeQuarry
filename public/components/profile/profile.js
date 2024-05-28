@@ -28,7 +28,7 @@ deleteButtons.forEach((button) => {
       JSON.stringify({
         type: "deletePost",
         content: id,
-		session_id: getCookie("session") 
+		
       })
     );
   });
@@ -53,7 +53,7 @@ deleteButtonsfavori.forEach((button) => {
       JSON.stringify({
         type: "deleteFavori",
         content: id,
-    session_id: getCookie("session") 
+    
       })
     );
     //Delete parent
@@ -107,13 +107,6 @@ function setDateInInput(theDate, theInput) {
 }
 
 
-function fetchQuestionsProfile(subject) {
-  fetch(`/api/questions?subjectId=${subjectId}`)
-        .then((response) => response.json())
-        .then((questions) => {
-            
-        });
-}
 
 document.getElementById("resend_email").onclick = ()=>{
   socket.send(
@@ -122,7 +115,6 @@ document.getElementById("resend_email").onclick = ()=>{
       content: {
         email: document.getElementById("email").value,
       },
-      session_id: getCookie("session")
     })
   );
 }

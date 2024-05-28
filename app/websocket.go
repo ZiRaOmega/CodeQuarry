@@ -93,14 +93,20 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				conn.Close()
 				return
 			}
+			sessionid_cookie, err := r.Cookie("session")
+			if err != nil {
+				conn.WriteJSON(WSMessage{Type: "session", Content: "expired"})
+				break
+			}
+			wsmessage.SessionID = sessionid_cookie.Value
 
 			switch wsmessage.Type {
 			case "session":
-				if wsmessage.Content == nil {
+				if sessionid_cookie == nil {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "empty"})
 					break
 				}
-				session_id := wsmessage.Content.(string)
+				session_id := sessionid_cookie.Value
 				// Check if the session ID is valid
 				if !isValidSession(session_id, db) {
 					conn.WriteJSON(WSMessage{Type: "session", Content: "expired"})
@@ -139,7 +145,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				// Assuming the content has all necessary information
 				content := wsmessage.Content.(map[string]interface{})
 
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if !isValidSession(wsmessage.SessionID, db) {
 					http.Redirect(w, r, "/", http.StatusSeeOther)
 					return
@@ -175,7 +181,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid question ID"})
 					break
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if !isValidSession(wsmessage.SessionID, db) {
 					http.Redirect(w, r, "/", http.StatusSeeOther)
 					return
@@ -204,7 +210,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 			case "questionCompareUser":
 				content := wsmessage.Content.(float64)
 				questionID := int(content)
-				userID, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				userID, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if !isValidSession(wsmessage.SessionID, db) {
 					http.Redirect(w, r, "/", http.StatusSeeOther)
 					return
@@ -270,7 +276,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					return
 				}
 				// Check session and get user_id
-				user_id, err := getUserIDUsingSessionID(session_id, db)
+				user_id, err := GetUserIDUsingSessionID(session_id, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "addFavori", Content: "error"})
 				} else {
@@ -300,7 +306,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					return
 				}
 				// Check session and get user_id
-				user_id, err := getUserIDUsingSessionID(session_id, db)
+				user_id, err := GetUserIDUsingSessionID(session_id, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "deleteFavori", Content: "error"})
 				} else {
@@ -350,7 +356,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -381,7 +387,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -437,7 +443,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -487,7 +493,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -534,7 +540,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -574,7 +580,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -609,7 +615,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -643,7 +649,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				question_id := int(contentMap["id"].(float64))
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
@@ -680,7 +686,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -727,7 +733,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -776,7 +782,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -806,7 +812,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
@@ -835,7 +841,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					// Optionally send an error response back to the client
 					continue
 				}
-				user_id, err := getUserIDUsingSessionID(wsmessage.SessionID, db)
+				user_id, err := GetUserIDUsingSessionID(wsmessage.SessionID, db)
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break

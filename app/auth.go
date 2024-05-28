@@ -244,21 +244,25 @@ func LogoutHandler(db *sql.DB) http.HandlerFunc {
 // Returns:
 //   - error: An error if any occurred during the session creation process.
 func CreateSession(username string, db *sql.DB, w http.ResponseWriter) error {
-	user_id, err := getUserIDFromDB(username, db)
+	user_id, err := GetUserIDFromDB(username, db)
 	if err != nil {
 		return err
 	}
 	user_uuid := UUID.NewV4().String()
 	createdAt := time.Now()
 	expireAt := createdAt.Add(Cookie_Expiration)
-	err = insertSessionToDB(db, user_id, user_uuid, createdAt, expireAt)
+	err = InsertSessionToDB(db, user_id, user_uuid, createdAt, expireAt)
 	if err != nil {
 		return err
 	}
 	cookie := http.Cookie{
-		Name:    "session",
-		Value:   user_uuid,
-		Expires: expireAt,
+		Name:     "session",
+		Value:    user_uuid,
+		Expires:  expireAt,
+		Path:     "/",
+		HttpOnly: true,
+		SameSite: http.SameSiteStrictMode,
+		Secure:   true,
 	}
 	http.SetCookie(w, &cookie)
 	return err

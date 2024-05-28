@@ -25,7 +25,6 @@ $(document).ready(function () {
     // Send a message to the server to check the session
     let message = {
       type: "session",
-      content: getCookie("session"),
     };
     socket.send(JSON.stringify(message));
     //socket.send("Hey there from client");
@@ -191,7 +190,7 @@ function ModifyResponse(response_id, content, description, question_id) {
         content: content,
         description: description,
       },
-      session_id: getCookie("session"),
+      
     })
   );
 }
@@ -309,7 +308,7 @@ function AddFavori(question_id) {
     JSON.stringify({
       type: "addFavori",
       content: question_id,
-      session_id: getCookie("session"),
+      
     })
   );
 }
@@ -383,7 +382,7 @@ function handleResponse(msg) {
           answer_id: bestAnswer.getAttribute("data-answer-id"),
           question_id: msg.content.questionId,
         },
-        session_id: getCookie("session"),
+        
       })
     );
   };
@@ -496,7 +495,7 @@ function handleResponse(msg) {
       JSON.stringify({
         type: "upvote_response",
         content: msg.content.response_id,
-        session_id: getCookie("session"),
+        
       })
     );
   };
@@ -521,7 +520,7 @@ function handleResponse(msg) {
       JSON.stringify({
         type: "downvote_response",
         content: msg.content.response_id,
-        session_id: getCookie("session"),
+        
       })
     );
   };

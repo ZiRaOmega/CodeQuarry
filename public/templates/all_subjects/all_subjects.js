@@ -428,7 +428,7 @@ function createQuestions(questions) {
           JSON.stringify({
             type: "upvote",
             content: question.id,
-            session_id: getCookie("session"),
+            
           })
         );
       };
@@ -447,7 +447,7 @@ function createQuestions(questions) {
           JSON.stringify({
             type: "downvote",
             content: question.id,
-            session_id: getCookie("session"),
+            
           })
         );
       };

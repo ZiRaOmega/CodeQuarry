@@ -23,14 +23,14 @@ func InitDB(dsn string) *sql.DB {
 }
 func SetupDB(db *sql.DB) {
 	createTableUsers(db)
-	createTableSession(db)
-	createTableVerifyEmail(db)
 	createTableSubject(db)
 	createTableQuestion(db)
 	createTableResponse(db)
-	createTableVote_response(db)
-	createTableVote_question(db)
 	createTableFavorite(db)
+	createTableVote_question(db)
+	createTableVote_response(db)
+	createTableVerifyEmail(db)
+	createTableSession(db)
 	ticker := time.NewTicker(1 * time.Hour)
 	go func() {
 		for range ticker.C {
@@ -223,7 +223,7 @@ func createTableSession(db *sql.DB) {
 // insertSessionToDB inserts a new session into the database.
 // It takes a database connection, user ID, user UUID, creation timestamp, and expiration timestamp as parameters.
 // It returns an error if there was a problem inserting the session.
-func insertSessionToDB(db *sql.DB, user_id int, user_uuid string, createdAt time.Time, expireAt time.Time) error {
+func InsertSessionToDB(db *sql.DB, user_id int, user_uuid string, createdAt time.Time, expireAt time.Time) error {
 	stmt, err := db.Prepare("INSERT INTO Sessions(user_id,uuid,created_at,expire_at) VALUES($1,$2,$3,$4)")
 	if err != nil {
 		return err
@@ -238,7 +238,7 @@ func insertSessionToDB(db *sql.DB, user_id int, user_uuid string, createdAt time
 // getUserIDFromDB retrieves the user ID from the database based on the given username.
 // It takes the username and a pointer to the SQL database connection as input parameters.
 // It returns the user ID as an integer and an error if any occurred during the database operation.
-func getUserIDFromDB(username string, db *sql.DB) (int, error) {
+func GetUserIDFromDB(username string, db *sql.DB) (int, error) {
 	var id int
 	stmt, err := db.Prepare("SELECT id_student FROM users WHERE username = $1 OR email = $2")
 	if err != nil {
@@ -255,7 +255,7 @@ func getUserIDFromDB(username string, db *sql.DB) (int, error) {
 	return id, nil
 }
 
-func getUserIDUsingSessionID(sessionID string, db *sql.DB) (int, error) {
+func GetUserIDUsingSessionID(sessionID string, db *sql.DB) (int, error) {
 	var id int
 	stmt, err := db.Prepare("SELECT user_id FROM Sessions WHERE uuid = $1")
 	if err != nil {

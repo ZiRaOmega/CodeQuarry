@@ -249,7 +249,7 @@ function switchVoteColor(question, upvoteContainer, downvoteContainer) {
       JSON.stringify({
         type: "upvote",
         content: question.id,
-        session_id: getCookie("session"),
+        
       })
     );
   });
@@ -268,7 +268,7 @@ function switchVoteColor(question, upvoteContainer, downvoteContainer) {
       JSON.stringify({
         type: "downvote",
         content: question.id,
-        session_id: getCookie("session"),
+        
       })
     );
   });

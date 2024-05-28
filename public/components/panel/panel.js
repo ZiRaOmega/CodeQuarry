@@ -15,7 +15,7 @@ function editQuestion(id) {
       upvotes: inputs[3].value,
       downvotes: inputs[4].value,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
@@ -42,7 +42,7 @@ function editResponse(responseId, question_id) {
       upvotes: inputs[3].value,
       downvotes: inputs[4].value,
     },
-    session_id: getCookie("session"),
+    
   };
 
   // Send the JSON stringified data through the WebSocket
@@ -63,7 +63,7 @@ function editSubject(id) {
       creationDate: inputs[1].value,
       updateDate: inputs[2].value,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
@@ -85,7 +85,7 @@ function addSubject() {
       title: inputs.value,
       description: textareas.value,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
   //Reset fields
@@ -99,7 +99,7 @@ function deleteSubject(id) {
     content: {
       id: id,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
@@ -110,7 +110,7 @@ function deleteQuestion(id) {
     content: {
       id: id,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
@@ -121,7 +121,7 @@ function deleteResponse(id, question_id) {
       id: id,
       question_id: question_id,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
@@ -160,7 +160,7 @@ function editUser(id) {
       rank: inputs[7].value,
       schoolyear: inputs[8].value,
     },
-    session_id: getCookie("session"),
+    
   };
   //Send data through WebSocket
   socket.send(JSON.stringify(data));
@@ -171,7 +171,7 @@ function deleteAvatar(user_id) {
     content: {
       user_id: user_id,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
@@ -181,7 +181,7 @@ function deleteUser(id) {
     content: {
       id: id,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
@@ -347,7 +347,7 @@ function ResendEmail(email) {
     content: {
       email: email,
     },
-    session_id: getCookie("session"),
+    
   };
   socket.send(JSON.stringify(data));
 }
