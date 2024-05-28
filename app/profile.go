@@ -181,7 +181,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 
 		user := User{}
 
-		user.ID, err = getUserIDUsingSessionID(session_id, db)
+		user.ID, err = GetUserIDUsingSessionID(session_id, db)
 		if err != nil {
 
 		}
@@ -405,7 +405,7 @@ func FavoriHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		session_id := cookie.Value
-		userID, err := getUserIDUsingSessionID(session_id, db)
+		userID, err := GetUserIDUsingSessionID(session_id, db)
 		if err != nil {
 			http.Error(w, "Error getting user ID", http.StatusInternalServerError)
 			return
@@ -449,7 +449,7 @@ func DeleteProfileHandler(db *sql.DB) http.HandlerFunc {
 
 		user := User{}
 
-		user.ID, err = getUserIDUsingSessionID(session_id, db)
+		user.ID, err = GetUserIDUsingSessionID(session_id, db)
 		if err != nil {
 
 		}

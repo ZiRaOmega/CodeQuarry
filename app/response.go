@@ -46,7 +46,8 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 				http.Error(w, "Error decoding request body", http.StatusBadRequest)
 				return
 			}
-			session_id := receive_data.(map[string]interface{})["session_id"].(string)
+			sessionid_cookie, err := r.Cookie("session")
+			session_id := sessionid_cookie.Value
 			question_id := receive_data.(map[string]interface{})["response"].(map[string]interface{})["question_id"].(string)
 			description := receive_data.(map[string]interface{})["response"].(map[string]interface{})["description"].(string)
 			content := receive_data.(map[string]interface{})["response"].(map[string]interface{})["content"].(string)
@@ -63,7 +64,7 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 			}
 			creation_date := time.Now()
 
-			userid, err := getUserIDUsingSessionID(session_id, db)
+			userid, err := GetUserIDUsingSessionID(session_id, db)
 			if userid == 0 || err != nil {
 				json.NewEncoder(w).Encode(map[string]string{"error": "Invalid session"})
 				http.Error(w, "Invalid session", http.StatusBadRequest)

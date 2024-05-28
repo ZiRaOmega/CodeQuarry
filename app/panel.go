@@ -21,7 +21,7 @@ func PanelAdminHandler(db *sql.DB) http.HandlerFunc {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
 		}
-		user_id, err := getUserIDUsingSessionID(session_id.Value, db)
+		user_id, err := GetUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return

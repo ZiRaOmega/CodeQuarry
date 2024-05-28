@@ -6,7 +6,7 @@ import (
 
 // HandleUpvote updates the upvote count for a question
 func HandleUpvote(db *sql.DB, questionID float64, sessionID string) error {
-	user_Id, err := getUserIDUsingSessionID(sessionID, db)
+	user_Id, err := GetUserIDUsingSessionID(sessionID, db)
 	if err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func SendNewVoteCount(db *sql.DB, questionID float64) (int, int) {
 
 // HandleDownvote updates the downvote count for a question
 func HandleDownvote(db *sql.DB, questionID float64, sessionID string) error {
-	user_Id, err := getUserIDUsingSessionID(sessionID, db)
+	user_Id, err := GetUserIDUsingSessionID(sessionID, db)
 	if err != nil {
 		return err
 	}
@@ -181,7 +181,7 @@ func UpdateUserInVoteQuestionDb(db *sql.DB, questionID float64, studentID float6
 
 // HandleUpvoteResponse updates the upvote count for a response
 func HandleUpvoteResponse(db *sql.DB, responseID float64, sessionID string) error {
-	user_Id, err := getUserIDUsingSessionID(sessionID, db)
+	user_Id, err := GetUserIDUsingSessionID(sessionID, db)
 	if err != nil {
 		return err
 	}
@@ -287,7 +287,7 @@ func UpdateUserInVoteResponseDb(db *sql.DB, responseID float64, studentID float6
 // HandleDownvoteResponse updates the downvote count for a response
 
 func HandleDownvoteResponse(db *sql.DB, responseID float64, sessionID string) error {
-	user_Id, err := getUserIDUsingSessionID(sessionID, db)
+	user_Id, err := GetUserIDUsingSessionID(sessionID, db)
 	if err != nil {
 		return err
 	}

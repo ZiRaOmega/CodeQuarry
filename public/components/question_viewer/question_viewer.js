@@ -62,7 +62,7 @@ function sendResponse() {
       },
       body: JSON.stringify({
         response: response,
-        session_id: getCookie("session"),
+        
       }),
     })
       .then((response) => response.json())
@@ -141,7 +141,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               JSON.stringify({
                 type: "questionCompareUser",
                 content: question.id,
-                session_id: getCookie("session"),
+                
               })
             );
           }
@@ -186,7 +186,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
           JSON.stringify({
             type: "upvote",
             content: question.id,
-            session_id: getCookie("session"),
+            
           })
         );
       };
@@ -210,7 +210,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
           JSON.stringify({
             type: "downvote",
             content: question.id,
-            session_id: getCookie("session"),
+            
           })
         );
       };
@@ -587,7 +587,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               JSON.stringify({
                 type: "upvote_response",
                 content: answer.response_id,
-                session_id: getCookie("session"),
+                
               })
             );
           };
@@ -615,7 +615,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
               JSON.stringify({
                 type: "downvote_response",
                 content: answer.response_id,
-                session_id: getCookie("session"),
+                
               })
             );
           };
@@ -653,7 +653,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
                       answer_id: bestAnswer.getAttribute("data-answer-id"),
                       question_id: question.id.toString(),
                     },
-                    session_id: getCookie("session"),
+                    
                   })
                 );
                 areYouSure[0].style.display = "none";
@@ -673,7 +673,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
                     answer_id: bestAnswer.getAttribute("data-answer-id"),
                     question_id: question.id.toString(),
                   },
-                  session_id: getCookie("session"),
+                  
                 })
               );
               document.getElementById("response_input").style.display = "flex";
@@ -706,7 +706,7 @@ function ModifyQuestion() {
         description: question_description,
         content: question_content,
       },
-      session_id: getCookie("session"),
+      
     })
   );
 }
