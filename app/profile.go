@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"html/template"
 	"io"
 	"log"
 	"net/http"
@@ -98,7 +99,7 @@ type User struct {
 	DeletingDate       sql.NullTime // Adjusted for possible NULL values
 	My_Post            []Question
 	Favori             []Question
-	CSRFToken          string
+	CSRFToken          template.HTML
 }
 
 // GetUser fetches user details from the database based on the session ID
@@ -188,10 +189,7 @@ func UpdateProfileHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Invalid user", http.StatusForbidden)
 			return
 		}
-		if !VerifyCSRFToken(w, r) {
-			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
-			return
-		}
+
 		user.LastName = r.PostFormValue("lastname")
 		user.FirstName = r.PostFormValue("firstname")
 		user.Username = r.PostFormValue("username")
@@ -460,10 +458,6 @@ func DeleteProfileHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		if !VerifyCSRFToken(w, r) {
-			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
-			return
-		}
 		//Check if the ceckbox is selected
 		if r.PostFormValue("confirm_delete") != "on" {
 			http.Error(w, "You must confirm the deletion", http.StatusForbidden)
