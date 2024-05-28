@@ -69,7 +69,7 @@ func main() {
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 	http.HandleFunc("/favicon.ico", app.FaviconHandler)
-	http.Handle("/", app.AddSecurityHeaders(CSRF(http.HandlerFunc(app.SendComponent("auth", db))).ServeHTTP))
+	http.Handle("/", app.CorsMiddleware(app.AddSecurityHeaders(CSRF(http.HandlerFunc(app.SendComponent("auth", db))).ServeHTTP)))
 
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
 	// http.HandleFunc("/scriphttps://pkg.go.dev/golang.org/x/tools/internal/typesinternal?utm_source%3Dgopls#IncompatibleAssignts/auth_obfuscate.js", app.ErrorsHandler)

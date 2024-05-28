@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 type LogLevel int
@@ -28,6 +29,27 @@ func AddSecurityHeaders(next http.HandlerFunc) http.HandlerFunc {
 		w.Header().Add("Content-Type", "text/html; charset=utf-8")
 		next.ServeHTTP(w, r)
 	}
+}
+func CorsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		origin := r.Header.Get("Origin")
+		if origin != "" {
+			for _, allowedOrigin := range allowedOrigins {
+				if strings.EqualFold(origin, allowedOrigin) {
+					w.Header().Set("Access-Control-Allow-Origin", origin)
+					w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+					w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+					w.Header().Set("Access-Control-Allow-Credentials", "true")
+					break
+				}
+			}
+		}
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }
 
 // func LogAudit(message string) {

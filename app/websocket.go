@@ -226,7 +226,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 				}
 
 				if !ok {
-					
+
 					// Optionally send an error response back to the client
 					continue
 				}
