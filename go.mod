@@ -3,6 +3,7 @@ module codequarry
 go 1.22
 
 require (
+	github.com/gorilla/csrf v1.7.2
 	github.com/gorilla/sessions v1.2.2
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9

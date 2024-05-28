@@ -63,19 +63,18 @@ $(document).ready(function () {
     }
     event.preventDefault();
     if (!errorMessage) {
-      let form=new FormData(registerForm)
-      //add csrfToken
-      form.append("csrfToken", document.getElementById("csrfToken").value);
+      let form = new FormData(registerForm);
+      
       fetch("/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: new URLSearchParams(),
-
+        body: new URLSearchParams((form)),
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log(data)
           if (data.status === "success") {
             let registerBlock = document.getElementById("registerBlock");
             registerBlock.style.display = "none";
@@ -106,60 +105,61 @@ let login = document.getElementById("login");
 let usernameOrEmailLogin = document.getElementById("usernameOrEmailLogin");
 let passwordLogin = document.getElementById("loginPassword");
 let contentAlertLogin = document.getElementById("contentAlertLogin");
+let loginForm = document.getElementById("loginForm");
 $(document).ready(function () {
   $("#loginForm").submit(function (event) {
     event.preventDefault(); // Prevent the default form submission
-    var formData = {
-      usernameOrEmailLogin: $("#usernameOrEmailLogin").val(),
-      passwordLogin: $("#loginPassword").val(),
-      csrfToken: $("#csrfToken").val(),
-    };
-    $.ajax({
-      type: "POST",
-      url: "/login",
-      data: $.param(formData), // Correctly encode the data as URL-encoded string
-      contentType: "application/x-www-form-urlencoded", // Ensure the content type is set correctly
-      success: function (response) {
-        if (response.status === "success") {
-          window.location.href = "/home"; // Redirect to the forum page
-        } else {
-          let loginBlock = document.getElementById("loginBlock");
-          loginBlock.style.display = "none";
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text:
-              response.message ||
-              "Invalid login credentials! or email not verified",
-            confirmButtonText: "OK",
-          }).then((result) => {
-            if (result.value) {
-              setTimeout(() => {
-                document.location.reload()
-              }, 500);
-            }
-          });
-        }
+    let form = new FormData(loginForm);
+    
+    //Add gorilla.csrf.Token to formData
+    
+    fetch("/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      error: function () {
+      body: new URLSearchParams(form),
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.status === "success") {
+        window.location.href = "/home"; // Redirect to the home page
+      } else {
         let loginBlock = document.getElementById("loginBlock");
         loginBlock.style.display = "none";
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Invalid login credentials! Or email not verified",
+          text: data.message || "Invalid login credentials! or email not verified",
+          confirmButtonText: "OK",
         }).then((result) => {
           if (result.value) {
             setTimeout(() => {
-              loginBlock.style.display = "flex";
-            }, 300);
-            loginBlock.style.animation = "fadeIn 0.3s ease-in-out";
+              document.location.reload();
+            }, 500);
           }
         });
-      },
+      }
+    })
+    .catch((error) => {
+      let loginBlock = document.getElementById("loginBlock");
+      loginBlock.style.display = "none";
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Invalid login credentials! Or email not verified",
+      }).then((result) => {
+        if (result.value) {
+          setTimeout(() => {
+            loginBlock.style.display = "flex";
+          }, 300);
+          loginBlock.style.animation = "fadeIn 0.3s ease-in-out";
+        }
+      });
     });
+
   });
 });
-document.getElementById('acceptTerms').addEventListener('change', function() {
-  document.getElementById('registerSubmit').disabled = !this.checked;
+document.getElementById("acceptTerms").addEventListener("change", function () {
+  document.getElementById("registerSubmit").disabled = !this.checked;
 });

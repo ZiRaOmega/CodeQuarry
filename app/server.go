@@ -5,7 +5,10 @@ import (
 	"log"
 	"net/http"
 	"path"
-	"text/template"
+
+	"html/template" // Add this import statement
+
+	"github.com/gorilla/csrf"
 )
 
 type AuthInfo struct {
@@ -17,33 +20,17 @@ type AuthInfo struct {
 func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
-		// Get cookie session
-
-		csrfToken, err := generateCSRFToken()
-		if err != nil {
-			http.Error(w, "Error generating CSRF token", http.StatusInternalServerError)
-			return
-		}
-		session, err := store.Get(r, "csrfToken")
-		if err != nil {
-			http.Error(w, "Error getting session", http.StatusInternalServerError)
-			return
-		}
-		session.Values[csrfSessionKey] = csrfToken
-		session.Save(r, w)
+		csrfToken := csrf.TemplateField(r)
 		if component_name == "auth" || component_name == "cgu" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-			if err != nil {
-				http.Error(w, "Error generating CSRF token", http.StatusInternalServerError)
-				return
-			}
+
 			tmplData := struct {
-				CSRFToken string
+				CSRFToken template.HTML
 			}{
 				CSRFToken: csrfToken,
 			}
 
-			err = ParseAndExecuteTemplate(component_name, tmplData, w)
+			err := ParseAndExecuteTemplate(component_name, tmplData, w)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
@@ -213,7 +200,7 @@ func SearchBarCSS(w http.ResponseWriter, r *http.Request) {
 // JS
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the animation js file
-	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
+	http.ServeFile(w, r, "public/components/auth/auth.js")
 }
 
 // CSS

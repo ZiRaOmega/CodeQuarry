@@ -123,6 +123,7 @@ func isValidToken(db *sql.DB, token string) bool {
 	// Prepare the SQL query to check the token's validity.
 	stmt, err := db.Prepare("SELECT COUNT(*) FROM VerifyEmail WHERE token = $1 AND validated = FALSE")
 	if err != nil {
+		fmt.Println(err.Error())
 		return false
 	}
 	defer stmt.Close()
@@ -131,6 +132,7 @@ func isValidToken(db *sql.DB, token string) bool {
 	// Execute the query with the token as a parameter and scan the result.
 	err = stmt.QueryRow(token).Scan(&count)
 	if err != nil {
+		fmt.Println(err.Error())
 		return false
 	}
 
@@ -155,7 +157,7 @@ func UpdateValidated(db *sql.DB, token string) error {
 
 // isEmailVerified checks if an email is verified using a prepared statement.
 func isEmailVerified(db *sql.DB, email string) bool {
-	// pq username et pas email ? 
+	// pq username et pas email ?
 	// email := GetEmailWithUsername(db, username)
 	// normal que ça marche pas email != username
 	stmt, err := db.Prepare("SELECT COUNT(*) FROM VerifyEmail WHERE email = $1 AND validated = TRUE")

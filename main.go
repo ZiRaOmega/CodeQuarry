@@ -34,10 +34,11 @@ func main() {
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	dbType := os.Getenv("DB_TYPE")
-	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
 	URL := os.Getenv("URL")
+	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
+	//URL := os.Getenv("URL")
 	db := app.InitDB(dsn)
-	app.InitStoreCSRFToken()
+	CSRF := app.InitStoreCSRFToken()
 	defer db.Close()
 	app.SetupDB(db)
 	// Obfuscate JavaScript files
@@ -68,7 +69,7 @@ func main() {
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
 	http.HandleFunc("/global_style/global.css", app.CssHandler)
 	http.HandleFunc("/favicon.ico", app.FaviconHandler)
-	http.Handle("/", app.AddSecurityHeaders((http.HandlerFunc(app.SendComponent("auth", db))).ServeHTTP))
+	http.Handle("/", app.AddSecurityHeaders(CSRF(http.HandlerFunc(app.SendComponent("auth", db))).ServeHTTP))
 
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
 	// http.HandleFunc("/scriphttps://pkg.go.dev/golang.org/x/tools/internal/typesinternal?utm_source%3Dgopls#IncompatibleAssignts/auth_obfuscate.js", app.ErrorsHandler)
@@ -77,30 +78,14 @@ func main() {
 	// Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	//http.HandleFunc("/register", app.RegisterHandler(db))
-	http.Handle("/register", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := r.ParseForm(); err != nil {
-			http.Error(w, "Error parsing form", http.StatusBadRequest)
-			return
-		}
+	http.Handle("/register", CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		if !app.VerifyCSRFToken(w, r) {
-			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
-			return
-		}
 		RegisterRateLimiter.Handle(app.RegisterHandler(db)).ServeHTTP(w, r)
-	}))
-	http.Handle("/login", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if err := r.ParseForm(); err != nil {
-			http.Error(w, "Error parsing form", http.StatusBadRequest)
-			return
-		}
+	})))
+	http.Handle("/login", CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		if !app.VerifyCSRFToken(w, r) {
-			http.Error(w, "Invalid CSRF token", http.StatusForbidden)
-			return
-		}
 		GlobalrateLimiter.Handle(app.LoginHandler(db)).ServeHTTP(w, r)
-	}))
+	})))
 	http.HandleFunc("/images/logo.png", app.LogoHandler)
 	http.HandleFunc("/checked", app.CheckLogoHandler)
 	http.HandleFunc("/logo", app.LogoHandler)
@@ -135,8 +120,12 @@ func main() {
 	http.HandleFunc("/question_viewer", app.QuestionViewerHandler(db))
 	http.HandleFunc("/scripts/question_viewer.js", app.QuestionViewerJSHandler)
 	http.HandleFunc("/components/question_viewer/question_viewer.css", app.QuestionViewerCSSHandler)
-	http.HandleFunc("/profile", app.SendComponent("profile", db))
-	http.HandleFunc("/update-profile", app.UpdateProfileHandler(db))
+	http.HandleFunc("/profile", func(w http.ResponseWriter, r *http.Request) {
+		CSRF(app.SendComponent("profile", db)).ServeHTTP(w, r)
+	})
+	http.HandleFunc("/update-profile", func(w http.ResponseWriter, r *http.Request) {
+		CSRF(http.HandlerFunc(app.UpdateProfileHandler(db))).ServeHTTP(w, r)
+	})
 	http.HandleFunc("/search_bar/input.js", app.SearchBarJS)
 	http.HandleFunc("/templates/search_bar/search_bar.css", app.SearchBarCSS)
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
@@ -151,7 +140,8 @@ func main() {
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 	http.HandleFunc("/cgu", app.SendComponent("cgu", db))
-	http.HandleFunc("/delete-profile", app.DeleteProfileHandler(db))
+	http.Handle("/delete-profile", CSRF(http.HandlerFunc(app.DeleteProfileHandler(db))))
+
 	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
 	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
