@@ -12,7 +12,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var allowedOrigins = []string{
+var AllowedOrigins = []string{
 	//"https://codequarry.dev",
 	"https://localhost", // for local development
 }
@@ -24,7 +24,7 @@ func CheckOrigin(r *http.Request) bool {
 		return false
 	}
 
-	for _, allowedOrigin := range allowedOrigins {
+	for _, allowedOrigin := range AllowedOrigins {
 		if strings.EqualFold(origin, allowedOrigin) {
 			return true
 		}
@@ -77,7 +77,8 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			Log(ErrorLevel, "Error upgrading the HTTP connection to a WebSocket connection")
-			http.Error(w, "Error upgrading the HTTP connection to a WebSocket connection", http.StatusInternalServerError)
+			fmt.Println(err.Error())
+			//http.Error(w, "Error upgrading the HTTP connection to a WebSocket connection", http.StatusInternalServerError)
 			return
 		}
 		// Add the new WebSocket connection

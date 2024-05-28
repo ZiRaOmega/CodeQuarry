@@ -2,20 +2,26 @@ package app
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gorilla/csrf"
 	"github.com/gorilla/sessions"
+	"github.com/joho/godotenv"
 )
 
 var store *sessions.CookieStore
 
+// InitStoreCSRFToken initializes and returns a middleware function that adds CSRF protection to the HTTP handler.
+// It loads the CSRF key and store key from environment variables, initializes the session store with secure options,
+// and configures the CSRF protection. The returned middleware function can be used to wrap the HTTP handler.
 func InitStoreCSRFToken() func(http.Handler) http.Handler {
-	// Replace with your own authentication key (32 bytes)
-	csrfKey := []byte("32-byte-long-auth-key")
+	godotenv.Load()
+	csrfKey := os.Getenv("CSRF_KEY")
+	storeKey := os.Getenv("STORE_KEY")
 
 	// Initialize the store with secure options
 	store = sessions.NewCookieStore(
-		[]byte("Z9H6byZx3dvnA5H+GZNJsaWshO1iamGbhTsM4C4eFxI="),
+		[]byte(storeKey),
 	)
 	store.Options = &sessions.Options{
 		Path:     "/",
@@ -26,12 +32,7 @@ func InitStoreCSRFToken() func(http.Handler) http.Handler {
 	}
 
 	// Initialize CSRF protection
-	CSRF := csrf.Protect(csrfKey, csrf.Secure(false))
+	CSRF := csrf.Protect([]byte(csrfKey), csrf.Secure(false))
 	return CSRF
 
 }
-
-const (
-	csrfTokenLength = 32
-	csrfSessionKey  = "csrf_token"
-)
