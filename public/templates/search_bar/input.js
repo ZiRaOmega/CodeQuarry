@@ -233,10 +233,10 @@ function create_results(array, input) {
       <div class="subject_tag">${item.question.subject_title}</div>
       <h3 class="question_title">${det_title}</h3>
       <p class="question_description">${det_desc}</p>
-      <pre><code>${""}</code></pre>
+      <pre><code>${escapeHTML(item.question.content)}</code></pre>
     `;
     //console.log(item.question.content)
-    details.querySelector("code").textContent = item.question.content;
+   // details.querySelector("code").textContent = item.question.content;
     //console.log(details.querySelector("code"))
     var prev_suffix = slice_rslt(item.Suffix, input);
     preview.innerHTML = `<span class="result_prefix">${item.Prefix}</span><span class="result_text">${prev_suffix}</span>`;

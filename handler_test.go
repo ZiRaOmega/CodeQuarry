@@ -16,6 +16,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// TestCssHandler tests the CssHandler function from the app package.
+// It sends a GET request to the /global_style/global.css endpoint
+// and checks if the response status code is 200 (OK) and if the
+// Content-Type header starts with "text/css".
 func TestCssHandler(t *testing.T) {
 	req, err := http.NewRequest("GET", "/global_style/global.css", nil)
 	if err != nil {
@@ -38,6 +42,9 @@ func TestCssHandler(t *testing.T) {
 	}
 }
 
+// TestFaviconHandler tests the FaviconHandler function from the app package.
+// It sends a GET request to the /favicon.ico endpoint and checks if the
+// response status code is 200 (OK) and if the Content-Type header starts with "image/".
 func TestFaviconHandler(t *testing.T) {
 	req, err := http.NewRequest("GET", "/favicon.ico", nil)
 	if err != nil {
@@ -60,6 +67,11 @@ func TestFaviconHandler(t *testing.T) {
 	}
 }
 
+// TestSendComponentAuth tests the SendComponent function from the app package
+// for the "auth" component. It initializes the database connection using
+// environment variables, sends a GET request to the root endpoint ("/"),
+// and checks if the response status code is 200 (OK) and if the Content-Type
+// header starts with "text/html".
 func TestSendComponentAuth(t *testing.T) {
 	err := godotenv.Load()
 	if err != nil {
@@ -98,6 +110,10 @@ func TestSendComponentAuth(t *testing.T) {
 	}
 }
 
+// TestLoginHandler tests the LoginHandler function from the app package.
+// It initializes the database connection using environment variables,
+// sends a POST request to the /login endpoint with form data, and checks if
+// the response status code is 200 (OK).
 func TestLoginHandler(t *testing.T) {
 	err := godotenv.Load()
 	if err != nil {
@@ -132,6 +148,10 @@ func TestLoginHandler(t *testing.T) {
 	}
 }
 
+// TestRegisterHandler tests the RegisterHandler function from the app package.
+// It initializes the database connection using environment variables,
+// sends a POST request to the /register endpoint with form data, and checks if
+// the response status code is 200 (OK).
 func TestRegisterHandler(t *testing.T) {
 	err := godotenv.Load()
 	if err != nil {
@@ -166,6 +186,10 @@ func TestRegisterHandler(t *testing.T) {
 	}
 }
 
+// TestLogoutHandler tests the LogoutHandler function from the app package.
+// It initializes the database connection using environment variables,
+// sends a POST request to the /logout endpoint with a session cookie,
+// and checks if the response status code is 303 (See Other).
 func TestLogoutHandler(t *testing.T) {
 	err := godotenv.Load()
 	if err != nil {
@@ -205,6 +229,10 @@ func TestLogoutHandler(t *testing.T) {
 	}
 }
 
+// TestWebsocketHandler tests the WebsocketHandler function from the app package.
+// It initializes the database connection using environment variables,
+// starts a new HTTPS server with the WebSocket handler, connects to the WebSocket
+// server, sends a test message, and checks if the response message is as expected.
 func TestWebsocketHandler(t *testing.T) {
 	// Load environment variables
 	err := godotenv.Load()
