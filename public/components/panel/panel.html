@@ -84,7 +84,7 @@
             /><br />
             <button onclick="editUser({{.ID}})">Edit</button>
             {{if eq $.Rank_Panel.Int64 2}}
-            <button onclick="deleteUser({{.ID}})">Delete</button>
+            <button onclick="deleteUser({{.ID}},this)">Delete</button>
             {{end}}
           </div>
           <br />
@@ -105,7 +105,7 @@
         <input class="input-field" type="date" value="{{.UpdateDate.Format
         "2006-01-02"}}" /><br />
         <button onclick="editSubject({{.Id}})">Edit</button>
-        <button onclick="deleteSubject({{.Id}})">Delete</button>
+        <button onclick="deleteSubject({{.Id}},this)">Delete</button>
       </div>
       <br />
       {{end}}
@@ -148,7 +148,7 @@
         <button onclick="removeOneDownVoteQuestion({{.Id}})">-</button>
         <br />
         <button onclick="editQuestion({{.Id}})">Edit</button>
-        <button onclick="deleteQuestion({{.Id}})">Delete</button>
+        <button onclick="deleteQuestion({{.Id}},this)">Delete</button>
         <button onclick="showResponses({{.Id}})">Responses</button>
         <div class="all_responses panel_all_div" data-response-id="{{.Id}}" style="display: none;">
           <h5>Responses:</h5>
@@ -194,7 +194,7 @@
             <button onclick="editResponse({{.ResponseID}},{{$Id}})">
               Edit
             </button>
-            <button onclick="deleteResponse({{.ResponseID}},{{$Id}})">
+            <button onclick="deleteResponse({{.ResponseID}},{{$Id}},this)">
               Delete
             </button>
           </div>

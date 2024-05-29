@@ -69,9 +69,6 @@ function addSubject() {
   const newSubjectElement = document.querySelector("#add_subject");
   const inputs = newSubjectElement.querySelector(".input-field");
   const textareas = newSubjectElement.querySelector(".textarea-field");
-  console.log(newSubjectElement);
-  console.log(inputs);
-  console.log(textareas);
   if (textareas.value == "" || inputs.value == "") {
     return;
   }
@@ -89,7 +86,7 @@ function addSubject() {
   textareas.value = "";
 }
 
-function deleteSubject(id) {
+function deleteSubject(id,element=new HTMLElement) {
   const data = {
     type: "deleteSubjectPanel",
     content: {
@@ -97,9 +94,10 @@ function deleteSubject(id) {
     },
   };
   socket.send(JSON.stringify(data));
+  element.parentElement.remove()
 }
 
-function deleteQuestion(id) {
+function deleteQuestion(id,element) {
   const data = {
     type: "deleteQuestionPanel",
     content: {
@@ -107,8 +105,9 @@ function deleteQuestion(id) {
     },
   };
   socket.send(JSON.stringify(data));
+  element.parentElement.remove()
 }
-function deleteResponse(id, question_id) {
+function deleteResponse(id, question_id, element) {
   const data = {
     type: "deleteResponsePanel",
     content: {
@@ -117,23 +116,10 @@ function deleteResponse(id, question_id) {
     },
   };
   socket.send(JSON.stringify(data));
+  element.parentElement.remove()
 }
 
 function editUser(id) {
-  /** <div class="user_details" data-user-id="{{.ID}}">
-                <input class="input-field" type="text" value="{{.FirstName}} " /><br>
-                <input class="input-field" type="text" value="{{.LastName}}" /><br>
-                <input class="input-field" type="text" value="@{{.Username}}" /><br>
-                <input class="input-field" type="email" value="{{.Email}}" /><br>
-                <textarea class="textarea-field">{{if .Bio.Valid}}{{.Bio.String}}{{else}}Not provided{{end}}</textarea><br>
-                <input class="input-field" type="url" value="{{if .Website.Valid}}{{.Website.String}}{{end}}" /><br>
-                <input class="input-field" type="url" value="{{if .GitHub.Valid}}{{.GitHub.String}}{{end}}" /><br>
-                <input class="input-field" type="number" value="{{if .XP.Valid}}{{.XP.Int64}}{{else}}0{{end}}" /><br>
-                <input class="input-field" type="text" value="{{if .Rank.Valid}}{{.Rank.String}}{{else}}Unranked{{end}}" /><br>
-                <input class="input-field" type="date" value="{{if .SchoolYear.Valid}}{{.SchoolYear.Time}}{{end}}" /><br>
-                <button >Edit</button>
-                <button >Delete</button>
-            </div>*/
   const userElement = document.querySelector(`[data-user-id="${id}"]`);
   const inputs = userElement.querySelectorAll(".input-field");
   const textareas = userElement.querySelectorAll(".textarea-field");
@@ -166,7 +152,7 @@ function deleteAvatar(user_id) {
   };
   socket.send(JSON.stringify(data));
 }
-function deleteUser(id) {
+function deleteUser(id,element) {
   const data = {
     type: "deleteUserPanel",
     content: {
@@ -174,6 +160,7 @@ function deleteUser(id) {
     },
   };
   socket.send(JSON.stringify(data));
+  element.remove()
 }
 
 function addOneUpVoteResponse(Responseid) {
@@ -370,7 +357,7 @@ function searchUsers() {
       let i = u.querySelectorAll("input")[p];
       console.log(i);
       if (i.value.toLowerCase().includes(search.toLowerCase())) {
-        u.style.display = "block";
+        u.style.display = "flex";
         console.log(i);
         break;
       } else {
@@ -386,7 +373,7 @@ function searchSubjects() {
     for (let p = 0; p < s.querySelectorAll("input").length; p++) {
       let i = s.querySelectorAll("input")[p];
       if (i.value.toLowerCase().includes(search.toLowerCase())) {
-        s.style.display = "block";
+        s.style.display = "flex";
         break;
       } else {
         s.style.display = "none";
@@ -401,7 +388,7 @@ function searchQuestions() {
     for (let p = 0; p < q.querySelectorAll("input").length; p++) {
       let i = q.querySelectorAll("input")[p];
       if (i.value.toLowerCase().includes(search.toLowerCase())) {
-        q.style.display = "block";
+        q.style.display = "flex";
         break;
       } else {
         q.style.display = "none";
