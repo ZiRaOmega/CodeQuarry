@@ -192,6 +192,6 @@ func ForgotPasswordHandler(db *sql.DB) http.HandlerFunc {
 		password := ResetPassword(db, email)
 		SendResetPasswordEmail(email, password)
 		//http.Error(w, "Password reset successful. Check your email for the new password", http.StatusOK)
-		http.Redirect(w, r, "/", http.StatusOK)
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }
