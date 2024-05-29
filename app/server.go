@@ -172,7 +172,7 @@ func FooterHandlerCss(w http.ResponseWriter, r *http.Request) {
 // JS
 func AllSubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
-	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects.js")
+	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects_obfuscate.js")
 }
 
 // CSS
@@ -199,8 +199,8 @@ func SearchBarCSS(w http.ResponseWriter, r *http.Request) {
 /* --------------- AUTH ---------------- */
 // JS
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
-	// serve the animation js file
-	http.ServeFile(w, r, "public/components/auth/auth.js")
+	// serve the auth js file
+	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
 }
 
 // CSS
