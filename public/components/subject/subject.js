@@ -179,7 +179,7 @@ function manageFavorite(favori, questionId) {
   };
 }
 
-function escapeHTML(str) {
+window.escapeHTML=function escapeHTML(str) {
   return str.replace(/[&<>"']/g, function (match) {
     const escape = {
       '&': '&amp;',
