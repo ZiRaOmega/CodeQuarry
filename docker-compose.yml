@@ -33,7 +33,7 @@ services:
       POSTGRES_PASSWORD: CQ1234
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./postgresql_config/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./postgresql_config:/var/lib/postgresql/data
     networks:
       - codequarry
 volumes:
