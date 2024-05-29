@@ -23,7 +23,6 @@ func CheckOrigin(r *http.Request) bool {
 	if origin == "" {
 		return false
 	}
-
 	for _, allowedOrigin := range AllowedOrigins {
 		if strings.EqualFold(origin, allowedOrigin) {
 			return true
@@ -78,7 +77,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 		if err != nil {
 			Log(ErrorLevel, "Error upgrading the HTTP connection to a WebSocket connection")
 			fmt.Println(err.Error())
-			//http.Error(w, "Error upgrading the HTTP connection to a WebSocket connection", http.StatusInternalServerError)
 			return
 		}
 		// Add the new WebSocket connection
@@ -172,11 +170,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					BroadcastMessage(WSMessage{Type: "postCreated", Content: updatedSubject, SessionID: ""}, conn)
 				}
 			case "deletePost":
-				/*{
-					content: id,
-					type: "deletePost",
-					session_id: getCookie("session")
-				}*/
 				question_id, err := strconv.Atoi(wsmessage.Content.(string))
 				if err != nil {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Invalid question ID"})
@@ -197,8 +190,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to delete post"})
 				} else {
 					// On successful question deletion, send an update message
-					//updatedSubject, _ := FetchSubjectWithQuestionCount(db, question_id) // Implement this method
-					/* conn.WriteJSON(WSMessage{Type: "postDeleted", Content: question_id}) */
 					XP, err := FetchXP(db, user_id)
 					if err != nil {
 						conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to fetch XP"})
@@ -424,20 +415,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					}
 				}
 			case "editQuestionPanel":
-				/*const data = {
-				    type: "editQuestionPanel",
-				    content: {
-				        id: id,
-				        title: inputs[0].value,
-				        description: textareas[0].value,
-				        content: textareas[1].value,
-				        creationDate: inputs[1].value,
-				        updateDate: inputs[2].value,
-				        upvotes: inputs[3].value,
-				        downvotes: inputs[4].value
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -474,20 +451,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
 			case "editResponsePanel":
-				/*const data = {
-				    type: "editResponsePanel",
-				    content: {
-				        id: responseId,
-						question_id: question_id,
-				        content: textareas[0].value,
-				        description: inputs[0].value,
-				        creationDate: inputs[1].value,
-				        updateDate: inputs[2].value,
-				        upvotes: inputs[3].value,
-				        downvotes: inputs[4].value
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -524,17 +487,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
 			case "editSubjectPanel":
-				/*const data = {
-				    type: "editSubjectPanel",
-				    content: {
-				        id: id,
-				        title: inputs[0].value,
-				        description: textareas[0].value,
-				        creationDate: inputs[1].value,
-				        updateDate: inputs[2].value,
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -567,14 +519,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					}
 				}
 			case "addSubjectPanel":
-				/* const data = {
-				    type: "addSubjectPanel",
-				    content: {
-				        title: inputs[0].value,
-				        description: textareas[0].value,
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok || len(contentMap) == 0 {
 
@@ -603,13 +547,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					}
 				}
 			case "deleteSubjectPanel":
-				/*const data = {
-				    type: "deleteSubjectPanel",
-				    content: {
-				        id: id,
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -637,13 +574,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					}
 				}
 			case "deleteQuestionPanel":
-				/*const data = {
-				    type: "deleteQuestionPanel",
-				    content: {
-				        id: id,
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -673,14 +603,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
 			case "deleteResponsePanel":
-				/* const data = {
-				    type: "deleteResponsePanel",
-				    content: {
-				        id: id,
-				        question_id: question_id
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -711,23 +633,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
 			case "editUserPanel":
-				/*const data = {
-				    type: "editUserPanel",
-				    content: {
-				        id: id,
-				        firstname : inputs[0].value,
-				        lastname : inputs[1].value,
-				        username : inputs[2].value,
-				        email : inputs[3].value,
-				        bio : textareas[0].value,
-				        website : inputs[4].value,
-				        github : inputs[5].value,
-				        xp : inputs[6].value,
-				        rank : inputs[7].value,
-				        schoolyear : inputs[8].value
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -770,13 +675,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
 			case "deleteUserPanel":
-				/* const data = {
-				    type: "deleteUserPanel",
-				    content: {
-				        id: id,
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -800,13 +698,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
 			case "deleteAvatarPanel":
-				/*const data = {
-				    type: "deleteAvatarPanel",
-				    content: {
-				        user_id: user_id,
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -829,13 +720,6 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Unauthorized"})
 				}
 			case "resendEmail":
-				/*const data = {
-				    type: "resendEmail",
-				    content: {
-				        email: email,
-				    },
-				    session_id: getCookie("session")
-				};*/
 				contentMap, ok := wsmessage.Content.(map[string]interface{})
 				if !ok {
 
@@ -922,7 +806,6 @@ func updateTokenVerifyEmail(db *sql.DB, email string, token string) error {
 		ON CONFLICT (email) 
 		DO UPDATE SET token = EXCLUDED.token, validated = false;
 	`
-
 	// Execute the query with the provided email and token
 	if _, err := db.Exec(query, email, token); err != nil {
 		return err

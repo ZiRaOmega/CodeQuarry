@@ -52,17 +52,6 @@ func CorsMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-// func LogAudit(message string) {
-// 	file, err := os.OpenFile("audit.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-// 	if err != nil {
-// 		log.Fatalf("Failed to open audit.log: %s", err)
-// 	}
-// 	defer file.Close()
-
-// 	logger := log.New(file, "LOG: ", log.LstdFlags)
-// 	logger.Println(message)
-// }
-
 func Log(level LogLevel, message string) {
 	file, err := os.OpenFile("audit.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
 	if err != nil {

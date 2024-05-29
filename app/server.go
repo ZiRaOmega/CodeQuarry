@@ -211,10 +211,6 @@ func AuthCssHandler(w http.ResponseWriter, r *http.Request) {
 
 /* --------------- HOME ---------------- */
 // HTML
-/* func HandleCodeQuarry(w http.ResponseWriter, r *http.Request) {
-	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/components/home/home.html")
-} */
 
 // CSS
 func CQcssHandler(w http.ResponseWriter, r *http.Request) {
