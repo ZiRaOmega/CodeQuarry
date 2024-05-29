@@ -209,7 +209,8 @@
   display: none;
   justify-content: center;
   align-items: center;
-  width: 9%;
+  width: fit-content;
+  padding: 10px;
   height: 40px;
   animation: FadeIn 0.3s;
 }
