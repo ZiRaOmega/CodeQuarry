@@ -35,8 +35,7 @@ func main() {
 	dbName := os.Getenv("DB_NAME")
 	dbType := os.Getenv("DB_TYPE")
 	URL := os.Getenv("URL")
-	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
-	//URL := os.Getenv("URL")
+	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=require"
 	db := app.InitDB(dsn)
 	CSRF := app.InitStoreCSRFToken()
 	defer db.Close()
@@ -72,12 +71,10 @@ func main() {
 	http.Handle("/", app.CorsMiddleware(app.AddSecurityHeaders(CSRF(http.HandlerFunc(app.SendComponent("auth", db))).ServeHTTP)))
 
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
-	// http.HandleFunc("/scriphttps://pkg.go.dev/golang.org/x/tools/internal/typesinternal?utm_source%3Dgopls#IncompatibleAssignts/auth_obfuscate.js", app.ErrorsHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/components/auth/animation.js", app.AnimationsHandler)
 	// Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
-	//http.HandleFunc("/register", app.RegisterHandler(db))
 	http.Handle("/register", CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
 		RegisterRateLimiter.Handle(app.RegisterHandler(db)).ServeHTTP(w, r)
@@ -91,11 +88,8 @@ func main() {
 	http.HandleFunc("/logo", app.LogoHandler)
 	http.HandleFunc("/create_post", app.AddSecurityHeaders(app.CreatePostHandler))
 	http.HandleFunc("/scripts/posts.js", app.PostsHandler)
-	// http.HandleFunc("/codeQuarry", app.SendTemplate("codeQuarry"))
 	http.HandleFunc("/home", app.SendComponent("home", db))
-	// http.HandleFunc("/styles/codeQuarry.css", app.CQcssHandler)
 	http.HandleFunc("/components/home/home.css", app.CQcssHandler)
-	// http.HandleFunc("/styles/header.css", app.HeaderCssHandler)
 	http.HandleFunc("/templates/header/header.css", app.HeaderHandlerCss)
 	http.HandleFunc("/templates/footer/footer.css", app.FooterHandlerCss)
 	http.HandleFunc("/templates/header/header.js", app.HandleHeaderJS)
@@ -132,7 +126,6 @@ func main() {
 	http.HandleFunc("/templates/search_bar/search_bar.css", app.SearchBarCSS)
 	http.HandleFunc("/components/profile/profile.js", app.ProfileJs)
 	http.HandleFunc("/posts.css", app.PostCSSHandler)
-	//http.HandleFunc("/classement", app.ClassementHandler(db))
 	http.HandleFunc("/classement", app.SendComponent("classement", db))
 	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
 	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
