@@ -410,11 +410,22 @@ function searchQuestions() {
   });
 }
 
-document.getElementById("search_bar_users").addEventListener("keyup", (k) => {
+document.getElementById("search_bar_questions").addEventListener("keyup", (k) => {
   k.preventDefault();
-  if (document.getElementById("search_bar_users").value == "") {
-    document.querySelectorAll(".user").forEach((u) => {
-      u.style.display = "block";
+  if (document.getElementById("search_bar_questions").value == "") {
+    document.querySelectorAll(".question").forEach((u) => {
+      u.style.display = "flex";
+    });
+  } else {
+    searchUsers();
+  }
+});
+
+document.getElementById("search_bar_subjects").addEventListener("keyup", (k) => {
+  k.preventDefault();
+  if (document.getElementById("search_bar_subjects").value == "") {
+    document.querySelectorAll(".subject").forEach((u) => {
+      u.style.display = "flex";
     });
   } else {
     searchUsers();
