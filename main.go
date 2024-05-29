@@ -149,21 +149,9 @@ func main() {
 	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
 	//For the server
 	//err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
-
-	//err = http.ListenAndServeTLS(":443", "server.crt", "server.key", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)
-	}
-	//for each tick
-	// Set up a ticker to run the sync function periodically
-	ticker := time.NewTicker(5 * time.Second)
-	defer ticker.Stop()
-
-	//for each tick do this app.CopyUsersToDeletedUsers(db)
-
-	for range ticker.C {
-		app.CopyUsersToDeletedUsers(db)
 	}
 
 }
