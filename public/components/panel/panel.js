@@ -417,7 +417,7 @@ document.getElementById("search_bar_questions").addEventListener("keyup", (k) =>
       u.style.display = "flex";
     });
   } else {
-    searchUsers();
+    searchQuestions();
   }
 });
 
@@ -428,6 +428,6 @@ document.getElementById("search_bar_subjects").addEventListener("keyup", (k) => 
       u.style.display = "flex";
     });
   } else {
-    searchUsers();
+    searchSubjects();
   }
 });
