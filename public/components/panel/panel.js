@@ -143,7 +143,7 @@ function editUser(id) {
   //Send data through WebSocket
   socket.send(JSON.stringify(data));
 }
-function deleteAvatar(user_id) {
+function deleteAvatar(user_id,element) {
   const data = {
     type: "deleteAvatarPanel",
     content: {
