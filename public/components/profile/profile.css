@@ -79,14 +79,12 @@ a{
     align-items: center;
 }
 
-.editProfileForm{
+.editProfileForm, .deleteProfileForm{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-bottom: 100px;
-    position: sticky;
-    top: 130px;
 }
 
 .all_edit_fields{
@@ -236,5 +234,9 @@ a{
 
     .titles{
         text-align: center;
+    }
+
+    .all_edit_fields{
+        flex-direction: column;
     }
 }

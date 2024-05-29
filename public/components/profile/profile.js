@@ -1,5 +1,6 @@
 const profileInfos = document.getElementById("profileInformations");
-const profileForm = document.querySelectorAll(".editProfileForm");
+const profileForm = document.getElementById("editProfileForm");
+const deleteForm = document.getElementById("deleteProfileForm")
 const button = document.getElementById("editButton");
 const lines = document.getElementsByClassName("informations")
 const links = document.getElementsByClassName("links")
@@ -86,10 +87,8 @@ for (let i of lines){
 
 button.addEventListener("click", function () {
 	profileInfos.style.display = "none";
-	profileForm.forEach(e=>{
-
-    e.style.display = "flex";
-  })
+	profileForm.style.display = "flex";
+  deleteForm.style.display = "flex";
   allposts.style.display = "none"
 });
 
