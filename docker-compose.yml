@@ -15,7 +15,9 @@ services:
       - db
     environment:
       DB_HOST: db
-      
+      DB_TYPE: postgres
+      DB_PORT: 5432
+
     volumes:
       - img_data:/root/public/img
       # Path on host to cert folder
