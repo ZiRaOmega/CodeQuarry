@@ -32,7 +32,7 @@ func InitStoreCSRFToken() func(http.Handler) http.Handler {
 	}
 
 	// Initialize CSRF protection
-	CSRF := csrf.Protect([]byte(csrfKey), csrf.Secure(false))
+	CSRF := csrf.Protect([]byte(csrfKey), csrf.Secure(true))
 	return CSRF
 
 }
