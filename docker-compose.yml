@@ -34,6 +34,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgresql_config/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./postgresql_config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
       - ./postgresql_config/server.crt:/var/lib/postgresql/data/server.crt
       - ./postgresql_config/server.key:/var/lib/postgresql/data/server.key
     networks:
