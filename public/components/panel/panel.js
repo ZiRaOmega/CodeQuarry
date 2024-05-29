@@ -151,8 +151,9 @@ function deleteAvatar(user_id,element) {
     },
   };
   socket.send(JSON.stringify(data));
+  element.parentElement.remove()
 }
-function deleteUser(id,element) {
+function deleteUser(id,element=new HTMLElement) {
   const data = {
     type: "deleteUserPanel",
     content: {
@@ -160,7 +161,7 @@ function deleteUser(id,element) {
     },
   };
   socket.send(JSON.stringify(data));
-  element.remove()
+  element.parentElement.remove()
 }
 
 function addOneUpVoteResponse(Responseid) {
