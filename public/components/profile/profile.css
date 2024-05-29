@@ -112,6 +112,8 @@ a{
     padding: 10px 20px;
     background-color: var(--darkblue);
     border-radius: 20px;
+    width: fit-content;
+    text-align: center;
     color: white;
     font-weight: bold;
 }

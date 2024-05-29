@@ -8,6 +8,7 @@
       <div class="panel_all_div" id="all_users" style="display: none;">
         <input id="search_bar_users"></input>
         <button onclick="searchUsers()">Search</button>
+        <div class="all_users_cards">
         {{range .Users}}
         <div class="user" style="display: none;">
           <div class="user_avatar">
@@ -90,12 +91,14 @@
           <br />
         </div>
         {{end}}
+        </div>
       
     </div>
     <button class="show_button" id="show_all_subjects">Subjects</button>
     <div class="panel_all_div" id="all_subjects" style="display: none;">
       <input id="search_bar_subjects"></input>
-        <button onclick="searchSubjects()">Search</button>
+      <button onclick="searchSubjects()">Search</button>
+      <div class="all_subjects_cards">
       {{range .Subjects}}
       <div class="subject" style="display: none;" data-subject-id="{{.Id}}">
         <input class="input-field" type="text" value="{{.Title}}" /><br />
@@ -115,11 +118,13 @@
         ><br />
         <button onclick="addSubject()">Add</button>
       </div>
+      </div>
     </div>
     <button class="show_button" id="show_all_questions">Questions</button>
     <div class="panel_all_div" id="all_questions" style="display: none;">
       <input id="search_bar_questions"></input>
         <button onclick="searchQuestions()">Search</button>
+      <div class="all_questions_cards">
       {{range .Questions}} {{$Id:=.Id}}
       <div class="question" style="display: none;" data-question-id="{{.Id}}">
         <input class="title input-field" type="text" value="{{.Title}}" /><br />
@@ -202,6 +207,7 @@
         </div>
       </div>
       {{end}}
+      </div>
     </div>
     {{template "script" .}}
     <script src="/scripts/panel.js"></script>
