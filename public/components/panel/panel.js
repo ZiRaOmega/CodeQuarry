@@ -15,7 +15,6 @@ function editQuestion(id) {
       upvotes: inputs[3].value,
       downvotes: inputs[4].value,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
@@ -42,7 +41,6 @@ function editResponse(responseId, question_id) {
       upvotes: inputs[3].value,
       downvotes: inputs[4].value,
     },
-    
   };
 
   // Send the JSON stringified data through the WebSocket
@@ -63,7 +61,6 @@ function editSubject(id) {
       creationDate: inputs[1].value,
       updateDate: inputs[2].value,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
@@ -85,7 +82,6 @@ function addSubject() {
       title: inputs.value,
       description: textareas.value,
     },
-    
   };
   socket.send(JSON.stringify(data));
   //Reset fields
@@ -99,7 +95,6 @@ function deleteSubject(id) {
     content: {
       id: id,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
@@ -110,7 +105,6 @@ function deleteQuestion(id) {
     content: {
       id: id,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
@@ -121,7 +115,6 @@ function deleteResponse(id, question_id) {
       id: id,
       question_id: question_id,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
@@ -160,7 +153,6 @@ function editUser(id) {
       rank: inputs[7].value,
       schoolyear: inputs[8].value,
     },
-    
   };
   //Send data through WebSocket
   socket.send(JSON.stringify(data));
@@ -171,7 +163,6 @@ function deleteAvatar(user_id) {
     content: {
       user_id: user_id,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
@@ -181,7 +172,6 @@ function deleteUser(id) {
     content: {
       id: id,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
@@ -309,30 +299,53 @@ function removeOneDownVoteQuestion(questionId) {
 document.getElementById("show_all_users").onclick = () => {
   const all_users = document.getElementById("all_users");
   toggleVisibility(all_users);
+  setTimeout(() => {
+    document.querySelectorAll(".user").forEach((u) => {
+      toggleFlexNone(u);
+    });
+  }, 550);
 };
 
 document.getElementById("show_all_subjects").onclick = () => {
   const all_subjects = document.getElementById("all_subjects");
   toggleVisibility(all_subjects);
+  setTimeout(() => {
+    document.querySelectorAll(".subject").forEach((u) => {
+      toggleFlexNone(u);
+    });
+  }, 550);
 };
 
 document.getElementById("show_all_questions").onclick = () => {
   const all_questions = document.getElementById("all_questions");
   toggleVisibility(all_questions);
+  setTimeout(() => {
+    document.querySelectorAll(".question").forEach((u) => {
+      toggleFlexNone(u);
+    });
+  }, 550);
 };
+function toggleFlexNone(u) {
+  //switch
+  if (u.style.display == "" || u.style.display == "none") {
+    u.style.display = "flex";
+  } else {
+    u.style.display = "none";
+  }
+}
 function toggleVisibility(element) {
   // Check if the element is visible
   if (element.classList.contains("visible")) {
     element.classList.remove("visible");
     setTimeout(() => {
       element.style.height = "0"; // Collapse the element after the fade out
-      element.style.display = "hidden";
+      element.style.display = "none";
     }, 500); // This should match the transition time
   } else {
     element.style.height = "auto"; // Expand the element before fading in
-
     element.classList.add("visible");
   }
+  
 }
 function showResponses(id) {
   const responses = document
@@ -347,7 +360,6 @@ function ResendEmail(email) {
     content: {
       email: email,
     },
-    
   };
   socket.send(JSON.stringify(data));
 }
