@@ -179,18 +179,6 @@ function manageFavorite(favori, questionId) {
   };
 }
 
-window.escapeHTML=function escapeHTML(str) {
-  return str.replace(/[&<>"']/g, function (match) {
-    const escape = {
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    };
-    return escape[match];
-  });
-}
 
 function htmlQuestionConstructor(question) {
   return `

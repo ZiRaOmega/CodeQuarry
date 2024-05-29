@@ -172,7 +172,7 @@ func FooterHandlerCss(w http.ResponseWriter, r *http.Request) {
 // JS
 func AllSubjectsHandlerJS(w http.ResponseWriter, r *http.Request) {
 	// Serve the subjects.html file as the default page
-	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects_obfuscate.js")
+	http.ServeFile(w, r, "public/templates/all_subjects/all_subjects.js")
 }
 
 // CSS
