@@ -338,7 +338,7 @@ function createQuestions(questions) {
       ContainerCreatorAndDate.appendChild(questionCreator);
       clickable_container.appendChild(ContainerCreatorAndDate);
       questionContainer.appendChild(clickable_container);
-      QuestionsElementsList.push(questionContainer);
+      //QuestionsElementsList.push(questionContainer);
       const voteContainer = document.createElement("div");
       voteContainer.classList.add("vote_container");
       const addFavoriElement = document.createElement("div");
