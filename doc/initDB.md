@@ -32,7 +32,7 @@ sudo systemctl start postgresql
 sudo systemctl enable postgresql
 ```
 
-5. Création de l'utilisateur 'codequarry' dans postgreSQL  
+5. 
 
 ```bash
 sudo -u postgres psql

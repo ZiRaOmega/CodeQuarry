@@ -85,10 +85,11 @@ func TestGetUserIDFromDB(t *testing.T) {
 	db := initTestDB(t)
 	defer db.Close()
 
-	username := "testuser"
+	username := "test"
 	email := "testuser@example.com"
+	password := "test"
 
-	_, err := db.Exec("INSERT INTO users (lastname, firstname, username, email, password) VALUES ($1, $2, $3, $4, $5)", "Last", "First", username, email, "password")
+	_, err := db.Exec("INSERT INTO users (lastname, firstname, username, email, password) VALUES ($1, $2, $3, $4, $5)", "Last", "First", username, email, password)
 	require.NoError(t, err)
 
 	id, err := app.GetUserIDFromDB(username, db)
