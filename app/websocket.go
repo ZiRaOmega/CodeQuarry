@@ -14,6 +14,9 @@ import (
 
 var AllowedOrigins = []string{
 	//"https://codequarry.dev",
+	//"https://www.codequarry.dev",
+	//"https://codequarry.ovh",
+	//"https://www.codequarry.ovh",
 	"https://localhost", // for local development
 }
 
