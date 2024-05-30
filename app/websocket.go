@@ -757,7 +757,7 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 }
 
 func DeleteAvatar(db *sql.DB, user_id int) error {
-	stmt, err := db.Prepare("UPDATE users SET avatar = NULL WHERE id_student = $1")
+	stmt, err := db.Prepare("UPDATE users SET avatar = 'img/defaultUser.png' WHERE id_student = $1")
 	if err != nil {
 		return err
 	}
