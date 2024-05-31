@@ -22,6 +22,7 @@ services:
       - img_data:/root/public/img
       # Path on host to cert folder
       - ./cert:/root/cert
+      - ./audit.log:/root/audit.log
 
   db:
     image: postgres:13
