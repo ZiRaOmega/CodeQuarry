@@ -48,6 +48,9 @@ func ResponsesHandler(db *sql.DB) http.HandlerFunc {
 			}
 			sessionid_cookie, err := r.Cookie("session")
 			session_id := sessionid_cookie.Value
+			if !isValidSession(session_id, db) {
+				http.Redirect(w, r, "/auth", http.StatusSeeOther)
+			}
 			question_id := receive_data.(map[string]interface{})["response"].(map[string]interface{})["question_id"].(string)
 			description := receive_data.(map[string]interface{})["response"].(map[string]interface{})["description"].(string)
 			content := receive_data.(map[string]interface{})["response"].(map[string]interface{})["content"].(string)
