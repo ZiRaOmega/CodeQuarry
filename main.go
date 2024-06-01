@@ -136,6 +136,7 @@ func main() {
 	http.HandleFunc("/forgot-password", app.ForgotPasswordHandler(db))
 	http.HandleFunc("/cgu", app.SendComponent("cgu", db))
 	http.HandleFunc("/rgpd", app.SendComponent("rgpd", db))
+	http.HandleFunc("/components/rgpd/rgpd.css", app.HandleCSSRGPD)
 	http.Handle("/delete-profile", CSRF(http.HandlerFunc(app.DeleteProfileHandler(db))))
 
 	//go startHTTPServer()

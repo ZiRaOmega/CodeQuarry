@@ -306,6 +306,7 @@ func HandleHeaderJS(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleCSSRGPD(w http.ResponseWriter, r *http.Request) {
+
 	http.ServeFile(w, r, "public/components/rgpd/rgpd.css")
 }
 
