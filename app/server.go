@@ -310,6 +310,9 @@ func HandleCSSRGPD(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/components/rgpd/rgpd.css")
 }
 
+func HandleRobots(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/robots.txt")
+}
 func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
