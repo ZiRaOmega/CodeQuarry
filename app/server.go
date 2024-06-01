@@ -91,6 +91,7 @@ func init() {
 	templates["classement"] = parseTemplates("classement", "head", "header", "search_bar", "footer", "script")
 	templates["panel"] = parseTemplates("panel", "script", "head", "header", "search_bar")
 	templates["cgu"] = parseTemplates("cgu", "head", "header", "search_bar", "footer", "script")
+	templates["rgpd"] = parseTemplates("rgpd", "head", "footer")
 }
 
 func parseTemplates(component_name string, parts ...string) *template.Template {
@@ -119,9 +120,6 @@ func ParseAndExecuteTemplate(component_name string, data interface{}, w http.Res
 		return err
 	}
 	return nil
-}
-func CGUHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "public/cgu/cgu.html")
 }
 
 // CSS
