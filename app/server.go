@@ -304,6 +304,11 @@ func HandleQuestionViewer(w http.ResponseWriter, r *http.Request) {
 func HandleHeaderJS(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/templates/header/header_obfuscate.js")
 }
+
+func HandleCSSRGPD(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/components/rgpd/rgpd.css")
+}
+
 func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
