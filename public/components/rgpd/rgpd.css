@@ -1,3 +1,7 @@
+header h1 {
+	margin-left: 40px;
+}
+
 main{
-	padding-left: 20px;
+	max-width: 90vw;
 }
