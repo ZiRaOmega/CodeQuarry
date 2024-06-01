@@ -21,7 +21,7 @@ func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
 		csrfToken := csrf.TemplateField(r)
-		if component_name == "auth" || component_name == "cgu" {
+		if component_name == "auth" || component_name == "cgu" || component_name == "rgpd" {
 			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
 
 			tmplData := struct {
