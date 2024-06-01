@@ -153,13 +153,13 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 		question_id := r.URL.Query().Get("question_id")
 		session_id, err := r.Cookie("session")
 		if err != nil {
-			http.Error(w, "Session not found", http.StatusUnauthorized)
+			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
 		}
 
 		user_id, err := GetUserIDUsingSessionID(session_id.Value, db)
 		if err != nil {
-			http.Error(w, "Session not found", http.StatusUnauthorized)
+			//http.Error(w, "Session not found", http.StatusUnauthorized)
 			//Redirect to auth
 			http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			return
@@ -170,20 +170,21 @@ func QuestionsHandler(db *sql.DB) http.HandlerFunc {
 			questions, err := FetchQuestionsBySubject(db, subjectID, user_id)
 			if err != nil {
 
-				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+				//http.Error(w, "Error while fetching", http.StatusInternalServerError)
+				http.Redirect(w, r, "/auth", http.StatusSeeOther)
 			}
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(questions)
 		} else if question_id != "" && subjectID == "" {
 			question_id_int, err := strconv.Atoi(question_id)
 			if err != nil {
-
-				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+				http.Redirect(w, r, "/auth", http.StatusSeeOther)
+				//http.Error(w, "Error while fetching", http.StatusInternalServerError)
 			}
 			questions, err := FetchQuestionByQuestionID(db, question_id_int, user_id)
 			if err != nil {
-
-				http.Error(w, "Error while fetching", http.StatusInternalServerError)
+				http.Redirect(w, r, "/auth", http.StatusSeeOther)
+				//http.Error(w, "Error while fetching", http.StatusInternalServerError)
 			}
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode([]Question{questions})
