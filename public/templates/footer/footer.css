@@ -1,4 +1,21 @@
 footer{
-	width: 100vw;
-	min-height: 150px;
+    display: flex;
+    justify-content: space-evenly;
+    z-index: 999;
+    position: fixed;
+    bottom: 0;
+    border: solid 1px var(--black);
+    background-color: var(--darkblue);
+    width: 100vw;
+    min-height: 50px;
+}
+
+.cgu, .rgpd{
+    text-decoration: none;
+}
+.cgu, .rgpd, .made_by{
+	color: var(--white);
+	font-size: 16px;
+	font-weight: bolder;
+	margin: 10px;
 }
