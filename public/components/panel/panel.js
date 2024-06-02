@@ -82,28 +82,28 @@ function addSubject() {
   };
   socket.send(JSON.stringify(data));
   //Reset fields
-  inputs.value = "";
-  textareas.value = "";
   /*<div class="subject" style="display: none;" data-subject-id="{{.Id}}">
-        <input class="input-field" type="text" value="{{.Title}}" /><br />
-        <textarea class="textarea-field">{{.Description}}</textarea><br />
-        <input class="input-field" type="date" value="{{.CreationDate.Format
-        "2006-01-02"}}" /><br />
-        <input class="input-field" type="date" value="{{.UpdateDate.Format
-        "2006-01-02"}}" /><br />
-        <button onclick="editSubject({{.Id}})">Edit</button>
-        <button onclick="deleteSubject({{.Id}},this)">Delete</button>
+  <input class="input-field" type="text" value="{{.Title}}" /><br />
+  <textarea class="textarea-field">{{.Description}}</textarea><br />
+  <input class="input-field" type="date" value="{{.CreationDate.Format
+    "2006-01-02"}}" /><br />
+    <input class="input-field" type="date" value="{{.UpdateDate.Format
+      "2006-01-02"}}" /><br />
+      <button onclick="editSubject({{.Id}})">Edit</button>
+      <button onclick="deleteSubject({{.Id}},this)">Delete</button>
       </div>*/
-  const newSubject = document.createElement("div");
-  newSubject.classList.add("subject");
-  newSubject.setAttribute("data-subject-id", "0");
-  newSubject.innerHTML = ` <input class="input-field" type="text" value="${inputs.value}" /><br />
-  <textarea class="textarea-field">${textareas.value}</textarea><br />
-  <input class="input-field" type="date" value="${new Date().toISOString().split('T')[0]}" /><br />
-  <input class="input-field" type="date" value="${new Date().toISOString().split('T')[0]}" /><br />
-          `
-  document.getElementById("all_subjects").appendChild(newSubject);
-
+      const newSubject = document.createElement("div");
+      newSubject.classList.add("subject");
+      newSubject.setAttribute("data-subject-id", "0");
+      newSubject.innerHTML = ` <input class="input-field" type="text" value="${inputs.value}" /><br />
+      <textarea class="textarea-field">${textareas.value}</textarea><br />
+      <input class="input-field" type="date" value="${new Date().toISOString().split('T')[0]}" /><br />
+      <input class="input-field" type="date" value="${new Date().toISOString().split('T')[0]}" /><br />
+      `
+      document.getElementById("all_subjects").appendChild(newSubject);
+      inputs.value = "";
+      textareas.value = "";
+      
 }
 
 function deleteSubject(id,element=new HTMLElement) {
