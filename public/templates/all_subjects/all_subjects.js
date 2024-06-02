@@ -140,6 +140,7 @@ function addSubjectClickListener(listItem, subject, listElement) {
 */
 function fetchQuestions(subjectId) {
   console.log("fetchQuestions")
+  document.getElementById("questions_list").innerHTML = "";
     fetch(`/api/questions?subjectId=${subjectId}`)
         .then((response) => response.json())
         .then((questions) => {
@@ -148,8 +149,7 @@ function fetchQuestions(subjectId) {
         });
 };
 
-function createFilter(questions) {
-    questionsList.innerHTML = ""; // Clear previous questions
+function createFilter(questions) { // Clear previous questions
     const filterContainer = document.createElement("div");
     filterContainer.classList.add("filter_container");
 
@@ -265,7 +265,7 @@ function refreshQuestionView(questions) {
 function createQuestions(questions) {
   // Clear previous questions
   if (questions != null)
-  document.getElementById("questions_list").innerHTML = "";
+  
    // Clear previous questions
       questions.forEach((question) => {
       const questionContainer = document.createElement("div");
