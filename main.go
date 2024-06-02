@@ -8,16 +8,20 @@ import (
 	"os"
 	"os/exec"
 	"time"
+	"sync"
 
 	"github.com/joho/godotenv"
 )
 
-func obfuscateJavaScript(inputPath, outputPath string) {
+func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errChan chan<- error) {
+	defer wg.Done()
+
 	// Ensure the path to the Python executable and the script is correct
 	cmd := exec.Command("npx", "javascript-obfuscator", inputPath, "-o", outputPath)
 	err := cmd.Run()
 	if err != nil {
-		log.Fatalf("Obfuscation failed: %s", err)
+		errChan <- err
+		return
 	}
 }
 func main() {
@@ -59,8 +63,23 @@ func main() {
 		{"scripts/websocket.js", "scripts/websocket_obfuscate.js"},
 	}
 
+	var wg sync.WaitGroup
+	errChan := make(chan error, len(jsFiles))
+
 	for _, file := range jsFiles {
-		obfuscateJavaScript(file.input, file.output)
+		wg.Add(1)
+		go obfuscateJavaScript(file.input, file.output, &wg, errChan)
+	}
+
+	// Wait for all goroutines to finish
+	wg.Wait()
+	close(errChan)
+
+	// Check for errors
+	for err := range errChan {
+		if err != nil {
+			log.Fatalf("Obfuscation failed: %s", err)
+		}
 	}
 
 	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour.Abs())
