@@ -66,3 +66,51 @@
     color: black;
     background-color: rgb(246, 246, 246);
 }
+
+@media only screen and (max-width: 600px) {
+   
+.create_post_input_title{
+    width: 350px;
+    height: 50px;
+    border-radius: 10px;
+    border: 2px solid black;
+    padding-left: 10px;
+    font-size: 17px;
+}
+
+.create_post_input_description{
+    margin-top: 10px;
+    width: 350px;
+    height: 80px;
+    border-radius: 10px;
+    border: 2px solid black;
+    resize: none;
+    padding-left: 10px;
+    font-size: 17px;
+}
+
+.create_post_input_content{
+    margin-top: 15px;
+    width: 350px;
+    height: 150px;
+    resize: none;
+    border-radius: 10px;
+    border: 2px solid black;
+    padding-left: 10px;
+    font-size: 17px;
+}
+
+.create_post_input_select{
+    margin-top: 15px;
+    width: 360px;
+    height: 50px;
+    border-radius: 5px;
+    border: 1px solid black;
+    background-color: black;
+    color: white;
+    padding-left: 10px;
+    font-size: 17px;
+    font-weight: bolder;
+}
+
+}
