@@ -197,6 +197,11 @@ function htmlQuestionConstructor(question) {
         }</span></p>
     </div>
 </div>
+<div class="vote-burger-menu" id="vote-burger-menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
 <div class="vote_container">
     <div class="upvote_container">
         <div class="upvote_text">+</div>
