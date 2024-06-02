@@ -313,6 +313,9 @@ func HandleCSSRGPD(w http.ResponseWriter, r *http.Request) {
 func HandleRobots(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "public/robots.txt")
 }
+func HandleSitemap(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "public/sitemap.xml")
+}
 func VerifEmailHandler(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {

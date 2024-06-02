@@ -139,6 +139,7 @@ func main() {
 	http.HandleFunc("/components/rgpd/rgpd.css", app.HandleCSSRGPD)
 	http.Handle("/delete-profile", CSRF(http.HandlerFunc(app.DeleteProfileHandler(db))))
 	http.HandleFunc("/robots.txt", app.HandleRobots)
+	http.HandleFunc("/sitemap.xml", app.HandleSitemap)
 
 	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
