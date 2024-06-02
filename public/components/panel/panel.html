@@ -152,9 +152,9 @@
         <button onclick="addOneDownVoteQuestion({{.Id}})">+</button>
         <button onclick="removeOneDownVoteQuestion({{.Id}})">-</button>
         <br />
-        <button onclick="editQuestion({{.Id}})">Edit</button>
-        <button onclick="deleteQuestion({{.Id}},this)">Delete</button>
-        <button onclick="showResponses({{.Id}})">Responses</button>
+        <button style="z-index: 999;" onclick="editQuestion({{.Id}})">Edit</button>
+        <button style="z-index: 999;" onclick="showResponses({{.Id}})">Responses</button>
+        <button style="z-index: 999;" onclick="deleteQuestion({{.Id}},this)">Delete</button>
         <div class="all_responses panel_all_div" data-response-id="{{.Id}}" style="display: none;">
           <h5>Responses:</h5>
           {{range .Responses}}
