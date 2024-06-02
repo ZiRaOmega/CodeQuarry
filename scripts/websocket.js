@@ -207,6 +207,7 @@ function handleAnswerUpdate(data) {
       ".question-viewer__answers__answer__content pre code"
     ).textContent = data.content;
   }
+  checkHighlight()
 }
 function handleQuestionUpdate(data) {
   const questionn = document.querySelector(
