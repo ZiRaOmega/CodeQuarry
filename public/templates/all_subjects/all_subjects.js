@@ -265,7 +265,9 @@ function refreshQuestionView(questions) {
 function createQuestions(questions) {
   // Clear previous questions
   if (questions != null)
-    questions.forEach((question) => {
+  document.getElementById("questions_list").innerHTML = "";
+   // Clear previous questions
+      questions.forEach((question) => {
       const questionContainer = document.createElement("div");
       questionContainer.classList.add("question");
       const questionChecked = document.createElement("div");
