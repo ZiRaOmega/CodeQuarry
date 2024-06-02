@@ -85,7 +85,7 @@
   display: flex;
   width: 90%;
   height: 400px;
-  margin-bottom: 30px;
+  margin-bottom: 100px;
   background-color: beige;
   justify-content: top;
   flex-direction: column;
@@ -461,7 +461,7 @@
     width: 100%;
     height: auto;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 100px;
   }
 
   #response_description,
@@ -536,7 +536,7 @@
     width: 100%;
     height: auto;
     padding: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 100px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -632,7 +632,7 @@
     width: 80%;
     height: auto;
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 100px;
   }
 
   #response_description,
