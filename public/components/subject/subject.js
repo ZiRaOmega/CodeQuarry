@@ -203,13 +203,13 @@ function htmlQuestionConstructor(question) {
       <div class="bar"></div>
     </div>
 <div class="vote_container">
-    <div class="upvote_container">
+    <div class="upvote_container option">
         <div class="upvote_text">+</div>
         <p class="upvote_count" data-question-id="${question.id}">${
     question.upvotes
   }</p>
     </div>
-    <div class="downvote_container">
+    <div class="downvote_container option">
         <div class="downvote_text">-</div>
         <p class="downvote_count" data-question-id="${question.id}">${
     question.downvotes
