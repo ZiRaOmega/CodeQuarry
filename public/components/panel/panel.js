@@ -340,6 +340,11 @@ function showResponses(id) {
     .querySelector(`[data-question-id="${id}"]`)
     .querySelector(".all_responses");
   toggleVisibility(responses);
+  setTimeout(() => {
+    document.querySelectorAll(".response").forEach((u) => {
+      toggleFlexNone(u);
+    });
+  }, 550);
 }
 
 function ResendEmail(email) {
