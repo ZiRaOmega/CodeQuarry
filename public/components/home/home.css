@@ -259,7 +259,7 @@ body {
     }
 
     #create_post_container {
-        width: 100%;
+        width: fit-content;
         height: auto;
         padding: 5px;
     }
