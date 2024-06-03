@@ -229,6 +229,7 @@ body {
 
     #all_subjects_container {
         margin-top: 20px;
+        margin-bottom: 100px;
     }
 
     #all_subjects_list, .all_subjects_item, .category_cards {
