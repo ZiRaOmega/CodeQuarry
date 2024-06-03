@@ -41,6 +41,7 @@
   height: auto;
   margin-top: 20px;
   animation: FadeIn 0.5s;
+  margin-bottom: 100px;
 }
 
 .question-viewer__question {
@@ -595,6 +596,7 @@
 
   .question-viewer{
     width: 90vw;
+    margin-bottom: 100px;
   }
 
 
