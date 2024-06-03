@@ -151,7 +151,7 @@
   right: 10px;
  
   border-radius: 5px;
-  z-index: 1000;
+  /*z-index: 1000;*/
 }
 
 .vote-options .option {
