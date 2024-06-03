@@ -23,7 +23,7 @@ func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errCh
 		errChan <- err
 		return
 	}
-	log.Printf("Obfuscation successful %d/%d: %s -> %s", inputPath, outputPath, index, total)
+	log.Printf("Obfuscation successful %d/%d: %s -> %s", index, total, inputPath, outputPath)
 }
 func main() {
 	err := godotenv.Load()
