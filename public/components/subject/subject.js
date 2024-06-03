@@ -197,7 +197,7 @@ function htmlQuestionConstructor(question) {
         }</span></p>
     </div>
 </div>
-<div class="vote-burger-menu" id="vote-burger-menu">
+<div class="vote-burger-menu" id="vote-burger-menu" data-question-id="${question.id}">
       <div class="bar"></div>
       <div class="bar"></div>
       <div class="bar"></div>
@@ -271,6 +271,7 @@ const voteBurgerMenus = document.querySelectorAll('.vote-burger-menu');
 
 voteBurgerMenus.forEach(burgerMenu => {
     burgerMenu.addEventListener('click', function() {
+      console.lop("clicked");
         const voteOptions = this.nextElementSibling;
         if (voteOptions.style.display === 'flex') {
             voteOptions.style.display = 'none';
