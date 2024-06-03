@@ -13,7 +13,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errChan chan<- error) {
+func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errChan chan<- error, index int,total int) {
 	defer wg.Done()
 
 	// Ensure the path to the Python executable and the script is correct
@@ -23,6 +23,7 @@ func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errCh
 		errChan <- err
 		return
 	}
+	log.Printf("Obfuscation successful %d/%d: %s -> %s", inputPath, outputPath, index, total)
 }
 func main() {
 	err := godotenv.Load()
@@ -66,9 +67,9 @@ func main() {
 	var wg sync.WaitGroup
 	errChan := make(chan error, len(jsFiles))
 
-	for _, file := range jsFiles {
+	for index, file := range jsFiles {
 		wg.Add(1)
-		go obfuscateJavaScript(file.input, file.output, &wg, errChan)
+		go obfuscateJavaScript(file.input, file.output, &wg, errChan,index,len(jsFiles))
 	}
 
 	// Wait for all goroutines to finish
