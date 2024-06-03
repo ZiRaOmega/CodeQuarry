@@ -202,7 +202,7 @@ function htmlQuestionConstructor(question) {
       <div class="bar"></div>
       <div class="bar"></div>
     </div>
-<div class="vote_container">
+<div class="vote_container vote-options" id="vote-options">
     <div class="upvote_container option">
         <div class="upvote_text">+</div>
         <p class="upvote_count" data-question-id="${question.id}">${
