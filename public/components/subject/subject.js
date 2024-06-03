@@ -266,7 +266,29 @@ function switchVoteColor(question, upvoteContainer, downvoteContainer) {
     );
   });
 }
+document.addEventListener("DOMContentLoaded", function () {
+const voteBurgerMenus = document.querySelectorAll('.vote-burger-menu');
 
+voteBurgerMenus.forEach(burgerMenu => {
+    burgerMenu.addEventListener('click', function() {
+        const voteOptions = this.nextElementSibling;
+        if (voteOptions.style.display === 'flex') {
+            voteOptions.style.display = 'none';
+        } else {
+            voteOptions.style.display = 'flex';
+        }
+    });
+});
+
+document.addEventListener('click', function(event) {
+    voteBurgerMenus.forEach(burgerMenu => {
+        const voteOptions = burgerMenu.nextElementSibling;
+        if (voteOptions.style.display === 'flex' && !burgerMenu.contains(event.target) && !voteOptions.contains(event.target)) {
+            voteOptions.style.display = 'none';
+        }
+    });
+});
+} );
 // TODO:
 /* 
 const filterBestAnswer = document.createElement("div");
