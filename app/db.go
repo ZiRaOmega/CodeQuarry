@@ -34,13 +34,20 @@ func SetupDB(db *sql.DB) {
 	ticker := time.NewTicker(1 * time.Hour)
 	go func() {
 		for range ticker.C {
-			fmt.Println("Delete user when deleting_date is more than 6 months")
+			log.Println("Delete user from DB after 6 months")
 			DeleteUserFromDBAfter6Months(db)
+			log.Println("Delete expired sessions")
+			DeleteExpiredSessions(db)
 		}
 	}()
 
 }
-
+func DeleteExpiredSessions(db *sql.DB) {
+	_, err := db.Exec("DELETE FROM Sessions WHERE expire_at < $1", time.Now())
+	if err != nil {
+		log.Fatal(err)
+	}
+}
 /* --------- Create Funcs ----------- */
 func createTableUsers(db *sql.DB) {
 	// Create a User table
