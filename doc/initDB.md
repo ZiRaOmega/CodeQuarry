@@ -41,21 +41,21 @@ sudo -u postgres psql
 6. Créez l'utilisateur codequarry avec le mot de passe CQ1234:  
 
 ```bash
-CREATE USER codequarry WITH PASSWORD 'CQ1234';
+CREATE USER db_user WITH PASSWORD 'PASSWORD';
 ```
 
 7. Création d'une base de données:
     *Toujours dans l'interface de commande PostgreSQL:*  
 
 ```bash
-CREATE DATABASE codequarrydb OWNER codequarry;
+CREATE DATABASE db_name OWNER codequarry;
 ```
 
 8. Attribution des droits:
     *Donnez tous les droits sur la base de données à codequarry:*  
 
 ```bash
-GRANT ALL PRIVILEGES ON DATABASE codequarrydb TO codequarry;
+GRANT ALL PRIVILEGES ON DATABASE db_name TO db_user;
 ```
 
 9. Lancer le projet:
@@ -106,9 +106,9 @@ go run .
 - 4.Host : localhost (ou l'adresse IP du  serveur de base de données si elle est distante)  
 
 >Port : 5432  
->Database : codequarrydb  
->Username : codequarry  
->Password : CQ1234  
+>Database : db_name  
+>Username : db_user 
+>Password : db_password  
 
 ![FILL](/imagesDb/Capture%20d’écran%20du%202024-04-23%2017-26-57.png)
 
