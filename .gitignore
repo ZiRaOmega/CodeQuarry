@@ -15,3 +15,9 @@ public/templates/header/header_obfuscate.js
 public/templates/search_bar/input_obfuscate.js
 scripts/websocket_obfuscate.js
 .prettierrc
+postgresql_config/server.*
+postgresql_config/pg_hba.conf  
+postgresql_config/postgresql.conf
+cert/*.pem
+.env
+docker-compose.yml
