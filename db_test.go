@@ -10,7 +10,6 @@ import (
 
 	"codequarry/app"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -18,9 +17,6 @@ import (
 
 // initTestDB initializes a test database
 func initTestDB(t *testing.T) *sql.DB {
-	// Load environment variables
-	err := godotenv.Load()
-	require.NoError(t, err, "Error loading .env file")
 
 	// Construct the DSN
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
@@ -48,6 +44,12 @@ func TestInitDB(t *testing.T) {
 	defer db.Close()
 
 	require.NoError(t, db.Ping())
+}
+
+// ResetDB resets the database by dropping all tables and recreating them
+func ResetDB(db *sql.DB) {
+	dropTables(db)
+	app.SetupDB(db)
 }
 
 // TestSetupDB tests the SetupDB function
@@ -138,12 +140,6 @@ func TestGetUserIDUsingSessionID(t *testing.T) {
 	id, err := app.GetUserIDUsingSessionID(userUUID, db)
 	require.NoError(t, err)
 	assert.Equal(t, userID, id)
-}
-
-// ResetDB resets the database by dropping all tables and recreating them
-func ResetDB(db *sql.DB) {
-	dropTables(db)
-	app.SetupDB(db)
 }
 
 // dropTables drops all tables in the database

@@ -3,7 +3,6 @@ package app
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/mail"
 	"time"
@@ -114,16 +113,16 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 	}
 }
 func GetEmailWithUsername(db *sql.DB, username string) string {
-	fmt.Println(username)
+	//fmt.Println(username)
 	stmt, err := db.Prepare("SELECT email FROM users WHERE username = $1")
 	if err != nil {
-		fmt.Println(err.Error())
+		Log(ErrorLevel, err.Error())
 	}
 	defer stmt.Close()
 	var email string
 	err = stmt.QueryRow(username).Scan(&email)
 	if err != nil {
-		fmt.Println(err.Error())
+		Log(ErrorLevel, err.Error())
 	}
 	return email
 }

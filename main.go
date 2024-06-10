@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"time"
 	"sync"
+	"time"
 
 	"github.com/joho/godotenv"
 )
 
-func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errChan chan<- error, index int,total int) {
+func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errChan chan<- error, index int, total int) {
 	defer wg.Done()
 
 	// Ensure the path to the Python executable and the script is correct
@@ -28,11 +28,10 @@ func obfuscateJavaScript(inputPath, outputPath string, wg *sync.WaitGroup, errCh
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		fmt.Println("Error loading .env file")
-		// You may choose to handle the error differently based on your requirements
+		app.Log(app.ErrorLevel, "Failed to load .env file")
 		return
 	}
-	// Update the DSN for PostgreSQL
+	// DSN for PostgreSQL
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
@@ -69,7 +68,7 @@ func main() {
 
 	for index, file := range jsFiles {
 		wg.Add(1)
-		go obfuscateJavaScript(file.input, file.output, &wg, errChan,index,len(jsFiles))
+		go obfuscateJavaScript(file.input, file.output, &wg, errChan, index, len(jsFiles))
 	}
 
 	// Wait for all goroutines to finish

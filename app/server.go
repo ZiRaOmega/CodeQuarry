@@ -2,7 +2,6 @@ package app
 
 import (
 	"database/sql"
-	"log"
 	"net/http"
 	"path"
 
@@ -16,66 +15,71 @@ type AuthInfo struct {
 }
 
 /* ======================= GLOBAL ======================= */
-
+//Couche de Présentation (Gestion des Requêtes HTTP)
 func SendComponent(component_name string, db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
 		csrfToken := csrf.TemplateField(r)
 		if component_name == "auth" || component_name == "cgu" || component_name == "rgpd" {
-			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
-
-			tmplData := struct {
-				CSRFToken template.HTML
-			}{
-				CSRFToken: csrfToken,
-			}
-
-			err := ParseAndExecuteTemplate(component_name, tmplData, w)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
+			handleStaticComponent(component_name, csrfToken, w)
 			return
 		}
-		cookie, err := r.Cookie("session")
+		handleDynamicComponent(component_name, csrfToken, db, w, r)
+	}
+}
+
+// Couche de Présentation (Gestion des Requêtes HTTP)
+func handleStaticComponent(component_name string, csrfToken template.HTML, w http.ResponseWriter) {
+	tmplData := struct {
+		CSRFToken template.HTML
+	}{
+		CSRFToken: csrfToken,
+	}
+	err := ParseAndExecuteTemplate(component_name, tmplData, w)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+}
+
+// Couche de Présentation (Gestion des Requêtes HTTP)
+func handleDynamicComponent(component_name string, csrfToken template.HTML, db *sql.DB, w http.ResponseWriter, r *http.Request) {
+	cookie, err := r.Cookie("session")
+	if err != nil {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	session_id := cookie.Value
+	if isValidSession(session_id, db) {
+		user, err := getUserInfo(session_id, db)
 		if err != nil {
-			log.Printf("Error getting session cookie: %v", err)
-			http.Redirect(w, r, "/", http.StatusSeeOther)
+			http.Error(w, "Error getting user info", http.StatusInternalServerError)
 			return
 		}
-		session_id := cookie.Value
-		if isValidSession(session_id, db) {
-			// Get user info from user_id
-			var user User
-			user, err = GetUser(session_id, db)
-			user.CSRFToken = csrfToken
+		user.CSRFToken = csrfToken
 
+		if component_name == "profile" || component_name == "classement" {
+			user.Rank.String, err = SetRankByXp(user)
 			if err != nil {
-				http.Error(w, "Error getting user info", http.StatusInternalServerError)
+				http.Error(w, "Error getting user rank", http.StatusInternalServerError)
 				return
 			}
-
-			if component_name == "profile" || component_name == "classement" {
-				if err != nil {
-
-					http.Error(w, "Error getting user info", http.StatusInternalServerError)
-					return
-				}
-				user.Rank.String, err = SetRankByXp(user)
-				if err != nil {
-					http.Error(w, "Error getting user rank", http.StatusInternalServerError)
-					return
-				}
-			}
-			err = ParseAndExecuteTemplate(component_name, user, w)
-			if err != nil {
-
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
-			log.Printf("[SendIndex:%s] New Client with IP: %s\n", r.URL.Path, r.RemoteAddr)
+		}
+		err = ParseAndExecuteTemplate(component_name, user, w)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 	}
+}
+
+// Couche de Logique Métier (Services)
+func getUserInfo(session_id string, db *sql.DB) (User, error) {
+	var user User
+	//Couche d'Accès aux Données (Interactions avec la Base de Données)
+	user, err := GetUser(session_id, db)
+	if err != nil {
+		return User{}, err
+	}
+	return user, nil
 }
 
 // Let's make a list of all the templates we need in each case

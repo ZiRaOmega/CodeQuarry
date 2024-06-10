@@ -74,7 +74,7 @@ func (U *User) FormatSchoolYear() string {
 	return U.SchoolYear.Time.Format("02/01/2006")
 }
 
-// Define User structure based on your database schema
+// User structure based on database schema
 type User struct {
 	ID                 int
 	LastName           string
@@ -92,11 +92,11 @@ type User struct {
 	XP                 sql.NullInt64
 	Rank               sql.NullString
 	Rank_Panel         sql.NullInt64
-	SchoolYear         sql.NullTime // Adjusted for possible NULL values
+	SchoolYear         sql.NullTime
 	School_Year_Format string
-	CreationDate       sql.NullTime // Adjusted for possible NULL values
-	UpdateDate         sql.NullTime // Adjusted for possible NULL values
-	DeletingDate       sql.NullTime // Adjusted for possible NULL values
+	CreationDate       sql.NullTime
+	UpdateDate         sql.NullTime
+	DeletingDate       sql.NullTime
 	My_Post            []Question
 	Favori             []Question
 	CSRFToken          template.HTML
