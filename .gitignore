@@ -21,3 +21,4 @@ postgresql_config/postgresql.conf
 cert/*.pem
 .env
 docker-compose.yml
+.git_github_no_censored_commit/
