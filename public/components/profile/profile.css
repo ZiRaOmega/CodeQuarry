@@ -1,0 +1,244 @@
+.history_link:hover{
+    cursor: pointer;
+}
+
+a{
+    text-decoration: none;
+    color: var(--darkblue);
+}
+
+.profile{
+    flex-basis: 40%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: fit-content;
+}
+
+.avatarViewer{
+    object-fit: cover;
+    border-radius: 50px;
+}
+
+.profileInformations{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+    position: sticky;
+    top: 160px;
+}
+
+.button, .submitButton{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    min-width: fit-content;
+    border-radius: 20px 20px 0 20px;
+    border : none;
+    background-color: var(--white);
+    border: solid 3px var(--darkblue);
+    color: var(--darkblue);
+    font-size: 1.1em;
+    transition: 0.2s all ease-out;
+    padding: 0 10px;
+    margin-top: 50px;
+}
+
+.button:hover, .submitButton:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+.websites{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.main-part{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 100vw;
+    height: fit-content;
+    padding-top: 50px;
+}
+
+#my_post{
+    flex-basis:75%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.editProfileForm, .deleteProfileForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 100px;
+}
+
+.all_edit_fields{
+    display: flex;
+    gap: 20px;
+    padding-top: 50px;
+}
+
+.left_edit_profile, .right_edit_profile{
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.editProfileForm input[type=text], .editProfileForm input[type=email], .editProfileForm input[type=password], .editProfileForm input[type=date],.editProfileForm input[type=file],  .editProfileForm textarea{
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+#bio{
+    margin-top: -10px;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: var(--darkblue);
+    border-radius: 20px;
+    width: fit-content;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+.informations{
+    margin: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+.rank{
+    margin-bottom: 30px;
+}
+
+.rankTitle{
+    font-style: italic;
+}
+
+.all-posts{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-basis: 60%;
+}
+
+ #favori{
+        margin: 50px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+.question-profile {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-radius: 20px;
+    width: 500px;
+    height: fit-content;
+    padding: 20px 20px;
+    background-color: var(--darkblue);
+    color: white;
+    margin-bottom: 20px;
+    transition: all 0.3s ease-in-out;
+
+}
+
+.question-profile:hover{
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.title_and_date {
+    flex-basis: 90%;
+}
+
+.delete_button, .delete_button_favori{
+    flex-basis: 10%;
+    background: none;
+    outline: none;
+    border: none;
+}
+
+.history_link{
+    color: white;
+}
+
+.post-title{
+    font-weight: bolder;
+    font-size: 1.4em;
+}
+
+.edit_profile_input{
+    height: 40px;
+    width: 230px;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    border: none;
+    resize: none;
+}
+
+.edit_profile_input_text, .send_email_input_text{
+    height: 40px;
+    width: fit-content;
+    margin-bottom: 10px;
+    padding: 0 20px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    border: none;
+    resize: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.8em;
+}
+
+.edit_profile_input_text:hover, .send_email_input_text:hover{
+    cursor: pointer;
+}
+
+@media (max-width: 900px) {
+    .question-profile{
+        width: 80vw;
+    }
+
+
+    .main-part{
+        flex-direction: column;
+    }
+
+    .all-posts{
+        width: 100vw;
+
+    }
+
+    .titles{
+        text-align: center;
+    }
+
+    .all_edit_fields{
+        flex-direction: column;
+    }
+}

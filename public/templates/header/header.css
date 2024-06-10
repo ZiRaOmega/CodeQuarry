@@ -1,0 +1,174 @@
+body {
+    overflow-x: hidden;
+}
+
+header {
+    width: 100vw;
+    height: 80px;
+    color: black;
+    padding: 1em;
+    background: white;
+    z-index: 2000;
+    text-align: center;
+    display: flex;
+    border-bottom: solid 1px #ECEFF1;
+    position: sticky;
+    top: 0;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.leftpart {
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 50px;
+    align-items: center;
+}
+
+.CQ-logo {
+    width: 75px;
+    height: 75px;
+    margin-bottom: 0;
+}
+
+#menu {
+    position: relative;
+    top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 50px;
+}
+
+#menu ul {
+    display: flex;
+    gap: 30px;
+}
+
+li {
+    list-style-type: none;
+    min-height: 41px;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+.header_icons {
+    transition: 0.3s all ease-out;
+}
+
+.header_icons:hover {
+    transform: scale(1.1);
+}
+
+#home::after {
+    content: "";
+    width: 30px;
+    height: 10px;
+    background: red;
+}
+
+.medal {
+    margin-left: 50px;
+}
+
+.burger-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+}
+
+.bar {
+    width: 100%;
+    height: 4px;
+    background-color: black;
+    transition: all 0.3s ease;
+}
+
+/* Media Queries for Tablets */
+/* @media (max-width: 850px) {
+    #menu {
+        display: none;
+    }
+
+    .leftpart {
+        flex-basis: 100%;
+        justify-content: center;
+        padding-left: 0;
+    }
+
+    .medal {
+        display: none;
+    }
+
+    .burger-menu {
+        display: flex;
+    }
+
+    .active{
+        display: flex;
+    }
+}
+ */
+/* Media Queries for Phones */
+@media (max-width: 900px) {
+    header {
+        height: 60px;
+        padding: 0.5em;
+    }
+
+    .leftpart {
+        justify-content: center;
+        padding-left: 20px;
+        flex-basis: 100%;
+    }
+
+    .CQ-logo {
+        width: 50px;
+        height: 50px;
+    }
+    .burger-menu {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+    }
+    #menu ul {
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px 0;
+    }
+
+    li {
+        min-height: auto;
+    }
+
+    .header_icons {
+        font-size: 20px;
+    }
+
+    .medal {
+        display: none;
+    }
+
+    #menu {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* adjust based on header height */
+        right: 0;
+        background-color: white;
+        padding-right: 0;
+        width: 100%;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .active {
+        display: flex !important;
+    }
+}

@@ -1,0 +1,173 @@
+/* ---------------------------- AUTH_BLOCK ---------------------------- */
+#auth_block{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: var(--white);
+}
+.CQ-logo{
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    background: url("/logo");
+    background-size: cover;
+    margin-bottom: 20px;
+}
+.title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+    user-select: none;
+}
+.code-quarry{
+    font-size: 20px;
+    font-weight: bold;
+    margin: 0;
+}
+.description{
+    font-size: 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+#login-register-buttons{
+    display: flex;
+    gap: 30px;
+}
+#login-button, #login, #loginRedirect, #forgotPasswordRedirect{
+    height: 40px;
+    width: fit-content;
+    padding: 0 20px;
+    border-radius: 20px 20px 20px 0;
+    background-color: var(--white);
+    border: solid 3px var(--darkblue);
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: 0.2s all ease-out;
+    color: var(--darkblue);
+}
+#login-button:hover, #login:hover, #loginRedirect:hover, #forgotPasswordRedirect:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+}
+
+#forgotPasswordForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#register-button, #registerRedirect, #registerSubmit{
+    height: 40px;
+    width: 140px;
+    border-radius: 20px 20px 0 20px;
+    border : none;
+    background-color: var(--darkblue);
+    border: solid 3px var(--darkblue);
+    color: var(--white);
+    font-size: 1.2em;
+    font-weight: 600;
+    transition: 0.2s all ease-out;
+}
+#register-button:hover, #registerRedirect:hover, #registerSubmit:hover{
+    cursor: pointer;
+    transform: scale(1.05);
+}
+/* ---------------------------- REGISTER BLOCK ---------------------------- */
+#registerBlock{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: white;
+}
+#registerForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#contentAlert{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: red;
+}
+#registerLastName, #registerFirstName, #registerUsername, #registerEmail, #registerPassword, #registerPasswordConfirmation{
+    height: 40px;
+    width: 230px;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    border: none;
+}
+#registerSubmit{
+    margin-bottom: 20px;
+    transform: scale(0.90);
+}
+#registerSubmit:hover{
+    transform: scale(0.95);
+}
+/* ---------------------------- LOGIN BLOCK ---------------------------- */
+#loginBlock{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: white;
+    opacity: 1;
+}
+#loginForm{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#usernameOrEmailLogin, #loginPassword{
+    height: 40px;
+    width: 230px;
+    margin-bottom: 10px;
+    padding: 0 10px;
+    background-color: var(--light-gray);
+    border-radius: 20px;
+    border: none;
+}
+#forgotPasswordBlock{
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 800px;
+    width: 500px;
+    background-color: white;
+    opacity: 1;
+}
+#usernameOrEmailLogin:focus, #loginPassword:focus{
+    outline: none
+}
+#login{
+    margin-bottom: 20px;
+    transform: scale(0.90);
+}
+#login:hover{
+    transform: scale(0.95);
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

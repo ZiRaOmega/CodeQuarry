@@ -1,0 +1,35 @@
+# robots.txt for CodeQuarry
+
+# Allow all user agents to crawl the site
+User-agent: *
+Allow: /
+
+# Disallow crawling of the following directories
+Disallow: /panel
+Disallow: /profile
+Disallow: /scripts
+Disallow: /home
+Disallow: /question_viewer
+Disallow: /subject
+Disallow: /privacy-policy
+
+
+# Disallow crawling of specific file types
+Disallow: /*.js$
+
+
+# Disallow crawling of specific URLs
+Disallow: /login
+Disallow: /register
+Disallow: /forgot-password
+Disallow: /api/subjects
+Disallow: /api/questions
+Disallow: /api/responses
+
+# Allow specific bots (e.g., Googlebot) to access the entire site
+User-agent: Googlebot
+Allow: /
+
+# Block specific bots (e.g., BadBot) from accessing the site
+User-agent: BadBot
+Disallow: /

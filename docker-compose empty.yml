@@ -1,0 +1,43 @@
+version: '3.8'
+networks:
+  network_name:
+
+services:
+  app:
+    build: .
+    networks:
+      - network_name
+    ports:
+      - "80:80"
+      - "443:443"
+      - "587:587"
+    depends_on:
+      - service_db_name
+    environment:
+      DB_HOST: db
+      DB_TYPE: postgres
+      DB_PORT: 5432
+
+    volumes:
+      - img_data:/root/public/img
+      # Path on host to cert folder
+      - ./cert:/root/cert
+      - ./audit.log:/root/audit.log
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: db_name
+      POSTGRES_USER: db_user
+      POSTGRES_PASSWORD: db_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgresql_config/pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
+      - ./postgresql_config/postgresql.conf:/var/lib/postgresql/data/postgresql.conf
+      - ./postgresql_config/server.crt:/var/lib/postgresql/data/server.crt
+      - ./postgresql_config/server.key:/var/lib/postgresql/data/server.key
+    networks:
+      - network_name
+volumes:
+  postgres_data:
+  img_data:

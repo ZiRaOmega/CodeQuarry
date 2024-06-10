@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+:root{
+    --darkblue: #000513;
+    --white : #FFF;
+    --light-gray: #EEE;
+}
+* {
+    font-family: "Inter", sans-serif;
+}
+
+body{
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+
+
+#create_post_container{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    height: 500px;
+    background-color: beige;
+
+}
+
+*{
+    font-family: 'Rubik';
+}
+
+@media (max-width: 900px) {
+    html{
+        overflow-x: hidden;
+    }
+}
+
+@media (max-width: 600px) {
+    html{
+        overflow-x: hidden;
+    }
+}

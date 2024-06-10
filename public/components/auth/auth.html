@@ -1,0 +1,95 @@
+{{define "auth"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+
+<body style="justify-content: center;">
+  <div id="auth_block">
+    <div class="CQ-logo"></div>
+    <div class="title">
+      <p class="code-quarry">•CodeQuarry</p>
+      <p class="description">Excavating the Depths of<br />Code Knowledge.</p>
+    </div>
+    <div id="login-register-buttons">
+      <button id="login-button">Login</button>
+      <button id="register-button">Register</button>
+    </div>
+  </div>
+
+  <div id="registerBlock">
+    <div class="CQ-logo"></div>
+    <div class="title">
+      <p class="code-quarry">Welcome to Code Quarry</p>
+      <p class="description">Let's register !</p>
+    </div>
+    <form id="registerForm" action="/register" method="post">
+      {{.CSRFToken}}  
+      <input type="text" name="lastname" id="registerLastName" placeholder="Lastname" required="required"
+        autocomplete="off" />
+      <input type="text" name="firstname" id="registerFirstName" placeholder="Firstname" required="required"
+        autocomplete="off" />
+      <input type="text" name="username" id="registerUsername" placeholder="Username" required="required"
+        autocomplete="off" />
+      <input type="email" name="email" id="registerEmail" placeholder="E-mail" required="required" autocomplete="off" />
+      <input type="password" name="password" id="registerPassword" placeholder="Password" required="required"
+        autocomplete="off" />
+
+      <input type="password" name="passwordConfirmation" id="registerPasswordConfirmation"
+        placeholder="Confirm Password" required="required" autocomplete="off" />
+      <div id="contentAlert"></div>
+      <a href="/cgu" target="_blank">Terms and Conditions</a>
+      <a href="/rgpd" target="_blank">Privacy Policy</a>
+      <div>
+        <input type="checkbox" id="acceptTerms" />
+        <label for="acceptTerms">I accept the Terms and Conditions and Privacy Policy</label>
+      </div>
+      <button type="submit" id="registerSubmit" disabled>Register</button>
+    </form>
+    <p>Already have an account ?</p>
+    <button id="loginRedirect">Login</button>
+  </div>
+
+  <div id="loginBlock">
+    <div class="CQ-logo"></div>
+    <div class="Title">
+      <p class="code-quarry">Welcome to Code Quarry</p>
+      <p class="description">Let's dig again !</p>
+    </div>
+    <form id="loginForm" action="/login" method="post">
+      {{.CSRFToken}}
+      <input type="text" name="usernameOrEmailLogin" id="usernameOrEmailLogin" placeholder="Username or Email"
+        required="required" autocomplete="off" />
+      <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password" required="required"
+        autocomplete="off" />
+      <div id="contentAlertLogin"></div>
+      <button type="submit" id="login">Login</button>
+    </form>
+    <p>Your forgot your password ?</p>
+    <button id="forgotPasswordRedirect">Forgot Password</button>
+    <p>You don't have an account ?</p>
+    <button id="registerRedirect">Register</button>
+  </div>
+  <div id="forgotPasswordBlock">
+    <div class="CQ-logo"></div>
+    <div class="Title">
+      <p class="code-quarry">Welcome to Code Quarry</p>
+      <p class="description">Let's recover your password !</p>
+    </div>
+    <form id="forgotPasswordForm" action="/forgot-password" method="post">
+      <p>Enter your email address and we will send you a temporary password.</p>
+      <input type="email" name="email" id="email" placeholder="E-mail" required="required"
+        autocomplete="off" />
+      <div id="contentAlertForgotPassword"></div>
+      <button type="submit" id="forgotPassword">Send</button>
+    </form>
+    <p>Remember your password ?</p>
+    <button id="loginRedirectForgotPassword">Login</button>
+  </div>
+  <script src="/components/auth/auth_obfuscate.js"></script>
+  <script src="/components/auth/animation.js"></script>
+  {{template "script" .}}
+ 
+</body>
+
+</html>
+{{end}}

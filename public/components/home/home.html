@@ -1,0 +1,20 @@
+{{define "home"}}
+
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+    {{template "header" .}}
+    {{template "all_subjects" .}}
+    <!-- <ul id="subjectsList"></ul> -->
+    <div id="questionsList" style="display: none;">
+    </div>
+    <div id="create_post_button"></div>
+    {{template "footer" .}}
+</body>
+<script src="scripts/posts.js"></script>
+
+{{template "script" .}}
+
+</html>
+{{end}}

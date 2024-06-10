@@ -1,0 +1,34 @@
+#classement{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 20px;
+}
+
+.classement-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    height: 80px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.ranking{
+    font-size: 22px;
+    font-weight: bolder;
+    width: 5px;
+    user-select: none;
+}
+
+.classement-name, .classement-firstname, .classement-lastname, .classement-username,.classement-XP, .classement-rank, .post-length{
+    font-size: 18px;
+    flex-basis: 8%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+}

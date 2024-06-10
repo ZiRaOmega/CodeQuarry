@@ -1,0 +1,35 @@
+{{define "subject"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+
+<body>
+    {{template "header" .}}
+    <script src="/scripts/all_subjects.js"></script>
+    <div id="questions_container">
+        <div id="return_filter_container">
+        <div id="return_button">⬅</div>
+        <div id="filter_container">
+            <div id="question_tracker_count"></div>
+            <div id="filter_questions">
+                <div id="filter_nbr_of_comments">↑ Comments</div>
+                <div id="filter_old">Oldest</div>
+                <div id="filter_new">Newest</div>
+                <div id="filter_popular">↗ Ascending</div>
+                <div id="filter_unpopular">↘ Descending</div>
+            </div>
+        </div>
+    </div>
+        <ul id="questions_list"></ul>
+    </div>
+    <div id="create_post_button"></div>
+    {{template "footer" .}}
+</body>
+<script src="/scripts/subject.js"></script>
+<script src="/scripts/posts.js"></script>
+
+
+{{template "script" .}}
+
+</html>
+{{end}}
