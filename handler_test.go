@@ -82,7 +82,7 @@ func TestSendComponentAuth(t *testing.T) {
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("DB_NAME_TEST")
 	dbType := os.Getenv("DB_TYPE")
 
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
@@ -124,14 +124,14 @@ func TestLoginHandler(t *testing.T) {
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("DB_NAME_TEST")
 	dbType := os.Getenv("DB_TYPE")
 
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
 	db := app.InitDB(dsn)
 	defer db.Close()
 
-	req, err := http.NewRequest("POST", "/login", strings.NewReader("username=test&password=test"))
+	req, err := http.NewRequest("POST", "/login", strings.NewReader("usernameOrEmailLogin=test&password=test"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -162,7 +162,7 @@ func TestRegisterHandler(t *testing.T) {
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("DB_NAME_TEST")
 	dbType := os.Getenv("DB_TYPE")
 
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
@@ -200,7 +200,7 @@ func TestLogoutHandler(t *testing.T) {
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("DB_NAME_TEST")
 	dbType := os.Getenv("DB_TYPE")
 
 	dsn := dbType + "://" + dbUser + ":" + dbPassword + "@" + dbHost + ":" + dbPort + "/" + dbName + "?sslmode=disable"
@@ -245,7 +245,7 @@ func TestWebsocketHandler(t *testing.T) {
 	dbPort := os.Getenv("DB_PORT")
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
-	dbName := os.Getenv("DB_NAME")
+	dbName := os.Getenv("DB_NAME_TEST")
 	dbType := os.Getenv("DB_TYPE")
 
 	// Form the Data Source Name (DSN) string

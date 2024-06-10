@@ -9,8 +9,6 @@
         <form action="/update-profile" method="POST" enctype="multipart/form-data" class="editProfileForm" id="editProfileForm" style="display: none;">
         <img src="{{.Avatar.String}}" alt="avatar" width="100" height="100" class="avatarViewer">
         <label for="avatar">Avatar:</label>
-        <!--<input type="file" id="photo_changer" style="display: none;">
-        <input type="button" class="edit_profile_input" value="Browse..." onclick="document.getElementById('photo_changer').click(); var fileInput = document.getElementById('photo_changer');var filename = fileInput.files[0].name; console.log(filename);" />-->
         <div id="yourBtn" class="edit_profile_input_text" onclick="getFile()">Browse...</div>
   <!-- this is your file input tag, so i hide it!-->
   <!-- i used the onchange event to fire the form submission-->
