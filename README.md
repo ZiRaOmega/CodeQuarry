@@ -66,3 +66,5 @@
 
 ## Additional Documentation
 - If you encounter problems while using the program, refer to the documentation in the `doc/` folder.
+
+Thanks to all contributors
