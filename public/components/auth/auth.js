@@ -10,9 +10,26 @@ let registerForm = document.getElementById("registerForm");
 let registerSubmit = document.getElementById("registerSubmit");
 let contentAlert = document.getElementById("contentAlert");
 //registerSubmit.addEventListener("click", function (event) {
-$(document).ready(function () {
+  $(document).ready(function () {
+  let terms = false;
+  document.getElementById("acceptTerms").addEventListener("change", function () {
+   terms = !this.checked;
+    console.log(!this.checked)
+    
+    
+    
+  });
   $("#registerForm").submit(function (event) {
     event.preventDefault();
+    if (terms!=true){
+      Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "Please accept the terms and conditions",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
     const fields = [
       { value: registerLastName.value, name: "LastName" },
       { value: registerFirstName.value, name: "FirstName" },
@@ -160,6 +177,5 @@ $(document).ready(function () {
 
   });
 });
-document.getElementById("acceptTerms").addEventListener("change", function () {
-  document.getElementById("registerSubmit").disabled = !this.checked;
-});
+
+
