@@ -208,6 +208,9 @@
       </div>
       {{end}}
       </div>
+      {{if eq $.Rank_Panel.Int64 2}}
+      {{.Auditlogs}}
+      {{end}}
     </div>
     {{template "script" .}}
     <script src="/scripts/panel.js"></script>

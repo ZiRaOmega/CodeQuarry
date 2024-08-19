@@ -31,6 +31,7 @@ func main() {
 		app.Log(app.ErrorLevel, "Failed to load .env file")
 		return
 	}
+	fmt.Println("Starting server...")
 	// DSN for PostgreSQL
 	dbHost := os.Getenv("DB_HOST")
 	dbPort := os.Getenv("DB_PORT")

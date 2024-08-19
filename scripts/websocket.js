@@ -353,7 +353,7 @@ function handleResponse(msg) {
   answerDate.textContent = `Posted the: ${new Date(
     msg.content.creation_date
   ).toLocaleDateString()}`;
-
+  
   // Best answer toggle
   const bestAnswerContainer = document.createElement("div");
   bestAnswerContainer.classList.add("best_answer_container");
@@ -389,7 +389,12 @@ function handleResponse(msg) {
   };
 
   bestAnswerContainer.appendChild(bestAnswer);
-  bestAnswerContainer.style.display = "flex";
+  if (msg.content.is_author){
+
+    bestAnswerContainer.style.display = "flex";
+  }else{
+    bestAnswerContainer.remove()
+  }
   creator_and_date_container.appendChild(bestAnswerContainer);
   creator_and_date_container.appendChild(answerAuthor);
   const answers = document.querySelector(".question-viewer__answers");

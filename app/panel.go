@@ -3,7 +3,9 @@ package app
 import (
 	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -11,6 +13,8 @@ type Panel struct {
 	Questions  []Question
 	Users      []User
 	Subjects   []Subject
+	ServerLogs string
+	AuditLogs  string
 	Rank_Panel sql.NullInt64
 }
 
@@ -33,11 +37,16 @@ func PanelAdminHandler(db *sql.DB) http.HandlerFunc {
 		data.Subjects = FetchSubjects(db)
 		data.Questions = FetchQuestions(db)
 		data.Users, err = FetchUsers(db)
+		data.AuditLogs = ""
 		if err != nil {
-
+			Log(ErrorLevel, "Error while fetching users")
 		}
 
 		if rank == 2 || rank == 1 {
+			if rank == 2 {
+				//data.ServerLogs = FetchServerLogs()
+				data.AuditLogs = FetchAuditLogs()
+			}
 			err := ParseAndExecuteTemplate("panel", data, w)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -188,4 +197,28 @@ func FetchUsers(db *sql.DB) ([]User, error) {
 		return nil, fmt.Errorf("rows final error: %v", err)
 	}
 	return users, nil
+}
+
+/*Function that retrieve the content of audit.log and return a string*/
+func FetchAuditLogs() string {
+	//Open the file
+	file, err := os.Open("audit.log")
+	if err != nil {
+		Log(ErrorLevel, "Error while opening the file audit.log")
+		return ""
+	}
+	defer file.Close()
+
+	//Read the content
+	contentBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		Log(ErrorLevel, "Error while reading the file audit.log")
+		return ""
+	}
+
+	//Set the content variable with the file content
+	content := string(contentBytes)
+
+	//Return the content
+	return content
 }

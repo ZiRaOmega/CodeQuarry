@@ -187,6 +187,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			}
 		}
 		// Compare the stored hashed password with the password that was submitted
+		//Function to check the password hash
 		err = bcrypt.CompareHashAndPassword([]byte(storedPassword), []byte(password))
 		if err != nil {
 			Log(DebugLevel, "Invalid login credentials"+username+" at "+r.URL.Path)

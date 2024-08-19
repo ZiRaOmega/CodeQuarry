@@ -202,7 +202,7 @@ func SearchBarCSS(w http.ResponseWriter, r *http.Request) {
 // JS
 func AuthHandler(w http.ResponseWriter, r *http.Request) {
 	// serve the auth js file
-	http.ServeFile(w, r, "public/components/auth/auth_obfuscate.js")
+	http.ServeFile(w, r, "public/components/auth/auth.js")
 }
 
 // CSS
