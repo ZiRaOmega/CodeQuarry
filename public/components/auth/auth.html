@@ -45,8 +45,10 @@
       </div>
        
     <!-- reCAPTCHA widget -->
-    <div class="g-recaptcha" data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj"></div>
-      <button type="submit" id="registerSubmit" >Register</button>
+    <button type="submit" id="registerSubmit" class="g-recaptcha" 
+      data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj" 
+      data-callback='onSubmit' 
+      data-action='submit' >Register</button>
     </form>
     <p>Already have an account ?</p>
     <button id="loginRedirect">Login</button>
@@ -65,8 +67,11 @@
       <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password" required="required"
         autocomplete="off" />
       <div id="contentAlertLogin"></div>
-      <div class="g-recaptcha" data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj"></div>
-      <button type="submit" id="login">Login</button>
+     
+      <button type="submit" id="login" class="g-recaptcha" 
+      data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj" 
+      data-callback='onSubmit' 
+      data-action='submit'>Login</button>
     </form>
     <p>Your forgot your password ?</p>
     <button id="forgotPasswordRedirect">Forgot Password</button>
@@ -92,6 +97,13 @@
   <script src="/components/auth/auth_obfuscate.js"></script>
   <script src="/components/auth/animation.js"></script>
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  
+
+ <script>
+  function onSubmit(token) {
+    document.getElementById("demo-form").submit();
+  }
+</script>
   {{template "script" .}}
  
 </body>
