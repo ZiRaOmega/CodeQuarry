@@ -35,7 +35,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		}
 
 		// Capture reCAPTCHA response
-		recaptchaResponse := r.FormValue("g-recaptcha-response")
+		recaptchaResponse := r.FormValue("g-recaptcha")
 		if recaptchaResponse == "" {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "reCAPTCHA response missing"})
 			return
@@ -188,7 +188,7 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		// Capture reCAPTCHA response
-		recaptchaResponse := r.FormValue("g-recaptcha-response")
+		recaptchaResponse := r.FormValue("g-recaptcha")
 		if recaptchaResponse == "" {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "reCAPTCHA response missing"})
 			return
