@@ -43,7 +43,10 @@
         <input type="checkbox" id="acceptTerms" />
         <label for="acceptTerms">I accept the Terms and Conditions and Privacy Policy</label>
       </div>
-      <button type="submit" id="registerSubmit" disabled>Register</button>
+       
+    <!-- reCAPTCHA widget -->
+    <div class="g-recaptcha" data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj"></div>
+      <button type="submit" id="registerSubmit" >Register</button>
     </form>
     <p>Already have an account ?</p>
     <button id="loginRedirect">Login</button>
@@ -62,6 +65,7 @@
       <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password" required="required"
         autocomplete="off" />
       <div id="contentAlertLogin"></div>
+      <div class="g-recaptcha" data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj"></div>
       <button type="submit" id="login">Login</button>
     </form>
     <p>Your forgot your password ?</p>
