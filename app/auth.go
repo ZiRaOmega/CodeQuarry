@@ -1,12 +1,16 @@
 package app
 
 import (
+	"bytes"
 	"database/sql"
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"net/mail"
+	"os"
 	"time"
 
+	"github.com/joho/godotenv"
 	UUID "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 
@@ -29,6 +33,20 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error parsing form", http.StatusBadRequest)
 			return
 		}
+
+		// Capture reCAPTCHA response
+		recaptchaResponse := r.FormValue("g-recaptcha-response")
+		if recaptchaResponse == "" {
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "reCAPTCHA response missing"})
+			return
+		}
+
+		// Verify reCAPTCHA
+		if !verifyRecaptcha(recaptchaResponse) {
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "reCAPTCHA verification failed"})
+			return
+		}
+
 		lastname := r.FormValue("lastname")
 		firstname := r.FormValue("firstname")
 		username := r.FormValue("username")
@@ -112,6 +130,35 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		Log(DebugLevel, "Registration successful: "+username+" at "+r.URL.Path)
 	}
 }
+
+// Verify reCAPTCHA response with Google
+func verifyRecaptcha(response string) bool {
+	godotenv.Load()
+	secret := os.Getenv("RECAPTCHA_SERVER_KEY")
+	url := "https://www.google.com/recaptcha/api/siteverify"
+
+	data := map[string]string{
+		"secret":   secret,
+		"response": response,
+	}
+	jsonData, _ := json.Marshal(data)
+
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		Log(ErrorLevel, "Error verifying reCAPTCHA: "+err.Error())
+		return false
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	var result map[string]interface{}
+	if err := json.Unmarshal(body, &result); err != nil {
+		Log(ErrorLevel, "Error parsing reCAPTCHA verification response: "+err.Error())
+		return false
+	}
+
+	return result["success"].(bool)
+}
 func GetEmailWithUsername(db *sql.DB, username string) string {
 	//fmt.Println(username)
 	stmt, err := db.Prepare("SELECT email FROM users WHERE username = $1")
@@ -140,6 +187,19 @@ func LoginHandler(db *sql.DB) http.HandlerFunc {
 			http.Error(w, "Error parsing form", http.StatusBadRequest)
 			return
 		}
+		// Capture reCAPTCHA response
+		recaptchaResponse := r.FormValue("g-recaptcha-response")
+		if recaptchaResponse == "" {
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "reCAPTCHA response missing"})
+			return
+		}
+
+		// Verify reCAPTCHA
+		if !verifyRecaptcha(recaptchaResponse) {
+			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "reCAPTCHA verification failed"})
+			return
+		}
+
 		username := r.FormValue("usernameOrEmailLogin")
 		password := r.FormValue("passwordLogin")
 		if utils.ContainsSQLi(username) || utils.ContainsSQLi(password) {
