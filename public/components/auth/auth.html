@@ -45,7 +45,7 @@
       </div>
        
     <!-- reCAPTCHA widget -->
-    <button type="submit" id="registerSubmit" class="g-recaptcha" 
+    <button id="registerSubmit" class="g-recaptcha" 
       data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj" 
       data-callback='onSubmit' 
       data-action='submit' >Register</button>
@@ -68,7 +68,7 @@
         autocomplete="off" />
       <div id="contentAlertLogin"></div>
      
-      <button type="submit" id="login" class="g-recaptcha" 
+      <button id="login" class="g-recaptcha" 
       data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj" 
       data-callback='onSubmit' 
       data-action='submit'>Login</button>
@@ -100,8 +100,11 @@
   
 
  <script>
-  function onSubmit(token) {
-    document.getElementById("demo-form").submit();
+  function onSubmitRegister(token) {
+    document.getElementById("registerForm").submit();
+  }
+  function onSubmitLogin(token) {
+    document.getElementById("loginForm").submit();
   }
 </script>
   {{template "script" .}}
