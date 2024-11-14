@@ -1,16 +1,16 @@
 package app
 
 import (
-	"bytes"
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/mail"
+	"net/url"
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	UUID "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 
@@ -132,20 +132,16 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 }
 
 // Verify reCAPTCHA response with Google
-func verifyRecaptcha(response string) bool {
-	godotenv.Load()
+func verifyRecaptcha(token string) bool {
 	secret := os.Getenv("RECAPTCHA_SERVER_KEY")
-	url := "https://www.google.com/recaptcha/api/siteverify"
+	endpoint := "https://www.google.com/recaptcha/api/siteverify"
 
-	data := map[string]string{
-		"secret":   secret,
-		"response": response,
-	}
-	jsonData, _ := json.Marshal(data)
-
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.PostForm(endpoint, url.Values{
+		"secret":   {secret},
+		"response": {token},
+	})
 	if err != nil {
-		Log(ErrorLevel, "Error verifying reCAPTCHA: "+err.Error())
+		log.Println("Error verifying reCAPTCHA:", err)
 		return false
 	}
 	defer resp.Body.Close()
@@ -153,7 +149,7 @@ func verifyRecaptcha(response string) bool {
 	body, _ := ioutil.ReadAll(resp.Body)
 	var result map[string]interface{}
 	if err := json.Unmarshal(body, &result); err != nil {
-		Log(ErrorLevel, "Error parsing reCAPTCHA verification response: "+err.Error())
+		log.Println("Error parsing reCAPTCHA response:", err)
 		return false
 	}
 
