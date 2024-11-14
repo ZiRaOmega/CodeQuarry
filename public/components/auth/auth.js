@@ -1,3 +1,9 @@
+function onSubmitRegister(token) {
+  document.getElementById("registerForm").submit();
+}
+function onSubmitLogin(token) {
+  document.getElementById("loginForm").submit();
+}
 let registerLastName = document.getElementById("registerLastName");
 let registerFirstName = document.getElementById("registerFirstName");
 let registerUsername = document.getElementById("registerUsername");
