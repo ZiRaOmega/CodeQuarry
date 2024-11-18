@@ -37,6 +37,8 @@ func SetupDB(db *sql.DB) {
 			DeleteUserFromDBAfter6Months(db)
 			log.Println("Delete expired sessions")
 			DeleteExpiredSessions(db)
+			log.Println("Delete unverified users after 7 days")
+			DeleteUnverifiedUsers(db)
 		}
 	}()
 
@@ -47,6 +49,32 @@ func DeleteExpiredSessions(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
+
+// deleteUnverifiedUsers removes users who have not verified their email within 1 week.
+func DeleteUnverifiedUsers(db *sql.DB) {
+	// Define the query to delete unverified users older than 1 week
+	query := `
+		DELETE FROM users
+		WHERE email IN (
+			SELECT email
+			FROM VerifyEmail
+			WHERE validated = FALSE
+			AND NOW() - INTERVAL '7 days' > (
+				SELECT creation_date
+				FROM VerifyEmail
+				WHERE VerifyEmail.email = users.email
+			)
+		);`
+
+	// Execute the deletion query
+	_, err := db.Exec(query)
+	if err != nil {
+		log.Fatalf("Error deleting unverified users: %v", err)
+	}
+
+	log.Println("Deleted unverified users older than 1 week.")
+}
+
 /* --------- Create Funcs ----------- */
 func createTableUsers(db *sql.DB) {
 	// Create a User table
