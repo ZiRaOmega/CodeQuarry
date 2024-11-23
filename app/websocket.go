@@ -210,7 +210,12 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
 				}
-				if CheckIfQuestionIsMine(db, questionID, float64(userID)) {
+				user_rank, err := GetRankByUserID(db, userID)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if CheckIfQuestionIsMine(db, questionID, float64(userID)) || user_rank == 2 {
 					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: true})
 				} else {
 					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: false})

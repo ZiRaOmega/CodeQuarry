@@ -151,7 +151,12 @@ func FetchResponseByQuestion(db *sql.DB, questionID int, user_id int) ([]Respons
 				r.UserVote = "downvoted"
 			}
 		}
-		if user_id == r.StudentID {
+		is_question_user_admin, err := GetRankByUserID(db, user_id)
+		if err != nil {
+			return nil, err
+		}
+
+		if user_id == r.StudentID || is_question_user_admin == 2 {
 			r.IsAuthor = true
 		}
 
@@ -239,4 +244,15 @@ func GetBestAnswerFromQuestion(db *sql.DB, questionID int) int {
 		return -1
 	}
 	return bestAnswer
+}
+
+func GetRankByUserID(db *sql.DB, userID int) (int, error) {
+	fmt.Println(userID)
+	query := `SELECT rang_rank_ FROM users WHERE id_student = $1`
+	var rank int
+	err := db.QueryRow(query, userID).Scan(&rank)
+	if err != nil {
+		return 0, err
+	}
+	return rank, nil
 }
