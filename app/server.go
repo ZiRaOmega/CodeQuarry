@@ -286,7 +286,7 @@ func DetectLanguageHandler(w http.ResponseWriter, r *http.Request) {
 
 func QuestionViewerJSHandler(w http.ResponseWriter, r *http.Request) {
 	// Serve the codeQuarry.html file as the default page
-	http.ServeFile(w, r, "public/components/question_viewer/public/components/question_viewer/question_viewer_obfuscate.js")
+	http.ServeFile(w, r, "public/components/question_viewer/question_viewer_obfuscate.js")
 }
 
 func ClassementJSHandler(w http.ResponseWriter, r *http.Request) {
