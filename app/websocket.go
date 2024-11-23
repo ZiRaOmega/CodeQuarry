@@ -16,6 +16,7 @@ var AllowedOrigins = []string{
 	"https://localhost", // for local development
 	"https://codequarry.dev",
 	"https://www.codequarry.dev",
+	"https://codequarry.dev:443",
 }
 
 // CheckOrigin verifies the request origin against the allowed origins
