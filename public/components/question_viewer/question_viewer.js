@@ -407,9 +407,11 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
             "question-viewer__answers__answer__description"
           );
 
-          question_viewer__answers__answer__date.innerText = `Posted the: ${new Date(
-            question.creation_date
-          ).toLocaleDateString()}`;
+          question_viewer__answers__answer__date.innerText = `Posted the: ${new Intl.DateTimeFormat('en-CA', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }).format(new Date(question.creation_date))}`;
 
           question_viewer__answers__answer__description.textContent =
             answer.description;
