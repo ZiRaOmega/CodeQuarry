@@ -247,7 +247,7 @@ func GetBestAnswerFromQuestion(db *sql.DB, questionID int) int {
 }
 
 func GetRankByUserID(db *sql.DB, userID int) (int, error) {
-	fmt.Println(userID)
+
 	query := `SELECT rang_rank_ FROM users WHERE id_student = $1`
 	var rank int
 	err := db.QueryRow(query, userID).Scan(&rank)

@@ -14,6 +14,8 @@ import (
 
 var AllowedOrigins = []string{
 	"https://localhost", // for local development
+	"https://codequarry.dev",
+	"https://www.codequarry.dev",
 }
 
 // CheckOrigin verifies the request origin against the allowed origins
