@@ -83,6 +83,8 @@
             <input class="input-field" type="date" value="{{if
             .SchoolYear.Valid}}{{.SchoolYear.Time.Format "2006-01-02"}}{{end}}"
             /><br />
+	    <input class="input-field" type="date" value="{{.CreationDate.Time.Format "2006-01-02"}}" disabled />
+            
             <button onclick="editUser({{.ID}})">Edit</button>
             {{if eq $.Rank_Panel.Int64 2}}
             <button onclick="deleteUser({{.ID}},this)">Delete</button>

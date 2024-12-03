@@ -159,12 +159,14 @@ func main() {
 	http.Handle("/delete-profile", CSRF(http.HandlerFunc(app.DeleteProfileHandler(db))))
 	http.HandleFunc("/robots.txt", app.HandleRobots)
 	http.HandleFunc("/sitemap.xml", app.HandleSitemap)
+	app.UpdateMissingCreationDates(db, time.Now())
+	
 
 	//go startHTTPServer()
 	fmt.Println("Server is running on https://" + URL + ":443/")
-	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
+	//err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
 	//For the server
-	//err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
+	err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)
 	if err != nil {
 		app.Log(app.ErrorLevel, "Error starting the server")
 		log.Fatal("[DEBUG] ListenAndServe: ", err)

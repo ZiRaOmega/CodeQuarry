@@ -16,6 +16,7 @@ var AllowedOrigins = []string{
 	"https://localhost", // for local development
 	"https://codequarry.dev",
 	"https://www.codequarry.dev",
+	"https://codequarry.dev:443",
 }
 
 // CheckOrigin verifies the request origin against the allowed origins
@@ -212,7 +213,12 @@ func WebsocketHandler(db *sql.DB) http.HandlerFunc {
 					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
 					break
 				}
-				if CheckIfQuestionIsMine(db, questionID, float64(userID)) {
+				user_rank, err := GetRankByUserID(db, userID)
+				if err != nil {
+					conn.WriteJSON(WSMessage{Type: "error", Content: "Failed to identify user"})
+					break
+				}
+				if CheckIfQuestionIsMine(db, questionID, float64(userID)) || user_rank == 2 {
 					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: true})
 				} else {
 					conn.WriteJSON(WSMessage{Type: "questionCompareUser", Content: false})

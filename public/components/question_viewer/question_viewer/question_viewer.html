@@ -1,0 +1,77 @@
+{{define "question_viewer"}}
+<!DOCTYPE html>
+<html lang="en">
+{{template "head" .}}
+<body>
+    {{template "header" .}}
+
+<div class="question-viewer">
+  <div class="areYouSure">
+    <div class="YesOrNo">
+      <p class="areYouSureTitle">Validate this as the best answer ?</p>
+      <p class="areYouSureText">Choosing a best answer means no one can answer anymore, are you satisfied by this one?</p>
+      <div class="YesNoContainer">
+        <div id="Yes">Yes</div>
+        <div id="No">Cancel</div>
+      </div>
+    </div>
+  </div>
+  <div class="question-viewer__question">
+    <div class="vote-burger-menu" id="vote-burger-menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <div class="vote-options vote_container" id="vote-options">
+      <div class="option upvote_container">
+        <div class="upvote_text">+</div>
+        <p class="upvote_count"></p>
+      </div>
+      <div class="option downvote_container">
+        <div class="downvote_text">-</div>
+        <p class="downvote_count"></p>
+      </div>
+    </div>
+    <div class="question-viewer__question__title"></div>
+    <div class="question-viewer__question__description"></div>
+    <div class="question-viewer__question__content">
+    </div>
+    <div class="creator_and_date_container">
+      <div class="question-viewer__question__date">
+        Posted the: {{.Question.CreationDate.Format "2006-01-02"}}
+      </div>
+      <div class="responses_counter">{{len .Question.Responses}} Response(s)</div>
+    <div class="question-viewer__question__author">Created by<span class="creator_name">{{.Question.Creator}}</span></div>
+  </div>
+  </div>
+  <div class="question-viewer__answers">
+  </div>
+  <div id="response_input" class="question-viewer__response-input">
+    <p id="votre_reponse">Your answer:</p>
+    {{.CSRFToken}}
+    <input id="question_id" question_id="{{.Question.Id}}" style="display: none;"></input>
+    <textarea
+      id="response_description"
+      placeholder="Your description.."
+    ></textarea>
+    <textarea
+      id="response_content"
+      placeholder="Write some code here.."
+    ></textarea>
+    <div
+      id="response_submit"
+      class="question-viewer__response-input__submit"
+    >
+      Submit
+  </div>
+  <div id="error_message_response"></div>
+  </div>
+  <p id="question_closed">This Question has been closed by the author.</p>
+  {{template "footer" .}}
+</div>
+<script src="/scripts/all_subjects.js"></script>
+<script src="/scripts/question_viewer.js"></script>
+{{template "script" .}}
+</body>
+</html>
+{{end}}

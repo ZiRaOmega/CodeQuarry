@@ -1,16 +1,16 @@
 package app
 
 import (
-	"bytes"
 	"database/sql"
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/mail"
+	"net/url"
 	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	UUID "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 
@@ -83,9 +83,9 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error hashing password"})
 			return
 		}
-
+		today := time.Now()
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
-		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp,rang_rank_) VALUES($1, $2, $3, $4, $5, $6, 0,0)")
+		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp,rang_rank_,,creation_date) VALUES($1, $2, $3, $4, $5, $6, 0,0, $7)")
 		if err != nil {
 
 			Log(ErrorLevel, "Error preparing the SQL statement")
@@ -94,7 +94,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		defer stmt.Close()
-		if _, err := stmt.Exec(lastname, firstname, username, email, string(hashedPassword), "/img/defaultUser.png"); err != nil {
+		if _, err := stmt.Exec(lastname, firstname, username, email, string(hashedPassword), "/img/defaultUser.png",today); err != nil {
 			if err.Error() == "pq: duplicate key value violates unique constraint \"users_username_key\"" {
 				Log(ErrorLevel, "Username already exists")
 				// http.Error(w, "Username already exists", http.StatusBadRequest)
@@ -132,20 +132,16 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 }
 
 // Verify reCAPTCHA response with Google
-func verifyRecaptcha(response string) bool {
-	godotenv.Load()
+func verifyRecaptcha(token string) bool {
 	secret := os.Getenv("RECAPTCHA_SERVER_KEY")
-	url := "https://www.google.com/recaptcha/api/siteverify"
+	endpoint := "https://www.google.com/recaptcha/api/siteverify"
 
-	data := map[string]string{
-		"secret":   secret,
-		"response": response,
-	}
-	jsonData, _ := json.Marshal(data)
-
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonData))
+	resp, err := http.PostForm(endpoint, url.Values{
+		"secret":   {secret},
+		"response": {token},
+	})
 	if err != nil {
-		Log(ErrorLevel, "Error verifying reCAPTCHA: "+err.Error())
+		log.Println("Error verifying reCAPTCHA:", err)
 		return false
 	}
 	defer resp.Body.Close()
@@ -153,7 +149,7 @@ func verifyRecaptcha(response string) bool {
 	body, _ := ioutil.ReadAll(resp.Body)
 	var result map[string]interface{}
 	if err := json.Unmarshal(body, &result); err != nil {
-		Log(ErrorLevel, "Error parsing reCAPTCHA verification response: "+err.Error())
+		log.Println("Error parsing reCAPTCHA response:", err)
 		return false
 	}
 

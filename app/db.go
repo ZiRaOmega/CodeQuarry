@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"time"
-
+	"fmt"
 	_ "github.com/lib/pq" // Import the PostgreSQL driver
 )
 
@@ -37,6 +37,8 @@ func SetupDB(db *sql.DB) {
 			DeleteUserFromDBAfter6Months(db)
 			log.Println("Delete expired sessions")
 			DeleteExpiredSessions(db)
+			log.Println("Delete unverified users after 7 days")
+			DeleteUnverifiedUsers(db)
 		}
 	}()
 
@@ -47,6 +49,30 @@ func DeleteExpiredSessions(db *sql.DB) {
 		log.Fatal(err)
 	}
 }
+
+// deleteUnverifiedUsers removes users who have not verified their email within 1 week.
+func DeleteUnverifiedUsers(db *sql.DB) {
+	// Define the query to delete unverified users older than 1 week
+	query := `
+		DELETE FROM users
+		WHERE email IN (
+			SELECT v.email
+			FROM VerifyEmail v
+			JOIN users u ON v.email = u.email
+			WHERE v.validated = FALSE
+			AND NOW() - INTERVAL '7 days' > u.creation_date
+			);
+		);`
+
+	// Execute the deletion query
+	_, err := db.Exec(query)
+	if err != nil {
+		log.Fatalf("Error deleting unverified users: %v", err)
+	}
+
+	log.Println("Deleted unverified users older than 1 week.")
+}
+
 /* --------- Create Funcs ----------- */
 func createTableUsers(db *sql.DB) {
 	// Create a User table
@@ -276,4 +302,19 @@ func GetUserIDUsingSessionID(sessionID string, db *sql.DB) (int, error) {
 		return 0, err
 	}
 	return id, nil
+}
+func UpdateMissingCreationDates(db *sql.DB, defaultDate time.Time) error {
+	// SQL query to update rows with NULL creation_date
+	query := `
+		UPDATE users
+		SET creation_date = $1
+		WHERE creation_date IS NULL
+	`
+
+	// Execute the query
+	_, err := db.Exec(query, defaultDate)
+	if err != nil {
+		return fmt.Errorf("failed to update missing creation dates: %w", err)
+	}
+	return nil
 }

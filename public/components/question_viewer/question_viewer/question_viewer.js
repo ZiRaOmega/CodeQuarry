@@ -406,11 +406,9 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
           question_viewer__answers__answer__description.classList.add(
             "question-viewer__answers__answer__description"
           );
-
           question_viewer__answers__answer__date.innerText = `Posted the: ${new Date(
             question.creation_date
           ).toISOString().slice(0, 10)}`;
-
 
           question_viewer__answers__answer__description.textContent =
             answer.description;

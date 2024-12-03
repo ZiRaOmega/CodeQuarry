@@ -45,8 +45,7 @@
       </div>
        
     <!-- reCAPTCHA widget -->
-    <div class="g-recaptcha" data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj"></div>
-      <button type="submit" id="registerSubmit" >Register</button>
+    <button id="registerSubmit" type="submit">Register</button>
     </form>
     <p>Already have an account ?</p>
     <button id="loginRedirect">Login</button>
@@ -65,8 +64,8 @@
       <input type="password" name="passwordLogin" id="loginPassword" placeholder="Password" required="required"
         autocomplete="off" />
       <div id="contentAlertLogin"></div>
-      <div class="g-recaptcha" data-sitekey="6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj"></div>
-      <button type="submit" id="login">Login</button>
+     
+      <button id="login" type="submit">Login</button>
     </form>
     <p>Your forgot your password ?</p>
     <button id="forgotPasswordRedirect">Forgot Password</button>
@@ -89,9 +88,14 @@
     <p>Remember your password ?</p>
     <button id="loginRedirectForgotPassword">Login</button>
   </div>
+  <script>
+ 
+</script>
   <script src="/components/auth/auth_obfuscate.js"></script>
   <script src="/components/auth/animation.js"></script>
-  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LfndH0qAAAAAI5c26D0fwZ0dqAbrLhk9nhWS8mj"></script>
+
+ 
   {{template "script" .}}
  
 </body>
