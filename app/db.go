@@ -2,6 +2,7 @@ package app
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"time"
 
@@ -304,4 +305,19 @@ func GetUserIDUsingSessionID(sessionID string, db *sql.DB) (int, error) {
 		return 0, err
 	}
 	return id, nil
+}
+func UpdateMissingCreationDates(db *sql.DB, defaultDate time.Time) error {
+	// SQL query to update rows with NULL creation_date
+	query := `
+		UPDATE users
+		SET creation_date = $1
+		WHERE creation_date IS NULL
+	`
+
+	// Execute the query
+	_, err := db.Exec(query, defaultDate)
+	if err != nil {
+		return fmt.Errorf("failed to update missing creation dates: %w", err)
+	}
+	return nil
 }

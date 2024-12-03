@@ -439,3 +439,35 @@ document.getElementById("search_bar_subjects").addEventListener("keyup", (k) => 
     searchSubjects();
   }
 });
+// Enable/Disable the button based on the checkbox state
+document.getElementById('confirmRemoveUnverified').addEventListener('change', function () {
+  const button = document.getElementById('removeUnverifiedButton');
+  button.disabled = !this.checked; // Enable if checked, disable otherwise
+});
+
+// Function to handle the removal of unverified emails
+function removeUnverifiedEmails() {
+  console.log("Removing unverified emails...");
+  if (!confirm("Are you sure you want to remove all unverified users? This action cannot be undone.")) {
+    return;
+  }
+
+  fetch('/admin/panel/deleteunverified', {
+    method: 'POST',
+    credentials: 'include', // Include session cookie for authentication
+  })
+    .then(response => {
+      if (response.ok) {
+        alert("Unverified users removed successfully.");
+        location.reload(); // Reload the page to refresh the user list
+      } else {
+        response.text().then(text => {
+          alert("Failed to remove unverified users: " + text);
+        });
+      }
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("An error occurred while removing unverified users.");
+    });
+}

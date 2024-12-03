@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -221,4 +222,59 @@ func FetchAuditLogs() string {
 
 	//Return the content
 	return content
+}
+
+func AdminDeleteUnverifiedUsersHandler(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Check if the user is logged in
+		sessionID, err := r.Cookie("session")
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+
+		// Get the user ID from the session
+		userID, err := GetUserIDUsingSessionID(sessionID.Value, db)
+		if err != nil {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+
+		// Check the user's rank to ensure they are an admin
+		rank := FetchRankByUserID(db, userID)
+		if rank != 2 { // Rank 2 indicates an admin
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		// Call the function to delete unverified users
+		err = deleteUnverifiedUsers(db)
+		if err != nil {
+			log.Printf("Error deleting unverified users: %v", err)
+			http.Error(w, "Failed to delete unverified users", http.StatusInternalServerError)
+			return
+		}
+
+		// Respond with success
+		w.WriteHeader(http.StatusOK)
+		fmt.Fprintf(w, "Unverified users deleted successfully.")
+	}
+}
+
+// Helper function to delete unverified users from the database
+func deleteUnverifiedUsers(db *sql.DB) error {
+	query := `
+        DELETE FROM users
+        WHERE email IN (
+            SELECT email
+            FROM VerifyEmail
+            WHERE validated = FALSE
+            AND NOW() - INTERVAL '7 days' > (
+                SELECT creation_date
+                FROM VerifyEmail
+                WHERE VerifyEmail.email = users.email
+            )
+        );`
+	_, err := db.Exec(query)
+	return err
 }

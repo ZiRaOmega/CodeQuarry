@@ -82,7 +82,7 @@ func main() {
 			log.Fatalf("Obfuscation failed: %s", err)
 		}
 	}
-
+	app.UpdateMissingCreationDates(db, time.Now())
 	RegisterRateLimiter := app.NewRateLimiter(5, time.Hour.Abs())
 	GlobalrateLimiter := app.NewRateLimiter(10, time.Minute)
 	// When adding secure headers on the root of the webserver, all pages going to have the same headers, so no need to add to all
@@ -150,6 +150,7 @@ func main() {
 	http.HandleFunc("/classement.css", app.ClassementCSSHandler)
 	http.HandleFunc("/scripts/classement.js", app.ClassementJSHandler)
 	http.HandleFunc("/panel", app.PanelAdminHandler(db))
+	http.HandleFunc("/admin/panel/deleteunverified", app.AdminDeleteUnverifiedUsersHandler(db))
 	http.HandleFunc("/scripts/panel.js", app.PanelJSHandler)
 	http.HandleFunc("/components/panel/panel.css", app.PanelCssHandler)
 	http.HandleFunc("/verify", app.VerifEmailHandler(db))

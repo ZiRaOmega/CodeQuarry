@@ -9,6 +9,13 @@
         <input id="search_bar_users"></input>
         <button onclick="searchUsers()">Search</button>
         <div class="all_users_cards">
+          <!-- Button to remove all unverified emails with a checkbox to confirm -->
+        <div class="remove-unverified-emails">
+          <input type="checkbox" id="confirmRemoveUnverified" />
+          <label for="confirmRemoveUnverified">Confirm deletion of all unverified emails</label>
+          <button onclick="removeUnverifiedEmails()" disabled id="removeUnverifiedButton">Remove Unverified Emails</button>
+        </div>
+
         {{range .Users}}
         <div class="user" style="display: none;">
           <div class="user_avatar">
