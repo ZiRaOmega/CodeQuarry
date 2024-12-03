@@ -83,9 +83,9 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"status": "error", "message": "Error hashing password"})
 			return
 		}
-
+		today := time.Now()
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
-		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp,rang_rank_) VALUES($1, $2, $3, $4, $5, $6, 0,0)")
+		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp,rang_rank_,creation_date) VALUES($1, $2, $3, $4, $5, $6, 0, 0,$7)")
 		if err != nil {
 
 			Log(ErrorLevel, "Error preparing the SQL statement")
@@ -94,7 +94,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 			return
 		}
 		defer stmt.Close()
-		if _, err := stmt.Exec(lastname, firstname, username, email, string(hashedPassword), "/img/defaultUser.png"); err != nil {
+		if _, err := stmt.Exec(lastname, firstname, username, email, string(hashedPassword), "/img/defaultUser.png", today); err != nil {
 			if err.Error() == "pq: duplicate key value violates unique constraint \"users_username_key\"" {
 				Log(ErrorLevel, "Username already exists")
 				// http.Error(w, "Username already exists", http.StatusBadRequest)
