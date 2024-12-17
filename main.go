@@ -165,7 +165,7 @@ func main() {
 	http.HandleFunc("/sitemap.xml", app.HandleSitemap)
 
 	//go startHTTPServer()
-	fmt.Println("Server is running on https://" + URL + ":443/")
+	fmt.Println("Server is running on https://" + URL + ":8443/")
 	err = http.ListenAndServeTLS(":443", "./cert/fullchain1.pem", "./cert/privkey1.pem", nil)
 	//For the server
 	//err = http.ListenAndServeTLS(":443", "./cert/codequarry.dev/fullchain1.pem", "./cert/codequarry.dev/privkey1.pem", nil)

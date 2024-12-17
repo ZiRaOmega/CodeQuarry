@@ -2,7 +2,7 @@ package app
 
 import (
 	"database/sql"
-	"html/template"
+	"fmt"
 	"net/http"
 )
 
@@ -12,6 +12,7 @@ func GuestHandler(db *sql.DB) http.HandlerFunc {
 		//Guest layout
 		subjects, err := FetchAllSubjects(db, 0)
 		if err != nil {
+			fmt.Println(err.Error())
 			http.Error(w, "Server error", http.StatusInternalServerError)
 			return
 		}
@@ -19,16 +20,9 @@ func GuestHandler(db *sql.DB) http.HandlerFunc {
 		/* w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(subjects) */
 		//Use html/template
-		w.Header().Set("Content-Type", "text/html")
-		tmpl, err := template.ParseFiles("templates/guest.html")
+		err = ParseAndExecuteTemplate("guest", subjects, w)
 		if err != nil {
-			http.Error(w, "Server error", http.StatusInternalServerError)
-			return
-		}
-		err = tmpl.Execute(w, subjects)
-		if err != nil {
-			http.Error(w, "Server error", http.StatusInternalServerError)
-			return
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }

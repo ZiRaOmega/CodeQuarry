@@ -64,10 +64,17 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 		return nil, err
 	}
 	defer rows.Close()
-	voted_question, err := FetchVotedQuestions(db, user_id)
-	if err != nil {
-		log.Printf("Error fetching voted questions: %v", err)
-		return nil, err
+
+	var voted_question []QuestionVote
+	if user_id != 0 {
+
+		voted_question, err = FetchVotedQuestions(db, user_id)
+		if err != nil {
+			log.Printf("Error fetching voted questions: %v", err)
+			return nil, err
+		}
+	} else {
+		voted_question = []QuestionVote{{Upvote: false, Downvote: false, Q: 0}}
 	}
 	for rows.Next() {
 		var q Question
