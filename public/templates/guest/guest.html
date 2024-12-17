@@ -1,0 +1,185 @@
+{{define "guest"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Subjects - Join Us</title>
+    <style>
+        /* General Page Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            color: #222;
+        }
+
+        /* Subject List Styles */
+        #all_subjects_container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .subject-card {
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+            padding: 20px;
+            width: 250px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        .subject-card h3 {
+            margin: 0 0 10px;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+        .subject-card p {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Popup Modal */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+        }
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 600px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            text-align: center;
+        }
+        #popup h3 {
+            margin-bottom: 15px;
+            color: #007bff;
+        }
+        #popup div {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        #popup button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #popup button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Call-to-Action */
+        .register-section {
+            text-align: center;
+            margin: 40px auto;
+        }
+        .register-button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .register-button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <h1>Explore Our Topics - A World of Knowledge Awaits</h1>
+    <p style="text-align: center; color: #555;">Discover insightful subjects and answers. Join us to participate in the conversation!</p>
+
+    <!-- Subjects Preview -->
+    <div id="all_subjects_container">
+        {{range .Subjects}}
+        <div class="subject-card" onclick="showQuestions({{.Id}})">
+            <h3>{{.Title}}</h3>
+            <p>{{.Description}}</p>
+            <p><strong>{{.QuestionCount}} Questions</strong></p>
+        </div>
+        {{end}}
+    </div>
+
+    <!-- Popup Modal -->
+    <div id="overlay"></div>
+    <div id="popup">
+        <h3 id="popup-title"></h3>
+        <div id="popup-questions"></div>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
+    <!-- Call-to-Action Section -->
+    <div class="register-section">
+        <h2>Don't Miss Out!</h2>
+        <p>Sign up now to contribute your own answers and join the community.</p>
+        <a href="/register" class="register-button">Register Now</a>
+    </div>
+
+    <script>
+        const subjects = {{.Subjects | json}};
+
+        function showQuestions(subjectId) {
+            const subject = subjects.find(sub => sub.Id === subjectId);
+            const popupTitle = document.getElementById("popup-title");
+            const popupQuestions = document.getElementById("popup-questions");
+
+            popupTitle.textContent = `Questions for ${subject.Title}`;
+            popupQuestions.innerHTML = "";
+
+            subject.Questions.forEach(q => {
+                const questionDiv = document.createElement("div");
+                questionDiv.innerHTML = `
+                    <h4>${q.Title}</h4>
+                    <p>${q.Description}</p>
+                    <p><strong>Answer:</strong> ${q.Content}</p>
+                    <hr>
+                `;
+                popupQuestions.appendChild(questionDiv);
+            });
+
+            document.getElementById("popup").style.display = "block";
+            document.getElementById("overlay").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+    </script>
+</body>
+</html>
+{{end}}

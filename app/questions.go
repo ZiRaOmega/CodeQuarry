@@ -82,7 +82,11 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 				q.UserVote = "downvoted"
 			}
 		}
-		q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
+		if user_id == 0 {
+			q.Responses = []Response{{Description: "You must register or login to see the responses", Content: "", UpVotes: 0, DownVotes: 0, BestAnswer: false, CreationDate: time.Now(), UpdateDate: time.Now(), QuestionID: q.Id, StudentID: 0, StudentName: "", UserVote: "", IsAuthor: false}}
+		} else {
+			q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
+		}
 		if err != nil {
 			log.Printf("Error fetching responses: %v", err)
 			continue

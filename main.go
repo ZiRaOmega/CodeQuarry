@@ -93,6 +93,8 @@ func main() {
 	http.HandleFunc("/components/auth/auth.css", app.AuthCssHandler)
 	http.HandleFunc("/components/auth/auth_obfuscate.js", app.AuthHandler)
 	http.HandleFunc("/components/auth/animation.js", app.AnimationsHandler)
+	//Guest handler layout
+	http.HandleFunc("/guest", app.AddSecurityHeaders(app.GuestHandler(db)))
 	// Serve public/img folder
 	http.Handle("/img/", http.StripPrefix("/img/", http.FileServer(http.Dir("public/img"))))
 	http.Handle("/register", CSRF(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
