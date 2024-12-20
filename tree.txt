@@ -1,0 +1,165 @@
+.
+├── Dockerfile
+├── app
+│   ├── auth.go
+│   ├── classement.go
+│   ├── csrf.go
+│   ├── db.go
+│   ├── email.go
+│   ├── handle_votes.go
+│   ├── middleware.go
+│   ├── panel.go
+│   ├── profile.go
+│   ├── questions.go
+│   ├── response.go
+│   ├── security.go
+│   ├── server.go
+│   ├── subjects.go
+│   ├── utils
+│   │   └── utils_security.go
+│   └── websocket.go
+├── audit.log
+├── cert
+│   ├── cert1.pem
+│   ├── chain1.pem
+│   ├── codequarry.dev
+│   │   ├── cert1.pem
+│   │   ├── chain1.pem
+│   │   ├── fullchain1.pem
+│   │   └── privkey1.pem
+│   ├── fullchain1.pem
+│   └── privkey1.pem
+├── db_test.go
+├── delete_cert.sh
+├── doc
+│   ├── docker.md
+│   ├── docker_stockage.md
+│   ├── https.md
+│   ├── images
+│   │   ├── Capture d’écran du 2024-04-23 17-26-57.png
+│   │   ├── Capture d’écran du 2024-04-23 17-27-09.png
+│   │   ├── codequarry-xss-tentative.png
+│   │   ├── missing_id.png
+│   │   ├── xss(dom).png
+│   │   └── xss-dom-passed.png
+│   ├── initDB.md
+│   ├── logs.md
+│   ├── profile.md
+│   ├── questions.md
+│   ├── rateLimit.md
+│   ├── requests_headers.md
+│   ├── sessions.md
+│   ├── template.md
+│   ├── test.md
+│   ├── utils_security.md
+│   ├── vulnerabilities.md
+│   └── websocket.md
+├── docker-compose.yml
+├── go.mod
+├── go.sum
+├── handler_test.go
+├── main.go
+├── package-lock.json
+├── package.json
+├── postgresql_config
+│   ├── pg_hba.conf
+│   ├── postgresql.conf
+│   ├── server.crt
+│   ├── server.csr
+│   └── server.key
+├── public
+│   ├── components
+│   │   ├── auth
+│   │   │   ├── animation.js
+│   │   │   ├── auth.css
+│   │   │   ├── auth.html
+│   │   │   └── auth.js
+│   │   ├── cgu
+│   │   │   └── cgu.html
+│   │   ├── classement
+│   │   │   ├── classement.css
+│   │   │   ├── classement.html
+│   │   │   └── classement.js
+│   │   ├── home
+│   │   │   ├── home.css
+│   │   │   ├── home.html
+│   │   │   └── posts
+│   │   │       ├── detect_lang
+│   │   │       │   └── detect_lang.js
+│   │   │       ├── posts.css
+│   │   │       └── posts.js
+│   │   ├── panel
+│   │   │   ├── panel.css
+│   │   │   ├── panel.html
+│   │   │   └── panel.js
+│   │   ├── profile
+│   │   │   ├── profile.css
+│   │   │   ├── profile.html
+│   │   │   └── profile.js
+│   │   ├── question_viewer
+│   │   │   ├── question_viewer.css
+│   │   │   ├── question_viewer.html
+│   │   │   └── question_viewer.js
+│   │   ├── rgpd
+│   │   │   ├── rgpd.css
+│   │   │   └── rgpd.html
+│   │   └── subject
+│   │       ├── subject.css
+│   │       ├── subject.html
+│   │       └── subject.js
+│   ├── global_style
+│   │   └── global.css
+│   ├── images
+│   │   ├── CODEQUARRY.ico
+│   │   ├── CODEQUARRY.webp
+│   │   ├── checked.png
+│   │   └── create_post.webp
+│   ├── img
+│   │   ├── 019ad.png
+│   │   ├── 1cb1f.png
+│   │   ├── 2e092.png
+│   │   ├── 45b38.jpg
+│   │   ├── 73806.png
+│   │   ├── 9148a.png
+│   │   ├── 989a4.png
+│   │   ├── 9f48b.png
+│   │   ├── Capture d’écran du 2024-04-23 18-58-03.png
+│   │   ├── b10c1.jpg
+│   │   ├── c0c31.png
+│   │   ├── c8056.png
+│   │   ├── da506.png
+│   │   └── defaultUser.png
+│   └── templates
+│       ├── all_subjects
+│       │   ├── all_subjects.css
+│       │   ├── all_subjects.html
+│       │   └── all_subjects.js
+│       ├── footer
+│       │   ├── footer.css
+│       │   └── footer.html
+│       ├── head
+│       │   └── head.html
+│       ├── header
+│       │   ├── header.css
+│       │   ├── header.html
+│       │   └── header.js
+│       ├── script
+│       │   └── script.html
+│       └── search_bar
+│           ├── input.js
+│           ├── search_bar.css
+│           └── search_bar.html
+├── question_test.go
+├── recette-de-tor-sur-son-lit-de-marvel
+├── renew_certs.log
+├── renew_certs.sg
+├── renew_certs.sh
+├── scripts
+│   ├── detect_lang
+│   │   └── detect_lang.js
+│   └── websocket.js
+├── set_first_admin.sh
+├── setup_cron_renew_cert.sh
+└── tree.txt
+
+32 directories, 130 files

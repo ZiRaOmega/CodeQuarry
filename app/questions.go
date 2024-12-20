@@ -28,6 +28,7 @@ type Question struct {
 	Downvotes    int        `json:"downvotes"`
 	Responses    []Response `json:"responses"`
 	UserVote     string     `json:"user_vote"`
+	IsAuthor     bool	`json:"is_author"`
 }
 type QuestionViewer struct {
 	Question   Question
@@ -45,13 +46,13 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 	var err error
 
 	if subjectID == "all" {
-		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes, q.id_student
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject`
 		rows, err = db.Query(query)
 	} else {
-		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+		query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes, q.id_student
                   FROM question q
                   JOIN users u ON q.id_student = u.id_student
                   JOIN subject s ON q.id_subject = s.id_subject
@@ -71,7 +72,7 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 	}
 	for rows.Next() {
 		var q Question
-		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes); err != nil {
+		if err := rows.Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes, &q.User_Id); err != nil {
 			log.Printf("Error scanning question: %v", err)
 			continue
 		}
@@ -83,6 +84,9 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 			}
 		}
 		q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
+		if q.User_Id==user_id{
+			q.IsAuthor=true
+		}
 		if err != nil {
 			log.Printf("Error fetching responses: %v", err)
 			continue
@@ -105,12 +109,12 @@ func FetchQuestionsBySubject(db *sql.DB, subjectID string, user_id int) ([]Quest
 // It returns the retrieved question and an error, if any.
 func FetchQuestionByQuestionID(db *sql.DB, questionID int, user_id int) (Question, error) {
 	var q Question
-	query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes
+	query := `SELECT q.id_question, s.title AS subject_title, q.title, q.description, q.content, q.creation_date, u.username, q.upvotes, q.downvotes, q.id_student
 				  FROM question q
 				  JOIN users u ON q.id_student = u.id_student	
 				  JOIN subject s ON q.id_subject = s.id_subject
 				  WHERE q.id_question = $1`
-	err := db.QueryRow(query, questionID).Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes)
+	err := db.QueryRow(query, questionID).Scan(&q.Id, &q.SubjectTitle, &q.Title, &q.Description, &q.Content, &q.CreationDate, &q.Creator, &q.Upvotes, &q.Downvotes, &q.User_Id)
 	if err != nil {
 		return q, err
 	}
@@ -126,10 +130,15 @@ func FetchQuestionByQuestionID(db *sql.DB, questionID int, user_id int) (Questio
 			q.UserVote = "downvoted"
 		}
 	}
+	if q.User_Id==user_id{
+                        q.IsAuthor=true
+                }
+
 	q.Responses, err = FetchResponseByQuestion(db, q.Id, user_id)
 	if err != nil {
 		return q, err
 	}
+
 	return q, nil
 }
 
@@ -434,6 +443,9 @@ func ModifyQuestion(db *sql.DB, questionID int, title string, description string
 	question, err := FetchQuestionByQuestionID(db, questionID, user_id)
 	if err != nil {
 		return err
+	}
+	if CheckIfQuestionIsMine(db,questionID,float64(user_id)){
+		return nil
 	}
 	//if title description or content is empty, keep the old value
 	if title == "" {

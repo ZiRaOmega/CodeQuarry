@@ -46,6 +46,8 @@ function createFilter(questions) {
     sortByUpvotes(questions);
   document.getElementById("filter_unpopular").onclick = () =>
     sortByDownvotes(questions);
+  //Sort by popularity first
+   sortByUpvotes(questions);
 }
 
 function sortByNumberOfComments(questions) {

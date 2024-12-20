@@ -21,6 +21,7 @@ func InitDB(dsn string) *sql.DB {
 	return db
 }
 func SetupDB(db *sql.DB) {
+	DeleteUnverifiedUsers(db)
 	createTableUsers(db)
 	createTableSubject(db)
 	createTableQuestion(db)
@@ -53,16 +54,15 @@ func DeleteExpiredSessions(db *sql.DB) {
 // deleteUnverifiedUsers removes users who have not verified their email within 1 week.
 func DeleteUnverifiedUsers(db *sql.DB) {
 	// Define the query to delete unverified users older than 1 week
-	query := `
-		DELETE FROM users
-		WHERE email IN (
-			SELECT v.email
-			FROM VerifyEmail v
-			JOIN users u ON v.email = u.email
-			WHERE v.validated = FALSE
-			AND NOW() - INTERVAL '7 days' > u.creation_date
-			);
-		);`
+	query := `WITH unvalidated_users AS (
+    SELECT u.email
+    FROM users u
+    JOIN VerifyEmail v ON u.email = v.email
+    WHERE v.validated = FALSE  -- Email non validé
+      AND NOW() - INTERVAL '7 days' > u.creation_date 
+)
+DELETE FROM users
+WHERE email IN (SELECT email FROM unvalidated_users);`
 
 	// Execute the deletion query
 	_, err := db.Exec(query)

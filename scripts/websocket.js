@@ -33,6 +33,7 @@ $(document).ready(function () {
   // Define the onmessage function to be called when a message is received from the server
   socket.onmessage = function (event) {
     let msg = JSON.parse(event.data);
+
     switch (msg.type) {
       case "session":
         handleSession(msg);
@@ -146,6 +147,7 @@ function handleBestAnswer(msg) {
     }
   });
   answersBtn.forEach((element) => {
+
     if (msg.content.question_best_answer == -1) {
       element.style.display = "flex";
       element.style.backgroundColor = "";
@@ -298,6 +300,7 @@ function updateQuestionCount(subject) {
 }
 
 function ItsMyQuestion(bool) {
+
   const best_answer = document.querySelectorAll(".best_answer_container");
   best_answer.forEach((element) => {
     element.style.display = bool ? "flex" : "none";
@@ -353,7 +356,7 @@ function handleResponse(msg) {
   answerDate.textContent = `Posted the: ${new Date(
     msg.content.creation_date
   ).toLocaleDateString()}`;
-
+  
   // Best answer toggle
   const bestAnswerContainer = document.createElement("div");
   bestAnswerContainer.classList.add("best_answer_container");
@@ -361,7 +364,7 @@ function handleResponse(msg) {
   bestAnswer.classList.add("best_answer");
   bestAnswer.textContent = "Best answer ✔";
   bestAnswer.setAttribute("data-answer-id", msg.content.response_id);
-  console.log(bestAnswer);
+
   // Appending everything to the main container
   answerContainer.appendChild(answer_description);
   answerContainer.appendChild(answerContent);
@@ -389,7 +392,12 @@ function handleResponse(msg) {
   };
 
   bestAnswerContainer.appendChild(bestAnswer);
-  bestAnswerContainer.style.display = "flex";
+  if (msg.content.is_author){
+
+    bestAnswerContainer.style.display = "flex";
+  }else{
+    bestAnswerContainer.remove()
+  }
   creator_and_date_container.appendChild(bestAnswerContainer);
   creator_and_date_container.appendChild(answerAuthor);
   const answers = document.querySelector(".question-viewer__answers");

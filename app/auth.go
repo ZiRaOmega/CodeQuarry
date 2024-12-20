@@ -85,7 +85,7 @@ func RegisterHandler(db *sql.DB) http.HandlerFunc {
 		}
 		today := time.Now()
 		// In postgres, the placeholders are $1, $2, $3, etc. In MySQL, the placeholders are ?, ?, ?, etc.
-		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp,rang_rank_,,creation_date) VALUES($1, $2, $3, $4, $5, $6, 0,0, $7)")
+		stmt, err := db.Prepare("INSERT INTO users(lastname, firstname, username, email, password, avatar ,xp,rang_rank_,creation_date) VALUES($1, $2, $3, $4, $5, $6, 0,0, $7)")
 		if err != nil {
 
 			Log(ErrorLevel, "Error preparing the SQL statement")

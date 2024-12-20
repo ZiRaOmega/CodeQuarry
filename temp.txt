@@ -49,7 +49,6 @@ function sendResponse() {
     const response_content = document.getElementById("response_content").value;
     const response = {
       question_id: getUrlArgument("question_id"),
-
       description: response_description,
       content: response_content,
     };
@@ -254,7 +253,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
         }
       };
       if (question.is_author){
-      var modifyButton = document.createElement("button");
+      const modifyButton = document.createElement("button");
       modifyButton.classList.add("modify_button");
       modifyButton.textContent = "Modify";
       modifyButton.onclick = function () {
@@ -306,7 +305,7 @@ fetch(`/api/questions?question_id=${getUrlArgument("question_id")}`)
 
         question_content_input.setAttribute("id", "question_content");
         question_content_input.classList.add("question_content_input");
-        var modifyButton = document.createElement("button");
+        const modifyButton = document.createElement("button");
         modifyButton.classList.add("modify_button");
         modifyButton.textContent = "Modify";
         modifyButton.onclick = function () {
