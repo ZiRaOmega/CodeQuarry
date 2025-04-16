@@ -1,6 +1,7 @@
 module codequarry
 
 go 1.22
+toolchain go1.24.1
 
 require (
 	github.com/gorilla/csrf v1.7.2
@@ -8,7 +9,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/crypto v0.22.0
+	golang.org/x/crypto v0.36.0
 )
 
 require (
@@ -21,5 +22,5 @@ require (
 require (
 	github.com/gorilla/websocket v1.5.1
 	github.com/satori/go.uuid v1.2.0
-	golang.org/x/net v0.23.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
 )
